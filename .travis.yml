@@ -1,0 +1,14 @@
+language: node_js
+    - "8.9.0"
+    
+install:
+    - npm install -g gitbook-cli
+    - gitbook install
+    - sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.py | sudo python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()"
+    
+script: 
+    - gitbook --version
+
+after_success:
+    git status
+    git version
