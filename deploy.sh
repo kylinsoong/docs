@@ -26,7 +26,7 @@ git status
 echo "Add all"
 git add --all
 echo "Commit"
-git commit -m "Deploy document"
+git commit -m "CI Deploying"
 echo "pushing"
 git push origin gh-pages
 echo "Check out to master"
