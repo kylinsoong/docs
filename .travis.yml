@@ -11,12 +11,8 @@ script:
 
 after_success:
     git checkout gh-pages
-    echo ""
     git status
-    echo ""
     git add --all
-    echo ""
     git commit -m "Deploy document"
-    echo ""
     git push origin gh-pages
     git checkout master
