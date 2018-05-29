@@ -7,8 +7,16 @@ install:
     - sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.py | sudo python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()"
     
 script: 
-    - gitbook --version
+    - gitbook build ./ content
 
 after_success:
+    git checkout gh-pages
+    echo ""
     git status
-    git version
+    echo ""
+    git add --all
+    echo ""
+    git commit -m "Deploy document"
+    echo ""
+    git push origin gh-pages
+    git checkout master
