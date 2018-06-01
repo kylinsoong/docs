@@ -1,3 +1,0 @@
-= Summary
-
-link:doc/install.adoc[安装]

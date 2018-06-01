@@ -1,3 +1,0 @@
-image::https://api.travis-ci.org/kylinsoong/docs.svg?branch=master[]
-
-= CI TEST
