@@ -50,7 +50,7 @@
 . link:openshift/openshift.adoc[OPENSHIFT]
 .. link:openshift/concepts/README.adoc[概念]
 .. link:openshift/install/README.adoc[安装]
-... link:openshift/install/yum-setup.adoc[本地 yum 源配置]
+... link:openshift/install/yum.adoc[本地 yum 源配置]
 ... link:openshift/install/architecture.adoc[整体架构]
 ... link:openshift/install/static-dns-ssh.adoc[静态域名，SSH 互信]
 ... link:openshift/install/env-setup.adoc[软件包安装及环境准备]
