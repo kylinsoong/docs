@@ -1,0 +1,3 @@
+= Deployment Strategies
+:toc: manual
+:toc-placement: preamble

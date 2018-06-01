@@ -1,0 +1,17 @@
+
+# Add Driver
+if (outcome != success) of /subsystem=datasources/jdbc-driver=mysql:read-resource
+    /subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql, driver-module-name=com.mysql.jdbc, , driver-class-name=com.mysql.jdbc.Driver, driver-xa-datasource-class-name=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
+end-if
+
+# Add XA Data Source
+if (outcome != success) of /subsystem=datasources/xa-data-source=AccountsDS:read-resource
+    xa-data-source add --name=AccountsDS --driver-name=mysql --jndi-name=java:jboss/AccountsDS --user-name=jdv_user --password=jdv_pass --use-java-context=true --xa-datasource-properties=[DatabaseName=>accounts, PortNumber=>3306, ServerName=>localhost]
+    /subsystem=datasources/xa-data-source=AccountsDS:enable()
+end-if
+
+# Verify adding
+if (outcome == success) of /subsystem=datasources/xa-data-source=AccountsDS:read-resource
+    /subsystem=datasources/xa-data-source=AccountsDS:test-connection-in-pool()
+end-if
+

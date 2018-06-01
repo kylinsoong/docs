@@ -1,0 +1,301 @@
+= 部署 mysql 数据库
+:toc: manual
+
+== 创建工程，部署应用
+
+[source, bash]
+.*oc new-project 创建工程*
+----
+oc new-project mysql-openshift
+----
+
+[source, bash]
+.*创建 sample-volume.yaml*
+----
+cat << EOF > sample-volume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sample-volume 
+spec:
+  capacity:
+    storage: 2Gi 
+  accessModes:
+  - ReadWriteOnce 
+  nfs: 
+    path: /var/export/data/sample 
+    server: nfs.example.com 
+  persistentVolumeReclaimPolicy: Recycle
+EOF
+----
+
+[source, bash]
+.*oc create -f 创建 PV*
+----
+oc create -f sample-volume.yaml 
+persistentvolume "sample-volume" created
+----
+
+[source, bash]
+.*创建 sample-claim.yaml*
+----
+cat << EOF > sample-claim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sample-claim
+spec:
+  accessModes:
+    - ReadWriteOnce 
+  resources:
+    requests:
+      storage: 2Gi
+EOF
+----
+
+[source, bash]
+.*oc create -f 创建 PVC*
+----
+oc create -f sample-claim.yaml 
+persistentvolumeclaim "sample-claim" created
+----
+
+[source, bash]
+.*oc get 验证 PV/PVC*
+----
+oc get pv
+NAME            CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM                          STORAGECLASS   REASON    AGE
+sample-volume   2Gi        RWO           Recycle         Bound     mysql-openshift/sample-claim                            8m
+oc get pvc
+NAME           STATUS    VOLUME          CAPACITY   ACCESSMODES   STORAGECLASS   AGE
+sample-claim   Bound     sample-volume   2Gi        RWO                          2m
+----
+
+[source, bash]
+.*oc new-app 使用 docker 镜像创建应用*
+----
+oc new-app --docker-image=registry.example.com:5000/rhscl/mysql-57-rhel7:latest --insecure-registry=true --name=mysql -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_DATABASE=testdb -e MYSQL_ROOT_PASSWORD=redhat
+----
+
+== 查看及验证部署是否成功
+
+[source, text]
+.*oc status*
+----
+# oc status 
+In project mysql-openshift on server https://master.example.com:8443
+
+svc/mysql - 172.30.142.113:3306
+  dc/mysql deploys istag/mysql:latest 
+    deployment #1 deployed 53 seconds ago - 1 pod
+----
+
+[source, text]
+.*oc get pods*
+----
+# oc get pods
+NAME            READY     STATUS    RESTARTS   AGE
+mysql-1-v41ht   1/1       Running   0          3m
+----
+
+[source, text]
+.*oc describe pod*
+----
+# oc describe pod mysql-1-v41ht 
+Name:			mysql-1-v41ht
+Namespace:		mysql-openshift
+Security Policy:	restricted
+Node:			node1.example.com/192.168.122.105
+Start Time:		Sun, 11 Feb 2018 16:52:03 +0800
+Labels:			app=mysql
+			deployment=mysql-1
+			deploymentconfig=mysql
+Annotations:		kubernetes.io/created-by={"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mysql-openshift","name":"mysql-1","uid":"d3303382-0f08-11e8-8d4a-52540...
+			openshift.io/deployment-config.latest-version=1
+			openshift.io/deployment-config.name=mysql
+			openshift.io/deployment.name=mysql-1
+			openshift.io/generated-by=OpenShiftNewApp
+			openshift.io/scc=restricted
+Status:			Running
+IP:			10.130.0.72
+Controllers:		ReplicationController/mysql-1
+Containers:
+  mysql:
+    Container ID:	docker://07a102f8ff67d4500a1f107af95a3a1e0a023f6c73153d2e2a9aac24b3a3c612
+    Image:		registry.example.com:5000/rhscl/mysql-57-rhel7@sha256:30a8beef8939505998d97669a1e15ff5e643d8d3f78c3e38f7749a24b7a9eac8
+    Image ID:		docker-pullable://registry.example.com:5000/rhscl/mysql-57-rhel7@sha256:30a8beef8939505998d97669a1e15ff5e643d8d3f78c3e38f7749a24b7a9eac8
+    Port:		3306/TCP
+    State:		Running
+      Started:		Sun, 11 Feb 2018 16:52:14 +0800
+    Ready:		True
+    Restart Count:	0
+    Environment:
+      MYSQL_DATABASE:		testdb
+      MYSQL_PASSWORD:		test_pass
+      MYSQL_ROOT_PASSWORD:	redhat
+      MYSQL_USER:		test_user
+    Mounts:
+      /var/lib/mysql/data from mysql-volume-1 (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-px370 (ro)
+Conditions:
+  Type		Status
+  Initialized 	True 
+  Ready 	True 
+  PodScheduled 	True 
+Volumes:
+  mysql-volume-1:
+    Type:	EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:	
+  default-token-px370:
+    Type:	Secret (a volume populated by a Secret)
+    SecretName:	default-token-px370
+    Optional:	false
+QoS Class:	BestEffort
+Node-Selectors:	<none>
+Tolerations:	<none>
+Events:
+  FirstSeen	LastSeen	Count	From				SubObjectPath		Type		Reason		Message
+  ---------	--------	-----	----				-------------		--------	------		-------
+  12m		12m		1	default-scheduler					Normal		Scheduled	Successfully assigned mysql-1-v41ht to node1.example.com
+  12m		12m		1	kubelet, node1.example.com	spec.containers{mysql}	Normal		Pulling		pulling image "registry.example.com:5000/rhscl/mysql-57-rhel7@sha256:30a8beef8939505998d97669a1e15ff5e643d8d3f78c3e38f7749a24b7a9eac8"
+  12m		12m		1	kubelet, node1.example.com	spec.containers{mysql}	Normal		Pulled		Successfully pulled image "registry.example.com:5000/rhscl/mysql-57-rhel7@sha256:30a8beef8939505998d97669a1e15ff5e643d8d3f78c3e38f7749a24b7a9eac8"
+  12m		12m		1	kubelet, node1.example.com	spec.containers{mysql}	Normal		Created		Created container
+  12m		12m		1	kubelet, node1.example.com	spec.containers{mysql}	Normal		Started		Started container
+----
+
+[source, text]
+.*oc get svc*
+----
+# oc get svc
+NAME      CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+mysql     172.30.142.113   <none>        3306/TCP   14m
+----
+
+[source, text]
+.*oc describe svc*
+----
+# oc describe svc mysql 
+Name:			mysql
+Namespace:		mysql-openshift
+Labels:			app=mysql
+Annotations:		openshift.io/generated-by=OpenShiftNewApp
+Selector:		app=mysql,deploymentconfig=mysql
+Type:			ClusterIP
+IP:			172.30.142.113
+Port:			3306-tcp	3306/TCP
+Endpoints:		10.130.0.72:3306
+Session Affinity:	None
+Events:			<none>
+----
+
+[source, text]
+.*oc describe dc*
+----
+# oc describe dc mysql 
+Name:		mysql
+Namespace:	mysql-openshift
+Created:	18 minutes ago
+Labels:		app=mysql
+Annotations:	openshift.io/generated-by=OpenShiftNewApp
+Latest Version:	1
+Selector:	app=mysql,deploymentconfig=mysql
+Replicas:	1
+Triggers:	Config, Image(mysql@latest, auto=true)
+Strategy:	Rolling
+Template:
+Pod Template:
+  Labels:	app=mysql
+		deploymentconfig=mysql
+  Annotations:	openshift.io/generated-by=OpenShiftNewApp
+  Containers:
+   mysql:
+    Image:	registry.example.com:5000/rhscl/mysql-57-rhel7@sha256:30a8beef8939505998d97669a1e15ff5e643d8d3f78c3e38f7749a24b7a9eac8
+    Port:	3306/TCP
+    Environment:
+      MYSQL_DATABASE:		testdb
+      MYSQL_PASSWORD:		test_pass
+      MYSQL_ROOT_PASSWORD:	redhat
+      MYSQL_USER:		test_user
+    Mounts:
+      /var/lib/mysql/data from mysql-volume-1 (rw)
+  Volumes:
+   mysql-volume-1:
+    Type:	EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:	
+
+Deployment #1 (latest):
+	Name:		mysql-1
+	Created:	18 minutes ago
+	Status:		Complete
+	Replicas:	1 current / 1 desired
+	Selector:	app=mysql,deployment=mysql-1,deploymentconfig=mysql
+	Labels:		app=mysql,openshift.io/deployment-config.name=mysql
+	Pods Status:	1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+Events:
+  FirstSeen	LastSeen	Count	From				SubObjectPath	Type		Reason	Message
+  ---------	--------	-----	----				-------------	--------	------	-------
+  18m		18m		1	deploymentconfig-controller			Normal		DeploymentCreated	Created new replication controller "mysql-1" for version 1
+----
+
+== 配置 NodePort，使 mysql 外部可见
+
+[source, text]
+.*oc edit svc 配置 NodePort*
+----
+# oc edit svc mysql
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: 2018-02-11T08:52:01Z
+  labels:
+    app: mysql
+  name: mysql
+  namespace: mysql-openshift
+  resourceVersion: "65812"
+  selfLink: /api/v1/namespaces/mysql-openshift/services/mysql
+  uid: d31b8548-0f08-11e8-8d4a-5254001d834f
+spec:
+  clusterIP: 172.30.142.113
+  ports:
+  - name: 3306-tcp
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+    nodePort: 30306
+  selector:
+    app: mysql
+    deploymentconfig: mysql
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
+----
+
+[source, text]
+.*oc describe svc*
+----
+# oc describe svc mysql 
+Name:			mysql
+Namespace:		mysql-openshift
+Labels:			app=mysql
+Annotations:		openshift.io/generated-by=OpenShiftNewApp
+Selector:		app=mysql,deploymentconfig=mysql
+Type:			NodePort
+IP:			172.30.142.113
+Port:			3306-tcp	3306/TCP
+NodePort:		3306-tcp	30306/TCP
+Endpoints:		10.130.0.72:3306
+Session Affinity:	None
+Events:			<none>
+----
+
+[source, text]
+.*外部连接测试*
+----
+# mysql -h192.168.122.105 -utest_user -ptest_pass -P30306
+MySQL [(none)]>
+----
+

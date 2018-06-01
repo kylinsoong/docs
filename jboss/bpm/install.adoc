@@ -1,0 +1,34 @@
+= 安装
+:toc: manual
+:toc-placement: preamble
+
+本文包括 JBoss BPM Suite 的安装测试。
+
+== 安装
+
+[source, bash]
+.*获取安装包*
+----
+jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip
+jboss-eap-7.0.0.zip
+----
+
+[source, bash]
+.*解压安装*
+----
+unzip jboss-eap-7.0.0.zip
+unzip jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip -d jboss-eap-7.0/
+----
+
+[source, bash]
+.*添加用户*
+----
+./bin/add-user.sh -a --user admin --password password1! --role kie-server,admin,rest-all,analyst
+./bin/add-user.sh -a --user kylin --password password1! --role kie-server,admin,rest-all,analyst
+----
+
+[source, bash]
+.*启动*
+----
+./bin/standalone.sh
+----

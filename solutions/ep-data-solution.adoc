@@ -1,0 +1,116 @@
+= Enterprise Data Integration Usage Case
+:toc: manual
+:toc-placement: preamble
+
+Red Hat has supplied full stack products to accelerate your modern application development, integrate different systems/datas to making your business perform, and automate your buisiness to making your business more intelligent.
+
+The following Products are related with Enterprise Data, or Data Integration which used in this usage case.
+
+* *Red Hat JBoss Data Grid* is an intelligent, highly available distributed caching solution that complements traditional architectures to boost the performance, scalability, elasticity, and flexibility of applications while lowering the total cost of ownership. In this usage case we will put JBoss Data Grid between Enterprise Data and your business model.
+* *Red Hat JBoss Data Virtualization* is a lean, virtual data integration solution that unlocks trapped data and delivers it as easily consumable, unified, and actionable information. In this usage case we will use JBoss Data Virtualization to extract, integrate data from multiple Postgresql Databses, and compose, union data for business usage, then materialize union data to external cache.
+
+== Set up JBoss Data Grid
+
+=== Download and Install
+
+Download
+
+* Red Hat JBoss Data Grid 6.6.2 Server
+* Red Hat JBoss Data Grid 6.6.2 Server Update 
+* Red Hat JBoss Data Grid 6.6.2 Hot Rod Java Client Module for JBoss EAP 
+
+from https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=data.grid&downloadType=distributions
+
+Unzip to finish install:
+
+[source, java]
+----
+$ unzip jboss-datagrid-6.6.0-server.zip
+$ unzip jboss-datagrid-6.6.2-eap-modules-remote-java-client.zip
+----
+
+NOTE: The above unzip will generate 2 folders: `jboss-datagrid-6.6.0-server` and `jboss-datagrid-6.6.2-eap-modules-remote-java-client`.
+
+Start JDG via
+
+[source, java]
+----
+cd jboss-datagrid-6.6.0-server/
+./bin/standalone.sh
+----
+
+=== Imply Patch
+
+[source, java]
+----
+$ ./bin/cli.sh -c
+patch apply /path/to/jboss-datagrid-6.6.2-server-patch.zip
+shutdown --restart=true
+----
+
+=== Prepare the Cache Store
+
+In this usage case, we use JDBC to store the cache, so this section will show how to setup a mysql database, and configure mysql datasource.
+
+[source, sql]
+.*Create a database JDGCACHESTORE in mysql*
+----
+DROP DATABASE IF EXISTS JDGCACHESTORE;
+CREATE DATABASE JDGCACHESTORE;
+----
+
+Put `mysql-connector-java-5.1.35.jar` to the home of JDG,
+
+[source, java]
+.*Connect to CLI*
+----
+./bin/cli.sh --connect
+----
+
+[source, java]
+.*Execute the Commands*
+----
+module add --name=com.mysql.jdbc --resources=mysql-connector-java-5.1.35.jar --dependencies=javax.api,javax.transaction.api
+/subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql, driver-module-name=com.mysql.jdbc, driver-class-name=com.mysql.jdbc.Driver, driver-xa-datasource-class-name=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
+/subsystem=datasources/data-source=JDG_DS:add(driver-name=mysql, jndi-name=java:/JDG_DS, connection-url=jdbc:mysql://localhost:3306/JDGCACHESTORE, user-name=root, password=redhat, enabled=true, use-java-context=true, min-pool-size=5, max-pool-size=30)
+/subsystem=datasources/data-source=JDG_DS:enable()
+/subsystem=datasources/data-source=JDG_DS:test-connection-in-pool()
+----
+
+The commands can be downloaded from
+
+* link:files/add-driver-mysql.cli[add-driver-mysql.cli]
+* link:files/add-datasource-mysql.cli[add-datasource-mysql.cli]
+
+
+=== Add local cache
+
+[source, java]
+----
+/subsystem=infinispan/cache-container=local/local-cache=customerCache:add(start=EAGER, indexing=ALL, indexing-properties={default.directory_provide=>ram})
+/subsystem=infinispan/cache-container=local/local-cache=customerCache/locking=LOCKING:add(acquire-timeout=20000, concurrency-level=500, striping=false)
+/subsystem=infinispan/cache-container=local/local-cache=customerCache/string-keyed-jdbc-store=mysqlStore:add(datasource="java:/JDG_DS", passivation=false, preload=false, purge=false, string-keyed-table={prefix=>"JDG",id-column=>{name=>id, type=>VARCHAR(255)},data-column=>{name=>datum, type=>BINARY},timestamp-column=>{name=>version, type=>BIGINT}})
+----
+
+=== Start JDG
+
+[source, java]
+----
+$ ./bin/standalone.sh -Djboss.socket.binding.port-offset=100
+----
+
+== Setup JDV
+
+=== Generate and deploy POJO Module
+
+=== Install JDG Hot Rod Java Client Module 
+
+[source, java]
+----
+$ cd dv-6.3/modules/
+$ cp -r /path/to/jboss-datagrid-6.6.2-eap-modules-remote-java-client/modules/* ./
+----
+
+=== Configure Infinispan Resource Adapter
+
+

@@ -1,0 +1,299 @@
+= MariaDB
+:toc: manual
+
+== MariaDB 安装
+
+[source, text]
+.*安装与启动*
+----
+# yum groupinstall mariadb mariadb-client -y
+# systemctl start mariadb
+# systemctl enable mariadb
+----
+
+[source, text]
+.*查看 MariaDB 监听的端口*
+----
+# ss -tulpn | grep mysql
+----
+
+[source, text]
+.*skip-networking 配置测试*
+----
+# vim /etc/my.cnf
+skip-networking=1
+# systemctl restart mariadb
+# ss -tulpn | grep mysql
+----
+
+NOTE: skip-networking 配置将导致 MariaDB 只能在本地连接，不监听端口接收远程连接。`skip-networking=1` 配置需添加在 *[mysqld]* 下面。
+
+[source, sql]
+.*mysql_secure_installation 初始化那全配置*
+----
+# mysql_secure_installation
+----
+
+[source, sql]
+.*root 用户登录*
+----
+# mysql -uroot -predhat
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+3 rows in set (0.00 sec)
+----
+
+== 基本管理
+
+=== 管理相关的元数据
+
+MariaDB 默认安装会有三个模型：information_schema，performance_schema，mysql。它们保存着和管理相关的元数据。
+
+[source, sql]
+.*查看元数据数据库*
+----
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+----
+
+[source, sql]
+.*mysql.servers 表中保存有服务器相关的配置*
+----
+MariaDB [(mysql)]> DESCRIBE servers;
+MariaDB [(mysql)]> SELECT * FROM servers;
+----
+
+=== SQL 语法
+
+[source, sql]
+.*创建数据库*
+----
+CREATE DATABASE DBNAME;
+----
+
+.*MariaDB 支持的比较运算符*
+|===
+|运算符 |描述
+
+|=
+|等于
+
+|<>
+|不等于，有些版本下的 SQL 也支持 `!=`
+
+|>
+|大于
+
+|<
+|小于
+
+|>=
+|大于等于
+
+|<=
+|小于等于
+
+|BETWEEN
+|在两者之间
+
+|LIKE
+|使用范式查询
+
+|IN
+|在指定的可能的值之中
+|===
+
+https://mariadb.com/kb/en/library/sql-statements/[MariaDB Knowledge Base: SQL Statements]
+
+https://mariadb.com/kb/en/library/data-types/[MariaDB Knowledge Base: Data Types]
+
+=== 创建用户
+
+[source, sql]
+----
+CREATE USER USERNAME@HOSTNAME IDENTIFIED BY 'PASSWORD'
+----
+
+|===
+|Account |描述
+
+|test_user@localhost
+|test_user 只可从本地 localhost 连接
+
+|test_user@192.168.1.5
+|test_user 只可从 192.168.1.5 连接
+
+|test_user@'192.168.1.%'
+|test_user 只可从 192.168.1.0 网段服务器连接
+
+|test_user@'%'
+|test_user 可从任意主机连接
+
+|test_user@'2000:472:18:b51:c32:a21'
+|test_user 只可从 2000:472:18:b51:c32:a21 连接
+
+|===
+
+=== 权限管理
+
+[source, sql]
+.*分配权限*
+----
+GRANT SELECT, UPDATE, DELETE, INSERT on inventory.category to test_user@localhost;
+FLUSH PRIVILEGES;
+----
+
+[source, sql]
+.*收回权限*
+----
+REVOKE SELECT, UPDATE, DELETE, INSERT test_user@localhost;
+FLUSH PRIVILEGES;
+----
+
+|===
+|分配权限示例 |说明
+
+|GRANT SELECT ON database.table TO username@hostname
+|分配 SELECT 某一数据库中的一张表的权限
+
+|GRANT SELECT ON database.* TO username@hostname
+|分配 SELECT 某一数据库中的所有表的权限
+
+|GRANT SELECT ON *.* TO username@hostname
+|分配 SELECT 所有数据中所有表的权限
+
+|GRANT CREATE, ALTER, DROP ON database.* to username@hostname
+|分配 CREATE, ALTER, DROP 某一数据库中的所有表的权限
+
+|GRANT ALL PRIVILEGES ON *.* to username@hostname
+|分配所有权限，相当于root 用户
+|===
+
+[source, sql]
+.*查看某一用户的权限*
+----
+SHOW GRANTS FOR username
+----
+
+=== 创建用户分配权限示例
+
+[source, sql]
+.*创建 2 个用户，分配不同权限*
+----
+CREATE USER john@localhost identified by 'john_password';
+CREATE USER steve@'%' identified by 'steve_password';
+GRANT INSERT, UPDATE, DELETE, SELECT on inventory.* to john@localhost;
+GRANT SELECT on inventory.* to steve@'%';
+FLUSH PRIVILEGES;
+----
+
+[source, sql]
+.*使用 john 用户进行增、删、改、差*
+----
+$ mysql -u john -p
+USE inventory;
+SELECT * FROM category;
+INSERT INTO category(name) VALUES('Memory');
+UPDATE category SET name='Solid State Drive' where id = 3;
+DELETE FROM category WHERE name LIKE 'Memory';
+----
+
+[source, sql]
+.*远程使用 steve 用户登录，进行增、删、改、差*
+----
+$ mysql -u steve -h server -p
+USE inventory;
+SELECT * FROM category;
+INSERT INTO category(name) VALUES('Memory');
+----
+
+== 备份和恢复数据库数据
+
+=== 两种备份方式比较
+
+[cols="5a,5a"]
+|===
+|逻辑备份 |物理（原始）备份
+
+|
+* 数据库结构是通过查询数据库来检索的。
+* 逻辑备份的可移植性很高，在某些情况下可以恢复到另一个数据库提供程序（如 Postgres）。
+* 备份过程很慢，因为服务器必须访问数据库信息并将其转换为逻辑格式。
+* 在服务器运正常行时执行。
+* 备份不包含日志和配置文件。
+|
+* 包含数据库目录和文件夹的原始副本。
+* 输出更精简。
+* 备份可以包含日志和配置文件。
+* 只能移植到具有类似硬件和软件的其他计算机。
+* 比逻辑备份快。
+* 应在服务器脱机或者数据库中所有表均锁定时执行，防止在备份期间发生更改。
+
+|
+[source, sql]
+.*备份一个数据库中的数据*
+----
+mysqldump -u root -p inventory > /backup/mariadb.dump
+----
+
+[source, sql]
+.*备份所有数据库中的数据*
+----
+mysqldump -u root -p --all-databases > /backup/mariadb.dump
+----
+|物理备份一般是通过如下工具:
+
+* ibbackup
+* cp
+* mysqlhotcopy
+* lvm
+
+|
+[source, sql]
+.*恢复备份*
+----
+mysql -u root -p inventory < /backup/mariadb.dum
+----
+|
+[source, bash]
+.*恢复备份* 
+----
+systemctl stop mariadb
+rm -rf /var/lib/mysql/*
+cp -r /backup/* /var/lib/mysql/*
+----
+|===
+
+=== 逻辑备份恢复示例
+
+[source, sql]
+.*在数据库 A 上备份数据*
+----
+mysqldump -u root -p inventory > /backup/inventory.dump
+----
+
+[source, sql]
+.*在数据库 B 上恢复备份*
+----
+# mysql -u root
+MariaDB [(none)]> create database inventory;
+MariaDB [(none)]> exit
+
+# mysql -u root inventory < inventory.dump
+# mysql -u root
+MariaDB [(none)]> use inventory;
+MariaDB [(inventory)]> SELECT * FROM category;
+----
+

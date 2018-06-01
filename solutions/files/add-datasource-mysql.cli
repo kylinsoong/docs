@@ -1,0 +1,6 @@
+
+if (outcome != success) of /subsystem=datasources/data-source=JDG_DS:read-resource
+    /subsystem=datasources/data-source=JDG_DS:add(driver-name=mysql, jndi-name=java:/JDG_DS, connection-url=jdbc:mysql://localhost:3306/JDGCACHESTORE, user-name=root, password=redhat, enabled=true, use-java-context=true, min-pool-size=5, max-pool-size=30)
+    /subsystem=datasources/data-source=JDG_DS:enable()
+end-if
+

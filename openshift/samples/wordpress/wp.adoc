@@ -1,0 +1,116 @@
+= OpenShift 上部署 Wordpress
+:toc: manual
+
+== 架构
+
+//TODO--
+
+== NFS 持久化存储配置
+
+[source, text]
+.*创建两个 NFS exports*
+----
+# mkdir -p /var/export/data/mysql
+# mkdir -p /var/export/data/wp
+
+# chown nfsnobody:nfsnobody /var/export/data/mysql/
+# chown nfsnobody:nfsnobody /var/export/data/wp/
+
+# chmod 700 /var/export/data/mysql/
+# chmod 700 /var/export/data/wp/
+----
+
+[source, text]
+.*编辑 /etc/exports 添加*
+----
+/var/export/data/mysql *(rw,async,all_squash)
+/var/export/data/wp *(rw,async,all_squash)
+----
+
+[source, text]
+.*设定 SELinux 策略*
+----
+# setsebool -P virt_use_nfs=true
+# setsebool -P virt_sandbox_use_nfs=true
+----
+
+[source, text]
+.*重启 NFS 服务*
+----
+# systemctl restart nfs-server.service
+----
+
+[source, text]
+.*验证 NFS 服务*
+----
+$ showmount -e nfs.example.com
+/var/export/data/wp     *
+/var/export/data/mysql  *
+----
+
+[source, text]
+.*使用 link:pv-mysql.yaml[pv-mysql.yaml], link:pv-wp.yaml[pv-wp.yaml] 完成 NFS 持久化存储配置*
+----
+$ oc create -f pv-mysql.yaml
+$ oc create -f pv-wp.yaml
+$ oc get pv | grep volume
+mysql-volume   5Gi        RWO           Recycle         Available                                      3m
+wp-volume      1Gi        RWO,RWX       Recycle         Available                                      30s
+----
+
+== 创建 PVC
+
+[source, text]
+.*创建工程*
+----
+$ oc login -u developer -p developer https://192.168.42.107:8443
+$ oc new-project wordpress
+----
+
+[source, text]
+.*使用 link:pvc-mysql.yaml[pvc-mysql.yaml], link:pvc-wp.yaml[pvc-wp.yaml] 完成 PVC 配置*
+----
+$ oc create -f pvc-mysql.yaml
+$ oc create -f pvc-wp.yaml
+----
+
+== 创建 mysql 服务
+
+[source, text]
+.*使用 link:pod-mysql.yaml[pod-mysql.yaml] 创建 mysql Pod*
+----
+$ oc create -f pod-mysql.yaml
+----
+
+[source, text]
+.*使用 link:service-mysql.yaml[service-mysql.yaml] 创建 mysql 服务*
+----
+$ oc create -f service-mysql.yaml 
+----
+
+== 创建 wordpress 服务
+
+[source, text]
+.*使用 link:pod-wordpress.yaml[pod-wordpress.yaml] 创建 wordpress Pod*
+----
+$ oc create -f pod-wordpress.yaml
+----
+
+[source, text]
+.*使用 link:service-wp.yaml[service-wp.yaml] 创建 wordpress 服务*
+----
+$ oc create -f service-wp.yaml
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+

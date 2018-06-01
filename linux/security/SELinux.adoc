@@ -1,0 +1,180 @@
+
+= Security Enhanced Linux (SELinux)
+:toc: manual
+
+== SELinux modes
+
+* enforcing - SELinux security policy is enforced.
+* permissive - SELinux prints warnings instead of enforcing.
+* disabled - No SELinux policy is loaded.
+
+NOTE: A system reboot is required to disable SELinux entirely, or to get from disabled mode to enforcing or permissive mode.
+
+[source,text]
+.*To display the current SELinux mode*
+----
+# getenforce
+----
+
+[source,text]
+.*To display SELinux Booleans and their current value*
+----
+# getsebool -a
+# getsebool httpd_enable_homedirs
+----
+
+[source,text]
+.*Changing the current SELinux mode*
+----
+# setenforce 0
+# setenforce Enforcing
+----
+
+== SELinux Context
+
+[source,text]
+.*Changing the SELinux context*
+----
+# mkdir /virtual
+# ls -Zd /virtual/
+unconfined_u:object_r:default_t:s0 /virtual/
+# chcon -t httpd_sys_content_t /virtual
+# ls -Zd /virtual/
+unconfined_u:object_r:httpd_sys_content_t:s0 /virtual/
+# restorecon -v /virtual
+restorecon reset /virtual context unconfined_u:object_r:httpd_sys_content_t:s0->unconfined_u:object_r:default_t:s0
+# ls -Zd /virtual/
+unconfined_u:object_r:default_t:s0 /virtual/
+----
+
+[source,text]
+.*Defining SELinux default file context rules*
+----
+# touch /tmp/file1 /tmp/file2
+# ls -Z /tmp/file*
+unconfined_u:object_r:user_tmp_t:s0 /tmp/file1  unconfined_u:object_r:user_tmp_t:s0 /tmp/file2
+# mv /tmp/file1 /var/www/html/
+# mv /tmp/file2 /var/www/html/
+# restorecon -Rv /var/www/
+restorecon reset /var/www/html/file1 context unconfined_u:object_r:user_tmp_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /var/www/html/file2 context unconfined_u:object_r:user_tmp_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+# ls -Z /var/www/html/file*
+unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file1  unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file2
+
+# touch /virtual/index.html
+# ls -Zd /virtual/
+unconfined_u:object_r:default_t:s0 /virtual/
+# ls -Z /virtual/
+unconfined_u:object_r:default_t:s0 index.html
+# semanage fcontext -a -t httpd_sys_content_t '/virtual(/.*)?'
+# restorecon -RFvv /virtual
+restorecon reset /virtual context unconfined_u:object_r:default_t:s0->system_u:object_r:httpd_sys_content_t:s0
+restorecon reset /virtual/index.html context unconfined_u:object_r:default_t:s0->system_u:object_r:httpd_sys_content_t:s0
+# ls -Zd /virtual/
+system_u:object_r:httpd_sys_content_t:s0 /virtual/
+# ls -Z /virtual/
+system_u:object_r:httpd_sys_content_t:s0 index.html
+----
+
+== SELinux Booleans
+
+[source,shell]
+.*Changing SELinux Booleans*
+----
+# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --> off
+# setsebool httpd_enable_homedirs on
+# semanage boolean -l | grep httpd_enable_homedirs
+httpd_enable_homedirs          (on   ,  off)  Allow httpd to enable homedirs
+# getsebool httpd_enable_homedirs 
+httpd_enable_homedirs --> on
+# setsebool -P httpd_enable_homedirs on
+# semanage boolean -l | grep httpd_enable_homedirs
+httpd_enable_homedirs          (on   ,   on)  Allow httpd to enable homedirs
+----
+
+== Troubleshooting SELinux
+
+Basic Troubleshooting Steps:
+
+1. Before thinking of making any adjustments, consider that SELinux may be doing its job correctly by prohibiting the attempted access. If a web server tries to access files in `/home`, this could signal a compromise of the service if web content isn't published by users. If access should have been granted, then additional steps need to be taken to solve the problem.
+2. The most common SELinux issue is an incorrect file context. This can occur when a file is created in a location with one file context and moved into a place where a different context is expected. In most cases, running **restorecon** will correct the issue. Correcting issues in this way has a very narrow impact on the security of the rest of the system.
+3. Another remedy for a too-restrictive access could be the adjustment of a Boolean. For example, the **ftpd_anon_write** Boolean controls whether anonymous FTP users can upload files. This Boolean would have to be turned on if it is desirable to allow anonymous FTP users to upload files to a server. Adjusting Booleans requires more care because they can have a broad impact on system security.
+4. It is possible that the SELinux policy has a bug that prevents a legitimate access. Since SELinux has matured, this is a rare occurrence.
+
+[source,shell]
+.*Monitoring SELinux violations*
+----
+# touch /root/file3
+# mv /root/file3 /var/www/html/
+# systemctl restart httpd
+# curl http://10.66.192.120/file3
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>403 Forbidden</title>
+</head><body>
+<h1>Forbidden</h1>
+<p>You don't have permission to access /file3
+on this server.</p>
+</body></html>
+# ls -Z /var/www/html/
+-rw-r--r--. root root unconfined_u:object_r:admin_home_t:s0 file3
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 index.html
+
+# tail /var/log/audit/audit.log
+...
+type=AVC msg=audit(1497323187.810:1280): avc:  denied  { getattr } for  pid=3511 comm="httpd" path="/var/www/html/file3" dev="dm-0" ino=101765410 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:admin_home_t:s0 tclass=file
+...
+
+# tail /var/log/messages
+Jun 12 23:06:54 ksoong setroubleshoot: SELinux is preventing httpd from getattr access on the file /var/www/html/file3. For complete SELinux messages. run sealert -l 9841b5dd-cb32-4506-84b7-888a1564e1d9
+
+# sealert -l 9841b5dd-cb32-4506-84b7-888a1564e1d9
+SELinux is preventing httpd from getattr access on the file /var/www/html/file3.
+
+*****  Plugin restorecon (99.5 confidence) suggests   ************************
+
+If you want to fix the label. 
+/var/www/html/file3 default label should be httpd_sys_content_t.
+Then you can run restorecon.
+Do
+# /sbin/restorecon -v /var/www/html/file3
+
+*****  Plugin catchall (1.49 confidence) suggests   **************************
+
+If you believe that httpd should be allowed getattr access on the file3 file by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# ausearch -c 'httpd' --raw | audit2allow -M my-httpd
+# semodule -i my-httpd.pp
+
+
+Additional Information:
+Source Context                system_u:system_r:httpd_t:s0
+Target Context                unconfined_u:object_r:admin_home_t:s0
+Target Objects                /var/www/html/file3 [ file ]
+Source                        httpd
+Source Path                   httpd
+Port                          <Unknown>
+Host                          ksoong.com
+Source RPM Packages           
+Target RPM Packages           
+Policy RPM                    selinux-policy-3.13.1-102.el7_3.16.noarch
+Selinux Enabled               True
+Policy Type                   targeted
+Enforcing Mode                Enforcing
+Host Name                     ksoong.com
+Platform                      Linux ksoong.com 3.10.0-514.16.1.el7.x86_64 #1 SMP
+                              Fri Mar 10 13:12:32 EST 2017 x86_64 x86_64
+Alert Count                   2
+First Seen                    2017-06-12 23:06:27 EDT
+Last Seen                     2017-06-12 23:06:53 EDT
+Local ID                      9841b5dd-cb32-4506-84b7-888a1564e1d9
+
+Raw Audit Messages
+type=AVC msg=audit(1497323213.860:1282): avc:  denied  { getattr } for  pid=3512 comm="httpd" path="/var/www/html/file3" dev="dm-0" ino=101765410 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:admin_home_t:s0 tclass=file
+
+Hash: httpd,httpd_t,admin_home_t,file,getattr
+----

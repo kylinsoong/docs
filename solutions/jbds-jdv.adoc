@@ -1,0 +1,105 @@
+= JBDS + JDV 示例
+:toc: manual
+:toc-placement: preamble
+
+JBDS + JDV 示例
+
+== 软件安装
+
+参照相关安装文档。
+
+== 准备数据源
+
+=== mariadb
+
+[source, bash]
+.*安装数据库*
+----
+yum groupinstall mariadb mariadb-client -y
+systemctl start mariadb
+----
+
+[source, bash]
+.*准备示例数据，执行 link:files/financials-mariadb.sql[financials-mariadb.sql]*
+----
+source financials-mariadb.sql
+----
+
+=== JDV
+
+拷贝 mysql-connector-java-5.1.35.jar，link:files/jbds-jdv.cli[jbds-jdv.cli] 到 JDV 主目录。
+
+[source, bash]
+.*确保 JDV 运行，数据库启动，执行*
+----
+$ ./bin/jboss-cli.sh --connect --file=jbds-jdv.cli
+----
+
+[source, bash]
+.*验证数据源配置*
+----
+/subsystem=datasources/data-source=US_Customers:test-connection-in-pool()
+{
+    "outcome" => "success",
+    "result" => [true]
+}
+----
+
+== 模型创建
+
+=== 元数据导入，物理模型创建
+
+* 创建工程时目录结构为: `DataSources`, `VirtualBaseLayer`, `UnionBaseLayer`, `Schemas`.
+* 在 Modeling Actions 中选择 Create source model from Teiid data source DDL，进行元数据导入，物理模型创建。
+
+=== 虚拟模型创建
+
+* 模型中只保存 account 表
+* 修复 AccountId 数据类型及 customerId 名称，具体通过数据字典 link:files/DataDictionary.xsd[DataDictionary.xsd].
+
+=== 级联模型创建
+
+[source, sql]
+----
+SELECT
+    *
+    FROM
+	APAC_Customers_VBL.account
+UNION ALL
+SELECT
+    *
+    FROM
+        US_Customers_VBL.account
+----
+
+== 部署 VDB
+
+* 创建 VDB
+* 转换为动态 VDB
+* 测试
+
+== WildFly Swarm 运行上面设计的 VDB
+
+=== 本地可运行
+
+=== 制作 docker 镜像
+
+----
+docker build -t cnpcvdbtest .
+docker tag cnpcvdbtest registry.example.com:5000/cnpcvdbtest:1.1
+docker push registry.example.com:5000/cnpcvdbtest:1.1
+----
+
+* 推送 docker 镜像到 docker 仓库
+
+----
+docker push registry.example.com:5000/cnpcvdbtest:1.1
+----
+
+* 运行 docker 镜像
+
+----
+docker run -it --rm -p 31000:31000 registry.example.com:5000/cnpcvdbtest:1.1
+----
+* 后续说明
+

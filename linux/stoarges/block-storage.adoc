@@ -1,0 +1,181 @@
+= 块存储
+:toc: manual
+
+== iSCSI Target 配置
+
+[source, text]
+.*安装 targetcli*
+----
+# yum -y install targetcli
+# systemctl enable target;
+# systemctl start target;
+# firewall-cmd --permanent --add-port=3260/tcp
+# firewall-cmd --reload
+----
+
+[source, text]
+.*创建一个 1 GB LV* 
+----
+# fdisk /dev/sda 
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): n
+Partition type:
+   p   primary (2 primary, 0 extended, 2 free)
+   e   extended
+Select (default p): 
+Using default response p
+Partition number (3,4, default 3): 
+First sector (896512000-976773167, default 896512000): 
+Using default value 896512000
+Last sector, +sectors or +size{K,M,G} (896512000-976773167, default 976773167): +1G
+Partition 3 of type Linux and of size 1 GiB is set
+
+Command (m for help): t
+Partition number (1-3, default 3): 
+Hex code (type L to list all codes): 8e
+Changed type of partition 'Linux' to 'Linux LVM'
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+# partprobe
+
+# pvcreate /dev/sda3
+  Physical volume "/dev/sda3" successfully created.
+
+# vgcreate iSCSI_vg /dev/sda3
+  Volume group "iSCSI_vg" successfully created
+
+# lvcreate -n disk1_lv -L 100m iSCSI_vg 
+  Logical volume "disk1_lv" created.
+----
+
+[source, text]
+.*进入 targetcli 交互命令行* 
+----
+# targetcli 
+Warning: Could not load preferences file /root/.targetcli/prefs.bin.
+targetcli shell version 2.1.fb46
+Copyright 2011-2013 by Datera, Inc and others.
+For help on commands, type 'help'.
+
+/> ls
+o- / ......................................................................................................................... [...]
+  o- backstores .............................................................................................................. [...]
+  | o- block .................................................................................................. [Storage Objects: 0]
+  | o- fileio ................................................................................................. [Storage Objects: 0]
+  | o- pscsi .................................................................................................. [Storage Objects: 0]
+  | o- ramdisk ................................................................................................ [Storage Objects: 0]
+  o- iscsi ............................................................................................................ [Targets: 0]
+  o- loopback ......................................................................................................... [Targets: 0]
+----
+
+[source, text]
+.*基于 /dev/iSCSI_vg/disk1_lv 创建块存储*
+----
+/> /backstores/block create iscsi.example.com.disk1 /dev/iSCSI_vg/disk1_lv 
+Created block storage object iscsi.example.com.disk1 using /dev/iSCSI_vg/disk1_lv.
+----
+
+[source, text]
+.*创建 IQN*
+----
+/> /iscsi create iqn.2018-04.org.ksoong:iscsi.example.com
+Created target iqn.2018-04.org.ksoong:iscsi.example.com.
+Created TPG 1.
+Global pref auto_add_default_portal=true
+Created default portal listening on all IPs (0.0.0.0), port 3260.
+----
+
+NOTE: 创建 IQN 默认也会创建一个 tpg1。
+
+[source, text]
+.*创建客户端连接 ACL*
+----
+/> /iscsi/iqn.2018-04.org.ksoong:iscsi.example.com/tpg1/acls create iqn.2018-04.org.ksoong:*
+Created Node ACL for iqn.2018-04.org.ksoong:
+----
+
+[source, text]
+.*创建 LUN*
+----
+/> /iscsi/iqn.2018-04.org.ksoong:iscsi.example.com/tpg1/luns create /backstores/block/iscsi.example.com.disk1 
+Created LUN 0.
+Created LUN 0->0 mapping in node ACL iqn.2018-04.org.ksoong:
+----
+
+[source, text]
+.*查看最终配置*
+----
+/> ls
+o- / ......................................................................................................................... [...]
+  o- backstores .............................................................................................................. [...]
+  | o- block .................................................................................................. [Storage Objects: 1]
+  | | o- iscsi.example.com.disk1 .......................................... [/dev/iSCSI_vg/disk1_lv (100.0MiB) write-thru activated]
+  | |   o- alua ................................................................................................... [ALUA Groups: 1]
+  | |     o- default_tg_pt_gp ....................................................................... [ALUA state: Active/optimized]
+  | o- fileio ................................................................................................. [Storage Objects: 0]
+  | o- pscsi .................................................................................................. [Storage Objects: 0]
+  | o- ramdisk ................................................................................................ [Storage Objects: 0]
+  o- iscsi ............................................................................................................ [Targets: 1]
+  | o- iqn.2018-04.org.ksoong:iscsi.example.com .......................................................................... [TPGs: 1]
+  |   o- tpg1 ............................................................................................... [no-gen-acls, no-auth]
+  |     o- acls .......................................................................................................... [ACLs: 1]
+  |     | o- iqn.2018-04.org.ksoong: .............................................................................. [Mapped LUNs: 1]
+  |     |   o- mapped_lun0 ............................................................... [lun0 block/iscsi.example.com.disk1 (rw)]
+  |     o- luns .......................................................................................................... [LUNs: 1]
+  |     | o- lun0 ...................................... [block/iscsi.example.com.disk1 (/dev/iSCSI_vg/disk1_lv) (default_tg_pt_gp)]
+  |     o- portals .................................................................................................... [Portals: 1]
+  |       o- 0.0.0.0:3260 ..................................................................................................... [OK]
+  o- loopback ......................................................................................................... [Targets: 0]
+----
+
+[source, text]
+.*退出*
+---- 
+/> exit
+Global pref auto_save_on_exit=true
+Last 10 configs saved in /etc/target/backup.
+Configuration saved to /etc/target/saveconfig.json
+----
+
+== 连接 iSCSI 存储
+
+[source, text]
+.*iscsi 安装配置* 
+----
+# yum -y install iscsi-initiator-utils
+# echo 'InitiatorName=iqn.2018-04.org.ksoong:test' < /etc/iscsi/initiatorname.iscsi
+# systemctl enable iscsi;
+# systemctl start iscsi;
+----
+
+[source, text]
+.*iSCSI target 发现* 
+----
+# iscsiadm -m discovery -t st -p iscsi.example.com
+10.66.192.89:3260,1 iqn.2018-04.org.ksoong:iscsi.example.com
+# iscsiadm -m node -T iqn.2018-04.org.ksoong:iscsi.example.com -p 10.66.192.89 -l
+# lsblk
+# tail /var/log/messages
+----
+
+[source, text]
+.*查看 iscsi 服务* 
+----
+# iscsiadm -m session -P 3
+# cd /var/lib/iscsi/nodes
+# ls -lR
+----
+

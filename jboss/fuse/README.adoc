@@ -1,0 +1,89 @@
+= JBoss Fuse
+:toc: manual
+:toc-placement: preamble
+
+This pages contains start up scripts of JBoss Fuse.
+
+== 安装 JBoss Fuse 6.3
+
+[cols="2,2,5a,2"]
+|===
+|类型 |安装包 |组件 | 依赖
+
+|JBoss Fuse on Karaf
+|jboss-fuse-karaf-6.3.0.redhat-187.zip
+|
+* Apache Camel
+* SwitchYard
+* Apache CXF
+* Apache ActiveMQ
+* Integration Pack
+* JON Pack
+|无
+
+|JBoss Fuse on JBoss EAP
+|fuse-eap-installer-6.3.0.redhat-187.jar
+|
+* Apache Camel
+* SwitchYard
+* BPEL/Riftsaw
+* Integration Pack
+* JON Pack
+|JBoss EAP 6.4
+
+|===
+
+=== Installation on Apache Karaf
+
+https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=46901[下载 jboss-fuse-karaf-6.3.0.redhat-187.zip]
+
+[source, java]
+.*解压安装*
+----
+unzip jboss-fuse-karaf-6.3.0.redhat-187.zip
+cd jboss-fuse-6.3.0.redhat-187/
+----
+
+[source, xml]
+.*编辑 etc/users.properties 添加*
+----
+admin=admin,admin,manager,viewer,Monitor, Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+----
+
+
+
+=== Installation on JBoss EAP
+
+https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=46891[下载 fuse-eap-installer-6.3.0.redhat-187.jar]
+
+== EIP 列表
+
+|===
+|名称 |链接
+
+|Content-Based Router
+|http://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentBasedRouter.html[link]
+
+|Recipient List
+|http://www.enterpriseintegrationpatterns.com/patterns/messaging/RecipientList.html[link]
+
+|Wire Tap
+|http://www.enterpriseintegrationpatterns.com/patterns/messaging/WireTap.html[link]
+
+|Message Filter
+|http://www.enterpriseintegrationpatterns.com/patterns/messaging/Filter.html[link]
+
+|Splitter
+|http://www.enterpriseintegrationpatterns.com/patterns/messaging/Sequencer.html[link]
+
+|Dead Letter Channel
+|http://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html
+
+|===
+
+== 相关链接
+
+. https://access.redhat.com/articles/310603[JBoss Fuse Supported Configurations]
+. https://access.redhat.com/articles/375743[JBoss Fuse Supported Standards]
+. https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/[JBoss Fuse Documentation]
+

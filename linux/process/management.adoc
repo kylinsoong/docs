@@ -1,0 +1,446 @@
+= 进程管理
+:toc: manual
+
+== ps 命令查看进程
+
+`ps` 用来显示操作系统上的进程，包括进程 UID，PID，PPID，CPU 使用情况等。
+
+[source, bash]
+.*ps aux*
+----
+$ ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.3 128176  6860 ?        Ss   12:36   0:02 /usr/lib/systemd/systemd --switched-root --syst
+root         2  0.0  0.0      0     0 ?        S    12:36   0:00 [kthreadd]
+root         3  0.0  0.0      0     0 ?        S    12:36   0:00 [ksoftirqd/0]
+root         5  0.0  0.0      0     0 ?        S<   12:36   0:00 [kworker/0:0H]
+root         7  0.0  0.0      0     0 ?        S    12:36   0:00 [migration/0]
+root         8  0.0  0.0      0     0 ?        S    12:36   0:00 [rcu_bh]
+----
+
+[source, bash]
+.*ps lax*
+----
+$ ps lax
+F   UID   PID  PPID PRI  NI    VSZ   RSS WCHAN  STAT TTY        TIME COMMAND
+4     0     1     0  20   0 128176  6860 ep_pol Ss   ?          0:02 /usr/lib/systemd/systemd --switched-root --
+1     0     2     0  20   0      0     0 kthrea S    ?          0:00 [kthreadd]
+1     0     3     2  20   0      0     0 smpboo S    ?          0:00 [ksoftirqd/0]
+1     0     5     2   0 -20      0     0 worker S<   ?          0:00 [kworker/0:0H]
+1     0     7     2 -100  -      0     0 smpboo S    ?          0:00 [migration/0]
+1     0     8     2  20   0      0     0 rcu_gp S    ?          0:00 [rcu_bh]
+----
+
+[source, bash]
+.*ps -ef*
+----
+$ ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 12:36 ?        00:00:02 /usr/lib/systemd/systemd --switched-root --system --deserialize 
+root         2     0  0 12:36 ?        00:00:00 [kthreadd]
+root         3     2  0 12:36 ?        00:00:00 [ksoftirqd/0]
+root         5     2  0 12:36 ?        00:00:00 [kworker/0:0H]
+root         7     2  0 12:36 ?        00:00:00 [migration/0]
+root         8     2  0 12:36 ?        00:00:00 [rcu_bh]
+----
+
+== 使用信号控制进程
+
+一个信号传递给进程可以导致软件运行中断。信号向执行中的程序报告事件。生成信号的事件可以是错误或外部事件（如 I/O 请求或计时器过期），或者来自于明确请求（如使用信号发送命令或通过键盘发送）。`kill -l` 获取所有信号列表:
+
+[source, bash]
+----
+$ kill -l
+ 1) SIGHUP	 2) SIGINT	 3) SIGQUIT	 4) SIGILL	 5) SIGTRAP
+ 6) SIGABRT	 7) SIGBUS	 8) SIGFPE	 9) SIGKILL	10) SIGUSR1
+11) SIGSEGV	12) SIGUSR2	13) SIGPIPE	14) SIGALRM	15) SIGTERM
+16) SIGSTKFLT	17) SIGCHLD	18) SIGCONT	19) SIGSTOP	20) SIGTSTP
+21) SIGTTIN	22) SIGTTOU	23) SIGURG	24) SIGXCPU	25) SIGXFSZ
+26) SIGVTALRM	27) SIGPROF	28) SIGWINCH	29) SIGIO	30) SIGPWR
+31) SIGSYS	34) SIGRTMIN	35) SIGRTMIN+1	36) SIGRTMIN+2	37) SIGRTMIN+3
+38) SIGRTMIN+4	39) SIGRTMIN+5	40) SIGRTMIN+6	41) SIGRTMIN+7	42) SIGRTMIN+8
+43) SIGRTMIN+9	44) SIGRTMIN+10	45) SIGRTMIN+11	46) SIGRTMIN+12	47) SIGRTMIN+13
+48) SIGRTMIN+14	49) SIGRTMIN+15	50) SIGRTMAX-14	51) SIGRTMAX-13	52) SIGRTMAX-12
+53) SIGRTMAX-11	54) SIGRTMAX-10	55) SIGRTMAX-9	56) SIGRTMAX-8	57) SIGRTMAX-7
+58) SIGRTMAX-6	59) SIGRTMAX-5	60) SIGRTMAX-4	61) SIGRTMAX-3	62) SIGRTMAX-2
+63) SIGRTMAX-1	64) SIGRTMAX
+----
+
+* *1) SIGHUP* - 挂起信号 HUB，用于报告终端控制进程的终止。也用于请求进程重新初始化（重新加载配置）而不终止。
+* *2) SIGINT* - 键盘中断信号 INT，导致程序终止。可以被拦截或处理。通过按 INTR 组合键 (Ctrl+c) 发送。
+* *3) SIGQUIT* - 键盘退出信号 QUIT，与 SIGINT 相似，但也在终止时生成进程转储。通过按 QUIT 组合键 (Ctrl+\) 发送。
+* *9) SIGKILL* - 强制中断信号 KILL，导致立即终止程序。无法被拦截、忽略或处理；总是致命的。
+* *15) SIGTERM* - 默认信号，终止信号 TERM，导致程序终止。和 SIGKILL 不同，可以被拦截、忽略或处理。要求程序终止的友好方式；允许自我清理。
+* *18) SIGCONT* - 继续信号 CONT，发送至进程使其恢复（若已停止）。无法被拦截。即使被处理，也始终恢复进程。
+* *19) SIGSTOP* - 强制停止信号 STOP，暂停进程。无法被拦截或处理。
+* *20) SIGTSTP* - 键盘停止信号 TSTP，和 SIGSTOP 不同，可以被拦截、忽略或处理。通过按 SUSP 组合键 (Ctrl+z) 发送。
+
+=== kill 命令终止进程
+
+使用两个 Terminal 执行命令测试 kill 命令终止进程
+
+[cols="5a,5a"]
+|===
+|Terminal 1 |Terminal 2
+
+|
+[source, bash]
+----
+$ (while true; do echo -n "game " >> ~/outfile; sleep 1; done) &
+[1] 3286
+$ (while true; do echo -n "set " >> ~/outfile; sleep 1; done) &
+[2] 3310
+$ (while true; do echo -n "match " >> ~/outfile; sleep 1; done) &
+[3] 3360
+----
+|
+[source, bash]
+----
+$ ps -ef \| grep sleep
+root      3976   737  0 16:29 ?        00:00:00 sleep 60
+kylin     4259  3310  0 16:30 pts/0    00:00:00 sleep 1
+kylin     4260  3360  0 16:30 pts/0    00:00:00 sleep 1
+kylin     4261  3286  0 16:30 pts/0    00:00:00 sleep 1
+----
+
+|
+|
+[source, bash]
+----
+$ pstree -l -p kylin
+gnome-terminal-(2463)─┬─bash(2472)─┬─bash(3286)───sleep(4940)
+                      │            ├─bash(3310)───sleep(4941)
+                      │            └─bash(3360)───sleep(4942)
+----
+
+|
+|
+[source, bash]
+----
+$ pgrep -l -u kylin
+5802 sleep
+5803 sleep
+5804 sleep
+----
+
+|
+[source, bash]
+----
+$ jobs 
+[1]   Running                 ( while true; do
+    echo -n "game " >> ~/outfile; sleep 1;
+done ) &
+[2]-  Running                 ( while true; do
+    echo -n "set " >> ~/outfile; sleep 1;
+done ) &
+[3]+  Running                 ( while true; do
+    echo -n "match " >> ~/outfile; sleep 1;
+done ) &
+----
+|
+[source, bash]
+----
+$ tail -f ~/outfile
+----
+
+|
+[source, bash]
+----
+$ kill -19 %1
+
+[1]+  Stopped                 ( while true; do
+    echo -n "game " >> ~/outfile; sleep 1;
+done )
+$ jobs
+----
+|
+
+|
+[source, bash]
+----
+$ kill -15 %2
+[2]   Terminated              ( while true; do
+    echo -n "set " >> ~/outfile; sleep 1;
+done )
+$ jobs
+----
+|
+
+|
+[source, bash]
+----
+$ kill -18 %1
+$ jobs
+----
+|
+
+|
+[source, bash]
+----
+$ kill -15 %1
+$ kill -15 %3
+$ jobs
+----
+|
+
+|
+[source, bash]
+----
+$ pkill -15 tail
+----
+|
+|===
+
+== 进程状态监控
+
+=== 什么是 Linux CPU load average
+
+在 Linux 操作系统中，`top`，`uptime` 都会输出 load average，例如
+
+[source, bash]
+----
+$ uptime 
+ 21:48:22 up  1:23,  7 users,  load average: 6.75, 5.66, 3.10
+----
+
+load average 是什么意思？load 通常指的是 CPU 执行计算的总次数，load average 是指一段时间内 CPU 执行计算的平均值，代表一段时间内感知的系统负载。Linux 通过预期服务等待时间（不仅仅是 CPU，而且包含磁盘和网络 I/O）的表示来实施平均负载计算。
+
+* 计算总数（在线请求总数）- 一个 CPU 队列中运行的线程和等待的线程总数
+* 负载总数 - 指的是一次计算历程，默认情况下每五秒运行一次
+* EMA(Exponential Moving Average) - 指数移动平均线是一个数学公式，用于平滑趋势数据的高点和降低当前活动的重要性，并降低数据质量
+* Load average - 负载平均值是负载数计算例程的结果。整体而言，它指的是最近 1 分钟、5 分钟和 15 分钟内系统活动数据的三个显示值的平均值。
+
+[source, bash]
+.*top 程序是系统进程的动态视图，显示一个摘要标题，以及与 ps 信息类似的进程或线程列表。与静态的 ps 输出不同，top 以可配置的间隔持续刷新，而且也提供列重新排列、排序和突出显示功能。用户配置可以保存，变为永久*
+----
+$ top
+
+top - 22:45:53 up  2:20,  7 users,  load average: 0.05, 0.21, 0.30
+Tasks: 256 total,   1 running, 254 sleeping,   0 stopped,   1 zombie
+%Cpu(s):  1.8 us,  0.5 sy,  0.0 ni, 97.5 id,  0.1 wa,  0.0 hi,  0.1 si,  0.0 st
+KiB Mem : 16144748 total, 10340104 free,  2431296 used,  3373348 buff/cache
+KiB Swap:  7815164 total,  7815164 free,        0 used. 12867648 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                                                                                        
+ 2449 root      20   0  355816  83848  58308 S   1.7  0.5   0:50.54 X             
+----
+
+以上为默认输出：
+
+* *PID* - 进程 ID
+* *USER* - 用户名称，即进程所有者。
+* *VIRT* - 虚拟内存，是进程正在使用的所有内存，包括常驻集合、共享库，以及任何映射或交换的内存页。（ps 命令中标为 VSZ。）
+* *RES* - 常驻内存，是进程所用的物理内存，包括任何驻留的共享对象。（ps 命令中标为 RSS。）
+* *S* - 进程状态，可能的状态包括：
+** *D* = 不可中断睡眠
+** *R* = 运行中或可运行
+** *S* = 睡眠中
+** *T* = 已停止或已跟踪
+** *Z* = 僵停
+* *TIME* - CPU 时间，是进程启动以来总的处理时间。可以切换为包含所有过去子进程的累计时间。
+* *COMMAND* - 进程命令名称
+
+.*top 中的基本击键操作*
+|===
+|键 |用途
+
+|? 或 h
+|交互式击键操作的帮助
+
+|l、t、m
+|切换到负载、线程和内存标题行。
+
+|1
+|标题中切换显示单独 CPU 信息或所有 CPU 的汇总。
+
+|s
+|更改刷新（屏幕）率，以带小数的秒数表示（如 0.5、1、5）。
+
+|b
+|切换反向突出显示运行中的进程；默认为仅粗体。
+
+|B
+|在显示中使用粗体，用于标题以及运行中的进程。
+
+|H
+|切换线程；显示进程摘要或单独线程。
+
+|u, U
+|过滤任何用户名称（有效、真实）
+
+|M
+|按照内存使用率，以降序方式对进程列表排序。
+
+|P
+|按照处理器使用率，以降序方式对进程列表排序。
+
+|k
+|中断进程。若有提示，输入 PID，再输入 signal。
+
+|r
+|调整进程的 nice 值。若有提示，输入 PID，再输入 nice_value。
+
+|W
+|写入（保存）当前的显示配置，以便在下一次重新启动 top 时使用。
+
+|q
+|退出
+|===
+
+== 进程优先级
+
+[source, bash]
+.*top 命令显示 nice*
+----
+top - 10:02:19 up 22 min,  5 users,  load average: 0.19, 0.20, 0.17
+Tasks: 243 total,   1 running, 241 sleeping,   0 stopped,   1 zombie
+%Cpu(s):  0.3 us,  0.0 sy,  0.0 ni, 99.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 16144748 total, 10624884 free,  1990956 used,  3528908 buff/cache
+KiB Swap:  7815164 total,  7815164 free,        0 used. 13364976 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                                                                                        
+ 2518 root      20   0  340972  79996  56896 S   1.0  0.5   0:26.16 X                                                                                                                                              
+ 7063 kylin     20   0  805436  27668  15628 S   0.9  0.2   0:02.21 gnome-terminal-                                                                                                                                
+ 6781 kylin     20   0 1048480 118184  35348 S   0.4  0.7   0:25.06 chrome                                                                                                                                         
+ 4709 kylin     20   0 2498916 383820 113728 S   0.3  2.4   1:24.83 Web Content                                                                                                                                    
+ 3729 kylin     20   0 2390604 223096  47600 S   0.1  1.4   0:27.27 gnome-shell                                                                                                                                    
+ 4656 kylin     20   0 2543556 294816 106360 S   0.1  1.8   0:49.95 firefox                                                                                                                                        
+ 6470 kylin     20   0  566572  73136  45776 S   0.1  0.5   0:18.20 chrome 
+----
+
+* *NI* - 真实 nice 级别
+* *PR* - 映射到大的优先级队列
+
+[source, bash]
+.*ps 显示 nice 级别*
+----
+$ ps axo pid,comm,nice --sort=-nice
+  PID COMMAND          NI
+   43 khugepaged       19
+  807 alsactl          19
+ 3989 tracker-extract  19
+ 3993 tracker-miner-a   -
+ 4008 tracker-miner-f  19
+ 4017 tracker-miner-u   -
+ 4386 singl <defunct>  19
+   42 ksmd              5
+  796 rtkit-daemon      1
+    1 systemd           0
+----
+
+[source, bash]
+.*启动程序并设定一个 nice 级别*
+----
+nice -n <NICELEVEL> <COMMAND>
+----
+
+[source, bash]
+.*修改已运行程序的 nice 级别*
+----
+renice -n <NICELEVEL> <PID>
+----
+
+=== 使用 nice 和 renice 修改进程优先级
+
+[source, bash]
+.*1 - 执行如下脚本，每一个 core 对应启动两个 sha1sum*
+----
+#!/bin/bash
+NCORES=$( grep -c '^processor' /proc/cpuinfo )
+PROCESSORS=$((NCORES*2))
+
+for I in $(seq $PROCESSORS)
+do
+sha1sum /dev/zero &
+done
+----
+
+[source, bash]
+.*2 - 查看后台进程所消耗的 CPU*
+----
+$ ps u $(pgrep sha1sum)
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+kylin     3021 49.3  0.0 116604  1064 pts/0    R    10:51   1:01 sha1sum /dev/zero
+kylin     3022 49.4  0.0 116604  1068 pts/0    R    10:51   1:01 sha1sum /dev/zero
+kylin     3023 49.3  0.0 116604  1068 pts/0    R    10:51   1:01 sha1sum /dev/zero
+kylin     3024 49.5  0.0 116604  1064 pts/0    R    10:51   1:01 sha1sum /dev/zero
+----
+
+[source, bash]
+.*3 - 停止所有进程*
+----
+$ killall sha1sum
+----
+
+[source, bash]
+.*4 - 执行如下脚本启动进程*
+----
+#!/bin/bash
+NCORES=$( grep -c '^processor' /proc/cpuinfo )
+PROCESSORS=$((NCORES*2 - 1))
+
+for I in $(seq $PROCESSORS)
+do
+sha1sum /dev/zero &
+done
+----
+
+[source, bash]
+.*5 - nice 设定优先级启动进程*
+----
+$ nice -n10 sha1sum /dev/zero &
+[1] 3259
+----
+
+[source, bash]
+.*6 - ps 命令查看每个进程 CPU 使用情况* 
+----
+$ ps -opid,pcpu,nice,comm $(pgrep sha1sum)
+  PID %CPU  NI COMMAND
+ 3235 66.4   0 sha1sum
+ 3236 64.9   0 sha1sum
+ 3237 64.0   0 sha1sum
+ 3259  7.0  10 sha1sum
+----
+
+[source, text]
+.*7 - renice 修改进程优先级为 -10* 
+----
+# renice -n -10 3259
+3259 (process ID) old priority 10, new priority -10
+----
+
+[source, bash]
+.*8 - top 查看每个进程 CPU 使用情况* 
+----
+top - 11:05:57 up 30 min,  2 users,  load average: 4.72, 3.71, 2.12
+KiB Mem : 48.1/1883456  [                                                                                     ]
+KiB Swap:  0.0/946172   [                                                                                     ]
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                     
+ 3259 kylin     10 -10  116604   1068    788 R  98.8  0.1   2:46.60 sha1sum                                     
+ 3235 kylin     20   0  116604   1064    788 R  31.1  0.1   4:03.91 sha1sum                                     
+ 3236 kylin     20   0  116604   1068    788 R  31.1  0.1   4:01.71 sha1sum                                     
+ 3237 kylin     20   0  116604   1068    788 R  29.5  0.1   4:01.67 sha1sum
+----
+
+[source, bash]
+.*9 - 在如上 top 窗口中敲 r 设定进程 3259 的 nice 值为 0 后 查看 CPU 使用情况变化*
+----
+top - 11:08:28 up 33 min,  2 users,  load average: 4.09, 3.85, 2.41
+KiB Mem : 48.1/1883456  [                                                                                     ]
+KiB Swap:  0.0/946172   [                                                                                     ]
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                     
+ 3259 kylin     20   0  116604   1068    788 R  49.8  0.1   4:38.58 sha1sum                                     
+ 3236 kylin     20   0  116604   1068    788 R  49.6  0.1   5:04.78 sha1sum                                     
+ 3237 kylin     20   0  116604   1068    788 R  49.6  0.1   5:04.61 sha1sum                                     
+ 3235 kylin     20   0  116604   1064    788 R  49.4  0.1   5:06.55 sha1sum  
+----
+
+[source, bash]
+.*10 - 停止所有进程*
+----
+$ killall sha1sum
+----
+

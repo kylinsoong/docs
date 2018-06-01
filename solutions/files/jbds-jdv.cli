@@ -1,0 +1,22 @@
+# Mysql
+module add --name=com.mysql.jdbc --resources=mysql-connector-java-5.1.35.jar --dependencies=javax.api,javax.transaction.api
+
+
+# Add Mysql Driver
+if (outcome != success) of /subsystem=datasources/jdbc-driver=mysql:read-resource
+    /subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql, driver-module-name=com.mysql.jdbc, driver-class-name=com.mysql.jdbc.Driver, xa-datasource-class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
+end-if
+
+# Add Data Source
+if (outcome != success) of /subsystem=datasources/data-source=US_Customers:read-resource
+    /subsystem=datasources/data-source=US_Customers:add(driver-name=mysql, jndi-name=java:/US_Customers, connection-url=jdbc:mysql://localhost:3306/uscustomers, user-name=root, password=redhat, enabled=true, use-java-context=true, min-pool-size=5, max-pool-size=30)
+    /subsystem=datasources/data-source=US_Customers:enable()
+end-if
+
+if (outcome != success) of /subsystem=datasources/data-source=APAC_Customers:read-resource
+    /subsystem=datasources/data-source=APAC_Customers:add(driver-name=mysql, jndi-name=java:/APAC_Customers, connection-url=jdbc:mysql://localhost:3306/apaccustomers, user-name=root, password=redhat, enabled=true, use-java-context=true, min-pool-size=5, max-pool-size=30)
+    /subsystem=datasources/data-source=APAC_Customers:enable()
+end-if
+
+
+

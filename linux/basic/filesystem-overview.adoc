@@ -1,0 +1,98 @@
+= 文件系统导视
+:toc: manual
+
+== 基本命令
+
+[cols="2a,2"]
+|===
+|命令 |说明
+
+|`cp file1 file2`
+`cp file1 file2 file3 dir`
+|拷贝文件
+
+|`mv file1 file2`
+`mv file1 file2 file3 dir`
+|移动文件
+
+|`rm file1`
+`rm -f file1 file2 file3`
+|删除文件
+
+|`mkdir dir`
+`mkdir -p par1/par2/dir`
+|创建文件夹
+
+|`cp -r dir1 dir2`
+`cp -r dir1 dir2 dir3 dir4`
+|拷贝文件夹
+
+|`mv dir1 dir2`
+`mv dir1 dir2 dir3 dir4`
+|移动文件夹
+
+|`rm -r dir1`
+`rm -rf dir1 dir2 dir3`
+|删除文件夹
+
+|`rmdir dir`
+|删除空文件夹
+
+|`ln file linkfile`
+|创建 hard link
+
+|`ln -s file linkfile`
+|创建 soft link
+|===
+
+== 在文件上创建 link
+
+.*Hard Link Vs Soft Link*
+|===
+|命令 |描述
+
+|1
+|当原始文件删除后 hard link 文件保存了原始文件的内容，而 soft link 不会。
+
+|2
+|soft link 可以指向一个文件夹，而 hard link 不可以。
+|===
+
+
+[source, text]
+.*创建一个文件*
+----
+# echo "Hello World" > newfile.txt
+# ls -l newfile.txt
+-rw-r--r--. 1 root root 12 Nov 26 17:18 newfile.txt
+----
+
+[source, text]
+.*ln 创建一个 hard link*
+----
+# ln newfile.txt /tmp/newfile-hlink.txt
+# ls -l newfile.txt /tmp/newfile-hlink.txt
+-rw-r--r--. 2 root root 12 Nov 26 17:18 newfile.txt
+-rw-r--r--. 2 root root 12 Nov 26 17:18 /tmp/newfile-hlink.txt
+----
+
+[source, text]
+.*ln -s 创建一个 soft link*
+----
+# ln -s /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+# ls -l newfile.txt /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+-rw-r--r--. 2 root root 12 Nov 26 17:18 newfile.txt
+-rw-r--r--. 2 root root 12 Nov 26 17:18 /tmp/newfile-hlink.txt
+lrwxrwxrwx. 1 root root 22 Nov 26 17:23 /tmp/newfile-slink.txt -> /tmp/newfile-hlink.txt
+----
+
+[source, text]
+.*ln -s 创建一个 soft link 指向文件夹*
+----
+# ln -s /tmp /root/tempdir
+# ls -l /root/
+lrwxrwxrwx.  1 root  root          4 Feb 15 16:38 tempdir -> /tmp
+# cd /root/tempdir/
+# ls
+----
+

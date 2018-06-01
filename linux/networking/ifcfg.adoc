@@ -1,0 +1,695 @@
+= 网络配置
+:toc: manual
+
+== 使用 nmcli 配置网络
+
+本部分使用 `nmcli` 命令配置网络，将默认的 DHCP 连接配置修改为静态配置。
+
+[source, bash]
+.*1 - 显示所有连接*
+----
+$ nmcli connection show 
+NAME    UUID                                  TYPE            DEVICE 
+eth0    9e02ed35-21b1-4edc-bc51-9cde226e06c8  802-3-ethernet  eth0   
+virbr0  c885851c-0751-4514-8a3f-df57bc8f0d90  bridge          virbr0
+----
+
+[source, bash]
+.*2 - 显示 Active 连接的所有配置信息*
+----
+$ nmcli connection show eth0 
+connection.id:                          eth0
+connection.uuid:                        9e02ed35-21b1-4edc-bc51-9cde226e06c8
+connection.stable-id:                   --
+connection.interface-name:              --
+connection.type:                        802-3-ethernet
+connection.autoconnect:                 yes
+connection.autoconnect-priority:        0
+connection.autoconnect-retries:         -1 (default)
+connection.timestamp:                   1522655893
+connection.read-only:                   no
+connection.permissions:                 --
+connection.zone:                        --
+connection.master:                      --
+connection.slave-type:                  --
+connection.autoconnect-slaves:          -1 (default)
+connection.secondaries:                 --
+connection.gateway-ping-timeout:        0
+connection.metered:                     unknown
+connection.lldp:                        -1 (default)
+802-3-ethernet.port:                    --
+802-3-ethernet.speed:                   0
+802-3-ethernet.duplex:                  --
+802-3-ethernet.auto-negotiate:          no
+802-3-ethernet.mac-address:             52:54:00:E2:09:EE
+802-3-ethernet.cloned-mac-address:      --
+802-3-ethernet.generate-mac-address-mask:--
+802-3-ethernet.mac-address-blacklist:   --
+802-3-ethernet.mtu:                     auto
+802-3-ethernet.s390-subchannels:        --
+802-3-ethernet.s390-nettype:            --
+802-3-ethernet.s390-options:            --
+802-3-ethernet.wake-on-lan:             1 (default)
+802-3-ethernet.wake-on-lan-password:    --
+ipv4.method:                            auto
+ipv4.dns:                               --
+ipv4.dns-search:                        --
+ipv4.dns-options:                       (default)
+ipv4.dns-priority:                      0
+ipv4.addresses:                         --
+ipv4.gateway:                           --
+ipv4.routes:                            --
+ipv4.route-metric:                      -1
+ipv4.ignore-auto-routes:                no
+ipv4.ignore-auto-dns:                   no
+ipv4.dhcp-client-id:                    --
+ipv4.dhcp-timeout:                      0
+ipv4.dhcp-send-hostname:                yes
+ipv4.dhcp-hostname:                     --
+ipv4.dhcp-fqdn:                         --
+ipv4.never-default:                     no
+ipv4.may-fail:                          yes
+ipv4.dad-timeout:                       -1 (default)
+ipv6.method:                            auto
+ipv6.dns:                               --
+ipv6.dns-search:                        --
+ipv6.dns-options:                       (default)
+ipv6.dns-priority:                      0
+ipv6.addresses:                         --
+ipv6.gateway:                           --
+ipv6.routes:                            --
+ipv6.route-metric:                      -1
+ipv6.ignore-auto-routes:                no
+ipv6.ignore-auto-dns:                   no
+ipv6.never-default:                     no
+ipv6.may-fail:                          yes
+ipv6.ip6-privacy:                       -1 (unknown)
+ipv6.addr-gen-mode:                     eui64
+ipv6.dhcp-send-hostname:                yes
+ipv6.dhcp-hostname:                     --
+ipv6.token:                             --
+proxy.method:                           none
+proxy.browser-only:                     no
+proxy.pac-url:                          --
+proxy.pac-script:                       --
+GENERAL.NAME:                           eth0
+GENERAL.UUID:                           9e02ed35-21b1-4edc-bc51-9cde226e06c8
+GENERAL.DEVICES:                        eth0
+GENERAL.STATE:                          activated
+GENERAL.DEFAULT:                        yes
+GENERAL.DEFAULT6:                       no
+GENERAL.VPN:                            no
+GENERAL.ZONE:                           --
+GENERAL.DBUS-PATH:                      /org/freedesktop/NetworkManager/ActiveConnection/1
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/Settings/1
+GENERAL.SPEC-OBJECT:                    --
+GENERAL.MASTER-PATH:                    --
+IP4.ADDRESS[1]:                         192.168.122.4/24
+IP4.GATEWAY:                            192.168.122.1
+IP4.DNS[1]:                             192.168.122.1
+DHCP4.OPTION[1]:                        requested_classless_static_routes = 1
+DHCP4.OPTION[2]:                        requested_rfc3442_classless_static_routes = 1
+DHCP4.OPTION[3]:                        subnet_mask = 255.255.255.0
+DHCP4.OPTION[4]:                        requested_subnet_mask = 1
+DHCP4.OPTION[5]:                        domain_name_servers = 192.168.122.1
+DHCP4.OPTION[6]:                        ip_address = 192.168.122.4
+DHCP4.OPTION[7]:                        requested_static_routes = 1
+DHCP4.OPTION[8]:                        dhcp_server_identifier = 192.168.122.1
+DHCP4.OPTION[9]:                        requested_nis_servers = 1
+DHCP4.OPTION[10]:                       requested_time_offset = 1
+DHCP4.OPTION[11]:                       broadcast_address = 192.168.122.255
+DHCP4.OPTION[12]:                       requested_interface_mtu = 1
+DHCP4.OPTION[13]:                       dhcp_rebinding_time = 3150
+DHCP4.OPTION[14]:                       requested_domain_name_servers = 1
+DHCP4.OPTION[15]:                       dhcp_message_type = 5
+DHCP4.OPTION[16]:                       requested_broadcast_address = 1
+DHCP4.OPTION[17]:                       routers = 192.168.122.1
+DHCP4.OPTION[18]:                       dhcp_renewal_time = 1800
+DHCP4.OPTION[19]:                       requested_domain_name = 1
+DHCP4.OPTION[20]:                       requested_routers = 1
+DHCP4.OPTION[21]:                       expiry = 1522658594
+DHCP4.OPTION[22]:                       requested_wpad = 1
+DHCP4.OPTION[23]:                       host_name = test2
+DHCP4.OPTION[24]:                       requested_nis_domain = 1
+DHCP4.OPTION[25]:                       requested_ms_classless_static_routes = 1
+DHCP4.OPTION[26]:                       network_number = 192.168.122.0
+DHCP4.OPTION[27]:                       requested_domain_search = 1
+DHCP4.OPTION[28]:                       next_server = 192.168.122.1
+DHCP4.OPTION[29]:                       requested_ntp_servers = 1
+DHCP4.OPTION[30]:                       requested_host_name = 1
+DHCP4.OPTION[31]:                       dhcp_lease_time = 3600
+IP6.ADDRESS[1]:                         fe80::5054:ff:fee2:9ee/64
+IP6.GATEWAY:                            --
+----
+
+[source, bash]
+.*3 - 查看网络设备状态*
+----
+$ nmcli device status 
+DEVICE      TYPE      STATE      CONNECTION 
+virbr0      bridge    connected  virbr0     
+eth0        ethernet  connected  eth0       
+lo          loopback  unmanaged  -- 
+----
+
+[source, bash]
+.*4 - 查看 eth0 配置*
+----
+$ nmcli device show eth0 
+GENERAL.DEVICE:                         eth0
+GENERAL.TYPE:                           ethernet
+GENERAL.HWADDR:                         52:54:00:E2:09:EE
+GENERAL.MTU:                            1500
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     eth0
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/1
+WIRED-PROPERTIES.CARRIER:               on
+IP4.ADDRESS[1]:                         192.168.122.4/24
+IP4.GATEWAY:                            192.168.122.1
+IP4.DNS[1]:                             192.168.122.1
+IP6.ADDRESS[1]:                         fe80::5054:ff:fee2:9ee/64
+IP6.GATEWAY:                            --
+----
+
+[source, bash]
+.*5 - 创建一个静态连接*
+----
+$ sudo nmcli connection add con-name static-eth0 ifname eth0 type ethernet ip4 192.168.122.4/24 gw4 192.168.122.1
+Connection 'static-eth0' (3d07c356-c704-4b32-8216-4b71ec8f6f82) successfully added.
+----
+
+[source, bash]
+.*6 - 修改新创建的静态连接，添加 DNS 配置*
+----
+$ sudo nmcli connection modify static-eth0 ipv4.dns 192.168.122.1
+----
+
+[source, bash]
+.*7 - 显示所有连接*
+----
+$ nmcli connection show 
+NAME         UUID                                  TYPE            DEVICE 
+eth0         9e02ed35-21b1-4edc-bc51-9cde226e06c8  802-3-ethernet  eth0   
+virbr0       c885851c-0751-4514-8a3f-df57bc8f0d90  bridge          virbr0 
+static-eth0  3d07c356-c704-4b32-8216-4b71ec8f6f82  802-3-ethernet  -- 
+----
+
+[source, bash]
+.*8 - 显示 Active 连接*
+----
+$ nmcli connection show --active 
+NAME    UUID                                  TYPE            DEVICE 
+eth0    9e02ed35-21b1-4edc-bc51-9cde226e06c8  802-3-ethernet  eth0   
+virbr0  c885851c-0751-4514-8a3f-df57bc8f0d90  bridge          virbr0
+----
+
+[source, bash]
+.*9 - 激活连接*
+----
+$ sudo nmcli connection up static-eth0 
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/4)
+----
+
+[source, bash]
+.*10 - 显示 Active 连接*
+----
+$ nmcli connection show --active 
+NAME         UUID                                  TYPE            DEVICE 
+static-eth0  3d07c356-c704-4b32-8216-4b71ec8f6f82  802-3-ethernet  eth0   
+virbr0       c885851c-0751-4514-8a3f-df57bc8f0d90  bridge          virbr0 
+----
+
+[source, bash]
+.*11 - 显示 IP 地址*
+----
+$ ip addr show eth0 
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 52:54:00:e2:09:ee brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.4/24 brd 192.168.122.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::1b41:2de3:a668:3bd/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*12 - 查看路由信息*
+----
+$ ip route 
+default via 192.168.122.1 dev eth0 proto static metric 100 
+192.168.122.0/24 dev eth0 proto kernel scope link src 192.168.122.4 metric 100 
+192.168.124.0/24 dev virbr0 proto kernel scope link src 192.168.124.1 
+----
+
+[source, bash]
+.*13 - ping DNS*
+---- 
+$ ping -c3 192.168.122.1
+PING 192.168.122.1 (192.168.122.1) 56(84) bytes of data.
+64 bytes from 192.168.122.1: icmp_seq=1 ttl=64 time=0.110 ms
+64 bytes from 192.168.122.1: icmp_seq=2 ttl=64 time=0.197 ms
+64 bytes from 192.168.122.1: icmp_seq=3 ttl=64 time=0.073 ms
+
+--- 192.168.122.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.073/0.126/0.197/0.053 ms
+----
+
+[source, bash]
+.*14 - 修改原始连接，禁止默认启动*
+----
+$ sudo nmcli connection modify eth0 connection.autoconnect no
+----
+
+NOTE: 重起服务器，查看网络连接和设备的信息，确认配置成功。
+
+== 编辑 ifcfg 配置网络 
+
+[source, text]
+.*在 server 1 上配置一个 IP 地址 10.0.1.1*
+----
+# echo "IPADDR1=10.0.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+# echo "PREFIX1=24" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+# nmcli con reload
+# nmcli con up eth0
+----
+
+[source, text]
+.*在 server 2 上配置一个 IP 地址 10.0.1.2**
+----
+# echo "IPADDR1=10.0.1.2" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+# echo "PREFIX1=24" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+# nmcli con reload
+# nmcli con up eth0
+----
+
+[source, text]
+.*两台 server 分别进行连通性测试*
+----
+# ip addr
+# ping 10.0.1.1 -c3
+# ping 10.0.1.2 -c3
+----
+
+== 配置 IPv4 网络
+
+[source, bash]
+.*1 - 创建一个网络接口 eno1*
+----
+# setenforce to 'Permissive' if default enforce is 'Enforcing'
+setenforce 0
+
+# create namespace
+ip netns add hidden
+
+# Active ::1 inside namespace
+ip netns exec hidden ip link set dev lo up
+
+# Add bridge inside 'hidden' namespace and turn on
+ip netns exec hidden brctl addbr hiddenbr0
+ip netns exec hidden ip link set dev hiddenbr0 up
+
+# Add virtual patch cables to bridge
+ip link add eno1 type veth peer name eno1-port
+ip link set eno1-port netns hidden up
+ip netns exec hidden brctl addif hiddenbr0 eno1-port
+
+# Attach virtual patch cable to bridge and assign its far side address
+ip netns exec hidden ip link add inside0 type veth peer name inside0-port
+ip netns exec hidden brctl addif hiddenbr0 inside0-port
+ip netns exec hidden ip link set inside0-port up
+ip netns exec hidden ip link set inside0 up 
+ip netns exec hidden ip addr add 192.168.0.254/24 dev inside0
+ip netns exec hidden ip addr add fddb:fe2a:ab1e::c0a8:00fe/64 dev inside0
+
+# setenforce to 'Enforcing'
+setenforce 1
+----
+
+[source, text]
+.*2 - 查看初始网络接口，配置文件及连接信息* 
+---- 
+# ip link
+# nmcli con show
+----
+
+[source, text]
+.*3 - 创建连接* 
+---- 
+# nmcli connection add con-name eno1 type ethernet ifname eno1 
+Connection 'eno1' (b5ce0f55-6e21-4529-8096-f5bbfcc11605) successfully added.
+# nmcli connection show | grep eno1
+eno1    b5ce0f55-6e21-4529-8096-f5bbfcc11605  802-3-ethernet  --
+# ip addr show eno1 
+6: eno1@if5: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether fe:70:83:fc:2e:d3 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+----
+
+[source, text]
+.*4 - 显示默认 IPv4 配置* 
+---- 
+# nmcli connection show eno1 | grep ipv4
+ipv4.method:                            auto
+ipv4.dns:                               --
+ipv4.dns-search:                        --
+ipv4.dns-options:                       (default)
+ipv4.dns-priority:                      0
+ipv4.addresses:                         --
+ipv4.gateway:                           --
+ipv4.routes:                            --
+ipv4.route-metric:                      -1
+ipv4.ignore-auto-routes:                no
+ipv4.ignore-auto-dns:                   no
+ipv4.dhcp-client-id:                    --
+ipv4.dhcp-timeout:                      0
+ipv4.dhcp-send-hostname:                yes
+ipv4.dhcp-hostname:                     --
+ipv4.dhcp-fqdn:                         --
+ipv4.never-default:                     no
+ipv4.may-fail:                          yes
+ipv4.dad-timeout:                       -1 (default)
+----
+
+[source, text]
+.*5 - 修改连接配置 IPv4 地址* 
+---- 
+# nmcli connection modify eno1 ipv4.addresses '192.168.0.1/24'
+# nmcli connection modify eno1 ipv4.method manual
+# nmcli connection down eno1
+# nmcli connection up eno1
+# ip addr show eno1 
+6: eno1@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP qlen 1000
+    link/ether fe:70:83:fc:2e:d3 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.0.1/24 brd 192.168.0.255 scope global eno1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5f7:aec:3e99:2a20/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, text]
+.*6 - ping 命令测试连通性* 
+---- 
+# ping 192.168.0.1 -c2
+PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
+64 bytes from 192.168.0.1: icmp_seq=1 ttl=64 time=0.026 ms
+64 bytes from 192.168.0.1: icmp_seq=2 ttl=64 time=0.033 ms
+
+--- 192.168.0.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.026/0.029/0.033/0.006 ms
+
+# ping 192.168.0.254 -c2
+PING 192.168.0.254 (192.168.0.254) 56(84) bytes of data.
+64 bytes from 192.168.0.254: icmp_seq=1 ttl=64 time=0.046 ms
+64 bytes from 192.168.0.254: icmp_seq=2 ttl=64 time=0.037 ms
+
+--- 192.168.0.254 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.037/0.041/0.046/0.007 ms
+----
+
+[source, text]
+.*7 - 查看路由信息和网络配置信息*  
+----  
+# ip route 
+default via 192.168.122.1 dev eth0 proto static metric 100 
+192.168.0.0/24 dev eno1 proto kernel scope link src 192.168.0.1 metric 100 
+192.168.122.0/24 dev eth0 proto kernel scope link src 192.168.122.214 metric 100 
+192.168.124.0/24 dev virbr0 proto kernel scope link src 192.168.124.1
+
+# cat /etc/sysconfig/network-scripts/ifcfg-eno1 
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=none
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=eno1
+UUID=b5ce0f55-6e21-4529-8096-f5bbfcc11605
+DEVICE=eno1
+ONBOOT=yes
+IPADDR=192.168.0.1
+PREFIX=24
+----
+
+[source, text]
+.*8 - 静态域名解析测试*
+----
+# echo '192.168.0.254 otherhost' >> /etc/hosts
+# ping otherhost -c3
+PING otherhost (192.168.0.254) 56(84) bytes of data.
+64 bytes from otherhost (192.168.0.254): icmp_seq=1 ttl=64 time=0.036 ms
+64 bytes from otherhost (192.168.0.254): icmp_seq=2 ttl=64 time=0.041 ms
+64 bytes from otherhost (192.168.0.254): icmp_seq=3 ttl=64 time=0.044 ms
+
+--- otherhost ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.036/0.040/0.044/0.006 ms
+----
+
+== 配置 OpenShift master 和 node 节点为静态 IP 地址
+
+配置 OpenShift master 和 两个 node 节点为静态 IP 地址，分别为 X.X.192.101, X.X.192.102, X.X.192.103，且外部能够 ping 通 master 和 node，master 和 node 之间也能互相 ping 通。
+
+=== 配置 master
+
+[source, text]
+.*备份原始配置文件*
+----
+# cd /etc/sysconfig/network-scripts/
+# cp ifcfg-eth0 ifcfg-eth0-bak
+----
+
+[source, bash]
+.*编辑ifcfg-eth0，内容如下*
+----
+BOOTPROTO=none
+IPADDR0=10.66.192.101
+PREFIX0=24
+GATEWAY0=10.66.193.254
+DEFROUTE=yes
+DNS1=8.8.8.8
+NAME="eth0"
+DEVICE=eth0
+ONBOOT=yes
+UUID="c2f83f58-c273-46d9-a1cd-b29e434a2eea"
+----
+
+[source, bash]
+.*执行如下命令使静态地址生效*
+----
+# nmcli connection reload
+# nmcli connection down eth0
+# nmcli connection up eth0
+----
+
+=== 配置 node1
+
+[source, bash]
+.*备份原始配置文件*
+----
+# cd /etc/sysconfig/network-scripts/
+# cp ifcfg-eth0 ifcfg-eth0-bak
+----
+
+[source, bash]
+.*编辑ifcfg-eth0，内容如下*
+----
+BOOTPROTO=none
+IPADDR0=10.66.192.102
+PREFIX0=24
+GATEWAY0=10.66.193.254
+DEFROUTE=yes
+DNS1=8.8.8.8
+NAME="eth0"
+DEVICE=eth0
+ONBOOT=yes
+UUID="0d7a5ff6-2491-4262-84a2-c1f629e40370"
+----
+
+[source, bash]
+.*执行如下命令使静态地址生效*
+----
+# nmcli connection reload
+# nmcli connection down eth0
+# nmcli connection up eth0
+----
+
+=== 配置 node2
+
+[source, bash]
+.*备份原始配置文件*
+----
+# cd /etc/sysconfig/network-scripts/
+# cp ifcfg-eth0 ifcfg-eth0-bak
+----
+
+[source, bash]
+.*编辑ifcfg-eth0，内容如下*
+----
+BOOTPROTO=none
+IPADDR0=10.66.192.103
+PREFIX0=24
+GATEWAY0=10.66.193.254
+DEFROUTE=yes
+DNS1=8.8.8.8
+NAME="eth0"
+DEVICE=eth0
+ONBOOT=yes
+UUID="4d52c55b-01bc-40ae-9b9d-d5d903be2901"
+----
+
+[source, bash]
+.*执行如下命令使静态地址生效*
+----
+# nmcli connection reload
+# nmcli connection down eth0
+# nmcli connection up eth0
+----
+
+=== 测试配置 
+
+[source, bash]
+.*外部机器 ping master 和 node*
+----
+$ ping -c2 10.66.192.101
+PING 10.66.192.101 (10.66.192.101) 56(84) bytes of data.
+64 bytes from 10.66.192.101: icmp_seq=1 ttl=64 time=0.575 ms
+64 bytes from 10.66.192.101: icmp_seq=2 ttl=64 time=0.679 ms
+
+--- 10.66.192.101 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 0.575/0.627/0.679/0.052 ms
+
+$ ping -c2 10.66.192.102
+PING 10.66.192.102 (10.66.192.102) 56(84) bytes of data.
+64 bytes from 10.66.192.102: icmp_seq=1 ttl=64 time=0.726 ms
+64 bytes from 10.66.192.102: icmp_seq=2 ttl=64 time=0.708 ms
+
+--- 10.66.192.102 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1004ms
+rtt min/avg/max/mdev = 0.708/0.717/0.726/0.009 ms
+
+$ ping -c2 10.66.192.103
+PING 10.66.192.103 (10.66.192.103) 56(84) bytes of data.
+64 bytes from 10.66.192.103: icmp_seq=1 ttl=64 time=0.800 ms
+64 bytes from 10.66.192.103: icmp_seq=2 ttl=64 time=0.639 ms
+
+--- 10.66.192.103 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1017ms
+rtt min/avg/max/mdev = 0.639/0.719/0.800/0.084 ms
+----
+
+[source, bash]
+.*master ping node*
+----
+# ping -c2 10.66.192.102
+PING 10.66.192.102 (10.66.192.102) 56(84) bytes of data.
+64 bytes from 10.66.192.102: icmp_seq=1 ttl=64 time=0.417 ms
+64 bytes from 10.66.192.102: icmp_seq=2 ttl=64 time=0.223 ms
+
+--- 10.66.192.102 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.223/0.320/0.417/0.097 ms
+
+# ping -c2 10.66.192.103
+PING 10.66.192.103 (10.66.192.103) 56(84) bytes of data.
+64 bytes from 10.66.192.103: icmp_seq=1 ttl=64 time=0.224 ms
+64 bytes from 10.66.192.103: icmp_seq=2 ttl=64 time=0.353 ms
+
+--- 10.66.192.103 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.224/0.288/0.353/0.066 ms
+----
+
+==  配置 OpenShift master 和 node 节点 hostname
+
+配置 OpenShift master 和 两个 node 节点 hostname 分别为 master.example.com, node1.example.com, node2.example.com，并在 */etc/hosts* 中添加映射。
+
+=== 配置 master
+
+[source, bash]
+----
+hostnamectl set-hostname master.example.com
+----
+
+编辑 */etc/hosts*， 添加
+
+----
+10.66.192.101 master.example.com
+----
+
+=== 配置 node1
+
+[source, bash]
+----
+hostnamectl set-hostname node1.example.com
+----
+
+编辑 */etc/hosts*， 添加
+
+----
+10.66.192.102 node1.example.com
+----
+
+=== 配置 node2
+
+[source, bash]
+----
+hostnamectl set-hostname node2.example.com
+----
+
+编辑 */etc/hosts*， 添加
+
+----
+10.66.192.103 node2.example.com
+----
+
+=== 测试配置
+
+[source, bash]
+.*master ping 域名*
+----
+# ping -c3 master.example.com
+PING master.example.com (10.66.192.101) 56(84) bytes of data.
+64 bytes from master.example.com (10.66.192.101): icmp_seq=1 ttl=64 time=0.049 ms
+64 bytes from master.example.com (10.66.192.101): icmp_seq=2 ttl=64 time=0.043 ms
+64 bytes from master.example.com (10.66.192.101): icmp_seq=3 ttl=64 time=0.046 ms
+
+--- master.example.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.043/0.046/0.049/0.002 ms
+----
+
+[source, bash]
+.*node1 ping 域名*
+----
+# ping -c3 node1.example.com
+PING node1.example.com (10.66.192.102) 56(84) bytes of data.
+64 bytes from node1.example.com (10.66.192.102): icmp_seq=1 ttl=64 time=0.042 ms
+64 bytes from node1.example.com (10.66.192.102): icmp_seq=2 ttl=64 time=0.052 ms
+64 bytes from node1.example.com (10.66.192.102): icmp_seq=3 ttl=64 time=0.050 ms
+
+--- node1.example.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.042/0.048/0.052/0.004 ms
+----
+
+[source, bash]
+.*node2 ping 域名*
+----
+# ping -c3 node2.example.com
+PING node2.example.com (10.66.192.103) 56(84) bytes of data.
+64 bytes from node2.example.com (10.66.192.103): icmp_seq=1 ttl=64 time=0.055 ms
+64 bytes from node2.example.com (10.66.192.103): icmp_seq=2 ttl=64 time=0.055 ms
+64 bytes from node2.example.com (10.66.192.103): icmp_seq=3 ttl=64 time=0.056 ms
+
+--- node2.example.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.055/0.055/0.056/0.006 ms
+----
+

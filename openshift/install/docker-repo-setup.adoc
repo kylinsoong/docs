@@ -1,0 +1,328 @@
+= 公共镜像仓库 Docker Registry 配置
+:toc: manual
+:toc-placement: preamble
+
+本部分包括公共镜像仓库 Docker Registry 配置。
+
+== 下载 docker 镜像
+
+[source, bash]
+.*设定环境变量*
+----
+REGISTRY="registry.access.redhat.com";PTH="openshift3";VERSION="v3.6"
+----
+
+[source, bash]
+.*下载核心镜像*
+----
+docker pull $REGISTRY/$PTH/ose-ansible:$VERSION
+docker pull $REGISTRY/$PTH/ose-cluster-capacity:$VERSION
+docker pull $REGISTRY/$PTH/ose-deployer:$VERSION
+docker pull $REGISTRY/$PTH/ose-docker-builder:$VERSION
+docker pull $REGISTRY/$PTH/ose-docker-registry:$VERSION
+docker pull $REGISTRY/$PTH/ose-egress-http-proxy:$VERSION
+docker pull $REGISTRY/$PTH/ose-egress-router:$VERSION
+docker pull $REGISTRY/$PTH/ose-f5-router:$VERSION
+docker pull $REGISTRY/$PTH/ose-federation:$VERSION
+docker pull $REGISTRY/$PTH/ose-haproxy-router:$VERSION
+docker pull $REGISTRY/$PTH/ose-keepalived-ipfailover:$VERSION
+docker pull $REGISTRY/$PTH/ose-pod:$VERSION
+docker pull $REGISTRY/$PTH/ose-sti-builder:$VERSION
+docker pull $REGISTRY/$PTH/ose:$VERSION
+docker pull $REGISTRY/$PTH/container-engine:$VERSION
+docker pull $REGISTRY/$PTH/efs-provisioner:$VERSION
+docker pull $REGISTRY/$PTH/node:$VERSION
+docker pull $REGISTRY/$PTH/openvswitch:$VERSION
+docker pull $REGISTRY/$PTH/registry-console:$VERSION
+----
+
+[source, bash]
+.*导出核心镜像*
+----
+cd /opt/images/
+docker save -o ose-images-core-$VERSION_`date +'%Y%m%d'`.tar.gz \
+$REGISTRY/$PTH/ose-ansible:$VERSION \
+$REGISTRY/$PTH/ose-cluster-capacity:$VERSION \
+$REGISTRY/$PTH/ose-deployer:$VERSION \
+$REGISTRY/$PTH/ose-docker-builder:$VERSION \
+$REGISTRY/$PTH/ose-docker-registry:$VERSION \
+$REGISTRY/$PTH/ose-egress-http-proxy:$VERSION \
+$REGISTRY/$PTH/ose-egress-router:$VERSION \
+$REGISTRY/$PTH/ose-f5-router:$VERSION \
+$REGISTRY/$PTH/ose-federation:$VERSION \
+$REGISTRY/$PTH/ose-haproxy-router:$VERSION \
+$REGISTRY/$PTH/ose-keepalived-ipfailover:$VERSION \
+$REGISTRY/$PTH/ose-pod:$VERSION \
+$REGISTRY/$PTH/ose-sti-builder:$VERSION \
+$REGISTRY/$PTH/ose:$VERSION \
+$REGISTRY/$PTH/container-engine:$VERSION \
+$REGISTRY/$PTH/efs-provisioner:$VERSION \
+$REGISTRY/$PTH/node:$VERSION \
+$REGISTRY/$PTH/openvswitch:$VERSION
+$REGISTRY/$PTH/registry-console:$VERSIO
+----
+
+[source, bash]
+.*下载 logging 和 metrics 镜像*
+----
+docker pull $REGISTRY/$PTH/logging-deployer:$VERSION
+docker pull $REGISTRY/$PTH/logging-elasticsearch:$VERSION
+docker pull $REGISTRY/$PTH/logging-kibana:$VERSION
+docker pull $REGISTRY/$PTH/logging-fluentd:$VERSION
+docker pull $REGISTRY/$PTH/logging-curator:$VERSION
+docker pull $REGISTRY/$PTH/logging-auth-proxy:$VERSION
+docker pull $REGISTRY/$PTH/metrics-deployer:$VERSION
+docker pull $REGISTRY/$PTH/metrics-hawkular-metrics:$VERSION
+docker pull $REGISTRY/$PTH/metrics-cassandra:$VERSION
+docker pull $REGISTRY/$PTH/metrics-hawkular-openshift-agent:$VERSION
+docker pull $REGISTRY/$PTH/metrics-heapster:$VERSION
+----
+
+[source, bash]
+.*导出 logging 和 metrics 镜像*
+----
+cd /opt/images/
+docker save -o ose-images-logging-metrics-$VERSION_`date +'%Y%m%d'`.tar.gz \
+$REGISTRY/$PTH/logging-deployer:$VERSION \
+$REGISTRY/$PTH/logging-elasticsearch:$VERSION \
+$REGISTRY/$PTH/logging-kibana:$VERSION \
+$REGISTRY/$PTH/logging-fluentd:$VERSION \
+$REGISTRY/$PTH/logging-curator:$VERSION \
+$REGISTRY/$PTH/logging-auth-proxy:$VERSION \
+$REGISTRY/$PTH/metrics-deployer:$VERSION \
+$REGISTRY/$PTH/metrics-hawkular-metrics:$VERSION \
+$REGISTRY/$PTH/metrics-cassandra:$VERSION \
+$REGISTRY/$PTH/metrics-hawkular-openshift-agent:$VERSION \
+$REGISTRY/$PTH/metrics-heapster:$VERSION
+----
+
+[source, bash]
+.*下载 TP 镜像*
+----
+docker pull $REGISTRY/$PTH/ose-service-catalog:$VERSION
+docker pull $REGISTRY/$PTH/ose-ansible-service-broker:$VERSION
+docker pull $REGISTRY/$PTH/mediawiki-apb:$VERSION
+docker pull $REGISTRY/$PTH/postgresql-apb:$VERSION
+----
+
+[source, bash]
+.*导出 TP 镜像*
+----
+cd /opt/images/
+docker save -o ose-images-tp-$VERSION-`date +'%Y%m%d'`.tar.gz \
+$REGISTRY/$PTH/ose-service-catalog:$VERSION \
+$REGISTRY/$PTH/ose-ansible-service-broker:$VERSION \
+$REGISTRY/$PTH/mediawiki-apb:$VERSION \
+$REGISTRY/$PTH/postgresql-apb:$VERSION
+----
+
+[source, bash]
+.*下载应用镜像*
+----
+docker pull $REGISTRY/jboss-webserver-3/webserver31-tomcat7-openshift:latest;
+docker pull $REGISTRY/jboss-webserver-3/webserver31-tomcat8-openshift:latest;
+docker pull $REGISTRY/jboss-eap-7/eap70-openshift:latest;
+docker pull $REGISTRY/jboss-processserver-6/processserver64-openshift:latest;
+docker pull $REGISTRY/jboss-decisionserver-6/decisionserver64-openshift:latest;
+docker pull $REGISTRY/redhat-sso-7/sso71-openshift:latest;
+docker pull $REGISTRY/jboss-datavirt-6/datavirt63-openshift:latest;
+docker pull $REGISTRY/jboss-amq-6/amq63-openshift:latest;
+docker pull $REGISTRY/jboss-datagrid-6/datagrid65-openshift:latest;
+docker pull $REGISTRY/jboss-datagrid-7/datagrid71-openshift:latest;
+docker pull $REGISTRY/jboss-fuse-6/fis-java-openshift:latest;
+docker pull $REGISTRY/rhscl/mongodb-32-rhel7:latest;
+docker pull $REGISTRY/rhscl/mysql-57-rhel7:latest;
+docker pull $REGISTRY/rhscl/php-56-rhel7:latest;
+docker pull $REGISTRY/rhscl/php-70-rhel7:latest;
+docker pull $REGISTRY/rhscl/python-36-rhel7:latest;
+docker pull $REGISTRY/rhscl/ruby-24-rhel7:latest;
+docker pull $REGISTRY/rhscl/redis-32-rhel7:latest;
+docker pull $REGISTRY/openshift3/jenkins-1-rhel7:latest;
+docker pull $REGISTRY/openshift3/jenkins-2-rhel7:latest;
+docker pull $REGISTRY/openshift3/jenkins-slave-base-rhel7:latest;
+docker pull $REGISTRY/openshift3/jenkins-slave-maven-rhel7:latest;
+docker pull $REGISTRY/openshift3/jenkins-slave-nodejs-rhel7:latest;
+docker pull $REGISTRY/rhscl/nodejs-6-rhel7:latest;
+----
+
+[source, bash]
+.*导出应用镜像*
+----
+docker save -o ose-images-apps-latest_`date +'%Y%m%d'`.tar.gz $REGISTRY/jboss-webserver-3/webserver31-tomcat7-openshift:latest \
+$REGISTRY/jboss-webserver-3/webserver31-tomcat8-openshift:latest \
+$REGISTRY/jboss-eap-7/eap70-openshift:latest \
+$REGISTRY/jboss-processserver-6/processserver64-openshift:latest \
+$REGISTRY/jboss-decisionserver-6/decisionserver64-openshift:latest \
+$REGISTRY/redhat-sso-7/sso71-openshift:latest \
+$REGISTRY/jboss-datavirt-6/datavirt63-openshift:latest \
+$REGISTRY/jboss-amq-6/amq63-openshift:latest \
+$REGISTRY/jboss-datagrid-6/datagrid65-openshift:latest \
+$REGISTRY/jboss-datagrid-7/datagrid71-openshift:latest \
+$REGISTRY/jboss-fuse-6/fis-java-openshift:latest \
+$REGISTRY/rhscl/mongodb-32-rhel7:latest \
+$REGISTRY/rhscl/mysql-57-rhel7:latest \
+$REGISTRY/rhscl/php-56-rhel7:latest \
+$REGISTRY/rhscl/php-70-rhel7:latest \
+$REGISTRY/rhscl/python-36-rhel7:latest \
+$REGISTRY/rhscl/ruby-24-rhel7:latest \
+$REGISTRY/rhscl/redis-32-rhel7:latest \
+$REGISTRY/openshift3/jenkins-1-rhel7:latest \
+$REGISTRY/openshift3/jenkins-2-rhel7:latest \
+$REGISTRY/openshift3/jenkins-slave-base-rhel7:latest \
+$REGISTRY/openshift3/jenkins-slave-maven-rhel7:latest \
+$REGISTRY/openshift3/jenkins-slave-nodejs-rhel7:latest \
+$REGISTRY/rhscl/nodejs-6-rhel7:latest
+----
+
+== 安装并配置 Docker Registry
+
+[source, bash]
+.*安装*
+----
+yum -y install docker-distribution
+systemctl enable docker-distribution
+systemctl start docker-distribution
+systemctl status docker-distribution
+----
+
+=== 配置TLS
+
+为了启用TLS协议传输，需要生成自签名证书。命令如下：
+
+[source, bash]
+----
+mkdir /etc/crts/ && cd /etc/crts
+openssl req \
+   -newkey rsa:2048 -nodes -keyout example.com.key \
+   -x509 -days 365 -out example.com.crt -subj \
+   "/C=CN/ST=GD/L=SZ/O=Global Security/OU=IT Department/CN=*.example.com"
+----
+
+编辑镜像仓库服务配置文件`/etc/docker-distribution/registry/config.yml`。确认http的配置如下：
+
+[source, bash]
+----
+http:
+   addr: :443
+   tls:
+       certificate: /etc/crts/example.com.crt
+       key: /etc/crts/example.com.key
+----
+
+修改完毕后，刷新systemd配置。命令如下：
+
+[source, bash]
+----
+systemctl daemon-reload
+----
+
+重启Docker Distribution服务。命令如下：
+
+[source, bash]
+----
+systemctl restart docker-distribution
+----
+
+Master 及 Nodes 配置信任自签名证书。并重启Docker服务
+
+[source, bash]
+----
+cp /etc/crts/example.com.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust extract
+----
+
+重起 Docker
+
+[source, bash]
+----
+systemctl restart docker
+----
+
+== 加载所有预先下载的 Docker 镜像
+
+[source, text]
+.*查看下载的镜像明细*
+----
+# ls -l /opt/images/
+total 18787276
+-rw-------. 1 root root 7161034240 Jan  3 16:30 ose-images-apps-latest_20180103.tar.gz
+-rw-------. 1 root root 5074610176 Dec 13 15:32 ose-images-core-20171213.tar.gz
+-rw-------. 1 root root 4293435392 Dec 13 15:46 ose-images-logging-metrics-20171213.tar.gz
+-rw-------. 1 root root 2709085696 Dec 13 16:58 ose-images-tp-v3.6-20171213.tar.gz
+----
+
+[source, text]
+.*加载 Docker 镜像*
+----
+# cd /opt/images
+# for i in `ls *.gz` ; do docker load -i $i; done;
+----
+
+[source, text]
+.*docker images 验证*
+----
+# docker images 
+REPOSITORY                                                               TAG                 IMAGE ID            CREATED             SIZE
+registry.access.redhat.com/openshift3/logging-elasticsearch              v3.6                f01bfebd1ad8        13 days ago         434.2 MB
+registry.access.redhat.com/openshift3/metrics-deployer                   v3.6                42c7b25506af        2 weeks ago         1.141 GB
+registry.access.redhat.com/openshift3/logging-deployer                   v3.6                e08af2020452        2 weeks ago         1.134 GB
+registry.access.redhat.com/openshift3/openvswitch                        v3.6                02d39c2dd01a        2 weeks ago         1.159 GB
+registry.access.redhat.com/openshift3/container-engine                   v3.6                e163224ed46c        2 weeks ago         334.5 MB
+registry.access.redhat.com/openshift3/ose-egress-http-proxy              v3.6                d9e96d936ccd        2 weeks ago         391.1 MB
+registry.access.redhat.com/openshift3/ose-cluster-capacity               v3.6                de44142f3851        2 weeks ago         934.5 MB
+registry.access.redhat.com/openshift3/ose-federation                     v3.6                10d0c1efa621        2 weeks ago         1.163 GB
+registry.access.redhat.com/openshift3/ose-service-catalog                v3.6                d8882e7cf28f        2 weeks ago         999.2 MB
+registry.access.redhat.com/openshift3/metrics-heapster                   v3.6                939d1957493f        2 weeks ago         277.7 MB
+registry.access.redhat.com/openshift3/logging-kibana                     v3.6                6415584e452f        2 weeks ago         619.4 MB
+registry.access.redhat.com/openshift3/metrics-hawkular-metrics           v3.6                3c555d497d60        2 weeks ago         1.02 GB
+registry.access.redhat.com/openshift3/metrics-cassandra                  v3.6                f91848f51fc5        2 weeks ago         783.8 MB
+registry.access.redhat.com/openshift3/metrics-hawkular-openshift-agent   v3.6                418801e83ce3        2 weeks ago         239 MB
+registry.access.redhat.com/openshift3/logging-fluentd                    v3.6                bb293aa9dc7f        2 weeks ago         235.2 MB
+registry.access.redhat.com/openshift3/logging-auth-proxy                 v3.6                5b153816556e        2 weeks ago         218.5 MB
+registry.access.redhat.com/openshift3/logging-curator                    v3.6                53ffb38d0903        2 weeks ago         222.3 MB
+registry.access.redhat.com/openshift3/ose-docker-builder                 v3.6                4d495bc08548        2 weeks ago         970.6 MB
+registry.access.redhat.com/openshift3/ose-sti-builder                    v3.6                5eb453a27189        2 weeks ago         970.6 MB
+registry.access.redhat.com/openshift3/node                               v3.6                eab3d672a779        2 weeks ago         1.157 GB
+registry.access.redhat.com/openshift3/ose-haproxy-router                 v3.6                d424c31da941        2 weeks ago         989.3 MB
+registry.access.redhat.com/openshift3/ose-deployer                       v3.6                5468323906f0        2 weeks ago         970.6 MB
+registry.access.redhat.com/openshift3/ose-f5-router                      v3.6                7e856efa8abc        2 weeks ago         970.6 MB
+registry.access.redhat.com/openshift3/ose-keepalived-ipfailover          v3.6                d04eddab37d8        2 weeks ago         385.2 MB
+registry.access.redhat.com/openshift3/ose-docker-registry                v3.6                0845725ae621        2 weeks ago         1.059 GB
+registry.access.redhat.com/openshift3/ose-egress-router                  v3.6                24cc3c77dbed        2 weeks ago         364.3 MB
+registry.access.redhat.com/openshift3/ose                                v3.6                ece5efd2a3c1        2 weeks ago         970.6 MB
+registry.access.redhat.com/openshift3/ose-pod                            v3.6                9a0f670643ae        2 weeks ago         208.6 MB
+registry.access.redhat.com/openshift3/ose-ansible                        v3.6                0fa85764161f        3 weeks ago         768.3 MB
+registry.access.redhat.com/openshift3/ose-ansible-service-broker         v3.6                6ecb3f6211a8        4 weeks ago         603.8 MB
+registry.access.redhat.com/openshift3/efs-provisioner                    v3.6                cf6b41663ce8        5 weeks ago         241.6 MB
+registry.access.redhat.com/openshift3/postgresql-apb                     v3.6                16381a30e9ea        4 months ago        950 MB
+registry.access.redhat.com/openshift3/mediawiki-apb                      v3.6                27f4d4dc629a        4 months ago        950 MB
+----
+
+== 推送镜像到本地 Docker Registry
+
+[source, bash]
+.*设定变量*
+----
+REDHAT_REG="registry.access.redhat.com"
+PRIVATE_REG="registry.example.com:5000"
+----
+
+[source, bash]
+.*设定 docker tag*
+----
+# for i in $(docker images|grep $REDHAT_REG|awk '{print $1":"$2}') ; do docker tag  $i "$PRIVATE_REG$(echo $i|awk -F 'com' {'print $2'})" ; done;
+----
+
+
+[source, bash]
+.*推送到本地镜像仓库*
+----
+# for i in `docker images|grep $PRIVATE_REG|awk '{print $1":"$2}'` ; do  docker push $i; done;
+----
+
+== 验证能否可成功下载镜像 （在所有机器上操作）
+
+[source, bash]
+----
+docker pull registry.example.com:5000/openshift3/ose-pod:v3.6
+----

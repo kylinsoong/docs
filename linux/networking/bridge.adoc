@@ -1,0 +1,107 @@
+= 软件网桥
+:toc: manual
+
+== 软件网桥
+
+网桥是一个链路层设备，可基于 MAC 地址在网络之间转发流量。网桥识别哪些主机连接到每个网络，构建 MAC 地址表，然后根据该表做出包转发决策。可以在 Linux 环境中使用软件网桥以仿真硬件网桥。软件网桥的最常见应用是在虚拟化应用程序中，用于在一个或多个虚拟 NIC 中共享一个硬件 NIC。
+
+== Bridge 配置
+
+[source, text]
+.*1. 创建一个 Bridge 并分配 IP 地址*
+----
+# nmcli connection add con-name br1 type bridge ifname br1
+Connection 'br1' (b0dfc7e6-9667-4293-95bb-14705e9dc1f0) successfully added.
+
+# nmcli connection modify br1 ipv4.addresses 192.168.0.100/24
+# nmcli connection modify br1 ipv4.method manual
+----
+
+[source, text]
+.*2. 将 eth0 添加到 br1*
+----
+# nmcli connection add con-name br1-port0 type bridge-slave ifname eno1 master br1
+Connection 'br1-port0' (0ee1cc18-ff1d-47e8-a9ac-376ba97c53c7) successfully added.
+----
+
+[source, text]
+.*3. 查看网络配置文件*
+----
+# cat /etc/sysconfig/network-scripts/ifcfg-br1
+DEVICE=br1
+STP=yes
+BRIDGING_OPTS=priority=32768
+TYPE=Bridge
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=none
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=br1
+UUID=b0dfc7e6-9667-4293-95bb-14705e9dc1f0
+ONBOOT=yes
+IPADDR=192.168.0.100
+PREFIX=24
+
+# cat /etc/sysconfig/network-scripts/ifcfg-br1-port0 
+TYPE=Ethernet
+NAME=br1-port0
+UUID=0ee1cc18-ff1d-47e8-a9ac-376ba97c53c7
+DEVICE=eno1
+ONBOOT=yes
+BRIDGE=br1
+----
+
+[source, text]
+.*4. 查看软件定义的 bridge*
+----
+# brctl show
+bridge name	bridge id		STP enabled	interfaces
+br1		8000.000000000000	yes		
+----
+
+[source, text]
+.*5. 连通性测试*
+----
+# ping -I br1 192.168.0.254
+PING 192.168.0.254 (192.168.0.254) from 192.168.0.100 br1: 56(84) bytes of data.
+64 bytes from 192.168.0.254: icmp_seq=1 ttl=64 time=0.051 ms
+64 bytes from 192.168.0.254: icmp_seq=2 ttl=64 time=0.057 ms
+----
+
+== 编辑网络配置文件配置网桥
+
+Once VM start up, it can connect to the internet, but the physical machine can not connect to VM, so set up bridge is necessary.
+
+* Create `/etc/sysconfig/network-scripts/ifcfg-br0` file with the following contents
+
+[source, bash]
+----
+DEVICE=br0
+ONBOOT=yes
+BOOTPROTO=dhcp
+TYPE=Bridge
+----
+
+* Edit `/etc/sysconfig/network-scripts/ifcfg-enp0s25` to mapping to the bridge created above
+
+[source, bash]
+----
+DEVICE=enp0s25
+ONBOOT=yes
+BRIDGE=br0
+ZONE=public
+----
+
+* Restart network
+
+[source, text]
+----
+# service network restart
+----
+

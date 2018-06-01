@@ -1,0 +1,137 @@
+= 元数据
+:toc: manual
+:toc-placement: preamble
+
+本部分验证元数据缓存功能。
+
+== 测试数据库初始化
+
+本部分使用 mariadb。
+
+[source.sql]
+.*创建数据库，用户*
+----
+$ mysql -u root -p
+
+CREATE DATABASE accounts;
+USE accounts;
+
+CREATE USER jdv_user@'%' IDENTIFIED BY 'jdv_pass';
+GRANT ALL PRIVILEGES ON accounts.* to jdv_user@'%';
+exit
+----
+
+[source.sql]
+.*初始化测试数据*
+----
+$ mysql -u jdv_user -p
+
+USE accounts;
+source accounts-schema.sql
+
+show tables;
++--------------------+
+| Tables_in_accounts |
++--------------------+
+| ACCOUNT            |
+| CUSTOMER           |
+| HOLDINGS           |
+| HT_ProductInfo     |
+| PRODUCT            |
++--------------------+
+5 rows in set (0.00 sec)
+----
+
+link:files/accounts-schema.sql[accounts-schema.sql]
+
+[source.sql]
+.*Mysql 驱动安装*
+----
+./bin/jboss-cli.sh --connect --file=module-add-mysql.cli
+----
+
+link:files/module-add-mysql.cli[module-add-mysql.cli]
+
+[source.sql]
+.*数据源配置*
+----
+./bin/jboss-cli.sh --connect --file=create-mysql-xa-ds.cli
+----
+
+link:files/create-mysql-xa-ds.cli[create-mysql-xa-ds.cli]
+
+== 元数据加载
+
+JDV 中可加载的元数据见下表:
+
+|===
+|名称 |默认加载 |过滤属性
+
+|Table 
+|Y
+|`catalog`, `schemaPattern`, `tableNamePattern`, `tableTypes`, `excludeTables`, `useFullSchemaName`, `useQualifiedName`, `useCatalogName`, `catalogSeparator`
+
+|PrimaryKey
+|Y
+|`importKeys`
+
+|Index
+|Y
+|`importKeys`, `importIndexes`, `importApproximateIndexes`
+
+|ForeignKey
+|Y
+|`importKeys`, `importForeignKeys`
+
+|TableStatistics
+|N
+|`importStatistics`
+
+|Procedure
+|N
+|`importProcedures`, `catalog`, `schemaPattern`, `procedureNamePattern`, `useProcedureSpecificName`, `excludeProcedures`, `useFullSchemaName`
+|===
+
+* `catalog`, `schemaPattern`, `tableNamePattern`, `tableTypes` - 最直接用来过滤表的加载策略，
+** `tableTypes` 是用逗号隔开的字符串，可配置的表类型有：TABLE、VIEW、SYSTEM TABLE、GLOBAL TEMPORARY、LOCAL TEMPORARY、ALIAS、SYNONYM。通常建议只加载表和视图，例如配置 `tableTypes` 属性为 `TABLE,VIEW`
+* `excludeTables` - 正则表达式，用来更细化的过滤表的加载，
+
+
+=== 元数据加载过滤
+
+部署 link:meta-filter-vdb.xml[meta-filter-vdb.xml] 到 JDV，查看 VDB 加载的元数据，结果如下
+
+[source, java]
+----
+[HOLDINGS, HT_ProductInfo]
+----
+
+=== 元数据动态加载
+
+* Using customer Repository API
+* https://issues.jboss.org/browse/TEIID-2578[TEIID-2578]
+
+== 元数据缓存
+
+为了方便观察从缓存中加载元数据，添加如下日志配置
+
+[source, java]
+----
+/subsystem=logging/logger=org.teiid.RUNTIME:add(level=DEBUG)
+----
+
+部署 link:meta-caching-vdb.xml[meta-caching-vdb.xml] 到 JDV，并反复重启 JDV 数次，观察日志中会有如下信息。
+
+[source, java]
+----
+15:22:30,717 DEBUG [org.teiid.RUNTIME] (teiid-async-threads - 4) Model  Accounts in VDB  CacheMetadataVDB  was loaded from cached metadata
+...
+15:37:20,949 DEBUG [org.teiid.RUNTIME] (teiid-async-threads - 1) Model  Accounts in VDB  CacheMetadataVDB  was loaded from cached metadata
+...
+15:37:46,072 DEBUG [org.teiid.RUNTIME] (teiid-async-threads - 1) Model  Accounts in VDB  CacheMetadataVDB  was loaded from cached metadata
+----
+
+NOTE: 注意，实际生成环境不建议日志为 DEBUG。
+
+NOTE: 元数据被缓存文件路径为: `standalone/data/teiid-data/CacheMetadataVDB_1/CacheMetadataVDB_1_Accounts.ser`。
+

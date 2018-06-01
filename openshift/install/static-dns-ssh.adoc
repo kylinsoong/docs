@@ -1,0 +1,86 @@
+= 静态域名及 SSH 互信
+:toc: manual
+
+== 管理和计算节点设置主机域名
+
+[source, bash]
+.*master*
+----
+hostnamectl set-hostname master.example.com
+----
+
+[source, bash]
+.*node1*
+----
+hostnamectl set-hostname node1.example.com
+----
+
+[source, bash]
+.*node2*
+----
+hostnamectl set-hostname node2.example.com
+----
+
+== 管理和计算节点设置静态域名解析
+
+[source, bash]
+.*在 master, node1, node2 上执行*
+----
+echo "192.168.122.101     master.example.com" >> /etc/hosts
+echo "192.168.122.105     node1.example.com" >> /etc/hosts
+echo "192.168.122.106     node2.example.com" >> /etc/hosts
+echo "10.66.192.2     registry.example.com" >> /etc/hosts
+echo "10.66.192.2     git.example.com" >> /etc/hosts
+echo "10.66.192.2     yum.example.com" >> /etc/hosts
+echo "10.66.192.2     nfs.example.com" >> /etc/hosts
+----
+
+[source, bash]
+.*在 yum/registry/git/nfs 上执行*
+----
+echo "10.66.192.2     registry.example.com" >> /etc/hosts
+echo "10.66.192.2     git.example.com" >> /etc/hosts
+echo "10.66.192.2     yum.example.com" >> /etc/hosts
+echo "10.66.192.2     nfs.example.com" >> /etc/hosts
+----
+
+== 控制台配置SSH到各节点的互信
+
+在 master 节点上生成 SSH 所需之秘钥。命令如下，应答输入请直接输入回车：
+
+[source, text]
+----
+# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:xPv+LSN8quh203vp/9Vtu0y2/5rEcM5TwdNbkLMtw7Q root@master.example.com
+The key's randomart image is:
++---[RSA 2048]----+
+|              .. |
+|       .      =..|
+|        o    o Oo|
+|       . .    E *|
+|        S   . .+.|
+|         .   * .o|
+|         o.  .*o=|
+|      ..o.+ *o+++|
+|     oo..o+Oo+=BB|
++----[SHA256]-----+
+----
+
+在 Master 节点上配置 Master 节点到各个节点（Master，Node1及Node2）的SSH主机互信。命令如下，请根据提示输入远程主机Root账户密码:
+
+[source, text]
+----
+for i in master.example.com node1.example.com node2.example.com registry.example.com git.example.com yum.example.com nfs.example.com;
+do
+ssh-copy-id $i;
+done;
+----
+

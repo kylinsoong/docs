@@ -1,0 +1,309 @@
+= JBoss AMQ 6.3 安装测试
+:toc: manual
+:toc-placement: preamble
+
+本文包括 JBoss AMQ 6.3 安装测试
+
+== 软件下载
+
+登录  https://access.redhat.com(需要红帽账号)，进入AMQ 下载页面（https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.amq.broker&version=6.3.0），选择下载
+Red Hat JBoss AMQ 6.3.0，可根据需求下载相应的其他组件。下载完成后会有如下文件：
+    
+[source, text]
+----
+jboss-a-mq-6.3.0.redhat-262.zip
+----
+
+== 安装
+
+=== AMQ 运行环境说明
+
+==== 支持运行的平台
+
+JBoss AMQ 6.3 支持的运行平台包括：Red Hat Enterprise Linux 7，Red Hat Enterprise Linux 6，Microsoft Windows Server 2012 等，详细请参照 https://access.redhat.com/articles/310613。 
+
+==== 支持运行的 Java 版本
+
+JBoss AMQ 6.3 支持的运行 Java 版本包括 Oracle JDK 1.7.x，Oracle JDK 1.8.x，OpenJDK 1.7.x，OpenJDK 1.8.x 等，详细请参照 https://access.redhat.com/articles/310613。
+
+==== 支持的标准和协议
+
+JBoss AMQ 6.3 支持的标准和协议包括：JMS，AMQP 等，详细请参照https://access.redhat.com/articles/375833。
+
+=== 安装 JBoss AMQ
+
+解压软件下载部分下载完成的 zip 包即完成了安装：
+
+[source, bash]
+----
+$ unzip jboss-a-mq-6.3.0.redhat-262.zip
+----
+
+安装完成生成 jboss-a-mq-6.3.0.redhat-262 目录即为 AMQ 的主目录。进入AMQ 主目录
+
+[source, bash]
+----
+$ cd jboss-a-mq-6.3.0.redhat-262/  
+----
+
+该目录下 etc 目录中保存这配置文件，bin 目录下为启动脚本，extras 下为和社区版 ActiveMQ比较接近的 `apache-activemq-5.11.0.redhat-630262-bin.zip`.
+
+==== 添加用户
+
+编辑 etc/users.properties 文件，添加
+
+[source, bash]
+----
+jboss=Abcd1234!,admin,manager,viewer,Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+save=save_activemq@123,admin,manager,viewer,Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+cmsfe=cmsfe_activemq@123,admin,manager,viewer,Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+----
+
+保存修改并退出。
+
+==== Broker 属性配置
+
+编辑 etc/activemq.xml 配置文件，分别修改 brokerName 为 amq1，useJmx 为 true:
+
+[source, xml]
+----
+<broker xmlns="http://activemq.apache.org/schema/core" brokerName="amq1" dataDirectory="${data}" useJmx="true">
+----
+
+==== 传输连接器配置
+
+编辑 etc/activemq.xml 配置文件，添加
+
+[source, xml]
+----
+<transportConnector name="openwire" uri="tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+----
+
+==== 启动 AMQ
+
+在 Linux 下启动执行
+
+[source, bash]
+----
+./bin/start
+----
+
+在 Windows 下启动执行
+
+[source, bash]
+----
+bin\start.bat
+----
+
+==== 安装测试
+
+访问 http://localhost:8181/ 登录 AMQ 管理控制台, 登录后可以查看一些默认配置信息。另外运行 https://raw.githubusercontent.com/kylinsoong/mom-examples/master/amq/sinopharm/src/main/java/org/jboss/amq/samples/SimplePing.java[SimplePing]，如果能接收到返回字符串 “PING JBOSS AMQ 6.3 SUCCESS!”，则表明安装成功。
+
+=== 安装 Apache ActiveMQ
+
+解压安装包完成安装
+
+[source, bash]
+----
+ $ unzip apache-activemq-5.11.0.redhat-630260-bin.zip
+----
+
+安装完成后生成了 apache-activemq-5.11.0.redhat-630260 目录，进入此目录。
+
+==== 配置
+
+[source, text]
+.*conf/users.properties*
+----
+admin=admin
+----
+
+[source, text]
+.*conf/credentials.properties*
+----
+activemq.username=admin
+activemq.password=admin
+guest.password=password
+----
+
+[source, text]
+.*conf/groups.properties*
+----
+admins=admin
+----
+
+[source, xml]
+.*conf/activemq.xml*
+----
+<plugins>
+    <simpleAuthenticationPlugin >
+        <users>
+            <authenticationUser username="admin" password="${activemq.password}" groups="users, admins" />
+        </users>
+    </simpleAuthenticationPlugin>
+</plugins>
+----
+
+[source, xml]
+.*conf/activemq.xml*
+----
+<destinationPolicy>
+    <policyMap>
+        <policyEntries>
+            <policyEntry topic=">" producerFlowControl="true" memoryLimit="100mb">
+                <pendingMessageLimitStrategy>
+                    <constantPendingMessageLimitStrategy limit="5000"/>
+                </pendingMessageLimitStrategy>
+            </policyEntry>
+            <policyEntry queue=">" producerFlowControl="true" memoryLimit="100mb">
+            </policyEntry>
+        </policyEntries>
+    </policyMap>
+</destinationPolicy>
+----
+
+[source, xml]
+.*conf/activemq.xml*
+----
+<managementContext>
+    <managementContext createConnector="true"  connectorPort="11099">
+        <property xmlns="http://www.springframework.org/schema/beans" name="environment">
+            <map xmlns="http://www.springframework.org/schema/beans">
+                <entry xmlns="http://www.springframework.org/schema/beans" key="jmx.remote.x.password.file" value="${activemq.conf}/jmx.password"/>
+                <entry xmlns="http://www.springframework.org/schema/beans" key="jmx.remote.x.access.file" value="${activemq.conf}/jmx.access"/>
+            </map>
+        </property>
+    </managementContext>
+</managementContext>
+----
+
+[source, xml]
+.*conf/activemq.xml*
+----
+<systemUsage>
+    <systemUsage>
+        <memoryUsage>
+            <memoryUsage percentOfJvmHeap="70" />
+        </memoryUsage>
+        <storeUsage>
+            <storeUsage limit="1 gb"/>
+        </storeUsage>
+        <tempUsage>
+            <tempUsage limit="2 gb"/>
+        </tempUsage>
+    </systemUsage>
+</systemUsage>
+----
+
+[source, xml]
+.*onf/activemq.xml*
+----
+<transportConnectors>
+    <transportConnector name="openwire" uri="tcp://0.0.0.0:61616?maximumConnections=3000&amp;wireFormat.maxFrameSize=104857600"/>
+</transportConnectors>
+----
+
+==== 启动
+
+在 Linux 下启动执行
+
+[source, bash]
+----
+ ./bin//activemq start
+----
+
+在 Windows 下启动执行
+
+[source, bash]
+----
+bin\activemq.bat start
+----
+
+==== 安装测试
+
+使用 http://localhost:8161/hawtio/login 登录管理控制台，登录管理控制台可以查看一些默认的配置。
+
+== AMQ 共享存储配置
+
+[source, xml]
+----
+<persistenceAdapter>
+  <kahaDB directory="/mq" lockKeepAlivePeriod="2000">
+    <locker>
+      <shared-file-locker lockAcquireSleepInterval="10000" />
+    </locker>
+  </kahaDB>
+</persistenceAdapter>
+----
+
+[source, xml]
+----
+<systemUsage>
+        <systemUsage>
+            <memoryUsage>
+                <memoryUsage percentOfJvmHeap="70"/>
+            </memoryUsage>
+            <storeUsage>
+                <storeUsage limit="30 gb"/>
+            </storeUsage>
+            <tempUsage>
+                <tempUsage limit="10 gb"/>
+            </tempUsage>
+        </systemUsage>
+</systemUsage>
+----
+
+基于如上配置，AMQ Broker 可以使用的内存为 Heap 的 70%，持久化消息存储，kahaDB 文件系统可以使用的磁盘大小为 30 GB，处理一些非持久化消息或 DLQ 及其它相关的临时文件可以使用的磁盘大小为 10 GB.
+
+== SSL 双向加密认证
+
+=== 服务器端配置
+
+[source, xml]
+----
+<sslContext>
+    <sslContext keyStore="file:///path/to/spserver.ks" keyStorePassword="redhat" trustStore="file:///path/to/spserver.ts" trustStorePassword="redhat"/>
+</sslContext>
+----
+
+添加 ssl 加密传输链接器配置如下
+
+[source, xml]
+----
+<transportConnector name="ssl" uri="ssl://0.0.0.0:61617?transport.enabledProtocols=TLSv1,TLSv1.1,TLSv1.2&amp;maximumConnections=1000" />
+----
+
+=== 客户端配置
+
+SSL 客户端需要使用 ActiveMQSslConnectionFactory，具体初始化代码如下
+
+[source, java]
+----
+ActiveMQSslConnectionFactory connectionFactory = new ActiveMQSslConnectionFactory();
+connectionFactory.setTrustStore("/path/to/spclient.ts");
+connectionFactory.setTrustStorePassword("redhat");
+connectionFactory.setKeyStore("/path/to/spclient.ks");
+connectionFactory.setKeyStorePassword("redhat");
+connectionFactory.setBrokerURL("ssl://localhost:61617");
+connectionFactory.setUserName("admin");
+connectionFactory.setPassword("admin");
+Connection connection = connectionFactory.createConnection();
+connection.start();
+----
+
+对应 bean 的配置为
+
+[source, xml]
+----
+<bean id="AMQJMSConnectionFactory" class="org.apache.activemq.ActiveMQSslConnectionFactory">
+  <property name="trustStore" value="/path/to/spclient.ts" />
+  <property name="trustStorePassword" value="redhat" />
+  <property name="keyStore" value="/path/to/spclient.ks" />
+  <property name="keyStorePassword" value="redhat" />
+  <property name="brokerURL" value="ssl://localhost:61617" />
+  <property name="userName" value="admin" />
+  <property name="password" value="admin" />
+</bean>
+----
+
+

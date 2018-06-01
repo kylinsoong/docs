@@ -1,0 +1,23 @@
+= 下载
+
+登录 https://access.redhat.com[access.redhat.com], 进入 https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=appplatform[EAP 下载页面]，选择下载
+
+*  Red Hat JBoss Enterprise Application Platform 6.4.0 
+
+进入 https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=data.services.platform&downloadType=distributions[JDV 下载页面], 选择下载：
+
+* Red Hat JBoss Data Virtualization 6.3.0 Installer 
+* Red Hat JBoss Developer Studio 10.4.0 Stand-alone Installer 
+* Red Hat JBoss Data Virtualization 6.3.0 TEIID JDBC Driver 
+
+可根据需求下载相应的其他组件。下载完成后会有如下文件
+
+[source, java]
+----
+$ ls -l
+total 1820988
+-rw-rw-r--. 1 kylin kylin  596374040 Jul 31 09:30 devstudio-10.4.0.GA-installer-standalone.jar
+-rw-rw-r--. 1 kylin kylin 1001265731 Jul 31 09:32 jboss-dv-6.3.0-1-installer.jar
+-rw-rw-r--. 1 kylin kylin     573609 Jul 31 09:50 jboss-dv-6.3.0-teiid-jdbc.jar
+-rw-rw-r--. 1 kylin kylin  165179304 Jul 31 09:56 jboss-eap-6.4.0.zip
+----

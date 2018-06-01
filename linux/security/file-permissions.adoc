@@ -1,0 +1,48 @@
+= 文件权限
+:toc: manual
+
+== 修改文件权限
+
+[source, text]
+.*chown 修改文件所有者*
+----
+# chown :ateam /home/ateam-text
+----
+
+[source, text]
+.*chmod 修改文件权限*
+----
+# chmod g+w /home/ateam-text
+# chmod 770 /home/ateam-text
+----
+
+== 设定文件初始权限
+
+[source, text]
+.*umask 设定可读权限给组，其他用户无读写权限*
+----
+umask 027
+----
+
+== POSIX ACLs
+
+[source, text]
+.*getfacl 查看文件权限设置*
+----
+$ getfacl /usr/bin/passwd
+----
+
+== 文件安全控制
+
+[source, text]
+.**
+----
+# setfacl -Rm g:sodor:rwX /shares/steamies
+# setfacl -Rm u:james:- /shares/steamies
+# setfacl -m d:g:sodor:rwx /shares/steamies
+# setfacl -m d:u:james:- /shares/steamies
+----
+
+
+
+

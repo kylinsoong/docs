@@ -1,0 +1,37 @@
+= Installing the JBoss Developer Studio
+:toc: manual
+:toc-placement: preamble
+
+In this recipe we will learn how to install JBDS and configure to access the OpenShift instance.
+
+== Download and install JBoss Developer Studio
+
+Download the latest JBoss Developer studio from:
+
+https://developers.redhat.com/products/devstudio/download/?referrer=jbd
+
+Install JBoss Developer Studio via
+
+[source, java]
+----
+$ java -jar devstudio-10.4.0.GA-installer-standalone.jar
+----
+
+== Install OpenShift Plugin
+
+* Open JBoss Studio.
+* Navigate to JBoss Central and select "Software/Update" tab
+* Look for the OpenShift v3 tools
+* Select it and install. Accept license agreement. It may warn you about unsigned content. Ignore it.
+
+== Configure OpenShift v3 Plugin
+
+* At the bottom of your IDE, expand the OpenShift explorer panel.
+* Add a new connection.
+* From the “Server type” dropdown box, select OpenShift 3.
+* For the Server URL, ensure you add port 8443 if you are not using the default server FQDN.
+* Select the authentication mechanism.
+* Provide the username and password.
+* Click Finish
+
+image:img/jbds-openshift-explore.png[jbds-openshift-explore]

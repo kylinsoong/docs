@@ -1,0 +1,57 @@
+= RedHat Enterprise Linux
+
+.*术语表*
+|===
+|术语 |全称 |中文 |说明
+
+|MBR
+|Master Boot Record
+|主引导记录
+|最大支持 4 个主分区；在 Linux 上可以通过扩展和逻辑分区达到最大 15 个分区；一个分区的最大容量是 2T。
+
+|GPT
+|GUID Partition Table
+|GUID 磁盘分割表
+|GPT 补充 MBR 分区的不足，基于 UEFI 标准；默认支持 128 个分区；能满足现有所有企业需求。
+
+|UEFI
+|Unified Extensible Firmware Interface
+|统一可扩展固件接口
+|一种电脑系统规格标准，用来定义操作系统和系统固件之间的接口。
+
+|NFS
+|Network File System
+|网络文件系统
+|一种网络文件系统
+
+|SMB
+|Server Message Block
+|消息区块服务器
+|向 Microsoft Windows 共享文件的一个标准，有称做 <<CIFS, CIFS>>，例如 Linux 服务器中 Samba 实现了 SMB 标准用来共享文件供 Windows 服务器/客户机/打印机等使用。
+
+|CIFS
+|Common Internet File System
+|标准网络文件系统
+|<<SMB, SMB>> 别名
+
+|iSCSI
+|Internet Small Computer Systems Interface
+|互联网小型计算机系统接口
+|一种在TCP/IP上进行数据块传输的标准。https://tools.ietf.org/html/rfc3720[RFC3720], https://tools.ietf.org/html/rfc7145[RFC7145], https://en.wikipedia.org/wiki/ISCSI[iSCSI] 
+
+|SCSI
+|Small Computer System Interface
+|小型计算机系统接口
+|SISI是定义计算机及其周边设备（硬盘、软驱、光驱、打印机、扫描仪等）之间进行物理连接和数据传输的一组标准
+
+|SAN
+|Storage Area Network
+|存储区域网络
+|一种计算机网络用来接入统一的，块级别存储。
+
+|NIC
+|Network Interface Controller
+|又称网络接口控制器，网络适配器（network adapter），网卡（network interface card），或区域网络接收器（LAN adapter），是一块被设计用来允许计算机在计算机网络上进行通讯的计算机硬件
+
+|===
+

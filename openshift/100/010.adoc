@@ -1,0 +1,218 @@
+= Blue-Green Deployments
+:toc: manual
+:toc-placement: preamble
+
+In this recipe is to demonstrate how simple it is to implement Blue-Green Deployments in OpenShift.
+
+== Blue-Green Deployments
+
+From https://en.wikipedia.org/wiki/User:Nuqing/Blue-green_deployment
+
+"Blue-green deployment is a release strategy that can be utilized by developers for deploying software in a production environment. Blue can be one particular production environment whereas green can define an identical production environment. Under blue-green deployment strategy, software developers are able to minimize downtime and reduce risk."
+
+The following contents including:
+
+* Deploying two versions of the same application. The first version will display a blue rectangle.
+* Create a FQDN that can be used to expose the applications.
+* We will first expose the first application.
+* We will also create another version of this application in the same project that displays a green rectangle.
+* We will then switch the FQDN to from the first application (blue) to the second application (green).
+
+image:img/blue_green_deployment.png[blue_green_deployment]
+
+== Blue
+
+* Create a new project
+
+[source, bash]
+----
+$ oc new-project bluegreen
+----
+
+* List existing image builder or image streams
+
+[source, bash]
+----
+$ oc new-app -S --image-stream=php
+Image streams (oc new-app --image-stream=<image-stream> [--code=<source>])
+-----
+php
+  Project: openshift
+  Tags:    5.6, 7.0, latest
+----
+
+* Create an application
+
+We will be using a sample application that displays a blue or green rectangle. The sample app can be browsed at https://github.com/jbosschina/bluegreen.
+
+We will be using an env var in order to change the color of the box; but in practice you would use a different branch for each version of the code. (E.g. v1 branch and v2 branch).
+
+[source, bash]
+----
+$ oc new-app --image-stream=php --code=https://github.com/jbosschina/bluegreen.git --env COLOR=blue --name=blue
+--> Found image 79f7d44 (7 weeks old) in image stream "openshift/php" under tag "7.0" for "php"
+
+    Apache 2.4 with PHP 7.0 
+    ----------------------- 
+    Platform for building and running PHP 7.0 applications
+
+    Tags: builder, php, php70, rh-php70
+
+    * The source repository appears to match: php
+    * A source build using source code from https://github.com/jbosschina/bluegreen.git will be created
+      * The resulting image will be pushed to image stream "blue:latest"
+      * Use 'start-build' to trigger a new build
+    * This image will be deployed in deployment config "blue"
+    * Port 8080/tcp will be load balanced by service "blue"
+      * Other containers can access this service through the hostname "blue"
+
+--> Creating resources ...
+    imagestream "blue" created
+    buildconfig "blue" created
+    deploymentconfig "blue" created
+    service "blue" created
+--> Success
+    Build scheduled, use 'oc logs -f bc/blue' to track its progress.
+    Run 'oc status' to view your app.
+----
+
+* Check application deployment status
+
+[source, bash]
+----
+$ oc get pods
+NAME           READY     STATUS      RESTARTS   AGE
+blue-1-build   0/1       Completed   0          2m
+blue-1-bw5sh   1/1       Running     0          2m
+----
+
+Notice that the build pod has exited and you now have a single instance of the application running under one single pod.
+
+This application displays a blue square.
+
+* Create a route for the application
+
+[source, bash]
+----
+$ oc expose service blue --name=bluegreen
+route "bluegreen" exposed
+----
+
+* Test the application
+
+[source, bash]
+----
+$ oc get route 
+NAME        HOST/PORT                                        PATH      SERVICES   PORT       TERMINATION   WILDCARD
+bluegreen   bluegreen-bluegreen.apps.example.com             blue       8080-tcp                 None
+----
+
+Copy the HOST/PORT and paste it in your browser. You should see something similar to:
+
+image:img/blue_deployment.jpeg[blue_deployment]
+
+At this point you have deployed an application that displays for illustration purposes a blue rectangle for version 1.
+
+== Green
+
+In this section we will:
+
+* Deploy a new version of this application (Same one as before with a very small change)
+* Point the previously created FQDN (route) to the new service that will be created as part of the new application creation process.
+
+image:img/blue_green_active_green.png[blue_green_active_green]
+
+* Create new version of the application
+
+Create a new application the same way as you did above in Part I. Make sure to name the application as 'green' this time.
+
+[source, bash]
+----
+$ oc new-app --image-stream=php --code=https://github.com/jbosschina/bluegreen.git --env COLOR=green --name=green
+--> Found image 79f7d44 (7 weeks old) in image stream "openshift/php" under tag "7.0" for "php"
+
+    Apache 2.4 with PHP 7.0 
+    ----------------------- 
+    Platform for building and running PHP 7.0 applications
+
+    Tags: builder, php, php70, rh-php70
+
+    * The source repository appears to match: php
+    * A source build using source code from https://github.com/jbosschina/bluegreen.git will be created
+      * The resulting image will be pushed to image stream "green:latest"
+      * Use 'start-build' to trigger a new build
+    * This image will be deployed in deployment config "green"
+    * Port 8080/tcp will be load balanced by service "green"
+      * Other containers can access this service through the hostname "green"
+
+--> Creating resources ...
+    imagestream "green" created
+    buildconfig "green" created
+    deploymentconfig "green" created
+    service "green" created
+--> Success
+    Build scheduled, use 'oc logs -f bc/green' to track its progress.
+    Run 'oc status' to view your app.
+----
+
+* Wait until the application is built and deployed. You should now see two services if you run:
+
+[source, bash]
+----
+$ oc get services 
+NAME      CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+blue      172.30.34.210    <none>        8080/TCP   17m
+green     172.30.106.224   <none>        8080/TCP   26s
+----
+
+* Edit the previously created route and change the service name (from blue to green), all the way at the bottom to the new service that was just created. You are essentially still using the FQDN you had previously created. However, that route will now point to a different (green) service.
+
+[source, bash]
+----
+$ oc edit route bluegreen
+
+apiVersion: v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  creationTimestamp: 2017-07-14T08:56:07Z
+  labels:
+    app: green
+  name: bluegreen
+  namespace: bluegreen
+  resourceVersion: "5441775"
+  selfLink: /oapi/v1/namespaces/bluegreen/routes/bluegreen
+  uid: 4659584a-6872-11e7-bbc1-0682973451aa
+spec:
+  host: bluegreen-bluegreen.apps.example.com
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: green
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: 2017-07-14T08:56:07Z
+      status: "True"
+      type: Admitted
+    host: bluegreen-bluegreen.apps.example.com
+    routerName: router
+    wildcardPolicy: None
+----
+
+* Test the application
+
+[source, bash]
+----
+$ oc get route 
+NAME        HOST/PORT                                        PATH      SERVICES   PORT       TERMINATION   WILDCARD
+bluegreen   bluegreen-bluegreen.apps.example.com             blue       8080-tcp                 None
+----
+
+Copy the HOST/PORT and paste it in your browser.
+
+You should now see the new version of the recently deployed application with a green rectangle.

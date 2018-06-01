@@ -1,0 +1,17 @@
+# 08. sakila
+if (outcome != success) of /subsystem=datasources/data-source=MySqlDS:read-resource
+    /subsystem=datasources/data-source=MySqlDS:add(driver-name=mysql, jndi-name="java:/MySqlDS", jta=true, enabled=true, use-ccm=true, connection-url="jdbc:mysql://localhost:3306/sakila", user-name=root, password=000000, valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker, background-validation=true, exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter)
+    /subsystem=datasources/data-source=MySqlDS:enable()
+end-if
+
+# 09. MySqlworld
+if (outcome != success) of /subsystem=datasources/data-source=MySqlworld:read-resource
+    /subsystem=datasources/data-source=MySqlworld:add(driver-name=mysql, jndi-name="java:/MySqlworld", jta=true, enabled=true, use-ccm=true, connection-url="jdbc:mysql://localhost:3306/world", user-name=root, password=000000, valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker, background-validation=true, exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter)
+    /subsystem=datasources/data-source=MySqlDS:enable()
+end-if
+
+# 10. t_DS
+if (outcome != success) of /subsystem=datasources/data-source=t_DS:read-resource
+    /subsystem=datasources/data-source=t_DS:add(driver-name=mysql, jndi-name="java:/t_DS", enabled=true, connection-url="jdbc:mysql://localhost:3306/sakila?serverTimezone=UTC", user-name=root, password=0)
+    /subsystem=datasources/data-source=t_DS:enable()
+end-if

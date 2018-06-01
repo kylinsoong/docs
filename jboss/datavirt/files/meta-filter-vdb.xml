@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="MetadataFilterVDB" version="1">
+
+    <description>Metadata Filter VDB</description>
+
+    <model name="Accounts">
+        <!--
+          JDBC Import settings
+
+          importer.useFullSchemaName directs the importer to drop the source
+          schema from the Teiid object name, so that the Teiid fully qualified name
+          will be in the form of <model name>.<table name>
+        -->
+        <property name="importer.useFullSchemaName" value="false"/>
+
+	<property name="importer.tableNamePattern" value="H%"/>
+
+         <!--
+            This connector is defined to reference the Mysql local DS"
+          -->
+        <source name="mysql-connector" translator-name="translator-mysql" connection-jndi-name="java:jboss/AccountsDS"/>
+    </model>
+
+    <translator name="translator-mysql" type="mysql5">
+        <property name="SupportsNativeQueries" value="true"/>
+    </translator>
+
+</vdb>
+

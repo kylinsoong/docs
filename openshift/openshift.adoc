@@ -1,0 +1,14 @@
+= OpenShift
+
+Openshift 是一个容器云应用平台，以最少的配置和管理开销为开发人员和 IT 组织提供了一个安全的、资源可弹性扩展的云原生应用平台。
+
+OpenShift 基于企业级 Linux，Docker 及 Kubernetes，提供了一个适用于当今企业级应用的，安全可扩展的多租户系统，同时也提供了厂商集成及第三方集成的应用程序运行时环境和软件包模版。 OpenShift 可以给客户的数据中心提供可靠的，灵活的和可扩展的容器云平台 到，使客户能够简单搭建，构建一个具有高安全性，高隐私，高合规，高保障性，高标准的云平台。
+
+应用容器化、云原生化已成为行业的标准。应用以容器化的方式运行，容器化的应用相当是单个操作系统内的隔离分区，基于 Linux kernel 之上的轻量级虚拟化。容器提供了许多与虚拟机类似的优点，例如安全性，存储，安全性，网络隔离等，但同时需要更少的硬件资源和更快的启动和终止时间。使用 OpenShift 容器云有助于提高平台及平台之上的应用的效率，弹性和可移植性等。
+
+== OpenShift 特性
+
+* *自助服务* - OpenShift 集成了来自红帽自己、独立软件开发商、社区等多种成熟的解决方案介质和模版，例如：红帽 JBoss 中间件，Spring(Spring MVC, Spring Boot，Spring Cloud)，Mysql, MongoDB, Redis 等。基于这些介质和模版允许开发人员快速创建应用。OpenShift 还提供了开发者从源代码管理仓库开始使用和 S2I 构建应用程序。系统理员或运维人员可以为用户和项目定义资源配额和限制来系统资源控制的使用。
+
+* *多语言的支持* - OpenShift 支持来自厂商的 Java，Node.js，PHP，Perl 和 Ruby 等。还有来自合作伙伴和更大的 Docker 社区的其他产品，MySQL，PostgreSQL，MongoDB数据库等。还支持轻量级中间件产品，如 Apache httpd，Apache Tomcat，JBoss EAP，ActiveMQ 和 Fuse 等。
+

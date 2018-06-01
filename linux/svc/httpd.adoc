@@ -1,0 +1,261 @@
+= HTTPD
+:toc: manual
+
+== 基本配置
+
+[source, bash]
+.*安装*
+----
+yum -y install httpd httpd-manual
+----
+
+[source, text]
+.*配置*
+----
+# vim /etc/httpd/conf/httpd.conf
+# grep ServerAdmin /etc/httpd/conf/httpd.conf
+ServerAdmin webmaster@example.com
+----
+
+[source, text]
+.*创建默认网页*
+----
+# echo 'Hello Class!' >> /var/www/html/index.html
+# cat /var/www/html/index.html
+Hello Class!
+----
+
+[source, text]
+.*启动服务*
+----
+# systemctl start httpd.service
+# systemctl enable httpd.service 
+----
+
+[source, text]
+.*配置防火墙*
+----
+# firewall-cmd --permanent --add-service=http
+# firewall-cmd --reload
+----
+
+通过如下链接测试:
+
+* http://localhost
+* http://localhost/manual
+
+== 配置 VirtualHost
+
+[source, text]
+.*准备 DocumentRoot 目录及欢迎页面*
+----
+# mkdir -p /srv/{default,lab.example.com}/www
+# echo 'Hello World' >> /srv/default/www/index.html
+# echo 'This is from lab.example.com' >> /srv/lab.example.com/www/index.html
+# restorecon -Rv /srv/
+----
+
+[source, text]
+.*创建 VirtualHost* 
+----
+# cat << EOF > /etc/httpd/conf.d/00-default-vhost.conf
+<VirtualHost _default_:80>
+  DocumentRoot /srv/default/www
+  CustomLog "logs/default-vhost.log" combined
+</VirtualHost>
+
+<Directory /srv/default/www>
+  Require all granted
+</Directory>
+EOF
+----
+
+[source, text]
+.*创建 VirtualHost*
+----
+# cat << EOF > /etc/httpd/conf.d/01-lab.example.com-vhost.conf
+<VirtualHost *:80>
+  ServerName lab.example.com
+  ServerAlias www
+  DocumentRoot /srv/lab.example.com/www
+  CustomLog "logs/lab.example.com.log" combined
+</VirtualHost>
+
+<Directory /srv/lab.example.com/www>
+  Require all granted
+</Directory>
+EOF
+----
+
+[source, text]
+.*启动 httpd* 
+----
+# systemctl start httpd.service
+# systemctl enable httpd.service
+----
+
+[source, text]
+.*配置防火墙* 
+----
+# firewall-cmd --permanent --add-service=http
+# firewall-cmd --reloa
+----
+
+[source, text]
+.*测试*
+----
+# hostname
+test.example.com
+
+# curl http://test.example.com
+Hello World
+# curl http://localhost
+Hello World
+# curl http://lab.example.com
+This is from lab.example.com
+----
+
+== 配置 HTTPS
+
+[source, text]
+.*安装包*
+----
+# yum -y install httpd mod_ssl
+# yum install -y crypto-utils
+----
+
+[source, text]
+.*生成 TLS 证书*
+----
+# genkey test.example.com
+----
+
+[source, text]
+.*创建测试目录及文件*
+----
+# mkdir -p /srv/test.example.com/www
+# echo 'test.example.com' >> /srv/test.example.com/www/index.html
+# restorecon -Rv /srv/
+----
+
+[source, text]
+.*查看证书文件路径*
+----
+# ls -l /etc/pki/tls/certs/test.example.com.crt 
+-rw-r-----. 1 root root 1221 Apr 16 21:36 /etc/pki/tls/certs/test.example.com.crt
+# chmod 0600 /etc/pki/tls/private/test.example.com.key
+# ls -l /etc/pki/tls/private/test.example.com.key 
+-rw-------. 1 root root 1737 Apr 16 21:36 /etc/pki/tls/private/test.example.com.key
+----
+
+[source, text]
+.*配置 SSL*
+----
+# cat << EOF > /etc/httpd/conf.d/test.conf
+<VirtualHost *:443>
+  ServerName test.example.com
+  SSLEngine On
+  SSLProtocol all -SSLv2 -SSLv3
+  SSLCipherSuite HIGH:MEDIUM:!aNull:!MD5
+  SSLHonorCipherOrder on
+  SSLCertificateFile /etc/pki/tls/certs/test.example.com.crt
+  SSLCertificateKeyFile /etc/pki/tls/private/test.example.com.key
+  DocumentRoot /srv/test.example.com/www
+</VirtualHost>
+
+<Directory /srv/wwwX/www>
+  Require all granted
+</Directory>
+
+<VirtualHost *:80>
+ServerName test.example.com
+  RewriteEngine on
+  RewriteRule ^(/.*)$ https://%{HTTP_HOST}$1 [redirect=301]
+</VirtualHost>
+EOF
+----
+
+[source, text]
+.*启动 httpd*
+----
+# systemctl start httpd.service
+# systemctl enable httpd.service
+----
+
+[source, text]
+.*配置防火墙*
+----
+# firewall-cmd --permanent --add-service=http --add-service=https
+# firewall-cmd --reload
+----
+
+测试： http://test.example.com
+
+== 创建 php 动态应用
+
+[source, text]
+.*安装包*
+----
+# yum -y install httpd mariadb-server
+# yum -y install php php-mysql
+----
+
+[source, text]
+.*启动服务*
+----
+# systemctl start httpd.service mariadb.service
+# systemctl enable httpd.service mariadb.service
+----
+
+[source, text]
+.*配置防火墙*
+----
+# firewall-cmd --permanent --add-service=http
+# firewall-cmd --reload
+----
+
+[source, sql]
+.*Mysql 配置*
+----
+CREATE DATABASE IF NOT EXISTS mtg;
+CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'test_pass';
+GRANT ALL PRIVILEGES ON mtg.* TO 'test_user'@'localhost';
+USE mtg;
+CREATE TABLE Cards (
+  CardID INT NOT NULL AUTO_INCREMENT,
+  NAME VARCHAR(255) NOT NULL,
+  Cost VARCHAR(255) NOT NULL,
+  PRIMARY KEY (CardID)
+);
+INSERT INTO Cards VALUES(NULL, 'MoxMoxMox', '1');
+INSERT INTO Cards VALUES(NULL, 'Blackest Lotus', '0');
+INSERT INTO Cards VALUES(NULL, 'Gryll Bears', '2{G}{G}');
+INSERT INTO Cards VALUES(NULL, 'Prodigal', '1{U}');
+----
+
+[source, php]
+.*创建 /var/www/html/index.php*
+----
+<html>
+  <head>
+  </head>
+  <body>
+    <?php
+      $servername = 'localhost';
+      $username = 'test_user';
+      $password = 'test_pass';
+      $dbname = 'mtg';
+      $conn = mysqli_connect($servername, $username, $password, $dbname);
+      if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+      }
+      echo '<div>Connected successfully</div>';
+      $contents = mysqli_query($conn, 'SELECT * FROM Cards');
+      while ($row = mysqli_fetch_array($contents)){
+        echo $row['CardID'] . ' ' . $row['NAME'] . ': ' . $row['Cost'] . '<br />';
+      }
+    ?>
+  </body>
+</html>
+----
+

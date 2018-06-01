@@ -1,0 +1,163 @@
+= Horizontal Auto Scaling
+:toc: manual
+:toc-placement: preamble
+
+In this recipe you will learn Openshift Pod Auto Scaling Stratage.
+
+== Create a project or use an existing project
+
+If you want to, you can create a new project based on what you have learned in the previous recipe. Since we already have a project we will use it. Run the following command to make sure.
+
+[source, bash]
+----
+$ oc project ocp-test
+----
+
+== Add test project
+
+Open the browser and select your project. Click into **Add to Project** button. In the search text box type `jboss-webserver30-tomcat8-openshift`, fill the fields with the following information:
+
+* Name: pod-auto-scale
+* Git Repository URL: https://github.com/jbosschina/pod-auto-scale.git
+
+Click `advanced options`, in Scaling section, change 
+
+* Strategy: Automatic
+* Min Pods: 1
+* Max Pods: 4
+* CPU Request Target: 80
+
+image:img/os-pod-auto-scale.png[os-pod-auto-scale]
+
+Click on **Create** and then on **Continue to overview**.
+
+== Send Auto Scaling Up
+
+=== 1. Prepare
+
+Make sure 1 pod are runing fine.
+
+[source, bash]
+----
+$ oc get pods --show-all=false
+NAME                     READY     STATUS    RESTARTS   AGE
+pod-auto-scale-1-fw4kr   1/1       Running   0          6m
+----
+
+=== 2. Send Request Scale to 2 Pod
+
+Request http://pod-auto-scale-ocp-test.apps.example.com/pod-auto-scale/send 3 times, meanwhile, continue monitor the pod number change.
+
+View the Pod log, make sure the request are handle
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-fw4kr
+....
+[08:52:59.137] - http-apr-8080-exec-1 start
+[08:53:24.380] - http-apr-8080-exec-2 start
+[08:53:27.428] - http-apr-8080-exec-3 start
+----
+
+The Pod number should scale to 2 as below
+
+[source, bash]
+----
+$ oc get pods --show-all=false
+NAME                     READY     STATUS    RESTARTS   AGE
+pod-auto-scale-1-fw4kr   1/1       Running   0          13m
+pod-auto-scale-1-m1msc   1/1       Running   0          2m
+----
+
+=== 3. Send Request Scale to 4 Pod
+
+Wait 2 minitues, request http://pod-auto-scale-ocp-test.apps.example.com/pod-auto-scale/send another 3 times
+
+View log from both Pods
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-m1msc
+...
+[08:56:13.886] - http-apr-8080-exec-1 start
+[08:56:39.875] - http-apr-8080-exec-2 start
+----
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-fw4kr
+...
+[08:52:59.137] - http-apr-8080-exec-1 start
+[08:53:24.380] - http-apr-8080-exec-2 start
+[08:53:27.428] - http-apr-8080-exec-3 start
+[08:56:37.429] - http-apr-8080-exec-4 start
+----
+
+The Pod number should scale to 4 as below
+
+[source, bash]
+----
+$ oc get pods --show-all=false
+NAME                     READY     STATUS    RESTARTS   AGE
+pod-auto-scale-1-032qq   1/1       Running   0          2m
+pod-auto-scale-1-fw4kr   1/1       Running   0          17m
+pod-auto-scale-1-ln7g1   1/1       Running   0          2m
+pod-auto-scale-1-m1msc   1/1       Running   0          6m
+----
+
+=== 4. Send request, make sure all pods are handling request
+
+Wait 2 minitues, request http://pod-auto-scale-ocp-test.apps.example.com/pod-auto-scale/send several times again, make sure all 4 pod has request to handle
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-fw4kr
+...
+[08:52:59.137] - http-apr-8080-exec-1 start
+[08:53:24.380] - http-apr-8080-exec-2 start
+[08:53:27.428] - http-apr-8080-exec-3 start
+[08:56:37.429] - http-apr-8080-exec-4 start
+[08:57:59.137] - http-apr-8080-exec-1 end
+[08:58:24.428] - http-apr-8080-exec-2 end
+[08:58:27.428] - http-apr-8080-exec-3 end
+[09:01:37.429] - http-apr-8080-exec-4 end
+[09:01:46.503] - http-apr-8080-exec-5 start
+----
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-m1msc
+...
+[08:56:13.886] - http-apr-8080-exec-1 start
+[08:56:39.875] - http-apr-8080-exec-2 start
+[09:01:13.886] - http-apr-8080-exec-1 end
+[09:01:17.774] - http-apr-8080-exec-3 start
+[09:01:39.875] - http-apr-8080-exec-2 end
+[09:01:48.375] - http-apr-8080-exec-4 start
+----
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-032qq
+...
+[09:01:44.055] - http-apr-8080-exec-1 start
+----
+
+[source, bash]
+----
+$ oc logs pod-auto-scale-1-ln7g1
+...
+[09:01:41.306] - http-apr-8080-exec-1 start
+----
+
+=== 5. Scale down pod num to 1
+
+Monitor to make sure all pod finish handle the request, and check the pod
+
+[source, bash]
+----
+$ oc get pods --show-all=false
+NAME                     READY     STATUS    RESTARTS   AGE
+pod-auto-scale-1-fw4kr   1/1       Running   0          26m
+----
+

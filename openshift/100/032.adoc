@@ -1,0 +1,3 @@
+= Writing Your Own S2I builders
+:toc: manual
+:toc-placement: preamble

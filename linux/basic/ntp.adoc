@@ -1,0 +1,80 @@
+= NTP
+:toc: manual
+
+*网络时间协议 Network Time Protocol (NTP)* 是计算机用于通过互联网提供并获取正确时间信息的一种标准方法。计算机可以通过互联网上的公共 NTP 服务获取正确的时间信息，如 NTP Pool Project。另一种选择是通过高质量硬件时钟为本地客户端提供准确时间。
+
+== 设置本地时钟和时区
+
+[source, bash]
+.*timedatectl 系统的当前时间、时区和 NTP 同步设置*
+----
+$ timedatectl 
+      Local time: Mon 2018-05-28 15:28:43 CST
+  Universal time: Mon 2018-05-28 07:28:43 UTC
+        RTC time: Mon 2018-05-28 07:28:43
+       Time zone: Asia/Shanghai (CST, +0800)
+     NTP enabled: no
+NTP synchronized: no
+ RTC in local TZ: no
+      DST active: n/a
+----
+
+[source, bash]
+.*timedatectl 时区设置*
+----
+$ timedatectl list-timezones 
+$ timedatectl list-timezones | grep Shanghai
+$ timedatectl set-timezone Asia/Shanghai
+----
+
+[source, bash]
+.*timedatectl 时间设置*
+----
+$ timedatectl set-time 15:40
+----
+
+[source, bash]
+.*停止/启用 NTP*
+----
+$ timedatectl set-ntp false 
+$ timedatectl set-ntp true
+----
+
+== 配置和监控 chronyd
+
+chronyd 服务通过与配置的 NTP 服务器同步，使通常不精确的本地硬件时钟 (RTC) 保持准确；或者，如果没有可用的网络连接，则与计算的 RTC 时钟漂移值同步，该值记录在 /etc/chrony.conf 配置文件中指定的 driftfile 中。
+
+默认情况下，chronyd 使用 NTP Pool Project 的服务器同步时间，不需要额外的配置。当涉及的计算机位于孤立网络中时，可能需要更改 NTP 服务器。
+
+[source, text]
+.*chronyd 指向本地时间源*
+----
+# systemctl restart chronyd
+----
+
+[source, bash]
+.*chronyc sources -v 命令获取包含额外说明的详细输出*
+----
+$ chronyc sources -v
+210 Number of sources = 5
+
+  .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
+ / .- Source state '*' = current synced, '+' = combined , '-' = not combined,
+| /   '?' = unreachable, 'x' = time may be in error, '~' = time too variable.
+||                                                 .- xxxx [ yyyy ] +/- zzzz
+||      Reachability register (octal) -.           |  xxxx = adjusted offset,
+||      Log2(Polling interval) --.      |          |  yyyy = measured offset,
+||                                \     |          |  zzzz = estimated error.
+||                                 |    |           \
+MS Name/IP address         Stratum Poll Reach LastRx Last sample               
+===============================================================================
+^* ns01.rdu2.utst.redhat.com     3   7   377   153  +5396us[+4451us] +/-  167ms
+^? 120.132.6.225                 0   9     0     -     +0ns[   +0ns] +/-    0ns
+^? ntp.de.fdw.no                 0   9     0     -     +0ns[   +0ns] +/-    0ns
+^? time5.aliyun.com              0   9     0     -     +0ns[   +0ns] +/-    0ns
+^? 85.199.214.100                0   9     0     -     +0ns[   +0ns] +/-    0ns
+----
+
+== 设置系统时钟示例
+
+

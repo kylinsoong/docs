@@ -1,0 +1,77 @@
+= 本地及远程登录
+:toc: manual
+
+== ssh 互信登录
+
+[source, bash]
+.*ssh-keygen 生成公钥私钥对*
+----
+[root@test1 ~]# ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:9r23YdzNJEt4ofW3jJHVDCR//1r1SjXMT89ENkw1j3U root@test1.example.com
+The key's randomart image is:
++---[RSA 2048]----+
+|            ..ooE|
+|             oo==|
+|              =+B|
+|             +=*o|
+|        S   oo++X|
+|       . . . ++@@|
+|          . ..*o@|
+|             +.= |
+|            ..+. |
++----[SHA256]-----+
+----
+
+[source, bash]
+.*ssh-copy-id 拷贝公钥到远程机器*
+----
+[root@test1 ~]# ssh-copy-id test2
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
+The authenticity of host 'test2 (192.168.122.4)' can't be established.
+ECDSA key fingerprint is SHA256:rXyrF9i/YrMqrDbnK4dHXGONrzLNUf/C+OEl56KgLHk.
+ECDSA key fingerprint is MD5:f0:4e:5d:30:34:4a:6d:7f:40:71:cd:a8:27:26:ae:e5.
+Are you sure you want to continue connecting (yes/no)? yes
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@test2's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'test2'"
+and check to make sure that only the key(s) you wanted were added.
+----
+
+[source, bash]
+.*远程登录执行命令*
+----
+[root@test1 ~]# ssh test2 'hostname'
+test2.example.com
+----
+
+== 收集和查看 sos report 
+
+[source, text]
+.*执行 sosreport 收集*
+----
+# sosreport
+----
+
+NOTE: `sosreport` 执行可能需要一段时间，并且执行过程中需要输入一些信息，例如红帽账户名、红帽问题单号等，命令执行完会在 `/var/tmp` 下产生一个以 *sosreport-* 开头的文件。
+
+[source, text]
+.*查看 sos report*
+----
+# cd /var/tmp/
+# tar -xvJf sosreport-kylin.016001789-20180215001511.tar.xz
+# cd sosreport-kylin.016001789-20180215001511/
+# ls -lR
+----
+

@@ -1,0 +1,101 @@
+= 系统日志
+:toc: manual
+
+== 系统日志文件概述
+
+|===
+|文件 |描述
+
+|/var/log/messages
+|大多数系统日志消息记录在此处。例外是与身份验证、电子邮件处理相关的定期运行作业的消息以及调试相关的消息。
+
+|/var/log/secure
+|安全和身份验证相关的消息和错误的日志文件。
+
+|/var/log/maillog
+|与邮件服务器相关的消息的日志文件。
+
+|/var/log/cron
+|与定期执行任务相关的日志文件。
+
+|/var/log/boot.log
+|与系统启动相关的消息记录在此处。
+|=== 
+
+== Linux 系统日志级别
+
+|===
+|编号 |优先级 |说明
+
+|0
+|emerg
+|系统不可用
+
+|1
+|alert
+|必须立即采取措施
+
+|2
+|crit
+|严重状况
+
+|3
+|err
+|非严重错误状况
+
+|4
+|warning
+|警告状况
+
+|5
+|notice
+|正常但重要的事件
+
+|6
+|info
+|信息性事件
+
+|7
+|debug
+|调试级别消息
+|===
+
+NOTE: `/etc/rsyslog.conf` 中保存着日志配置相关的信息。
+
+[source, text]
+.*配置 Linux 日志配置，将所有 debug 级别的日志输出到单独的文件*
+----
+# echo "*.debug /var/log/messages-debug" >/etc/rsyslog.d/debug.conf
+# systemctl restart rsyslog
+# tail -f /var/log/messages-debug
+# logger -p user.debug "Debug Message Test"
+----
+
+== journalctl 查看系统日志
+
+[source, text]
+----
+# journalctl
+# journalctl -n 10
+# journalctl -p err
+# journalctl -f
+# journalctl --since today
+# journalctl --since "2018-05-27 23:20:00" --until "2018-05-27 23:30:00"
+
+# journalctl _PID=1
+# journalctl _UID=81
+# journalctl --since 9:05:00 --until 9:15:00
+# journalctl --since 9:00:00 _SYSTEMD_UNIT="sshd.service"
+
+# journalctl | head -2
+----
+
+== 将运行时系统日志保存到磁盘
+
+[source, text]
+----
+# mkdir /var/log/journal
+# chown root:systemd-journal /var/log/journal
+# chmod 2755 /var/log/journal
+# killall -USR1 systemd-journald
+----

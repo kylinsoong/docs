@@ -1,0 +1,111 @@
+= 创建 Mysql 数据库
+:toc: manual
+
+== 启动 Mysql 实例
+
+[source,text]
+.*使用如下命令启动 Mysql 实例*
+----
+# docker run --name mysql -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=redhat -d -p 3306:3306 mysql:5.6
+----
+
+NOTE: `--name` 指定了容器的名字；`-e` 设定容器运行环境参数；`-d` 设置后台运行容器；`-p` 设定端口转发。
+
+[source,text]
+.*查看运行的容器*
+----
+# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+039039fcc38c        mysql:5.6           "docker-entrypoint.sh"   2 minutes ago       Up 2 minutes        3306/tcp            mysql
+----
+
+== 命令行进入 mysql 容器
+
+[source,text]
+.*使用如下命令进入 mysql 容器*
+----
+# docker exec -it mysql bash
+root@039039fcc38c:/# 
+----
+
+== 在数据库中创建表
+
+[source,text]
+.*使用 root 用户登录*
+----
+root@039039fcc38c:/# mysql -uroot -predhat
+----
+
+[source,text]
+.*show databases*
+----
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| items              |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.00 sec)
+----
+
+[source,text]
+.*创建表*
+----
+mysql> use items;
+mysql> CREATE TABLE Projects (id int(11) NOT NULL, name varchar(255) DEFAULT NULL, code varchar(255) DEFAULT NULL, PRIMARY KEY (id));
+mysql> insert into Projects (id, name, code) values (1,'DevOps','DO180');
+mysql> select * from Projects;
++----+--------+-------+
+| id | name   | code  |
++----+--------+-------+
+|  1 | DevOps | DO180 |
++----+--------+-------+
+----
+
+[source,text]
+.*退出*
+----
+mysql> exit
+Bye
+root@039039fcc38c:/# exit
+exit
+----
+
+== JDBC 连接容器化 mysql 
+
+使用如下连接参数：
+
+* URL: jdbc:mysql://localhost:3306/items
+* USER: test_user
+* PASSWORD: test_pass
+
+连接成功后执行 `SELECT * FROM Projects` 查询会有一条数据。
+
+同样，使用本地 mysql 命令也可以连接到容器化的 mysql，具体:
+
+[source,text]
+----
+# mysql -h127.0.0.1 -utest_user -ptest_pass items
+MySQL [items]> SELECT * FROM Projects;
++----+--------+-------+
+| id | name   | code  |
++----+--------+-------+
+|  1 | DevOps | DO180 |
++----+--------+-------+
+1 row in set (0.00 sec)
+----
+
+
+== 停止并删除容器
+
+[source,text]
+.*执行如下命令停止并删除容器*
+----
+# docker stop mysql
+# docker rm mysql
+# docker rmi mysql:5.6
+----
+

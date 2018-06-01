@@ -1,0 +1,163 @@
+= 文件存储
+:toc: manual
+
+== NFS 文件共享
+
+[source, text]
+.*NFS 服务器上 exporing 一个共享文件存储*
+----
+# systemctl start nfs-server
+# systemctl enable nfs-server
+# mkdir /nfsshare
+# chown nfsnobody /nfsshare
+# echo '/nfsshare *(rw)' >>/etc/exports
+# exportfs -r
+# firewall-cmd --permanent --add-service=nfs
+# firewall-cmd --reload
+----
+
+[source, text]
+.*客户端服务器 Mounting 文件存储*
+----
+# mkdir /mnt/nfsshare
+# vim /etc/fstab
+nfs.example.com:/nfsshare  /mnt/nfsshare  nfs  defaults  0 0
+# mount -a
+# touch /mnt/nfsshare/test.txt
+----
+
+[source, text]
+.*Umounting 文件存储*
+----
+# umount /mnt/nfsshare/
+----
+
+== Kerberos 加固 NFS Exports
+
+[source, text]
+.*NFS 服务器端配置*
+----
+# mv serverSample.keytab /etc/krb5.keytab
+# vim /etc/sysconfig/nfs
+RPCNFSDARGS="-V 4.2"
+# systemctl start nfs-secure-server
+# systemctl enable nfs-secure-server
+# mkdir /securenfs
+# echo '/securenfs desktopX(sec=krb5p,rw)' >> /etc/exports
+# exportfs -r
+# firewall-cmd --permanent --add-service=nfs
+# firewall-cmd --reload
+----
+
+[source, text]
+.*NFS 客户端配置*
+----
+# mv clientSample.keytab /etc/krb5.keytab
+# systemctl start nfs-secure
+# systemctl enable nfs-secure
+# mkdir /mnt/secureshare
+# echo 'nfs.example.com:/securenfs /mnt/secureshare nfs defaults,v4.2,sec=krb5p 0 0' >> /etc/fstab
+# mount -a
+----
+
+[source, text]
+.*测试 - NFS 服务器端创建文件*
+----
+# echo "Hello World" > /securenfs/testfile.txt
+# chcon -t public_content_t /securenfs/testfile.txt
+# chown ldapuser:ldapuser /securenfs/testfile.txt
+# chmod 644 /securenfs/testfile.txt
+# ls -Z /mnt/secureshare
+----
+
+[source, text]
+.*测试 - 客户端读写文件*
+----
+# su - ldapuser
+$ echo "I can write" >>/mnt/secureshare/testfile.tx
+$ cat /mnt/secureshare/testfile.txt
+----
+
+== SMB 文件共享
+
+[source, text]
+.*SMB 服务器 - 安装 samba*
+----
+# yum -y install samba
+----
+
+[source, text]
+.*SMB 服务器 - 创建系统租户 marketing*
+----
+# groupadd -r marketing
+----
+
+[source, text]
+.*SMB 服务器 - 创建 SMB 共享目录并分配权限*
+----
+# mkdir -p /smbshare
+# chgrp marketing /smbshare
+# chmod 2775 /smbshare
+# semanage fcontext -a -t samba_share_t '/smbshare(/.*)?'
+# restorecon -vvFR /smbshare
+----
+
+[source, text]
+.*SMB 服务器 - 编辑 /etc/samba/smb.conf，修改或添加如下配置*
+----
+[global]
+        workgroup = mycompany
+
+[smbshare]
+       path = /smbshare
+       write list = @marketing
+----
+
+[source, text]
+.*SMB 服务器 - 创建 samba 安全用户*
+----
+# yum -y install samba-client
+# useradd -s /sbin/nologin -G marketing brian
+# smbpasswd -a brian
+# useradd -s /sbin/nologin rob
+# smbpasswd -a rob
+----
+
+[source, text]
+.*SMB 服务器 - 启动服务*
+----
+# systemctl start smb.service nmb.service
+# systemctl enable smb.service nmb.service
+# firewall-cmd --permanent --add-service=samba
+# firewall-cmd --reload
+----
+
+[source, text]
+.*客户端服务器 - 配置使用 SMB 文件存储*
+----
+# yum -y install cifs-utils
+# mkdir /mnt/brian
+# mount -o username=brian //smb.example.com/smbshare /mnt/brian 
+Password for brian@//smb.example.com/smbshare:  ******
+# mkdir /mnt/rob
+# mount -o username=rob //smb.example.com/smbshare /mnt/rob
+Password for rob@//smb.example.com/smbshare:  ******
+# echo "test" > /mnt/brian/brian.txt
+# echo "test" > /mnt/rob/rob.txt
+-bash: /mnt/rob/rob.txt: Permission denied
+----
+
+== Multiuser SMB Mount
+
+[source, text]
+----
+# mkdir /mnt/multiuser
+# echo 'username=brian' > /root/smb-multiuser.txt
+# echo 'password=redhat' >> /root/smb-multiuser.txt
+# echo '//smb.example.com/smbshare /mnt/multiuser cifs credentials=/root/smb-multiuser.txt,multiuser,sec=ntlmssp 0 0' >> /etc/fstab
+# mount /mnt/multiuser/
+# cifscreds add smb.example.com -u brian
+# echo "Multiuser" >/mnt/multiuser/test.txt
+----
+
+NOTE: 本部分主要做的是持久化 Mount SMB 文件存储，并使用单独的文件保存 samba 安全认证。

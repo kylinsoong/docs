@@ -1,0 +1,4 @@
+
+#1
+/subsystem=datagrid-infinispan/cache-container=local/local-cache=addressbook_indexed:add(configuration=default)
+

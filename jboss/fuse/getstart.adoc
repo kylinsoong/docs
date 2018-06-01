@@ -1,0 +1,138 @@
+= Fuse Integration Service Gets Start
+:toc: manual
+:toc-placement: preamble
+
+Fuse Integration Service Gets Start.
+
+== Minishift
+
+This sections contain steps to install CDK Minishift on RHEL 7.
+
+[source, bash]
+.*Enable the Red Hat Developer Tools software repository*
+----
+subscription-manager repos --enable rhel-7-server-devtools-rpms
+subscription-manager repos --enable rhel-server-rhscl-7-rpms
+
+cd /etc/pki/rpm-gpg
+wget -O RPM-GPG-KEY-redhat-devel https://www.redhat.com/security/data/a5787476.txt
+rpm --import RPM-GPG-KEY-redhat-devel
+----
+
+[source, bash]
+.*Install only Red Hat Container Development Kit*
+----
+yum install cdk-minishift docker-machine-kvm
+----
+
+[source, bash]
+.*Setup the minishift VM and download additional components*
+----
+minishift setup-cdk --force --default-vm-driver="kvm"
+----
+
+[source, bash]
+.*Add the OpenShift oc command to the system path*
+----
+ln -s /home/$(whoami)/.minishift/cache/oc/v3.6.173.0.21/oc /usr/bin/oc
+----
+
+== Mock Rest
+
+[source, java]
+.*Build*
+----
+$ cd fuse-get-started/mock-rest/
+$ mvn clean package
+----
+
+[source, java]
+.*Run Locally*
+----
+$ java -jar target/mock-rest-service-0.1.0.jar
+----
+
+The Following API can used to test:
+
+* http://localhost:8080/rest/mock/ping
+* http://localhost:8080/quickies/greeting/getTime
+* http://localhost:8080/quickies/greeting/hi/Kylin
+
+[source, java]
+.*Deploy to OpenShift*
+----
+oc new-project mock --display-name="Mock Service" --description="Mock Service"
+mvn -Dkubernetes.master=https://192.168.42.107:8443 -Dkubernetes.namespace=mock -Dkubernetes.auth.basic.username=developer -Dkubernetes.auth.basic.password=developer -Dfabric8.mode=openshift -Dkubernetes.trust.certificates=true -Dfabric8.build.strategy=s2i -Dkubernetes.auth.tryServiceAccount=false -Dfabric8.generator.from=registry.access.redhat.com/jboss-fuse-6/fis-java-openshift -Dfabric8.generator.fromMode=docker -Dkubernetes.auth.tryKubeConfig=false clean fabric8:deploy
+oc expose svc/mock-rest-service
+----
+
+The Following API can used to test:
+
+* http://mock-rest-service-mock.192.168.42.107.nip.io/rest/mock/ping
+* http://mock-rest-service-mock.192.168.42.107.nip.io/quickies/greeting/getTime
+* http://mock-rest-service-mock.192.168.42.107.nip.io/quickies/greeting/hi/Kylin
+
+== Mock Soap
+
+[source, java]
+.*Build*
+----
+$ cd fuse-get-started/mock-soap/
+$ mvn clean package
+----
+
+[source, java]
+.*Run Locally*
+----
+$ java -jar target/mock-soap-service-0.1.0.jar
+----
+
+[source, java]
+.*Test Locally*
+----
+$ curl --header "content-type: text/xml" -d @request.xml http://localhost:8080/services
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <ns2:getCountryResponse xmlns:ns2="http://jboss.org/fis/mock-soap-service">
+            <ns2:country>
+                <ns2:name>China</ns2:name>
+                <ns2:population>136704314</ns2:population>
+                <ns2:capital>Beijing</ns2:capital>
+                <ns2:currency>RMB</ns2:currency>
+            </ns2:country>
+        </ns2:getCountryResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+----
+
+NOTE: The request.xml can be found from root of `mock-soap`, the success response is the country China SOAP mesage. Alternatively, a SOAP UI tools can be used to test. The WSDL can be viewed via http://localhost:8080/services/countries.wsdl.
+
+[source, java]
+.*Deploy to OpenShift*
+----
+oc new-project mock --display-name="Mock Service" --description="Mock Service"
+mvn -Dkubernetes.master=https://192.168.42.107:8443 -Dkubernetes.namespace=mock -Dkubernetes.auth.basic.username=developer -Dkubernetes.auth.basic.password=developer -Dfabric8.mode=openshift -Dkubernetes.trust.certificates=true -Dfabric8.build.strategy=s2i -Dkubernetes.auth.tryServiceAccount=false -Dfabric8.generator.from=registry.access.redhat.com/jboss-fuse-6/fis-java-openshift -Dfabric8.generator.fromMode=docker -Dkubernetes.auth.tryKubeConfig=false clean fabric8:deploy
+oc expose svc/mock-soap-service
+----
+
+[source, java]
+.*Test Remotely*
+----
+$ curl --header "content-type: text/xml" -d @request.xml http://mock-soap-service-mock.192.168.42.107.nip.io/services
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <ns2:getCountryResponse xmlns:ns2="http://jboss.org/fis/mock-soap-service">
+            <ns2:country>
+                <ns2:name>China</ns2:name>
+                <ns2:population>136704314</ns2:population>
+                <ns2:capital>Beijing</ns2:capital>
+                <ns2:currency>RMB</ns2:currency>
+            </ns2:country>
+        </ns2:getCountryResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+----
+
+NOTE: The request.xml can be found from root of `mock-soap`, the success response is the country China SOAP mesage. Alternatively, a SOAP UI tools can be used to test. The WSDL can be viewed via http://mock-soap-service-mock.192.168.42.107.nip.io/services/countries.wsdl.

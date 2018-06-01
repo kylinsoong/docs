@@ -1,0 +1,221 @@
+= Using Templates
+:toc: manual
+:toc-placement: preamble
+
+In this recipe we will learn how to use OpenShift Web Console to spin up a MySQL database using templates. We will then add a frontend PHP application that accesses this database using the service exposed by the database. We will provide a route (a URL) to access the frontend application from a browser.
+
+== Create a project or use an existing project
+
+If you want to, you can create a new project based on what you have learned in the previous recipe. Since we already have a project we will use it. Run the following command to make sure.
+
+[source, bash]
+----
+$ oc project ocp-test
+----
+
+== Create a MYSQL database using the template
+
+Click on **Add to Project** button and you will be taken to select an image or template. You will see the application create screen as shown below:
+
+image:../img/application_create_screen.png[application_create_screen]
+
+Scroll down and click on **Data Stores** session. Find **MySQL (Ephemeral)** template from the list and click **Select**. You will also notice **MySQL (Persistent)** template. But we will address that in a different lab exercise.
+
+image:../img/mysql_ephemeral_template.png[mysql_ephemeral_template]
+
+You will be taken to the mysql ephemeral creation screen. Click edit parameters and edit the values to use the following values:
+
+[source, sql]
+----
+Database Service Name: mysql
+MySQL Connection Username: test_user
+MySQL Connection Password: test_pass
+MySQL Database Name: sample
+----
+
+Click the **Create** button.
+
+image:../img/mysql_ephemeral_creation.png[mysql_ephemeral_creation]
+
+Click **Go to overview**.
+
+If pod does not show running, Click **Applications** and select **Deployments**, do the following:
+
+1. Click onto `mysql` deployments config
+2. Click on the **Actions** button and select **Edit Health Checks**
+3. Under the Readiness Probe section remove the single quotes around $MYSQL_PASSWORD
+4. Click **Save**
+5. Click **Applications** and select **Pods**
+6. Click onto the pod name
+7. Click on the **Actions** button and select **Delete**
+
+Browse over to Pods, Services and Deployments from the **Applications** tab to notice the additions to the project. You will note that the service has been assigned an IP address that starts with `172.*`. Make a note of that. Also note the port that is exposed by this service. By default it exposes `3306`.
+
+== Add data to MySQL database
+
+Let us see how we can enter the pod and access the database.
+
+Based on what you learned previously get the list of running pods (Tip: `oc get pods`). You will find one pod for mysql running. Take a note of it's name.
+
+[source, bash]
+----
+$ oc get pod
+NAME            READY     STATUS    RESTARTS   AGE
+mysql-1-g22vt   1/1       Running   0          3m
+----
+
+Enter the pod by running the following command. Substitute the pod name with your mysql pod name.
+
+[source, bash]
+----
+$ oc rsh mysql-1-g22vt 
+sh-4.2$ 
+----
+
+You will be taken to a bash prompt inside the running pod. Now using the service ip address you noted earlier, port number, username and password you used start the mysql client as shown below. You will have to substitute your values here.
+
+[source, sql]
+----
+sh-4.2$ mysql -u test_user -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 89
+Server version: 5.7.16 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+----
+
+You will be taken to the mysql prompt. See the list of databases. You will notice that the sample database that you requested is added and available.
+
+[source, sql]
+----
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| sample             |
++--------------------+
+2 rows in set (0.00 sec)
+----
+
+Change over to use the `sample` database
+
+[source, sql]
+----
+mysql> use sample;
+Database changed
+----
+
+Now `show tables` shows an empty set. So let us create a table and add some records using the commands shown below.
+
+[source, sql]
+.*Create Table*
+----
+CREATE TABLE PRODUCT (ID integer, SYMBOL varchar(16), COMPANY_NAME varchar(256), CONSTRAINT PRODUCT_PK PRIMARY KEY(ID));
+----
+
+[source, sql]
+.*Add some data*
+----
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1001,'RHT','Red Hat Corporation');
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1007,'IBM','International Business Machines Corporation');
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1008,'DELL','Dell Computer Corporation');
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1010,'HPQ','Hewlett-Packard Company');
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1033,'FCZ','Ford Motor Credit Company');
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1034,'SAP','SAP AG');
+INSERT INTO PRODUCT (ID,SYMBOL,COMPANY_NAME) VALUES(1036,'TM','Toyota Motor Corporation');
+----
+
+[source, sql]
+.*Verify that the records*
+----
+select * from PRODUCT;
+----
+
+Now `exit` MySQL client and `exit` out of the pod.
+
+== Add a PHP frontend to talk to this database
+
+In this step we will add a PHP frontend application that talks to recently create database. The code is available on github to use at https://github.com/jbosschina/dbtest.
+
+Browse through the code in this repository. It has a simple php file (dbtest.php) that connects to the database and reads the values from the users table and displays them.
+
+To add a frontend again click on **Add to Project** to spin up a frontend application in the same project. It takes you to select image or template page and choose the PHP template under PHP apps.
+
+image:img/php.png[php]
+
+Enter the following values for each parameters:
+
+* Name: dbtest
+* Git Repository URL: https://github.com/jbosschina/dbtest
+
+Click onto the link "Show advanced routing, build, and deployment options", go to Deployment Configuration section and enter the following environment variables:
+
+* MYSQL_USER: test_user
+* MYSQL_PASSWORD: test_pass
+* MYSQL_DATABASE: sample
+
+Alternatives, the below commands can use to set up the variables:
+
+[source, bash]
+----
+$ oc env dc dbtest -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_DATABASE=sample
+deploymentconfig "dbtest" updated
+----
+
+Click **Create** to add this frontend application to talk to the database.
+
+Click **Continue to overview**.
+
+Click **Group Service** next to DB test and select **mysql** service.
+
+image:img/console_project_overview.png[console_project_overview]
+
+You can check the build logs using the following command:
+
+[source, bash]
+----
+$ oc log build/dbtest-1
+W0710 22:12:12.461827    8667 cmd.go:337] log is DEPRECATED and will be removed in a future version. Use logs instead.
+Cloning "https://github.com/jbosschina/dbtest.git" ...
+	Commit:	6b6e432fe130e8fc9aa7a10f2d3d11dae6496329 (change the query against table)
+	Author:	kylin <kylinsoong.1214@gmail.com>
+	Date:	Mon Jul 10 22:07:37 2017 +0800
+---> Installing application source...
+Pushing image 172.30.160.227:5000/ocp-test/dbtest:latest ...
+Pushed 4/5 layers, 82% complete
+Pushed 5/5 layers, 100% complete
+Push successful
+----
+
+Once the build completes, OpenShift initiates a deploy process. Once the deployment is complete, the frontend pod starts running. You will find the running pod when you navigate to Applications->Pods on the Web console.
+
+Now type in your application url in the browser or use curl with 
+
+http://<<your application url>>/dbtest.php
+
+You will notice that it displays the records read from the database
+
+[source, bash]
+----
+Hello All.. Here is the list of products: 
+ID: 1001 SYMBOL: RHT COMPANY_NAME: Red Hat Corporation
+ID: 1007 SYMBOL: IBM COMPANY_NAME: International Business Machines Corporation
+ID: 1008 SYMBOL: DELL COMPANY_NAME: Dell Computer Corporation
+ID: 1010 SYMBOL: HPQ COMPANY_NAME: Hewlett-Packard Company
+ID: 1033 SYMBOL: FCZ COMPANY_NAME: Ford Motor Credit Company
+ID: 1034 SYMBOL: SAP COMPANY_NAME: SAP AG
+ID: 1036 SYMBOL: TM COMPANY_NAME: Toyota Motor Corporation
+End of the list 
+----
+
+In this recipe exercise you have seen a complete web application deployed using OpenShift templates in two parts. First we deployed the MySQL database. We added data manually by getting into the pod. Then we added the frontend code that was built using the OpenShift S2I process. You configured this frontend application to access the database using a service, in this case, the "mysql" service. The frontend is made accessible using a route for which you gave a URL.

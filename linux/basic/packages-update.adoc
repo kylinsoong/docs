@@ -1,0 +1,327 @@
+= 软件包安装更新
+:toc: manual
+
+== 什么是红帽订阅管理
+
+红帽订阅订阅管理提供了向服务器/计算机授权产品订阅的工具，让管理员能够获取软件包的更新，跟踪系统所用支持合同和订阅的相关信息。PackageKit 和 yum 等标准工具可以用来获取红帽提供的软件包和更新等内容。可以通过红帽订阅管理工具执行下列四项基本任务：
+
+* *注册* - 注册系统，将该系统与某一红帽帐户关联。这可以让订阅管理器唯一地清查该系统。不再使用某一系统时，可以取消注册。
+* *订阅* - 订阅系统，授权它获取所选红帽产品的更新。订阅包含特定的支持级别、到期日期和默认存储库。可以通过工具自动附加，或选择具体的授权。随着需求的变化，可以移除订阅。
+* *启用 yum 库* - 启用 yum 库，以提供软件包。默认情况下每一订阅会启用多个 yum 库，但可以根据需要启用或禁用更新或源代码等其他 yum 库。
+* *审核和跟踪* - 审核和跟踪可用或已用的授权。可以在具体系统上本地查看订阅信息，也可在红帽客户门户订阅页面或订阅资产管理器 (SAM) 查看具体帐户的订阅信息。
+
+== subscription-manager
+
+RHEL 默认安装会包含 subscription-manager 包，通过此包可以注册一个有效订阅，从而进行安装和更新软件包。
+
+[source, text]
+.*注册一个红帽账户*
+----
+# subscription-manager register --username=yourusername --password=yourpassword
+----
+
+[source, text]
+.*查看有效订阅*
+----
+# subscription-manager list --available | less
+# subscription-manager list --available --matches '*OpenShift Container Platform*'
+----
+
+[source, text]
+.*绑定订阅*
+----
+# subscription-manager attach --auto
+# subscription-manager attach --pool=<YOUR_POOL_ID>
+----
+
+[source, text]
+.*查看绑定的订阅*
+----
+# subscription-manager list --consumed 
+----
+
+[source, text]
+.*取消注册*
+----
+# subscription-manager unregister
+----
+
+[source, text]
+.*禁止所有的 repo*
+----
+# subscription-manager repos --disable="*"
+----
+
+NOTE: Linux 操作系统注册成功之后，`/etc/pki` 目录下, `product` 中的证书指明系统上安装了哪些红帽产品；`consumer` 中的证书指明系统所注册到的红帽帐户；`entitlement` 中的证书指明该系统附加有哪些订阅。  
+
+== yum
+
+yum 是一个强大的命令行工具，可用于更加灵活地管理（安装、更新、删除和查询）软件包。
+
+.*常用 yum 命令*
+|===
+|命令 |描述
+
+|yum list [NAME-PATTERN]
+|按名称列出已安装和可用的软件包
+
+|yum grouplist
+|列出已安装和可用的组
+
+|yum search KEYWORD
+|按关键字搜索软件包
+
+|yum info PACKAGENAME
+|显示软件包的详细信息
+
+|yum install PACKAGENAME
+|安装软件包
+
+|yum groupinstall "GROUPNAME"
+|安装软件包组
+
+|yum update
+|更新所有软件包
+
+|yum remove PACKAGENAME
+|删除软件包
+
+|yum history
+|显示事务历史记录
+|===
+
+=== 使用 yum 查找软件包
+
+[source, text]
+.*查看 repositories*
+----
+# yum repolist 
+----
+
+[source, text]
+.*yum list 显示已安装的和可用的软件包* 
+----
+# yum list 'http*'*
+----
+
+[source, text]
+.*查看已安装的包* 
+----
+# yum list installed
+----
+
+[source, text]
+.*查看 package groups* 
+----
+# yum grouplist
+----
+
+[source, text]
+.*查着包* 
+----
+# yum search all 'web server'
+----
+
+[source, text]
+.*查着包* 
+----
+# yum provides /var/www/html
+----
+
+[source, text]
+.*查看包详细情况* 
+----
+# yum info httpd
+----
+
+=== 使用 yum 安装和删除软件包
+
+[source, text]
+.*安装包* 
+----
+# yum install httpd
+----
+
+[source, text]
+.*更新包* 
+----
+# yum update
+----
+
+[source, text]
+.*移除包* 
+----
+# yum remove httpd
+----
+
+[source, text]
+.*group 安装* 
+----
+# yum group install "Infiniband Support"
+----
+
+=== 查看事务历史记录
+
+[source, text]
+.*查看安装的历史* 
+----
+# yum history
+----
+
+[source, text]
+.*查看 yum 日志 /var/log/yum.log* 
+----
+Dec 05 16:09:59 Installed: apr-1.4.8-3.el7_4.1.x86_64
+Dec 05 16:09:59 Installed: apr-util-1.5.2-6.el7.x86_64
+Dec 05 16:10:00 Installed: httpd-tools-2.4.6-67.el7_4.6.x86_64
+Dec 05 16:10:00 Installed: mailcap-2.1.41-2.el7.noarch
+...
+----
+
+=== yum history undo
+
+[source, text]
+----
+//安装
+# yum search gnuplot
+# yum info gnuplot
+# yum install -y gnuplot
+
+//查看已安装的包
+# yum list gnuplot*
+Installed Packages
+gnuplot.x86_64                                                                                       4.6.2-3.el7                                                                                @rhel-7-server-rpms
+gnuplot-common.x86_64                                                                                4.6.2-3.el7                                                                                @rhel-7-server-rpms
+
+//移除
+# yum remove gnuplot
+# yum remove gnuplot-common
+
+//group 安装
+# yum group list
+# yum group info "Compatibility Libraries"
+# yum group install "Compatibility Libraries"
+
+//查看历史
+# yum history 
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+ID     | Login user               | Date and time    | Action(s)      | Altered
+-------------------------------------------------------------------------------
+     5 | root <root>              | 2017-12-05 16:40 | Install        |   12   
+     4 | root <root>              | 2017-12-05 16:29 | Install        |    2   
+     3 | root <root>              | 2017-12-05 16:20 | I, O, U        |  157 EE
+     2 | root <root>              | 2017-12-05 16:09 | Install        |    5   
+     1 | System <unset>           | 2017-12-05 11:29 | Install        | 1298  
+
+# yum history undo 5
+# yum history undo 4
+----
+
+== yum 源管理
+
+[source, text]
+.*查看所有 repositories* 
+----
+# yum repolist all
+----
+
+[source, text]
+.*yum-config-manager enable/disable repository*
+----
+# yum-config-manager --enable rhel-7-server-extras-rpms
+# yum-config-manager --disable content.example.com_rhel7.0_x86_64_rht
+----
+
+[source, text]
+.*yum-config-manager 添加第三方 repository*
+----
+# yum-config-manager --add-repo="http://dl.fedoraproject.org/pub/epel/7/x86_64/"
+----
+
+== rpm
+
+[source, text]
+.*rpm -q -a  - 查看全部已安装了的包*
+----
+# rpm -q -a
+# rpm -q -a | grep "http*"
+----
+
+[source, text]
+.*rpm -q PACKAGENAME  - 查看当前已安装了的包*
+----
+# rpm -q yum
+yum-3.4.3-154.el7.noarch
+----
+
+[source, text]
+.*rpm -q -f FILENAME  -  确认什么包提供了此文件*
+----
+# rpm -q -f /etc/yum.repos.d/
+yum-3.4.3-154.el7.noarch
+----
+
+[source, text]
+.*rmp -q  - yum list*
+----
+# rpm -q httpd
+httpd-2.4.6-67.el7_4.6.x86_64
+----
+
+[source, text]
+.*rpm -q -i  -  yum info*
+----
+# rpm -q -i httpd
+----
+
+[source, text]
+.*rpm -q -l  - 列出某个包引入的所有文件*
+----
+# rpm -q -l yum
+----
+
+[source, text]
+.*rpm -q -c  - 列出某个包引入的所有配置文件*
+----
+# rpm -q -c yum
+/etc/logrotate.d/yum
+/etc/yum.conf
+/etc/yum/version-groups.conf
+----
+
+[source, text]
+.*rpm -q -d  - 列出某个包引入的所有文档文件*
+----
+# rpm -q -d yum
+----
+
+[source, text]
+.*rpm -q --scripts  -  列出某个包安装前后可能会执行的脚本*
+----
+# rpm -q --scripts openssh-server
+----
+
+[source, text]
+.*rpm -q --changelog  -  列出某一个包的 changelog*
+----
+# rpm -q --changelog yum
+----
+
+[source, text]
+.*rpm -q -l -p  - 查询包中内容*
+----
+# rpm -q -l -p wonderwidgets-1.0-4.x86_64.rpm
+----
+
+[source, text]
+.*rpm -ivh  -  安装包*
+----
+# rpm -ivh wonderwidgets-1.0-4.x86_64.rpm
+----
+
+[source, text]
+.*rpm -q -p -i  -  安装此包需要多大磁盘空间*
+----
+# rpm -q -p -i wonderwidgets-1.0-4.x86_64.rpm
+----
+

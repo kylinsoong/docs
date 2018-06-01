@@ -1,0 +1,113 @@
+
+
+= Docker Commands
+
+[cols="5a,2"]
+|===
+|Commands |Notes
+
+|
+----
+docker ps -a
+----
+|Show all containers on the system
+
+|
+----
+docker ps
+----
+|Show only currently running containers
+
+|
+----
+docker run <NAME>
+----
+|Creates & runs a docker container via an image
+
+|
+----
+docker images
+----
+|Lists all the images on your local system
+
+|
+----
+docker build -t <NAME> .
+----
+|Build the image, `-t` parameter gives a image tag
+
+|
+----
+docker tag <IMAGE ID> <IMAGE NAME>
+----
+|Tag the images
+
+|
+----
+docker login
+----
+|Login with Docker ID to push and pull images from Docker Hub.
+
+|
+----
+docker push <IMAGE NAME>
+----
+|Push tagged image to Docker Hub.
+
+|
+----
+docker rmi -f <IMAGE ID>
+----
+|Remove the images via ID.
+|===
+
+== Docker Engine Commands
+
+[cols="5a,2"]
+|===
+|Commands |Notes
+
+|
+----
+docker-machine ls
+----
+|list available machines
+
+|
+----
+docker-machine create --driver <DRIVER> <NAME>
+----
+|Create a machine
+
+|
+----
+docker-machine env <NAME>
+----
+|To see machine environment
+
+|
+----
+docker-machine ip <NAME>
+----
+| Get the IP address of a machine
+
+|
+----
+docker-machine stop <NAME>
+----
+|Stop a machine
+
+|
+----
+docker-machine start <NAME>
+----
+|Start a machine
+
+|
+----
+docker-machine status <NAME>
+----
+|Get machine status
+
+|===
+

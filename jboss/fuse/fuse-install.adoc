@@ -1,0 +1,43 @@
+= 安装
+:toc: manual
+
+== JBoss Fuse 6.3
+
+[source, java]
+.*JBoss Fuse 6.3 Install*
+----
+$ unzip jboss-fuse-karaf-6.3.0.redhat-187.zip && cd jboss-fuse-6.3.0.redhat-187
+----
+
+[source, java]
+.*Edit etc/users.properties, comment out*
+----
+admin=admin,admin,manager,viewer,Monitor, Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+----
+
+[source, java]
+.*Start JBoss Fuse*
+----
+./bin/start
+----
+
+[source, java]
+.*Edit etc/system.properties, change the AMQ default bind host*
+----
+activemq.host = 0.0.0.0
+----
+
+Login into http://localhost:8181/ with `admin`/`admin` for JBoss Fuse Management and runting monitor.
+
+== 安装常见 Feature
+
+[source, java]
+----
+./bin/client
+features:install camel-sql
+features:install camel-jackson
+features:install camel-http
+features:install camel-jsonpath
+features:install camel-jetty
+features:install camel-xmljson
+----

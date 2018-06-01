@@ -1,0 +1,73 @@
+= Elasticsearch, Spark on OpenShift
+:toc: manual
+
+== Overview
+
+This example demonstrate how to deploy `elasticsearch` and `spark` to Openshift, and a Spring boot on top of them.
+
+== Elasticsearch
+
+[source, bash]
+.*Create project*
+----
+$ oc new-project elastic-spark
+----
+
+[source, bash]
+.*Setup ElasticSearch*
+----
+$ oc new-app --docker-image=docker.io/elasticsearch:2.4.6 --name=elastic
+$ oc expose svc/elastic
+----
+
+[source, bash]
+.*Test Elasticsearch*
+----
+$ curl http://elastic-elastic-spark.192.168.42.102.nip.io/
+{
+  "name" : "Digitek",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "MiiiFsazRGqr9HNgFyIA6g",
+  "version" : {
+    "number" : "2.4.6",
+    "build_hash" : "5376dca9f70f3abef96a77f4bb22720ace8240fd",
+    "build_timestamp" : "2017-07-18T12:17:44Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.4"
+  },
+  "tagline" : "You Know, for Search"
+}
+----
+
+NOTE: The elastic url can be found via `oc get routes | grep elastic`.
+
+== Spark
+
+[source, bash]
+.*Setup Spark*
+----
+$ oc new-app --docker-image=docker.io/radanalyticsio/openshift-spark --name=spark
+$ oc expose svc/spark
+----
+
+
+== Spring Boot
+
+[source, bash]
+.*Setup Spring Boot*
+----
+$ cd spring-boot/
+$ mvn clean fabric8:deploy
+----
+
+NOTE: Maven fabric8 plugin will do S2I and enable Spring Boot Service.
+
+[source, bash]
+.*Test Spring Boot*
+----
+$ curl http://spring-boot-elastic-spark.192.168.42.102.nip.io/rest/ping
+$ curl http://spring-boot-elastic-spark.192.168.42.102.nip.io/rest/findAll
+$ curl http://spring-boot-elastic-spark.192.168.42.102.nip.io/rest/findByFirstName/Kylin
+$ curl http://spring-boot-elastic-spark.192.168.42.102.nip.io/rest/findByLastName/Soong
+----
+

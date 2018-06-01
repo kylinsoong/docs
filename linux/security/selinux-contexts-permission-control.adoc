@@ -1,0 +1,155 @@
+= Using SELinux Contexts to perform permission control 
+:toc: manual
+
+== Issue
+
+* How to configure Apache to use a document root in a non-standard location?
+* How to change the SELinux context of a directory and its contents persistently?
+
+== Solution
+
+* Make sure Apache web server are installed correctly
+
+[source,shell]
+----
+# systemctl status  httpd
+----
+
+* Configure Apache to use a document root in a non-standard location.
+ 
+[source,shell]
+----
+# mkdir /custom
+# echo 'SUCCESS' > /custom/ping
+# vim /etc/httpd/conf/httpd.conf
+# grep custom /etc/httpd/conf/httpd.conf
+DocumentRoot "/custom"
+<Directory "/custom">
+<Directory "/custom">
+----
+
+* Restart httpd
+
+[source,shell]
+----
+# systemctl restart httpd
+----
+
+* Access web content ping
+
+[source,xml]
+----
+# curl http://10.66.192.120/ping
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>403 Forbidden</title>
+</head><body>
+<h1>Forbidden</h1>
+<p>You don't have permission to access /ping
+on this server.</p>
+</body></html>
+----
+
+NOTE: 403 Forbidden return hints that you do not have permission to access the file.
+
+* Define a SELinux file context rule that sets the context type to httpd_sys_content_t for /custom and all the files below it.
+
+[source,shell]
+----
+# semanage fcontext -a -t httpd_sys_content_t '/custom(/.*)?'
+----
+
+* Use restorecon to change their contexts.
+
+[source,shell]
+----
+# restorecon -Rv /custom/
+restorecon reset /custom context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /custom/ping context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+----
+
+* Access web content ping
+
+[source,shell]
+.*Changing SELinux Booleans*
+----
+# curl http://10.66.192.120/ping
+SUCCESS
+----
+
+== Troubleshooting
+
+This section for troubleshooting that see how the issue be identified and resolved.    
+
+* Remove the file context rule created earlier and restore the `/custom` directory structure back to its original SELinux context
+
+[source,shell]
+----
+# ls -Z /custom/
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 ping
+# ls -Zd /custom/
+drwxr-xr-x. root root unconfined_u:object_r:httpd_sys_content_t:s0 /custom/
+# semanage fcontext -d -t httpd_sys_content_t '/custom(/.*)?'
+# restorecon -Rv /custom/
+restorecon reset /custom context unconfined_u:object_r:httpd_sys_content_t:s0->unconfined_u:object_r:default_t:s0
+restorecon reset /custom/ping context unconfined_u:object_r:httpd_sys_content_t:s0->unconfined_u:object_r:default_t:s0
+# ls -Z /custom/
+-rw-r--r--. root root unconfined_u:object_r:default_t:s0 ping
+# ls -Zd /custom/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /custom/
+----
+
+* Access ping
+
+[source,xml]
+----
+# curl http://10.66.192.120/ping
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>403 Forbidden</title>
+</head><body>
+<h1>Forbidden</h1>
+<p>You don't have permission to access /ping
+on this server.</p>
+</body></html>
+----
+
+* Viewing the contents of `/var/log/messages`
+
+[source,shell]
+----
+# tail /var/log/messages
+Jun 12 23:29:17 ksoong setroubleshoot: SELinux is preventing /usr/sbin/httpd from getattr access on the file /custom/ping. For complete SELinux messages. run sealert -l 4c46f31a-bb2e-475b-a4a0-1c92669f8673
+----
+
+* Run the suggested sealert command and see if you can identify the issue and a possible resolution.
+
+[source,shell]
+----
+# sealert -l 4c46f31a-bb2e-475b-a4a0-1c92669f8673
+SELinux is preventing /usr/sbin/httpd from getattr access on the file /custom/ping.
+
+*****  Plugin catchall_labels (83.8 confidence) suggests   *******************
+
+If you want to allow httpd to have getattr access on the ping file
+Then you need to change the label on /custom/ping
+Do
+# semanage fcontext -a -t FILE_TYPE '/custom/ping'
+where FILE_TYPE is one of the following: 
+....
+Then execute:
+restorecon -v '/custom/ping'
+....
+----
+
+* Using the hints of the above message to solve the issue:
+
+[source,shell]
+----
+# semanage fcontext -a -t httpd_sys_content_t '/custom(/.*)?'
+# restorecon -Rv /custom/
+restorecon reset /custom context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /custom/ping context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+# curl http://10.66.192.120/ping
+SUCCESS
+----

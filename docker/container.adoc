@@ -1,0 +1,139 @@
+= 容器管理
+:toc: manual
+
+== 创建容器
+
+[source,text]
+.*docker run 创建容器*
+----
+# docker run --name rhel7.4  registry.access.redhat.com/rhel7-atomic:7.4-119
+----
+
+[source,text]
+.*docker run 创建容器并进入命令行*
+----
+# docker run --name rhel7.4 -it registry.access.redhat.com/rhel7-atomic:7.4-119 /bin/bash
+----
+
+[source,text]
+.*docker ps 查看容器运行状态*
+----
+# docker ps
+----
+
+[source,text]
+.*docker stop 停止容器*
+----
+# docker stop rhel7.4 
+----
+
+[source,text]
+.*docker start 启动容器*
+----
+# docker start rhel7.4
+----
+
+[source,text]
+.*docker restart 重启容器*
+----
+# docker restart rhel7.4
+----
+
+[source,text]
+.*docker stats 查看容器统计数据*
+----
+# docker stats rhel7.4
+----
+
+[source,text]
+.*docker inspect 查看容器详细信息*
+----
+# docker inspect rhel7.4
+----
+
+[source,text]
+.*docker rm 删除容器*
+----
+# docker rm rhel7.4
+----
+
+== 容器持久化存储
+
+本部分以 link:svc/mysql.adoc[容器化的 mysql 服务] 为例说明容器持久化存储。
+
+[source,text]
+.*创建一个目录并分配相应的权限*
+----
+# mkdir -p /var/local/mysql
+# chown -R 27:27 /var/local/mysql/
+# chcon -R -t svirt_sandbox_file_t /var/local/mysql/
+----
+
+NOTE: `svirt_sandbox_file_t` 是 SELinux 权限上下文。
+
+[source,text]
+.*启动 mysql*
+----
+# docker run --name mysql -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=redhat -d -p 3306:3306 mysql:5.6
+----
+
+[source,text]
+.*执行 link:files/mysql-items.sql[mysql-items.sql]*
+----
+# mysql -h172.17.0.2 -utest_user -ptest_pass items < ./mysql-items.sql
+----
+
+[source,text]
+.*重启 mysql 容器*
+----
+# docker restart mysql
+----
+
+[source,text]
+.*查询 mysql 中数据*
+----
+# mysql -h172.17.0.2 -utest_user -ptest_pass items
+MySQL [items]> SELECT * FROM Projects;
++----+--------+-------+
+| id | name   | code  |
++----+--------+-------+
+|  1 | DevOps | DO180 |
+|  2 | DevOps | DO280 |
++----+--------+-------+
+----
+
+[source,text]
+.*移除容器*
+----
+# docker stop mysql
+# docker rm mysql
+----
+
+== 容器端口映射
+
+本部分以 link:svc/mysql.adoc[容器化的 mysql 服务] 为例说明容器端口映射
+
+[source,text]
+.*启动 myql 容器*
+----
+# docker run --name mysql -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=redhat -d -p 13306:3306 mysql:5.6
+----
+
+[source,text]
+.*本地连接 mysql*
+----
+# mysql -h127.0.0.1 -utest_user -ptest_pass -P13306 items < mysql-items.sql
+----
+
+[source,text]
+.*查询 mysql*
+----
+# mysql -h127.0.0.1 -utest_user -ptest_pass -P13306 items -e "SELECT * FROM Projects"
++----+--------+-------+
+| id | name   | code  |
++----+--------+-------+
+|  1 | DevOps | DO180 |
+|  2 | DevOps | DO280 |
++----+--------+-------+
+----
+

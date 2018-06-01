@@ -1,0 +1,43 @@
+= Rollback Applications
+:toc: manual
+:toc-placement: preamble
+
+In this recipe we will see how we can rollback an application in OpenShift quickly without switching to an older version of the source code in SCM.
+
+== Check application health status
+
+* Run:
+
+[source, bash]
+----
+$ oc get pods --show-all=false
+NAME                    READY     STATUS    RESTARTS   AGE
+scm-web-hooks-2-qr093   1/1       Running   0          3m
+----
+
+* Inspecting the output of the above command we can see that we have a single replica of the previously deployed application running.
+* We can also see that previously two pods were used to build the application. OpenShift will create and docker deploy a pod per deployment. This tells us that we currently have two versions of the application.
+* You can also use:
+
+[source, bash]
+----
+$ oc get deploymentconfig 
+NAME            REVISION   DESIRED   CURRENT   TRIGGERED BY
+scm-web-hooks   3          1         1         config,image(scm-web-hooks:latest)
+----
+
+* The latest and active version for the application is 3
+
+== Rollback the application
+
+* Using the previous command we ran to retrieve the deployment configuration, we will revert or rollback to version 1.
+
+[source, bash]
+----
+$ oc rollback scm-web-hooks --to-version=1
+#4 rolled back to scm-web-hooks-1
+----
+
+So OpenShift has rolled back the application to version 1 and created a new build configuration. Reloading the application now displays:
+
+image:img/github_show_url.png[github_show_url]

@@ -1,0 +1,147 @@
+= Using SSL in your application
+:toc: manual
+:toc-placement: preamble
+
+In this recipe you will set up your application to encrypt traffic with the OpenShift Wildcard certificate.
+
+== Create a project or use an existing project
+
+If you want to, you can create a new project based on what you have learned in the previous recipe. Since we already have a project we will use it. Run the following command to make sure.
+
+[source, bash]
+----
+$ oc project ocp-test
+----
+
+== View the routing config
+
+To view the routing config you will need to use the `oc get route` command
+
+[source, json]
+----
+$ oc get route helloworld -o json
+{
+    "apiVersion": "v1",
+    "kind": "Route",
+    "metadata": {
+        "annotations": {
+            "openshift.io/host.generated": "true"
+        },
+        "creationTimestamp": "2017-07-10T15:30:34Z",
+        "labels": {
+            "app": "helloworld"
+        },
+        "name": "helloworld",
+        "namespace": "ocp-test",
+        "resourceVersion": "4714374",
+        "selfLink": "/oapi/v1/namespaces/ocp-test/routes/helloworld",
+        "uid": "b7355a0f-6584-11e7-bbc1-0682973451aa"
+    },
+    "spec": {
+        "host": "helloworld-ocp-test.apps.example.com",
+        "port": {
+            "targetPort": "8080-tcp"
+        },
+        "to": {
+            "kind": "Service",
+            "name": "helloworld",
+            "weight": 100
+        },
+        "wildcardPolicy": "None"
+    },
+    "status": {
+        "ingress": [
+            {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2017-07-10T15:30:34Z",
+                        "status": "True",
+                        "type": "Admitted"
+                    }
+                ],
+                "host": "helloworld-ocp-test.apps.example.com",
+                "routerName": "router",
+                "wildcardPolicy": "None"
+            }
+        ]
+    }
+}
+----
+
+Note here that the `host:` is set to the FQDN that your application is running on.
+
+Currently the routing component of OpenShift 3 supports ports `80` and `443`. When you first create your route, the mapping of `80` to your pod is done automatically. There are a few things that need to be done in order to get the `443` mapping to work.
+
+== TLS Edge Termination
+
+OpenShift has a wildcard SSL certificate that it can use for any application. We can use this SSL certificate to serve SSL from our application without having to generate a cert of our own (which is sometimes called SSL-offloading).
+
+Edit your routing configuration:
+
+[source, bash]
+----
+$ oc edit route helloworld
+----
+
+You are going to add `tls: termination: edge` right below the `host:` section. It should look something like this.
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  creationTimestamp: 2017-07-10T15:30:34Z
+  labels:
+    app: helloworld
+  name: helloworld
+  namespace: ocp-test
+  resourceVersion: "4715129"
+  selfLink: /oapi/v1/namespaces/ocp-test/routes/helloworld
+  uid: b7355a0f-6584-11e7-bbc1-0682973451aa
+spec:
+  host: helloworld-ocp-test.apps.example.com
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: helloworld
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: 2017-07-10T15:30:34Z
+      status: "True"
+      type: Admitted
+    host: helloworld-ocp-test.apps.example.com
+    routerName: router
+    wildcardPolicy: None
+----
+
+== Verify
+
+Verify by visiting your page by using the `https://` URI
+
+----
+$ curl https://helloworld-ocp-test.apps.example.com/helloworld/
+curl: (60) Peer's certificate issuer has been marked as not trusted by the user.
+More details here: https://curl.haxx.se/docs/sslcerts.html
+
+curl performs SSL certificate verification by default, using a "bundle"
+ of Certificate Authority (CA) public keys (CA certs). If the default
+ bundle file isn't adequate, you can specify an alternate file
+ using the --cacert option.
+If this HTTPS server uses a certificate signed by a CA represented in
+ the bundle, the certificate verification probably failed due to a
+ problem with the certificate (it might be expired, or the name might
+ not match the domain name in the URL).
+If you'd like to turn off curl's verification of the certificate, use
+ the -k (or --insecure) option.
+----
+
+Congratulations!! In this exercise you have learned about service SSL from your application.
+

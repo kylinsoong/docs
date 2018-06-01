@@ -1,0 +1,257 @@
+= 容器镜像
+:toc: manual
+
+== 安装配置镜像仓库
+
+[source,text]
+.*docker-distribution 安装*
+----
+# yum -y install docker-distribution
+# systemctl enable docker-distribution.service
+# systemctl start docker-distribution.service
+# systemctl status docker-distribution.service
+----
+
+[source,text]
+.*启用TLS协议传输，生成自签名证书*
+----
+# mkdir /etc/crts/ && cd /etc/crts
+# openssl req -newkey rsa:2048 -nodes -keyout example.com.key -x509 -days 365 -out example.com.crt -subj "/C=CN/ST=GD/L=BJ/O=Global Security/OU=IT Department/CN=*.example.com"
+----
+
+NOTE: 如上命令生成 `example.com.crt` 和 `example.com.key`。
+
+[source,text]
+.*编辑 `/etc/docker-distribution/registry/config.yml` 配置 TLS*
+----
+http:
+    addr: :443
+    tls:
+        certificate: /etc/crts/example.com.crt
+        key: /etc/crts/example.com.key
+----
+
+[source,text]
+.*客户端安装自签名证书*
+----
+# scp root@registry.example.com/etc/crts/example.com.crt /etc/pki/ca-trust/source/anchors/
+# update-ca-trust extract
+# systemctl restart docker
+----
+
+== 容器镜像管理
+
+[source,text]
+.*docker save 导出镜像到 tar 文件*
+----
+# docker save -o mysql.tar docker.io/mysql:5.6
+----
+
+[source,text]
+.*docker load 加载镜像*
+----
+# docker load -i mysql.tar
+----
+
+[source,text]
+.*docker tag 标记镜像*
+----
+# docker tag docker.io/mysql:5.6 registry.example.com/mysql:5.6
+----
+
+[source,text]
+.*docker push 推送镜像到镜像仓库*
+----
+# docker push registry.example.com/mysql:5.6
+----
+
+[source,text]
+.*docker rmi 删除镜像*
+----
+# docker rmi registry.example.com/mysql:5.6
+----
+
+NOTE: `docker rmi $(docker images -q)` 可以删除所有镜像。
+
+[source,text]
+.*docker pull 下载镜像*
+----
+# docker pull registry.example.com/mysql:5.6
+----
+
+== 二次定制镜像
+
+[source,text]
+.*启动容器化 httpd 服务*
+----
+# docker run --name httpd -p 8081:80 -d httpd:2.4
+# curl http://localhost:8081
+<html><body><h1>It works!</h1></body></html>
+----
+
+[source,text]
+.*创建一个新的 html 页面*
+----
+# docker exec -it httpd bash
+root@6c2c7ecbd9ed:/usr/local/apache2# echo "This is test page!" > htdocs/test.html
+root@6c2c7ecbd9ed:/usr/local/apache2# exit
+# curl http://localhost:8081/test.html
+This is test page!
+----
+
+[source,text]
+.*docker diff 查看镜像的变化*
+----
+# docker diff httpd
+----
+
+[source,text]
+.*定制新镜像并标记*
+----
+# docker commit -a "Kylin Soong" -m "add test page" httpd
+# docker images
+# docker tag 19277e943995 registry.example.com/httpd:2.4
+----
+
+[source,text]
+.*推送新定制的镜像到镜像仓库*
+----
+# docker push registry.example.com/httpd:2.4
+----
+
+[source,text]
+.*运行新定制的镜像*
+----
+# docker run --name httpd -p 8081:80 -d registry.example.com/httpd:2.4
+# curl http://localhost:8081/test.html
+This is test page!
+----
+
+== Dockerfile 创建镜像
+
+=== 构建一个 apache httpd 镜像
+
+[source,text]
+.*创建 Dockerfile*
+----
+FROM rhel7.4
+
+MAINTAINER Kylin Soong "kylinsoong.1214@gmail.com"
+
+LABEL description="A basic Apache container on RHEL 7"
+
+ADD local.repo /etc/yum.repos.d/local.repo
+RUN yum -y update && \
+    yum install -y httpd && \
+    yum clean all
+
+RUN echo "Hello World" > /var/www/html/index.html
+
+EXPOSE 80
+
+CMD ["httpd", "-D", "FOREGROUND"]
+----
+
+[source,text]
+.*local.repo 内容*
+----
+[local]
+baseurl = http://yum.example.com/repo/
+name = Local (RPMS)
+gpgcheck = 0
+enabled = 1
+----
+
+[source,text]
+.*docker build 构建镜像*
+----
+# ls 
+Dockerfile  local.repo
+# docker build -t registry.example.com/apache-httpd:2.4 .
+Sending build context to Docker daemon 3.072 kB
+Step 1 : FROM rhel7.4
+ ---> d01d4f01d3c4
+Step 2 : MAINTAINER Kylin Soong "kylinsoong.1214@gmail.com"
+ ---> Using cache
+ ---> a897bb58928d
+Step 3 : LABEL description "A basic Apache container on RHEL 7"
+ ---> Using cache
+ ---> 7c04350cf576
+Step 4 : ADD local.repo /etc/yum.repos.d/local.repo
+ ---> 734c01cf222b
+Removing intermediate container a40dfff8cdbf
+Step 5 : RUN yum -y update &&     yum install -y httpd &&     yum clean all
+ ---> Running in ba3ca005984a
+Step 6 : RUN echo "Hello World" > /var/www/html/index.html
+ ---> Running in 418cc0b4bc95
+ ---> 013ea84104d3
+Removing intermediate container 418cc0b4bc95
+Step 7 : EXPOSE 80
+ ---> Running in b3371bb80e09
+ ---> 2785968e5312
+Removing intermediate container b3371bb80e09
+Step 8 : CMD httpd -D FOREGROUND
+ ---> Running in f96d1dc1249f
+ ---> 20ea4abe3bce
+Removing intermediate container f96d1dc1249f
+Successfully built 20ea4abe3bce
+----
+
+[source,text]
+.*运行测试镜像，并将镜像推送到私有镜像仓库*
+----
+# docker run --name apache-httpd -p 8081:80 -d registry.example.com/apache-httpd:2.4
+# curl http://127.0.0.1:8081
+Hello World
+# docker stop apache-httpd
+# docker rm apache-httpd
+# docker push registry.example.com/apache-httpd:2.4 
+----
+
+=== 构建 ksoong.org 镜像
+
+本部分将 http://ksoong.org/ 内容构建成一个容器镜像。
+
+[source,text]
+.*创建 Dockerfile*
+----
+FROM rhel7.4
+
+MAINTAINER Kylin Soong "kylinsoong.1214@gmail.com"
+
+LABEL description="Kylin Soong.Blog"
+
+ADD local.repo /etc/yum.repos.d/local.repo
+RUN yum -y update && \
+    yum install -y httpd && \
+    yum clean all
+
+EXPOSE 80
+
+COPY ./blog/ /var/www/html/
+
+CMD ["httpd", "-D", "FOREGROUND"]
+----
+
+[source,text]
+.*docker build 构建镜像*
+----
+# ls
+blog  Dockerfile  local.repo
+# docker rmi registry.example.com/ksoong.org:1.0
+----
+
+[source,text]
+.*运行镜像*
+----
+# docker run --name ksoong.org -p 80:80 -d registry.example.com/ksoong.org:1.0
+----
+
+NOTE: 镜像启动后本地浏览器访问 http://localhost/。
+
+[source,text]
+.*推送博客镜像到私有镜像仓库*
+----
+# docker push registry.example.com/ksoong.org:1.0
+----
+

@@ -1,0 +1,156 @@
+= LVM
+:toc: manual
+
+== 创建一个逻辑卷
+
+[source, text]
+.*1 - 创建一个 256M 的分区*
+----
+# fdisk /dev/sda 
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): n
+Partition type:
+   p   primary (2 primary, 0 extended, 2 free)
+   e   extended
+Select (default p): 
+Using default response p
+Partition number (3,4, default 3): 
+First sector (896512000-976773167, default 896512000): 
+Using default value 896512000
+Last sector, +sectors or +size{K,M,G} (896512000-976773167, default 976773167): +256M
+Partition 3 of type Linux and of size 256 MiB is set
+
+Command (m for help): t
+Partition number (1-3, default 3): 
+Hex code (type L to list all codes): 8e
+Changed type of partition 'Linux' to 'Linux LVM'
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+
+# partprobe
+----
+
+[source, text]
+.*2 - 创建 PV*
+----
+# pvcreate /dev/sda3
+  Physical volume "/dev/sda3" successfully created.
+----
+
+[source, text]
+.*3 - 创建 VG*
+----
+# vgcreate test-vg /dev/sda3
+  Volume group "test-vg" successfully created
+----
+
+[source, text]
+.*4 - 创建 LV*
+----
+# lvcreate -n storage -L 200M test-vg
+  Logical volume "storage" created.
+----
+
+[source, text]
+.*5 - Add a Persistent File System*
+----
+# mkfs -t xfs /dev/test-vg/storage
+# mkdir /storage
+# vim /etc/fstab
+/dev/test-vg/storage  /storage  xfs  defaults  1  2
+# mount -a
+----
+
+== 扩展一个逻辑卷
+
+[source, text]
+.*1 - 创建一个新的分区*
+----
+# fdisk /dev/sda 
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): n
+Partition type:
+   p   primary (3 primary, 0 extended, 1 free)
+   e   extended
+Select (default e): p
+Selected partition 4
+First sector (897036288-976773167, default 897036288): 
+Using default value 897036288
+Last sector, +sectors or +size{K,M,G} (897036288-976773167, default 976773167): +500M
+Partition 4 of type Linux and of size 500 MiB is set
+
+Command (m for help): t
+Partition number (1-4, default 4): 
+Hex code (type L to list all codes): 8e
+Changed type of partition 'Linux' to 'Linux LVM'
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+
+# partprobe
+----
+
+[source, text]
+.*2 - 创建 PV*
+----
+# pvcreate /dev/sda4
+  Physical volume "/dev/sda4" successfully created.
+----
+
+[source, text]
+.*3 - 扩展 VG*
+----
+# vgextend test-vg /dev/sda4
+  Volume group "test-vg" successfully extended
+----
+
+[source, text]
+.*4 - 扩展 LV*
+----
+# lvextend -L 700M /dev/test-vg/storage 
+  Size of logical volume test-vg/storage changed from 200.00 MiB (50 extents) to 700.00 MiB (175 extents).
+  Logical volume test-vg/storage successfully resized.
+----
+
+[source, text]
+.*5 - 扩展文件系统*
+----
+# xfs_growfs /storage/
+meta-data=/dev/mapper/test--vg-storage isize=512    agcount=4, agsize=12800 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=51200, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=855, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 51200 to 179200
+----
+
+NOTE: 在步骤 5 执行前后分别执行  `df -h | grep storage` 将会看到文件系统大小的变化。

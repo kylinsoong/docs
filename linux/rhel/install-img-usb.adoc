@@ -1,0 +1,33 @@
+= 在 Linux 中生成 USB 安装介质
+:toc: manual
+:toc-placement: preamble
+
+本文说明如何在 Linux 中生成 USB 介质。
+
+== 下载安装介质
+
+[source, bash]
+----
+wget https://download.fedoraproject.org/pub/fedora/linux/releases/26/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-26-1.5.iso
+----
+
+== 作为 root 登录
+
+[source, bash]
+----
+su -
+----
+
+== 使用 umount target 命令卸载该设备
+
+[source, bash]
+----
+umount /dev/sdb
+----
+
+== 使用 dd 命令将 ISO 安装映像直接写入 USB 设备
+
+[source, bash]
+----
+dd if=Fedora-Workstation-Live-x86_64-26-1.5.iso of=/dev/sdb
+----

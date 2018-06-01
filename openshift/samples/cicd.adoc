@@ -1,0 +1,15 @@
+= CICD Pipeline
+:toc: manual
+:toc-placement: preamble
+
+CICD Pipeline.
+
+== Create Projects
+
+[source, java]
+----
+oc new-project pipeline-test-dev --description="Development" --display-name="Development"
+oc new-project pipeline-test-test --description="Testing" --display-name="Testing"
+oc new-project pipeline-test-prod --description="Production" --display-name="Production"
+----
+

@@ -1,0 +1,48 @@
+
+= 后续配置
+:toc: manual
+:toc-placement: preamble
+
+本部分包括安装完成后续的配置。本部分操作在 Master 结点上执行。
+
+
+== 配置用户及子域名
+
+[source, bash]
+.*安装Httpd-tools，并创建用户及密码*
+----
+yum -y install httpd-tools
+htpasswd -cb /etc/origin/master/htpasswd redhat welcome1
+htpasswd -b /etc/origin/master/htpasswd admin admin
+oadm policy add-cluster-role-to-user admin admin
+----
+
+[source, bash]
+.*修改配置文件/etc/origin/master/master-config.yaml内的用户验证配置*
+----
+cp /etc/origin/master/master-config.yaml /etc/origin/master/master-config.yaml.bak.$(date "+%Y%m%d%H%M%S");
+sed -i 's/.*subdomain.*/  subdomain: apps.example.com/' /etc/origin/master/master-config.yaml ;
+----
+
+NOTE: 本部分在实验环境可以忽略
+
+[source, bash]
+.*重启OpenShift，使配置修改生效*
+----
+systemctl restart atomic-openshift-master 
+systemctl restart atomic-openshift-node
+----
+
+== 常见问题解决总结
+
+[source, text]
+.*import-image 导入*
+----
+# oc get imagestream -n openshift
+# oc import-image <IMG_NAME>
+----
+
+[source, bash]
+.**
+----
+----

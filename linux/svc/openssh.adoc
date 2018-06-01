@@ -1,0 +1,92 @@
+= OpenSSH
+:toc: manual
+
+== ssh
+
+[source, text]
+.*使用当前用户登录*
+----
+# ssh yum.example.com
+root@yum.example.com's password: 
+[root@yum ~]# exit
+logout
+Connection to yum.example.com closed.
+----
+
+[source, text]
+.*使用特定用户登录*
+----
+# ssh remoteuser@yum.example.com
+remoteuser@yum.example.com's password:
+----
+
+[source, text]
+.*远程执行命令*
+----
+# ssh root@yum.example.com hostname
+root@yum.example.com's password: 
+yum.example.com
+----
+
+[source, text]
+.*查看登录当前系统的所有用户*
+----
+# w -f
+ 17:22:20 up 19:04,  2 users,  load average: 0.00, 0.01, 0.05
+USER     TTY        LOGIN@   IDLE   JCPU   PCPU WHAT
+root     pts/0     17:21    4.00s  0.04s  0.00s w -f
+kylin    pts/1     17:21   36.00s  0.04s  0.04s -bash
+----
+
+== 配置 ssh 免密登录
+
+[source, text]
+.*ssh-keygen*
+----
+# ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:S3l+TPKZdysNqHjnlESimBw87Cf3iyd9UNGEdnSt+hg root@registry.example.com
+The key's randomart image is:
++---[RSA 2048]----+
+|            =o ..|
+|    o      + o. .|
+|     =   ...o  . |
+|    o = ..o.  .  |
+|     * +S +.o.   |
+|      +..=.*E+   |
+|        +.+o*++ .|
+|       o.=o+.o.o.|
+|       .+.+.  .. |
++----[SHA256]-----+
+----
+
+[source, text]
+.*ssh-copy-id*
+----
+# ssh-copy-id -i .ssh/id_rsa.pub yum.example.com
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: ".ssh/id_rsa.pub"
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@yum.example.com's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'yum.example.com'"
+and check to make sure that only the key(s) you wanted were added.
+----
+
+== 配置 ssh 服务
+
+*/etc/ssh/sshd_config* 用来配置 SSH 服务。执行如下命令重起 SSH，让配置生效:
+
+[source, text]
+----
+# systemctl restart sshd
+# systemctl status sshd
+----

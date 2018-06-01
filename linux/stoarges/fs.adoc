@@ -1,0 +1,242 @@
+= 文件系统
+:toc: manual
+
+== mount/unmount 文件系统
+
+[source, text]
+.*1 - 查看块设备*
+----
+# blkid
+/dev/vda1: UUID="e055ef62-8369-4822-898a-0177fabdce0b" TYPE="xfs" 
+/dev/vda2: UUID="N4VWXs-LLXz-XibL-oHGD-zyI0-ekvX-3eVWHP" TYPE="LVM2_member" 
+/dev/mapper/rhel-root: UUID="27d2eaed-e282-4cc2-815a-aefc678a7c30" TYPE="xfs" 
+/dev/mapper/rhel-swap: UUID="52801be3-b410-46ab-b690-17605386b099" TYPE="swap"
+----
+
+[source, text]
+.*2 - mount*
+----
+# mkdir /mnt/mydata
+# mount /dev/vda1 /mnt/mydata
+# cd /mnt/mydata
+----
+
+NOTE: mount 也可以使用文件系统的 UUID，例如上述 mount 操作也可以通过命令`mount UUID="e055ef62-8369-4822-898a-0177fabdce0b" /mnt/mydata`
+
+[source, text]
+.*3 - 查看打开的文件*
+----
+# lsof /mnt/mydata
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+bash    4755 root  cwd    DIR  252,1     4096   64 /mnt/mydata
+lsof    5097 root  cwd    DIR  252,1     4096   64 /mnt/mydata
+lsof    5098 root  cwd    DIR  252,1     4096   64 /mnt/mydata
+----
+
+[source, text]
+.*4 - umount*
+----
+# cd
+# umount /mnt/mydata
+----
+
+== 访问移动存储设备
+
+通常移动存储设备会自动 mount，通过 `df` 可以查看 mount 位置，通常路径为 `/run/media/<user>/<label>`。
+
+[source, text]
+.*查看移动存储设备 mount 点*
+----
+$ df -h
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/sdb               240M  184M   56M  77% /run/media/kylin/DISK_IMG
+/dev/sdc1               15G   16K   15G   1% /run/media/kylin/B453-8CAA
+----
+
+[source, text]
+.*访问访问移动存储设备*
+----
+$ cd /run/media/kylin/B453-8CAA/
+$ mkdir eap && cd eap
+$ cp /run/media/kylin/DISK_IMG/jboss-eap-7.0.0.zip ./
+----
+
+== 添加分区、文件系统及持久化 Mount
+
+[source, text]
+.*创建一个 1 GB MBR 分区*
+----
+# fdisk /dev/sda 
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): p
+
+Disk /dev/sda: 256.1 GB, 256060514304 bytes, 500118192 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000e1d3d
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     3907583     1952768   83  Linux
+/dev/sda2         3907584   480534527   238313472   8e  Linux LVM
+
+Command (m for help): n
+Partition type:
+   p   primary (2 primary, 0 extended, 2 free)
+   e   extended
+Select (default p): 
+Using default response p
+Partition number (3,4, default 3): 
+First sector (480534528-500118191, default 480534528): 
+Using default value 480534528
+Last sector, +sectors or +size{K,M,G} (480534528-500118191, default 500118191): +1G
+Partition 3 of type Linux and of size 1 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+
+# partprobe
+----
+
+[source, text]
+.*格式化新创建的分区为 ext4 格式的文件系统*
+----
+# mkfs -t ext4 /dev/sda3
+mke2fs 1.42.9 (28-Dec-2013)
+Discarding device blocks: done                            
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+65536 inodes, 262144 blocks
+13107 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=268435456
+8 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done
+----
+
+[source, text]
+.*Mount ext4 文件系统*
+----
+# mkdir /archive
+# blkid /dev/sda3
+/dev/sda3: UUID="c855ceda-66f5-417e-9f3f-95e188d92992" TYPE="ext4"
+# vim /etc/fstab
+UUID=c855ceda-66f5-417e-9f3f-95e188d92992 /archive                ext4    defaults        0 2
+# mount -a
+# mount | grep -w /archive
+/dev/sda3 on /archive type ext4 (rw,relatime,seclabel,data=ordered)
+----
+
+== 添加一个 Swap 空间
+
+[source, text]
+.*创建一个 500MB Linux swap 类型的分区*
+----
+# fdisk /dev/mapper/rhel-swap
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xd7068ae9.
+
+Command (m for help): p
+
+Disk /dev/mapper/rhel-swap: 968 MB, 968884224 bytes, 1892352 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xd7068ae9
+
+                Device Boot      Start         End      Blocks   Id  System
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): 
+Using default response p
+Partition number (1-4, default 1): 
+First sector (2048-1892351, default 2048): 
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-1892351, default 1892351): +500M
+Partition 1 of type Linux and of size 500 MiB is set
+
+Command (m for help): t
+Selected partition 1
+Hex code (type L to list all codes): 82
+Changed type of partition 'Linux' to 'Linux swap / Solaris'
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 22: Invalid argument.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+
+# partprobe 
+----
+
+[source, text]
+.*初始化 swap 分区*
+----
+# mkswap /dev/mapper/rhel-swap1 
+Setting up swapspace version 1, size = 511996 KiB
+no label, UUID=76ef8d5e-dab3-4bee-a801-fe1aa7b74b38
+----
+
+[source, text]
+.*配置 swap*
+----
+# vim /etc/fstab
+UUID=76ef8d5e-dab3-4bee-a801-fe1aa7b74b38  swap  swap  defaults        0 0
+----
+
+[source, text]
+.*激活 swap*
+----
+# swapon -a
+----
+
+[source, text]
+.*验证 swap*
+----
+# swapon -s
+Filename				Type		Size	Used	Priority
+/dev/dm-2                              	partition	511996	0	-1
+
+# free
+              total        used        free      shared  buff/cache   available
+Mem:        1883456      676432      684736        9912      522288     1009096
+Swap:        511996           0      511996
+----
+

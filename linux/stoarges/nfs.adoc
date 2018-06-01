@@ -1,0 +1,193 @@
+= NFS
+:toc: manual
+
+== Mount NFS share
+
+image:img/nfs-mount.png[Mount an NFS share]
+
+The NFS Server run on `nfs.example.com`, which  provided a shared nfs share `/var/export/data/sample`, the goal of this section is to mount the NFS share to Server, and `/mnt/sample` as a mountpoint.
+
+There are three basic steps to mounting an NFS share:
+
+[source, text]
+.*Identify - identify the NFS server can provide export details*
+----
+# showmount -e nfs.example.com
+Export list for nfs.example.com:
+/var/export/data/sample *
+----
+
+NOTE: NFSv4 use the different ways to identify.
+
+[source, text]
+.*Mount point - create a mount point in a suitable location*
+----
+# mkdir /mnt/sample
+----
+
+[source, text]
+.*Mount - use the mount command*
+----
+# mount -t nfs -o sync nfs.example.com:/var/export/data/sample /mnt/sample
+----
+
+NOTE: The *-t nfs* option is the file system type for NFS shares (not strictly required, shown for completeness). The *-o sync* option tells *mount* to immediately synchronize write operations with the NFS server (the default is asynchronous). The default security method (sec=sys) will be used to try mounting the NFS share, using standard Linux file permissions.
+
+NOTE: The `umount /mnt/sample` can unmount the share.
+
+== Mount secured NFS share
+
+image:img/nfs-mount-secure.png[Mount an secured NFS share]
+
+The NFS Server run on `nfs.example.com`, which provided two shared nfs share:
+
+* `/shares/public` - a kerberos-secured NFS share
+* `/shares/manual` - a standard Linux file permissions based NFS share
+
+This section show how to mount these two NFS share.
+
+[source, bash]
+.*Enable Kerberos access and security*
+----
+mv sample.keytab /etc/krb5.keytab
+----
+
+[source, bash]
+.*Enable and start the nfs-secure service*
+----
+systemctl enable nfs-secure
+systemctl start nfs-secure
+----
+
+[source, bash]
+.*create a mount point in a suitable location*
+----
+mkdir mkdir -p /mnt/{public,manual}
+----
+
+[source, bash]
+.*Edit the /etc/fstab, add the below line to the end of the file*
+----
+nfs.example.com:/shares/public  /mnt/public  nfs  sec=krb5p,sync  0 0
+----
+
+[source, bash]
+.*mount the secure NFS share*
+----
+mount -a
+----
+
+[source, bash]
+.*mount the normal MFS share*
+----
+mount -o sync,sec=sys nfs.example.com:/shares/manual /mnt/manual
+----
+
+[source, bash]
+.*verify the mount*
+----
+df -h
+----
+
+== Automounting NFS
+
+This section used the almost same situation as <<Mount secured NFS share, Mount secured NFS share>>, but use the automounting mode.
+
+[source, bash]
+.*Enable Kerberos access and security*
+----
+mv sample.keytab /etc/krb5.keytab
+----
+
+[source, bash]
+.*Enable and start the nfs-secure service*
+----
+systemctl enable nfs-secure
+systemctl start nfs-secure
+----
+
+[source, bash]
+.*Install autofs*
+----
+yum -y install autofs
+----
+
+[source, bash]
+.*Setup direct-map automount, create and edit the /etc/auto.master.d/direct.autofs add*
+----
+/-  /etc/auto.direct
+----
+
+[source, bash]
+.*Create /etc/auto.direct, add*
+----
+/mnt/public  -rw,sync,sec=krb5p  nfs.example.com:/shares/public
+----
+
+[source, bash]
+.*Setuo indirect-map automount, create and edit the /etc/auto.master.d/shares.autofs add*
+----
+/shares  /etc/auto.shares
+----
+
+[source, bash]
+.*Create /etc/auto.shares, add*
+----
+*  -rw,sync,sec=krb5p  nfs.example.com:/shares/&
+----
+
+[source, bash]
+.*Enable and start the automount*
+----
+systemctl enable autofs
+systemctl start autofs
+----
+
+== Mounting a SMB File System
+
+[source, bash]
+.*install cifs-utils*
+----
+yum -y install cifs-utils
+----
+
+[source, bash]
+.*create the Mount Point*
+----
+mkdir ~/work
+----
+
+[source, bash]
+.*create the Credentials File*
+----
+mkdir /secure
+vim /secure/student.smb
+----
+
+[source, bash]
+.*add the following lines*
+----
+username=student
+password=student
+domain=MYGROUP
+----
+
+[source, bash]
+.*use chmod to protect the secure directory and the student.smb credentials file*
+----
+chmod 770 /secure
+chmod 600 /secure/student.smb
+----
+
+[source, bash]
+.*edit /etc/fstab add*
+----
+//server1/student  /home/student/work  cifs  credentials=/secure/student.smb  0  0
+----
+
+[source, bash]
+.*mount the file system*
+----
+mount -a
+----
+

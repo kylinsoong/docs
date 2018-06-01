@@ -1,0 +1,46 @@
+= 部署测试 VDB
+:toc: manual
+:toc-placement: preamble
+
+本部分部署测试 VDB 并进行简单查询测试。
+
+== 部署测试 VDB
+
+.*测试 VDB 如下*
+|===
+|数据源 |VDB 名称 |VDB 部署文件  
+
+|test
+|test10-1-1-1-vdb
+|link:files/test-vdb.xml[test-vdb.xml]
+
+|===
+
+部署 test-vdb.xml 到 JDV 6.3
+
+[source, bash]
+----
+$ cd jboss-eap-6.4/standalone/deployments/
+$ cp ../../test-vdb.xml ./
+----
+
+部署完成后测试
+
+[source, sql]
+----
+SQL: SELECT * FROM SYSADMIN.MatViews
++------------------+------------+-----------------+------------------+--------------------------------+-------+---------------+---------+-------------+
+|     VDBName      | SchemaName |      Name       | TargetSchemaName |           TargetName           | Valid |   LoadState   | Updated | Cardinality |
++------------------+------------+-----------------+------------------+--------------------------------+-------+---------------+---------+-------------+
+| test10-1-1-1-vdb | pg_catalog | matpg_datatype  | [NULL]           | #MAT_PG_CATALOG.MATPG_DATATYPE | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | pg_catalog | matpg_relatt    | [NULL]           | #MAT_PG_CATALOG.MATPG_RELATT   | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | pg_catalog | pg_attribute    | [NULL]           | #MAT_PG_CATALOG.PG_ATTRIBUTE   | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | pg_catalog | pg_class        | [NULL]           | #MAT_PG_CATALOG.PG_CLASS       | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | pg_catalog | pg_index        | [NULL]           | #MAT_PG_CATALOG.PG_INDEX       | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | pg_catalog | pg_proc         | [NULL]           | #MAT_PG_CATALOG.PG_PROC        | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | pg_catalog | pg_type         | [NULL]           | #MAT_PG_CATALOG.PG_TYPE        | false | NEEDS_LOADING | [NULL]  |      [NULL] |
+| test10-1-1-1-vdb | SYS        | spatial_ref_sys | [NULL]           | #MAT_SYS.SPATIAL_REF_SYS       | false | NEEDS_LOADING | [NULL]  |      [NULL] |
++------------------+------------+-----------------+------------------+--------------------------------+-------+---------------+---------+-------------+
+----
+
+

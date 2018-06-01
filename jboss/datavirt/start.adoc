@@ -1,0 +1,44 @@
+= 启动并测试
+:toc: manual
+:toc-placement: preamble
+
+本部分包括启动 JDV 6.3 以及部署测试 VDB 测试。
+
+== 启动
+
+[source, java]
+.*使用端口偏移，并绑定 IP 地址启动*
+----
+jdv@A1DB01 jboss-eap-6.4]$ ./bin/standalone.sh -Djboss.socket.binding.port-offset=100 -b 0.0.0.0 -bmanagement=0.0.0.0 2>&1 > ./console.log &
+----
+
+== 验证启动
+
+查看 concole.log ，确认启动过程没有错误日志抛出，且启动完成后有如下日志输出:
+
+[source, java]
+----
+JBoss Red Hat JBoss Data Virtualization 6.3.0 (AS 7.5.9.Final-redhat-2) started in 13591ms - Started 847 of 889 services (100 services are lazy, passive or on-demand)
+----
+
+查看 JDV 进程及所占用端口号:
+
+[source, java]
+----
+$ jps -l
+14985 /home/jdv/jdv63/jboss-eap-6.4/jboss-modules.jar
+
+$ netstat -antulop | grep 14985
+tcp        0      0 0.0.0.0:4547                0.0.0.0:*                   LISTEN      14985/java          off (0.00/0/0)
+tcp        0      0 0.0.0.0:10090               0.0.0.0:*                   LISTEN      14985/java          off (0.00/0/0)
+tcp        0      0 0.0.0.0:35532               0.0.0.0:*                   LISTEN      14985/java          off (0.00/0/0)
+tcp        0      0 0.0.0.0:10099               0.0.0.0:*                   LISTEN      14985/java          off (0.00/0/0)
+tcp        0      0 0.0.0.0:8180                0.0.0.0:*                   LISTEN      14985/java          off (0.00/0/0)
+tcp        0      0 0.0.0.0:31100               0.0.0.0:*                   LISTEN      14985/java          off (0.00/0/0)
+----
+
+NOTE: 注意，JDBC 端口为 31100，及其他所有端口都偏移了 100。
+
+== 登录管理控制台
+
+使用 `admin`/`password1!` 登录管理控制台(http://11.11.208.135:10090/console)

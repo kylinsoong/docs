@@ -1,0 +1,58 @@
+= 创建 httpd 服务
+:toc: manual
+
+== 启动 httpd
+
+[source,text]
+.*执行如下命令启动 httpd*
+----
+# docker run --name httpd -p 8081:80 -d httpd:2.4
+----
+
+NOTE: 如上命令在后台运行 httpd 容器。
+
+[source,text]
+.*测试 httpd 服务*
+----
+# curl http://localhost:8081
+<html><body><h1>It works!</h1></body></html>
+----
+
+== 命令行进入 https 容器
+
+[source,text]
+.*使用如下命令进入 httpd 容器*
+----
+# docker exec -it httpd bash
+root@d255a8d00911:/usr/local/apache2#
+----
+
+[source,text]
+.*查看默认 index.html 内容*
+----
+root@d255a8d00911:/usr/local/apache2# cat htdocs/index.html 
+<html><body><h1>It works!</h1></body></html>
+----
+
+[source,text]
+.*修改 index.html 内容*
+----
+root@d255a8d00911:/usr/local/apache2# echo "Hello World!" > htdocs/index.html
+----
+
+[source,text]
+.*退出后验证修改内容是否生效*
+----
+# curl http://localhost:8081
+Hello World!
+----
+
+== 停止并删除容器
+
+[source,text]
+.*执行如下命令停止并删除容器*
+----
+# docker stop httpd
+# docker rm httpd
+# docker rmi httpd:2.4
+----

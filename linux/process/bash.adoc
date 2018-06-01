@@ -1,0 +1,870 @@
+= Bash
+:toc: manual
+
+== 语法
+
+=== 基本语法
+
+[cols="2,5a,2,5a"]
+|===
+|名称 |语法 |描述 |示例
+
+|interpreter
+|
+----
+#!/bin/bash
+----
+|Bash shell 脚本的第一行以 #! 开头，通常也称为 sharp-bang 或缩写版本 sha-bang。后面的路径名称是命令解释器，也就是应该用于执行脚本的程序。
+|
+
+|echo
+|
+----
+echo "arbitrary text"
+echo "arbitrary text" >&2
+----
+|文本定向到标准输出 (STDOUT), 输出重定向将其定向到标准错误 (STDERR)
+|
+----
+$ cat hello
+#!/bin/bash
+echo "Hello, world"
+echo "ERROR: Houston, we have a problem." >&2
+
+$ ./hello 2> hello.log
+Hello, world
+
+$ cat hello.log
+ERROR: Houston, we have a problem.
+----
+
+|特殊字符
+|
+----
+\ '' "" `` 
+----
+|处理特殊字符
+|
+----
+$ echo \# not a comment
+# not a comment
+
+$ echo '$HOME'
+$HOME
+
+$ echo "$HOME"
+/home/kylin
+
+$ echo `pwd`
+/home/kylin/tmp
+
+$ echo "\`pwd\`"
+`pwd`
+----
+
+|变量
+|
+----
+VARIABLENAME=value
+----
+|变量名称由数字、字母（大写和小写）和下划线字符 _ 组成，不能以数字开头，等号 = 用于为变量分配值，并且不能用空格将其与变量名称或值分隔开。
+|
+----
+COUNT=40
+first_name=John
+file1=/tmp/abc
+_ID=RH123
+full_name='John Doe'
+full_name="$FIRST $LAST"
+price='$1'
+----
+
+|变量扩展
+|
+----
+$VARIABLENAME
+${VARIABLENAME}
+----
+|通过在变量名称前面加上美元符号 $，可以通过称为变量扩展的过程来重新调用变量的值。
+|
+----
+$ FIRST_=Jane
+$ FIRST=John
+$ LAST=Doe
+
+$ echo $FIRST_$LAST
+JaneDoe
+$ echo ${FIRST}_$LAST
+John_Doe
+----
+
+|命令替换
+|
+----
+`<COMMAND>`
+$(<COMMAND>)
+----
+|将命令的调用替换为执行命令后的输出
+|
+----
+$ echo "Current time: `date`"
+Current time: Tue May  1 10:44:51 CST 2018
+$ echo "Current time: $(date)"
+Current time: Tue May  1 10:44:59 CST 2018
+----
+
+|算术扩展
+|
+----
+$[<EXPRESSION>]
+----
+|执行简单的整数算术运算
+|
+----
+$ echo $[1+1]
+2
+$ echo $[2*2]
+4
+$ COUNT=1; echo $[$[$COUNT+1]*2]
+4
+
+$ SEC_PER_MIN=60
+$ MIN_PER_HR=60
+$ HR_PER_DAY=24
+$ SEC_PER_DAY=$[$SEC_PER_MIN * $MIN_PER_HR * $HR_PER_DAY]
+$ echo "There are $SEC_PER_DAY seconds in a day."
+There are 86400 seconds in a day.
+----
+
+|for loop
+|
+----
+for <VARIABLE> in <LIST>; do
+     <COMMAND>
+     ...
+     <COMMAND> referencing <VARIABLE>
+done
+----
+|循环按顺序逐一处理 <LIST> 中提供的项目，并且在处理列表中的最后一个项目之后退出。列表中的每个项目临时存储为 <VARIABLE> 的值，而 for 循环执行包含在其结构中的命令块。变量的命名是任意的。
+|
+----
+$ for HOST in host1 host2 host3; do echo $HOST; done
+host1
+host2
+host3
+$ for HOST in host{1,2,3}; do echo $HOST; done
+host1
+host2
+host3
+$ for HOST in host{1..3}; do echo $HOST; done
+host1
+host2
+host3
+----
+
+|传入参数
+|
+----
+$1, $2, $*, $@
+----
+|将命令行参数的值存储到脚本中, 以数字方式对变量进行命名
+|
+----
+$ cat showargs
+#!/bin/bash
+for ARG in "$*"; do
+  echo $ARG
+done
+
+$ ./showargs 1 2 3
+1 2 3
+----
+
+|退出代码
+|
+----
+$?
+----
+|每个命令返回一个退出状态，也通常称为返回状态或退出代码
+|
+----
+$ cat hello
+#!/bin/bash
+echo "Hello, world"
+exit 0
+
+$ ./hello
+Hello, world
+
+$ echo $?
+0
+----
+
+|比较
+|
+----
+[ <ITEM1> <BINARY COMPARISON OPERATOR> <ITEM2> ]
+[ <UNARY OPERATOR> <ITEM> ]
+----
+|整数比较, 字符串比较，文件比较
+|
+----
+
+----
+
+|If/then
+|
+----
+if <CONDITION>; then
+<STATEMENT>
+...
+<STATEMENT>
+fi
+----
+|如果满足给定条件，将采取一个或多个操作。如果不满足给定条件，则不采取任何操作
+|
+----
+systemctl is-active psacct > /dev/null 2>&1
+
+if  [ $? -ne 0 ]; then
+  systemctl start psacct
+fi
+----
+
+|If/then/else
+|
+----
+if <CONDITION>; then
+      <STATEMENT>
+      ...
+      <STATEMENT>
+    else
+      <STATEMENT>
+      ...
+      <STATEMENT>
+fi
+----
+|if/then 条件结构可以进一步扩展，以便能够根据是否满足条件来采取不同的操作集合
+|
+----
+systemctl is-active psacct > /dev/null 2>&1
+
+if  [ $? -ne 0 ]; then
+  systemctl start psacct
+else
+  systemctl stop psacct
+fi
+----
+
+|If/then/elif/then/else 
+|
+----
+if <CONDITION>; then
+      <STATEMENT>
+      ...
+      <STATEMENT>
+    elif <CONDITION>; then
+      <STATEMENT>
+      ...
+      <STATEMENT>
+    else
+      <STATEMENT>
+      ...
+      <STATEMENT>
+    fi
+----
+|测试多个条件
+|
+----
+systemctl is-active mariadb > /dev/null 2>&1
+MARIADB_ACTIVE=$?
+systemctl is-active postgresql > /dev/null 2>&1
+POSTGRESQL_ACTIVE=$?
+
+if  [ "$MARIADB_ACTIVE" -eq 0 ]; then
+  mysql
+elif  [ "$POSTGRESQL_ACTIVE" -eq 0 ]; then
+  psql
+else
+  sqlite3
+fi
+
+|case
+|
+----
+case <VALUE> in
+   <PATTERN1>)
+       <STATEMENT>
+       ...
+       <STATEMENT>
+       ;;
+   <PATTERN2>)
+       <STATEMENT>
+       ...
+       <STATEMENT>
+       ;;
+esac
+----
+|case 语句尝试按顺序逐个将 <VALUE> 与每个 <PATTERN> 进行匹配。当某个模式匹配时，将执行与该模式相关联的代码段，以 ;; 语法指示块的结束。
+|
+----
+case "$1" in
+   start)
+       start
+       ;;
+   stop)
+       rm -f $lockfile
+       stop
+       ;;
+   restart)
+       restart
+       ;;
+   reload)
+       reload
+       ;;
+   status)
+       status
+       ;;
+   *)
+       echo "Usage: $0 (start|stop|restart|reload|status)"
+       ;;
+esac
+----
+
+|===
+
+=== 运算符及其含义
+
+|===
+|运算符 |含义
+
+|<VARIABLE>++
+|变量后置递增
+
+|<VARIABLE>--
+|变量后置递减
+
+|++<VARIABLE>
+|变量前置递增
+
+|--<VARIABLE>
+|变量前置递减
+
+|-
+|一元减法
+
+|+
+|一元加法
+
+|**
+|求幂
+
+|*
+|乘法
+
+|/
+|除法
+
+|%
+|求余
+
+|+
+|加法
+
+|-
+|减法
+
+|===
+
+=== 算术运算符优先级顺序
+
+|===
+|运算符 |含义
+
+|<VARIABLE>++、<VARIABLE>--
+|变量后置递增和后置递减
+
+|++<VARIABLE>、--<VARIABLE>
+|变量前置递增和前置递减
+
+|-、+
+|一元减法和加法
+
+|**
+|求幂
+
+|*、/、%
+|乘法、除法、求余
+
+|+、 -
+|加法、减法
+|===
+
+=== 比较运算符
+
+|===
+|作用域 |运算符 |含义 |示例
+
+|整数
+|-eq
+|等于
+|[ "$a" -eq "$b" ]
+
+|整数
+|-ne
+|不等于
+|[ "$a" -ne "$b" ]
+
+|整数
+|-gt
+|大于
+|[ "$a" -gt "$b" ]
+
+|整数
+|-ge
+|大于等于
+|[ "$a" -ge "$b" ]
+
+|整数
+|-lt
+|小于
+|[ "$a" -lt "$b" ]
+
+|整数
+|-le
+|小于等于
+|[ "$a" -le "$b" ]
+
+|字符串
+|=
+|等于
+|[ "$a" = "$b" ]
+
+|字符串
+|==
+|等于
+|[ "$a" == "$b" ]
+
+|字符串
+|!=
+|不等于
+|[ "$a" != "$b" ]
+
+|字符串
+|-z
+|字符串的长度为零（空）
+|[ -z "$a" ]
+
+|字符串
+|-n
+|字符串不为空
+|[ -n "$a" ]
+
+|文件
+|-b
+|文件存在并且是块特殊
+|[ -b <FILE> ]
+
+|文件
+|-c
+|文件存在并且是字符特殊
+|[ -c <FILE> ]
+
+|文件
+|-d
+|文件存在并且是目录
+|[ -d <DIRECTORY> ]
+
+|文件
+|-e
+|文件存在
+|[ -e <FILE> ]
+
+|文件
+|-f
+|文件是常规文件
+|[ -f <FILE> ]
+
+|文件
+|-L
+|文件存在并且是符号链接
+|[ -L <FILE> ]
+
+|文件
+|-r
+|文件存在并且授予了读权限
+|[ -r <FILE> ]
+
+|文件
+|-s
+|文件存在并且大小大于零
+|[ -s <FILE> ]
+
+|文件
+|-w
+|文件存在并且授予了写权限
+|[ -w <FILE> ]
+
+|文件
+|-x
+|文件存在并且授予了执行（或搜索）权限
+|[ -x <FILE> ]
+
+|文件
+|-ef
+|FILE1 与 FILE2 的设备和索引节点编号相同
+|[ <FILE1> -ef <FILE2> ]
+
+|文件
+|-nt
+|FILE1 的修改日期比 FILE2 晚
+|[ <FILE1> -nt <FILE2> ]
+
+|文件
+|-ot
+|FILE1 的修改日期比 FILE2 早
+|[ <FILE1> -ot <FILE2> ]
+
+|===
+
+== 示例
+
+=== 提供 kernel 相关包信息
+
+[source, bash]
+----
+#!/bin/bash
+#
+# This script provides information regarding when kernel-related packages
+# are installed on a system by querying information from the RPM database.
+#
+
+# Variables
+PACKAGETYPE=kernel
+PACKAGES=$(rpm -qa | grep $PACKAGETYPE)
+
+# Loop through packages
+for PACKAGE in $PACKAGES; do
+    # Determine package install date and time
+    INSTALLEPOCH=$(rpm -q --qf "%{INSTALLTIME}\n" $PACKAGE)
+
+    # RPM reports time in epoch, so need to convert
+    # it to date and time format with date command
+    INSTALLDATETIME=$(date -d @$INSTALLEPOCH)
+
+    # Print message
+    echo "$PACKAGE was installed on $INSTALLDATETIME"
+done
+----
+
+=== MariaDB 数据备份
+
+[source, bash]
+.*创建数据库备份目录*
+----
+mkdir /dbbackup
+----
+
+[source, bash]
+.*输出除 information_schema 和 performance_schema 外的所有数据库名称*
+----
+$ mysql --skip-column-names -E -uroot -predhat -e 'SHOW DATABASES' | grep -v '^*' | grep -v '^information_schema$' | grep -v '^performance_schema$'
+JDGCACHESTORE
+apaccustomers
+brokerinfo
+eucustomers
+matdb
+mysql
+products
+test
+uscustomers
+----
+
+[source, bash]
+.*创建脚本*
+----
+#!/bin/bash
+
+# Variables
+DBUSER=root
+DBPASSWORD=redhat
+FMTOPTIONS='--skip-column-names -E'
+COMMAND='SHOW DATABASES'
+BACKUPDIR=/dbbackup
+
+# Backup non-system databases
+for DBNAME in $(mysql $FMTOPTIONS -u$DBUSER -p$DBPASSWORD -e "$COMMAND" | grep -v ^* | grep -v information_schema | grep -v performance_schema); do
+    echo "Backing up \"$DBNAME\""
+    mysqldump -u$DBUSER -p$DBPASSWORD $DBNAME > $BACKUPDIR/$DBNAME.dump
+done
+
+# Add up size of all database dumps
+for DBDUMP in $BACKUPDIR/*; do
+    SIZE=$(stat --printf "%s\n" $DBDUMP)
+    TOTAL=$[ $TOTAL + $SIZE ]
+done
+
+# Report name, size, and percentage of total for each database dump
+echo
+for DBDUMP in $BACKUPDIR/*; do
+  SIZE=$(stat --printf "%s\n" $DBDUMP)
+  echo "$DBDUMP,$SIZE,$[ 100 * $SIZE / $TOTAL ]%"
+done
+----
+
+[source, bash]
+.*执行备份脚本*
+----
+$ dbbackup
+Backing up "JDGCACHESTORE"
+Backing up "apaccustomers"
+Backing up "brokerinfo"
+Backing up "eucustomers"
+Backing up "matdb"
+Backing up "mysql"
+Backing up "products"
+Backing up "test"
+Backing up "uscustomers"
+
+/dbbackup/apaccustomers.dump,7851,1%
+/dbbackup/brokerinfo.dump,3239,0%
+/dbbackup/eucustomers.dump,9697,1%
+/dbbackup/JDGCACHESTORE.dump,4083,0%
+/dbbackup/matdb.dump,7275,1%
+/dbbackup/mysql.dump,514266,89%
+/dbbackup/products.dump,15940,2%
+/dbbackup/test.dump,3929,0%
+/dbbackup/uscustomers.dump,9928,1%
+----
+
+=== 传入参数
+
+[source, bash]
+----
+#!/bin/bash
+
+echo "$0 has $# arguments."
+
+# Optionally, use 'for ARG in "$*"; do' will output the arguments in one line
+for ARG in "$@"; do
+    echo $ARG
+done
+----
+
+[source, bash]
+.*执行脚步*
+----
+$ ./showargs foo bar zoo
+./showargs has 3 arguments.
+foo
+bar
+zoo
+----
+
+=== 比较运算符
+
+[source, bash]
+----
+#!/bin/bash
+
+[ 1 -eq 1 ]; echo $?;
+[ 1 -ne 1 ]; echo $?;
+[ 8 -gt 2 ]; echo $?;
+[ 2 -ge 2 ]; echo $?;
+[ 2 -lt 2 ]; echo $?;
+[ 1 -lt 2 ]; echo $?;
+
+[ abc = abc ]; echo $?;
+[ abc == def ]; echo $?;
+[ abc != def ]; echo $?;
+
+STRING=''; [ -z "$STRING" ]; echo $?;
+STRING='abc'; [ -n "$STRING" ]; echo $?;
+
+[ 2 -gt 1 ] && [ 1 -gt 0 ]; echo $?;
+[ 2 -gt 1 ] && [ 1 -gt 2 ]; echo $?;
+[ 2 -gt 1 ] || [ 1 -gt 2 ]; echo $?;
+[ 0 -gt 1 ] || [ 1 -gt 2 ]; echo $?;
+----
+
+=== 创建 httpd 虚拟主机
+
+[source, bash]
+----
+#!/bin/bash
+
+# Variables
+VHOSTNAME=$1
+TIER=$2
+HTTPDCONF=/etc/httpd/conf/httpd.conf
+VHOSTCONFDIR=/etc/httpd/conf.vhosts.d
+DEFVHOSTCONFFILE=$VHOSTCONFDIR/00-default-vhost.conf
+VHOSTCONFFILE=$VHOSTCONFDIR/$VHOSTNAME.conf
+WWWROOT=/srv
+DEFVHOSTDOCROOT=$WWWROOT/default/www
+VHOSTDOCROOT=$WWWROOT/$VHOSTNAME/www
+
+# Check arguments
+if [ "$VHOSTNAME" = '' ] || [ "$TIER" = '' ]; then
+    echo "Usage: $0 VHOSTNAME TIER"
+    exit 1
+else
+    case $TIER in
+        1)    VHOSTADMIN='basic_support@example.com'
+              ;;
+        2)    VHOSTADMIN='business_support@example.com'
+              ;;
+        3)    VHOSTADMIN='enterprise_support@example.com'
+              ;;
+        *)    echo "Invalid tier specified."
+              exit 1
+              ;;
+        esac
+fi
+
+# Create conf directory one time if non-existent
+if [ ! -d $VHOSTCONFDIR ]; then
+    mkdir $VHOSTCONFDIR
+
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed creating $VHOSTCONFDIR."
+        exit 1 
+    fi
+fi
+
+# Add include one time if missing
+grep -q '^IncludeOptional conf\.vhosts\.d/\*\.conf$' $HTTPDCONF
+
+if [ $? -ne 0 ]; then
+    # Backup before modifying
+    cp -a $HTTPDCONF $HTTPDCONF.orig
+    echo "IncludeOptional conf.vhosts.d/*.conf" >> $HTTPDCONF
+
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed adding include directive."
+        exit 1
+    fi
+fi
+
+cat <<DEFCONFEOF > $DEFVHOSTCONFFILE
+<VirtualHost _default_:80>
+  DocumentRoot $DEFVHOSTDOCROOT
+  CustomLog "logs/default-vhost.log" combined
+</VirtualHost>
+<Directory $DEFVHOSTDOCROOT>
+  Require all granted
+</Directory>
+DEFCONFEOF
+
+# Check for default virtual host
+if [ ! -f $DEFVHOSTCONFFILE ]; then
+    cat <<DEFCONFEOF > $DEFVHOSTCONFFILE
+<VirtualHost _default_:80>
+  DocumentRoot $DEFVHOSTDOCROOT
+  CustomLog "logs/default-vhost.log" combined
+</VirtualHost>
+
+<Directory $DEFVHOSTDOCROOT>
+  Require all granted
+</Directory>
+DEFCONFEOF
+fi
+
+if [ ! -d $DEFVHOSTDOCROOT ]; then
+  mkdir -p $DEFVHOSTDOCROOT
+  restorecon -Rv /srv/
+fi
+
+cat <<CONFEOF > $VHOSTCONFFILE
+<VirtualHost *:80>
+  ServerName $VHOSTNAME
+  ServerAdmin $VHOSTADMIN
+  DocumentRoot $VHOSTDOCROOT
+  ErrorLog "logs/${VHOSTNAME}_error_log"
+  CustomLog "logs/${VHOSTNAME}_access_log" common
+</VirtualHost>
+
+<Directory $VHOSTDOCROOT>
+  Require all granted
+</Directory>
+CONFEOF
+
+# Check for virtual host conflict
+if [ -f $VHOSTCONFFILE ]; then
+    echo "ERROR: $VHOSTCONFFILE already exists."
+    exit 1
+elif [ -d $VHOSTDOCROOT ]; then
+    echo "ERROR: $VHOSTDOCROOT already exists."
+    exit 1
+else
+    cat <<CONFEOF > $VHOSTCONFFILE
+<Directory $VHOSTDOCROOT>
+  Require all granted
+  AllowOverride None
+</Directory>
+
+<VirtualHost *:80>
+  DocumentRoot $VHOSTDOCROOT
+  ServerName $VHOSTNAME
+  ServerAdmin $VHOSTADMIN
+  ErrorLog "logs/${VHOSTNAME}_error_log"
+  CustomLog "logs/${VHOSTNAME}_access_log" common
+</VirtualHost>
+CONFEOF
+
+    mkdir -p $VHOSTDOCROOT
+    restorecon -Rv $WWWROOT
+fi
+
+# Check config and reload
+apachectl configtest &> /dev/null
+
+if [ $? -eq 0 ]; then
+    systemctl reload httpd &> /dev/null
+else
+    echo "ERROR: Config error."
+    exit 1
+fi
+----
+
+[source, bash]
+.*运行脚本创建虚拟主机*
+----
+mkvhost test.example.com 2
+----
+
+=== export 对比实验
+
+[cols="5a,5a"]
+|===
+|不使用 export |使用 export
+
+|
+[source, bash]
+----
+$ MYVAR="some value"
+
+$ echo $MYVAR
+some value
+$ bash
+$ echo $MYVAR
+
+$ exit
+exit
+----
+
+|
+[source, bash]
+----
+$ MYVAR="some value"
+$ export MYVAR
+$ echo $MYVAR
+some value
+$ bash
+$ echo $MYVAR
+some value
+$ exit
+exit
+----
+
+|===

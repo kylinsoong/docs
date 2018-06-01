@@ -1,0 +1,334 @@
+
+= DNS
+:toc: manual
+:toc-placement: preamble
+
+Linux 域名解析系统。
+
+== 基本概念
+
+=== 什么是 DNS
+
+DNS 英文全称 *Domain Name System*，即域名系统。DNS 是一个分层的命名系统，充当着网络系统主机和资源的目录，目录中的信息是将网络名称映射到逻辑条目/资源记录数据。
+
+image:img/dns-level.png[DNS 分层命名系统]
+
+上图为一 DNS 分层命名系统示例，DNS 层次结构是以根域名 `.` 开始的，从根域名开始向下会有多个分支及子域名。DNS 层次结构的每个层次都是由 `.` 来分开的。`.` 是最顶层的根域名，com，net 及 org 等域名占据了分层域名中的第二级；example.com，redhat.com 等占据了第三级；上图中 apps.example.com 则是四级。
+
+为了更好的解释 DNS 分层结构，需要对下表中定义的三个名词有所了解:
+
+[cols="2,5a"]
+|===
+|名称 |描述
+
+|域名(domain)
+|一个域名是以公用名称结尾的一系列资源记录的集合，代表DNS 域名空间的整个子树，例如 `example.com`，`apps.example.com`。最大可能的域是根域名 `.`，其中代表整个 DNS 名称空间。
+
+TLD(top-level domain，顶级域名)是只有一个组件的域名；gTLDs(gTLDs，通用顶级域名)是最初根据行业分类设计，包括 `.com`，`.net`，`.edu`等；ccTLDs(Country code TLDs，国家代码顶级域名)是根据国家代码设计，例如 `.cn`，`.us`，`.uk` 等。
+
+|子域名(subdomain)
+|一个子域名同样是一个域名，它是另一个域名的子树。子域名通常是在讨论两个域名之间的关系时使用的术语。例如，apps.example.com 是域名 example.com 的一个子域名。
+
+|区(zone)
+|一个区是特定名称服务器直接负责或认证的域名的一个部分。 这可能是一个完整的域名，也可能只是部分或全部域名的一部分子域名委托给其他域名服务器。
+|===
+
+=== 域名查询解析
+
+当系统需要使用 DNS 服务器执行名称解析时，首先会按顺序向 /etc/resolv.conf 中列出的服务器发送查询，直到获得响应或所有列出的服务器耗尽。host 或 dig 命令可以用来手动查找 DNS 名称。
+
+[source, bash]
+.*An example of dig*
+----
+$ dig https://test.apps.example.com
+
+; <<>> DiG 9.9.4-RedHat-9.9.4-51.el7_4.1 <<>> https://test.apps.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44376
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;https://test.apps.example.com.	IN	A
+
+;; ANSWER SECTION:
+https://test.apps.example.com. 0 IN	A	192.168.122.105
+
+;; Query time: 1 msec
+;; SERVER: 192.168.122.106#53(192.168.122.106)
+;; WHEN: Sat Jan 06 17:43:43 CST 2018
+;; MSG SIZE  rcvd: 63
+----
+
+image:img/anatomy-of-dns-lookup.png[DNS 查询解析]
+
+1. 从 `/etc/resolv.conf` 获取 DNS 服务器的地址
+2. 发送 `https://example.com 的 IP 地址是多少` 请求到步骤1获取到的 DNS 服务器
+3. 查询 `example.com` 是否在本地是有认证的
+4. 如果是直接返回对应的 IP 地址，跳过以后的步骤，直接将 IP 地址返回给 Client。在这种情况下，则返回会有一个 aa 的标记，即表示是本地 authoritative answer 的。 
+5. 如果 `example.com` 在本地没有认证，则查看 `example.com` 是否在缓存中有对应的记录
+6. 如果缓存块有对应的记录，则返回 IP 地址.跳过以后的步骤，直接将 IP 地址返回给 Client。在这种情况下，返回没有 aa 标记。
+7. 如果缓存中没有对应的记录，则一般发送类似 `.com 的域名服务器是什么` 的请求到 TLD 域名服务器
+8. TLD 域名服务器会返回类似 `example.com 的域名服务器是 dns.example.com, IP 地址为 192.168.1.255` 信息
+9. dnsA 域名服务器根据返回的地址信息，发送类似 `example.com 的 IP 地址是多少` 的请求到 dns.example.com
+10. dns.example.com 服务iq会找到 example.com 对应的 IP 地址，例如 192.168.1.1，返回给 dnsA
+11. dnsA 域名服务器将返回的信息在缓存中保存，并返回给Client
+
+=== DNS RRs
+
+DNS RRs(DNS resource records, DNS 资源记录) 是 DNS 区(zone) 中的记录，用来指定 DNS 区中特定名称或对象的详细属性，一条 DNS RRs 通常包括的属性有:
+
+* `owner-name` - 资源记录的名称
+* `type` - 资源记录的类型
+* `TTL`，- 资源记录在缓存中保存的时间
+* `class` - 该属性长见的值为 `IN`，代表互联网
+* `data` - 数据属性，常见值 IPv4 地址， IPv6 地址
+
+*常见资源记录类型对应描述列表*
+
+[cols="2,5a"]
+|===
+|类型 |描述
+
+|A
+|主机名和 IPv4 地址的映射
+[source, bash]
+----
+$ host -v -t A google.com
+Trying "google.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 58605
+;; flags: qr rd ra; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;google.com.			IN	A
+
+;; ANSWER SECTION:
+google.com.		220	IN	A	74.125.24.138
+google.com.		220	IN	A	74.125.24.100
+google.com.		220	IN	A	74.125.24.101
+google.com.		220	IN	A	74.125.24.102
+google.com.		220	IN	A	74.125.24.139
+google.com.		220	IN	A	74.125.24.113
+----
+
+|AAAA
+|主机名和 IPv6 地址的映射
+[source, bash]
+----
+$ host -v -t AAAA google.com
+Trying "google.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44229
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;google.com.			IN	AAAA
+
+;; ANSWER SECTION:
+google.com.		145	IN	AAAA	2404:6800:4003:c03::71
+----
+
+|CNAME
+|定义了一个别名指向另一个 A 或 AAAA 类型的资源记录
+[source, bash]
+.*DNS 区中 CNAME 示例*
+----
+NAME                    TYPE   VALUE
+--------------------------------------------------
+bar.example.com.        CNAME  foo.example.com.
+foo.example.com.        A      192.0.2.23
+----
+
+注意事项:
+
+* CNAME 链必须要以 A 或 AAAA 结束
+* 在 CDN 网络使用 CNAME 链来加快传输的可靠性和速度
+* NS 和 MX 类型的资源记录不能够指向 CNAME
+
+|PTR
+|IPv4 地址/IPv6 地址和主机名的映射，用来 DNS 反转解析
+
+[source, bash]
+.*PTR IPv4 将 IP 地址反转，以 in-addr.arpa 结束*
+----
+$ host -v -t PTR 8.8.8.8
+Trying "8.8.8.8.in-addr.arpa"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64860
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;8.8.8.8.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+8.8.8.8.in-addr.arpa.	72850	IN	PTR	google-public-dns-a.google.com.
+----
+
+[source, bash]
+.*PTR IPv6 反转且以十进制个位数字表示，以 ip6.arpa 结束*
+----
+$ host -v -t PTR 2001:4860:4860::8888
+Trying "8.8.8.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.8.4.0.6.8.4.1.0.0.2.ip6.arpa"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20901
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;8.8.8.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.8.4.0.6.8.4.1.0.0.2.ip6.arpa. IN PTR
+
+;; ANSWER SECTION:
+8.8.8.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.8.4.0.6.8.4.1.0.0.2.ip6.arpa. 86400	IN PTR google-public-dns-a.google.com.
+----
+
+|NS
+|域名和在 DNS zone 中有授权的 DNS 名称服务器的映射
+
+[source, bash]
+----
+$ host -v -t NS google.com
+Trying "google.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44701
+;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;google.com.			IN	NS
+
+;; ANSWER SECTION:
+google.com.		24431	IN	NS	ns2.google.com.
+google.com.		24431	IN	NS	ns3.google.com.
+google.com.		24431	IN	NS	ns1.google.com.
+google.com.		24431	IN	NS	ns4.google.com.
+---- 
+
+|SOA
+|提供了 DNS zone 工作原理等信息。任意一个 DNS zone 中都有一条 SOA 记录，提供的信息包括域名服务器的 Master 点，Salve 点，Slave 如何同步 Master 数据，及 DNS zone 的管理契约等。
+
+[source, bash]
+----
+$ host -v -t SOA google.com
+Trying "google.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 541
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;google.com.			IN	SOA
+
+;; ANSWER SECTION:
+google.com.		60	IN	SOA	ns1.google.com. dns-admin.google.com. 181070036 900 900 1800 60
+----
+
+|MX
+|域名和邮件交换服务器之间的映射
+
+[source, bash]
+----
+$ host -v -t MX mail.google.com
+Trying "mail.google.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 17580
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mail.google.com.		IN	MX
+
+;; ANSWER SECTION:
+mail.google.com.	455795	IN	CNAME	googlemail.l.google.com.
+
+;; AUTHORITY SECTION:
+l.google.com.		43	IN	SOA	ns1.google.com. dns-admin.google.com. 181060731 900 900 1800 60
+----
+
+|TXT
+|名称和任意可读文本之间的映射，通常用于 Sender Policy Framework (SPF)，DomainKeys Identified Mail (DKIM)，Domain-based Message Authentication，Reporting and Conformance (DMARC)
+
+[source, bash]
+----
+$ host -v -t TXT google.com
+Trying "google.com"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 55568
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;google.com.			IN	TXT
+
+;; ANSWER SECTION:
+google.com.		3600	IN	TXT	"v=spf1 include:_spf.google.com ~all"
+----
+
+|SRV
+|用来定位在一个域中支持特定服务的主机。SRV 中提供了一系列提供特殊服务(例如 LDAP)的主机名，包括服务监听的端口号等。SRV 记录中包括 `priority`，`weight` 等属性。 
+|===
+
+通常一个主机(不分客户端和服务器)会有如下记录:
+
+* 一条或多条 A/AAAA 类型的记录映射主机名和它的 IP 地址
+* 一条 PTR 记录将主机的每个 IP 地址反转映射为主机名
+* 可选择，一条或多条 CNAME 记录进行别名设定及映射 A/AAAA 类型记录
+
+除了如上记录，一个 DNS zone 会有更多如下记录:
+
+* 一条 SOA 记录说明 zone 是如何工作的
+* 一条 NS 记录指向授权的服务器
+* 一条或多条 MX 记录进行域名和邮件交互服务之间的映射
+* 可选择的，一条或多条 TXT 记录提供一些特殊服务，例如 SPF
+* 可选择的，一条或多条 SRV 记录域中本地服务 
+
+相关 RFC 文档:
+
+. http://tools.ietf.org/html/rfc1034[RFC 1034: Domain names - concepts and facilities]
+. http://tools.ietf.org/html/rfc1035[RFC 1035: Domain names - implementation and specification]
+. http://tools.ietf.org/html/rfc2181[RFC 2181: Clarifications to the DNS Specification]
+
+== 配置管理 unbound
+
+[source, text]
+.*安装启动 unbound*
+----
+# yum install -y unbound
+# systemctl enable unbound.service
+# systemctl start unbound.service
+----
+
+[source, text]
+.*配置 unbound*
+----
+# vim /etc/unbound/unbound.conf
+----
+
+[source, text]
+.*配置检测*
+----
+# unbound-checkconf
+----
+
+[source, text]
+.*重起 unbound*
+----
+# systemctl restart unbound.service
+----
+
+[source, text]
+.*配置防火墙*
+----
+# firewall-cmd --permanent --add-service=dns
+# firewall-cmd --reload
+----
+
+[source, text]
+.*查看 DNS 缓存*
+----
+# unbound-control dump_cache
+# unbound-control flush example.com
+# unbound-control flush
+----
+
+== DNS 常见问题
+
+[source, text]
+.*DNS 常见问题分析*
+----
+$ getent hosts example.com
+$ grep ^hosts: /etc/nsswitch.conf
+$ grep [[:space:]]example.com /etc/hosts
+$ grep ^nameserver /etc/resolv.conf
+nameserver 172.25.254.255
+$ dig @172.25.254.255 A example.com
+$ dig A example.com
+----
+

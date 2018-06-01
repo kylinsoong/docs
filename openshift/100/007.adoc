@@ -1,0 +1,143 @@
+= Binary Deployment of a war file
+:toc: manual
+:toc-placement: preamble
+
+In this recipe you will learn to deploy a war file. We will assume that you built your source code outside of OpenShift build process and want to download the WAR file on your workstation.
+
+== Create a project or use an existing project
+
+If you want to, you can create a new project based on what you have learned in the previous recipe. Since we already have a project we will use it. Run the following command to make sure.
+
+[source, bash]
+----
+$ oc project ocp-test
+----
+
+== Create war file
+
+Create folders and file as following
+
+[source, bash]
+----
+$ mkdir binarytest && cd binarytest
+$ mkdir deployments
+
+$ echo "Hello World" > index.html
+$ zip helloworld.war index.html
+$ mv helloworld.war ./deployments/
+$ rm index.html
+
+$ ls -lR
+.:
+total 0
+drwxrwxr-x. 2 kylin kylin 28 Jul 10 23:03 deployments
+
+./deployments:
+total 4
+-rw-rw-r--. 1 kylin kylin 182 Jul 10 23:02 helloworld.war
+----
+
+== Using builder image
+
+Create a new build using the builder image of your choice. Here we are using JBoss EWS (tomcat 8) image. The flag binary=true indicates that this build will use the binary content instead of the url to the source code.
+
+Here I am naming my application as helloworld. So all the artifacts will get the name helloworld.
+
+[source, bash]
+----
+$ oc new-build --image-stream=jboss-webserver30-tomcat8-openshift --binary=true --name=helloworld
+--> Found image 8700fb1 (2 months old) in image stream "openshift/jboss-webserver30-tomcat8-openshift" under tag "latest" for "jboss-webserver30-tomcat8-openshift"
+
+    JBoss Web Server 3.0 
+    -------------------- 
+    Platform for building and running web applications on JBoss Web Server 3.0 - Tomcat v8
+
+    Tags: builder, java, tomcat8
+
+    * A source build using binary input will be created
+      * The resulting image will be pushed to image stream "helloworld:latest"
+      * A binary build was created, use 'start-build --from-dir' to trigger a new build
+
+--> Creating resources with label build=helloworld ...
+    imagestream "helloworld" created
+    buildconfig "helloworld" created
+--> Success
+----
+
+== Executing the build
+
+Start the build by uploading the contents of your `deployments` directory. Make sure you are in the parent folder where you created the `deployments` folder inside previously. Remember the war file is in the `deployments` folder. The jboss-ews builder image knows to copy the contents of the `deployments` folder to the `deployments` directory and then builds the application image.
+
+[source, bash]
+----
+$ oc start-build helloworld --from-dir=.
+Uploading directory "." as binary input for the build ...
+WARNING: the provided file may not be an archive (tar, tar.gz, or zip), use --from-file to prevent extraction
+build "helloworld-1" started
+----
+
+You can check the build logs by executing:
+
+[source, bash]
+----
+$ oc logs helloworld-1-build
+Receiving source from STDIN as archive ...
+Copying all deployments war artifacts from /home/jboss/source/deployments directory into /opt/webserver/webapps for later deployment...
+'/home/jboss/source/deployments/helloworld.war' -> '/opt/webserver/webapps/helloworld.war'
+Pushing image 172.30.160.227:5000/ocp-test/helloworld:latest ...
+Pushed 0/7 layers, 14% complete
+Pushed 1/7 layers, 16% complete
+Pushed 2/7 layers, 38% complete
+Pushed 3/7 layers, 51% complete
+Pushed 4/7 layers, 64% complete
+Pushed 5/7 layers, 94% complete
+Pushed 6/7 layers, 98% complete
+Pushed 7/7 layers, 100% complete
+Push successful
+----
+
+== Create the application
+
+Now create the application with the same name as what you gave for the build.
+
+Here we are using the name *helloworld*, so that the rest of the objects such as deployment configuration and service are created with the same name and refer to the image-stream created earlier.
+
+[source, bash]
+----
+$ oc new-app helloworld --allow-missing-imagestream-tags 
+--> Found image 24d9f59 (6 minutes old) in image stream "ocp-test/helloworld" under tag "latest" for "helloworld"
+
+    ocp-test/helloworld-1:c1f56454 
+    ------------------------------ 
+    Platform for building and running web applications on JBoss Web Server 3.0 - Tomcat v8
+
+    Tags: builder, java, tomcat8
+
+    * This image will be deployed in deployment config "helloworld"
+    * Ports 8080/tcp, 8443/tcp, 8778/tcp will be load balanced by service "helloworld"
+      * Other containers can access this service through the hostname "helloworld"
+
+--> Creating resources ...
+    deploymentconfig "helloworld" created
+    service "helloworld" created
+--> Success
+    Run 'oc status' to view your app.
+----
+
+Now, expose the service as a route to be able to use it from the browser.
+
+[source, bash]
+----
+$ oc expose service helloworld
+route "helloworld" exposed
+----
+
+== Verify
+
+You can use the route to access the application using the URL.
+
+[source, bash]
+----
+$ curl http://helloworld-ocp-test.apps.example.com/helloworld/
+Hello World
+----

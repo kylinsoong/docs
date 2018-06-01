@@ -1,0 +1,108 @@
+= IPv6 网络配置
+:toc: manual
+
+== 配置 IPv6 网络
+
+[source, bash]
+.*1 - 创建一个网络接口 eno1*
+----
+# setenforce to 'Permissive' if default enforce is 'Enforcing'
+setenforce 0
+
+# create namespace
+ip netns add hidden
+
+# Active ::1 inside namespace
+ip netns exec hidden ip link set dev lo up
+
+# Add bridge inside 'hidden' namespace and turn on
+ip netns exec hidden brctl addbr hiddenbr0
+ip netns exec hidden ip link set dev hiddenbr0 up
+
+# Add virtual patch cables to bridge
+ip link add eno1 type veth peer name eno1-port
+ip link set eno1-port netns hidden up
+ip netns exec hidden brctl addif hiddenbr0 eno1-port
+
+# Attach virtual patch cable to bridge and assign its far side address
+ip netns exec hidden ip link add inside0 type veth peer name inside0-port
+ip netns exec hidden brctl addif hiddenbr0 inside0-port
+ip netns exec hidden ip link set inside0-port up
+ip netns exec hidden ip link set inside0 up
+ip netns exec hidden ip addr add 192.168.0.254/24 dev inside0
+ip netns exec hidden ip addr add fddb:fe2a:ab1e::c0a8:00fe/64 dev inside0
+
+# setenforce to 'Enforcing'
+setenforce 1
+----
+
+[source, text]
+.*2 - 查看初始网络接口，配置文件及连接信息*
+----
+# ip link
+# nmcli con show
+----
+
+[source, text]
+.*3 - 创建连接*
+----
+# nmcli connection add con-name eno1 type ethernet ifname eno1
+Connection 'eno1' (b5ce0f55-6e21-4529-8096-f5bbfcc11605) successfully added.
+# nmcli connection show | grep eno1
+eno1    b5ce0f55-6e21-4529-8096-f5bbfcc11605  802-3-ethernet  --
+# ip addr show eno1
+6: eno1@if5: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether fe:70:83:fc:2e:d3 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+----
+
+[source, text]
+.*4 - 显示默认 IPv6 配置*
+----
+# nmcli connection show eno1 | grep ipv6
+ipv6.method:                            auto
+ipv6.dns:                               --
+ipv6.dns-search:                        --
+ipv6.dns-options:                       (default)
+ipv6.dns-priority:                      0
+ipv6.addresses:                         --
+ipv6.gateway:                           --
+ipv6.routes:                            --
+ipv6.route-metric:                      -1
+ipv6.ignore-auto-routes:                no
+ipv6.ignore-auto-dns:                   no
+ipv6.never-default:                     no
+ipv6.may-fail:                          yes
+ipv6.ip6-privacy:                       -1 (unknown)
+ipv6.addr-gen-mode:                     stable-privacy
+ipv6.dhcp-send-hostname:                yes
+ipv6.dhcp-hostname:                     --
+ipv6.token:                             --
+----
+
+[source, text]
+.*5 - 修改连接配置 IPv6 地址*
+----
+# nmcli con mod eno1 ipv6.addresses 'fddb:fe2a:ab1e::c0a8:1/64 fddb:fe2a:ab1e::c0a8:fe'
+# nmcli con mod eno1 ipv6.method manual
+# nmcli con down eno1
+# nmcli con up eno1
+----
+
+[source, text]
+.*6 - 连通性测试*
+----
+# ping6 fddb:fe2a:ab1e::c0a8:1
+# ping6 fddb:fe2a:ab1e::c0a8:fe
+----
+
+[source, text]
+.*7 - 查看路由信息*
+----
+# ip -6 route
+----
+
+[source, text]
+.*8 - ping 多播组*
+----
+# ping6 ff02::1%eno1
+----

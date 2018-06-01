@@ -1,0 +1,21 @@
+= Teiid Data Service
+
+*Teiid Data Service* is for demonstrating: 
+
+----
+OpenShift
+Data Virtualization
+Data Federation
+Data as Service
+RHOARs
+Microservices
+Cloud native Application
+Modern Application Development
+----
+
+Which mainly have 2 portion:
+
+* https://github.com/teiid/wildfly-swarm-teiid-examples/tree/master/vdb-datafederation - A WildFly Swarm based service supply data virtualization, data federation, OData service. 
+* https://github.com/kylinsoong/vdb-vaadin-dashboard - A vaadin based UI which consume the OData service supplied by VDB Data service.
+
+

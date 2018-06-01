@@ -1,0 +1,191 @@
+= Basic Linux Admin Commands
+:toc: manual
+ 
+== date
+
+[source, text]
+.*查看当前日期和时间*
+----
+$ date
+Sun Nov 19 20:55:25 CST 2017
+$ date +%x
+11/19/2017
+$ date +%R
+20:57
+----
+
+== file
+
+[source, text]
+.*查看文件类型*
+----
+$ file /etc
+/etc: directory
+$ file /etc/passwd
+/etc/passwd: ASCII text
+----
+
+== head
+
+[source, text]
+.*显示文件前 10 行*
+----
+$ head /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+----
+
+[source, text]
+.*显示文件前 3 行*
+----
+$ head -n 3 /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+----
+
+== tail
+
+[source, text]
+.*显示文件后 10 行*
+----
+$ tail /etc/passwd
+pulse:x:171:171:PulseAudio System Daemon:/var/run/pulse:/sbin/nologin
+gdm:x:42:42::/var/lib/gdm:/sbin/nologin
+gnome-initial-setup:x:992:987::/run/gnome-initial-setup/:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+avahi:x:70:70:Avahi mDNS/DNS-SD Stack:/var/run/avahi-daemon:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+ntp:x:38:38::/etc/ntp:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+node3:x:1000:1000:node3:/home/node3:/bin/bash
+named:x:25:25:Named:/var/named:/sbin/nologin
+----
+
+[source, text]
+.*显示文件后 3 行*
+----
+$ tail -n 3 /etc/passwd
+tcpdump:x:72:72::/:/sbin/nologin
+node3:x:1000:1000:node3:/home/node3:/bin/bash
+named:x:25:25:Named:/var/named:/sbin/nologin
+----
+
+== wc
+
+[source, text]
+.*统计文件中行数，字数，字符数*
+----
+$ wc /etc/passwd
+  41   79 2107 /etc/passwd
+$ wc -l /etc/passwd
+41 /etc/passwd
+$ wc -w /etc/passwd
+79 /etc/passwd
+$ wc -c /etc/passwd
+2107 /etc/passwd
+----
+
+== locate
+
+`locate` 用来文件定位。
+
+[source, text]
+.*locate*
+----
+# locate Kylin
+----
+
+[source, text]
+.*locate -i*
+----
+# locate -i Kylin
+----
+
+[source, text]
+.*locate -i -n 1*
+----
+# locate -i -n 1 Kylin
+/home/kylin
+----
+
+[source, text]
+.*updatedb*
+----
+# updatedb
+----
+
+NOTE: 默认 locate 数据库会每天更新一次，`updatedb` 可以进行手动更新。
+
+== find
+
+`find` 命令用来在 Linux 文件系统上进行文件查找。
+
+[source, text]
+.*find -name*
+----
+# find / -name sshd_config
+# find / -name '*.txt'
+# find /etc -name '*pass*'
+----
+
+[source, text]
+.*find -iname*
+----
+# find / -iname '*messages*'
+----
+
+[source, text]
+.*find -size*
+----
+# find / -size 10M
+# find / -size +10G
+# find / -size -10k
+----
+
+[source, text]
+.*find -mmin*
+----
+# find / -mmin 120
+# find / -mmin +120
+# find / -mmin -120
+----
+
+[source, text]
+.*find -perm*
+----
+# find /home -perm 764
+----
+
+[source, text]
+.*find -type*
+----
+# find /etc/ -type d
+# find /etc/ -type f
+# find / -type l
+# find /dev/ -type b
+----
+
+[source, text]
+.*find -links*
+----
+# find / -type f -links +1
+----
+
+== env
+
+[source, bash]
+.*输出所有环境变量*
+----
+$ env
+....
+----
+

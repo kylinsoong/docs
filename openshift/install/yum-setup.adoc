@@ -1,0 +1,160 @@
+
+= 创建 yum 源
+:toc: manual
+
+本部分登录 yum 源服务器 yum.example.com，下载 OCP 3.6 所需要的最新安装包，基于http 服务器创建本地 yum 源。
+
+== 绑定订阅账户
+
+[source, text]
+.*注册账户*
+----
+# subscription-manager register --username=<user_name> --password=<password>
+----
+
+[source, text]
+.*查找包含 OpenShift 订阅的 Pool ID*
+----
+# subscription-manager list --available --matches '*OpenShift Container Platform*' 
+----
+
+[source, text]
+.*绑定 Pool ID*
+----
+# subscription-manager attach --pool=<YOUR_POOL_ID>
+----
+
+=== 启用 OpenShift 需要的 Repo
+
+[source, text]
+.*禁止所有的 repo*
+----
+# subscription-manager repos --disable="*"
+---- 
+
+[source, text]
+.*查看是否还有未被禁止的 repo*
+----
+# yum repolist
+---- 
+
+[source, text]
+.*如果还有未被禁止的 repo，手工禁止它*
+----
+# yum-config-manager --disable <repo_id>
+# yum-config-manager --disable \*
+---- 
+
+== 创建本地 YUM 源
+
+=== 同步安装包到本地目录
+
+[source, text]
+.*仅启用 OCP 3.9 所需的 repo*
+----
+# subscription-manager repos \
+    --enable="rhel-7-server-rpms" \
+    --enable="rhel-7-server-extras-rpms" \
+    --enable="rhel-7-fast-datapath-rpms" \
+    --enable="rhel-7-server-ose-3.9-rpms"
+----
+
+
+通过如下命令可以下载最新安装包到本地目录:
+
+[source, text]
+----
+# for repo in \
+rhel-7-server-rpms \
+rhel-7-server-extras-rpms \
+rhel-7-fast-datapath-rpms \
+rhel-7-server-ose-3.9-rpms
+do
+reposync -lm --repoid=${repo} --download_path=/opt/ose
+createrepo -v </opt/ose/>${repo} -o </opt/ose/>${repo}
+done
+----
+
+NOTE: 如果 reposync 不存在，可以通过 `yum install -y yum-utils` 安装 reposync 包。
+
+NOET: `reposync -p /opt/ose -n` 仅下载 OpenShift 需要的最新 Repo。
+
+=== 更新 repodata
+
+执行如下命令更新 repodata：
+
+[source, text]
+----
+createrepo --workers=5 /opt/ose/
+----
+
+=== 安装配置 httpd
+
+[source, text]
+----
+# yum -y install httpd
+----
+
+创建 httpd 配置文件，以发布 YUM 源:
+
+[source, text]
+----
+# cat << EOF > /etc/httpd/conf.d/yum.conf
+Alias /repo "/opt/ose"
+<Directory "/opt/ose">
+  Options +Indexes +FollowSymLinks
+  Require all granted
+</Directory>
+<Location /repo>
+  SetHandler None
+</Location>
+EOF
+----
+
+重启 httpd，使修改生效:
+
+[source, text]
+----
+systemctl enable httpd
+systemctl restart httpd
+----
+
+== 测试 YUM 源配置
+
+在 master，node1 或 node2 上添加如下配置
+
+[source, text]
+----
+cat << EOF > /etc/yum.repos.d/ocp.repo
+[rhel-7-server-rpms]
+baseurl = http://yum.example.com/ose/rhel-7-server-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-rpms
+
+[rhel-7-server-extras-rpms]
+baseurl = http://yum.example.com/ose/rhel-7-server-extras-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-extras-rpms
+
+[rhel-7-server-ose-3.7-rpms]
+baseurl = http://yum.example.com/ose/rhel-7-server-ose-3.7-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ose-3.7-rpms
+
+[rhel-7-fast-datapath-rpms]
+baseurl = http://yum.example.com/ose/rhel-7-fast-datapath-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-fast-datapath-rpms
+EOF
+----
+
+执行输出如下命令测试 YUM 源配置
+
+[source, text]
+----
+# yum list | grep -i atomic-openshift
+----

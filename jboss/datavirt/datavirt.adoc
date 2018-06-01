@@ -1,0 +1,11 @@
+= JBoss 数据虚拟化平台测试报告
+
+JBoss 数据虚拟化平台测试报告内容包括：
+
+* 功能性测试
+* 性能指标报告
+
+
+== 重要链接
+
+* JBoss 数据虚拟化认证配置 - https://access.redhat.com/articles/703663

@@ -1,0 +1,116 @@
+= 服务管理
+:toc: manual
+
+== systemd
+
+*systemd* 是系统和服务管理进程，管理着系统启动和服务器进程。该进程可以在系统启动和系统运行时对系统资源、服务器守护进程和其他进程进行管理。
+
+守护进程是在执行各种任务的后台等待或运行的进程。一般情况下，守护进程在系统启动时自动启动并持续运行至关机或被手动停止。按照惯例，许多守护进程的名称以字母*d*结束；为了监听连接，守护进程使用 socket 套接字。这是与本地或远程客户端的主要通信通道。套接字可能能由守护进程创建，或者可能从守护进程隔开并通过另一进程创建，如 systemd。当客户端建立连接时，套接字传递到守护进程。
+
+一个 Service（服务），通常指的是一个或多个守护进程，但启动或停止一项服务可能会对系统的状态进行一次性变更，不会留下守护进程之后继续运行。
+
+NOTE: 许多年来，Linux 和 UNIX 系统的进程 ID 1 属于 init 进程。这一进程负责激活系统中的其他服务, 常用的守护进程在系统启动时通过 System V 和 LSB init 脚本启动。这些是 shell 脚本，可能会因分发版本而不同。较不常用的守护进程由其他服务根据需要启动，如 initd 或 xinetd，它们侦听客户端连接。这些系统存在诸多限制，但 systemd 可以解决。RHEL 7 开始，进程 ID 1 属于 systemd 这一新的 init 系统，它在并行化功能，它可提高系统的启动速度，按需启动守护进程，而不需要单独的服务，自动服务依赖关系管理，可以防止长时间超时，例如在网络不可用时不启动网络服务，以及利用 Linux 控制组一起追踪相关进程的方式等方面做了加强。
+
+[source, bash]
+.*systemctl -t help 命令显示可用单元类型的列表*
+----
+# systemctl -t help
+Available unit types:
+service
+socket
+busname
+target
+snapshot
+device
+mount
+automount
+swap
+timer
+path
+slice
+scope
+----
+
+* 服务单元具有 .service 扩展名，代表系统服务。这种单元用于启动经常访问的守护进程，如 web 服务器。
+* 套接字单元具有 .socket 扩展名，代表进程间通信 (IPC) 套接字。套接字的控制可以在建立客户端连接时传递到守护进程或新启动的服务。套接字单元用于延迟系统启动时的服务启动，或者按需启动不常使用的服务。这原则上类似于使用 xinetd 超级服务器按需启动的服务。
+* 路径单元具有 .path 扩展名，用于将服务的激活推迟到特定文件系统更改发生之后。这通常用于使用假脱机目录的服务，如打印系统。
+
+[source, text]
+.*systemctl 查看 systemd 管理单元*
+----
+# systemctl
+# systemctl --type=service
+# systemctl status rngd.service -l
+# systemctl is-active sshd
+# systemctl is-enabled sshd
+# systemctl list-units --type=service
+# systemctl list-units --type=service --all
+# systemctl list-unit-files --type=service
+# systemctl --failed --type=service
+# systemctl list-unit-files --type=service
+----
+
+
+== systemctl 管理服务
+
+[source, text]
+.*systemctl list-dependencies 输出服务的依赖*
+----
+# systemctl list-dependencies sshd
+# systemctl list-dependencies sshd --reverse
+----
+
+[source, text]
+.*systemctl mask 隐藏服务*
+----
+# systemctl mask network
+# systemctl unmask network
+----
+
+[source, text]
+.*systemctl enable 服务开机启动*
+----
+# systemctl status sshd.service
+# systemctl disable sshd.service
+# systemctl status sshd.service
+# systemctl enable sshd.service
+# systemctl is-enabled sshd.service
+----
+
+.*常用 systemctl 服务管理命令*
+|===
+|命令 | 描述
+
+|systemctl status UNIT
+|查看有关服务状态的详细状态信息
+
+|systemctl stop UNIT
+|在运行中的系统上停止一个服务
+
+|systemctl start UNIT
+|在运行中的系统上启动一个服务
+
+|systemctl restart UNIT
+|在运行中的系统上重新启动一个服务
+
+|systemctl reload UNIT
+|重新加载某个运行中服务的配置文件
+
+|systemctl mask UNIT
+|彻底禁用服务，使其无法手动启动或在系统启动时启动
+
+|systemctl unmask UNIT
+|使屏蔽的服务变为可用
+
+|systemctl enable UNIT
+|将服务配置为在系统启动时启动
+
+|systemctl disable UNIT
+|禁止服务在系统启动时启动
+
+|systemctl list-dependencies UNIT
+|列出指定服务需要的 systemd 单元
+
+
+|===
+

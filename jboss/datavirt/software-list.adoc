@@ -1,0 +1,16 @@
+= 软件版本号对照表
+
+|===
+|软件名称 |版本
+
+|Red Hat JBoss Data Virtualization
+|6.3.0 + Patches
+
+|Red Hat JBoss Developer Studio
+|10.4.0
+
+|Red Hat JBoss Enterprise Application Platform
+|6.4.0
+
+|===
+

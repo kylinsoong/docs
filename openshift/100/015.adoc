@@ -1,0 +1,72 @@
+= Deploy a SpringBoot Application
+:toc: manual
+:toc-placement: preamble
+
+In this recipe we will deploy a SpringBoot application using a custom source to image builder image.
+
+== Create project
+
+[source, bash]
+----
+$ oc new-project spring-sample-app
+----
+
+== SpringBoot S2I Builder
+
+Create a new application using SpringBoot S2I Builder image. Here we will deploy sample code from a git repository 
+
+
+[source, bash]
+----
+$ oc new-app veermuchandi/spring-mvn-base~https://github.com/jbosschina/spring-sample-app.git --name=bootapp
+--> Found Docker image c3ddd9e (8 months old) from Docker Hub for "veermuchandi/spring-mvn-base"
+
+    Spring Boot Maven 3 
+    ------------------- 
+    Platform for building and running Spring Boot applications
+
+    Tags: builder, java, java8, maven, maven3, springboot
+
+    * An image stream will be created as "spring-mvn-base:latest" that will track the source image
+    * A source build using source code from https://github.com/jbosschina/spring-sample-app.git will be created
+      * The resulting image will be pushed to image stream "bootapp:latest"
+      * Every time "spring-mvn-base:latest" changes a new build will be triggered
+    * This image will be deployed in deployment config "bootapp"
+    * Port 8080/tcp will be load balanced by service "bootapp"
+      * Other containers can access this service through the hostname "bootapp"
+
+--> Creating resources ...
+    imagestream "spring-mvn-base" created
+    imagestream "bootapp" created
+    buildconfig "bootapp" created
+    deploymentconfig "bootapp" created
+    service "bootapp" created
+--> Success
+    Build scheduled, use 'oc logs -f bc/bootapp' to track its progress.
+    Run 'oc status' to view your app.
+----
+
+Expose Service to create a route
+
+[source, bash]
+----
+$ oc expose service bootapp 
+route "bootapp" exposed
+----
+
+Check the route
+
+[source, bash]
+----
+$ oc get route 
+NAME      HOST/PORT                                              PATH      SERVICES   PORT       TERMINATION   WILDCARD
+bootapp   bootapp-spring-sample-app.apps.example.com             bootapp    8080-tcp                 None
+----
+
+Wait for your application to be built and deployed.
+
+== Verify
+
+Test your application by using the hostname assigned in the route.
+
+Congratulations! You are now running a SpringBoot application on OpenShift.

@@ -1,0 +1,7 @@
+{
+    "variables" : {
+        "copyrightYear" :  "2018",
+        "copyrightHolder" :  "Kylin Soong"
+    },
+    "plugins": ["collapsible-menu"]
+}
