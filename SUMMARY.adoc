@@ -144,7 +144,7 @@
 ... link:jboss/fuse/camel-errorhandler.adoc[Dead Letter Channel]
 .. link:jboss/bpm/bpm.adoc[BPM]
 ...  link:jboss/bpm/install.adoc[安装测试]
-. link:solutions/README.adoc[实用案例]
+. link:solutions/README.adoc[SOLUTIONS]
 .. link:solutions/jbds-jdv.adoc[JBDS 创建虚拟数据库操作示例]
 .. link:solutions/ep-data-solution.adoc[企业数据整合案例]
 .. link:solutions/spark-gs.adoc[Spark Get Start]

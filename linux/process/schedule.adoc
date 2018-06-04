@@ -1,4 +1,68 @@
 = 周期性执行进程
 :toc: manual
 
+== 系统 cron 作业
+
+系统 cron 作业不是使用 crontab 命令定义的，而是在一组配置文件中配置的。系统 cron 作业是在两个位置定义的：/etc/crontab 和 /etc/cron.d/*。安装 cron 作业的软件包应当通过在 /etc/cron.d/ 中放置文件才能执行安装操作，但是，管理员还可以使用此位置来更轻松地将相关作业分到单个文件中，或者使用配置管理系统推送作业。
+
+还有预定义作业每小时、每天、每周和每月运行一次。这些作业将分别执行位于 /etc/cron.hourly/、/etc/cron.daily/、/etc/cron.weekly/ 和 /etc/cron.monthly/ 中的所有脚本。请注意，这些目录包含可执行脚本，而不包含 cron 配置文件。
+
+确保使置于这些目录中的所有脚本可执行。如果某个脚本不可执行（例如使用 chmod +x），则它不会运行。
+
+/etc/cron.hourly/* 脚本是使用 run-parts 命令从 /etc/cron.d/0hourly 中定义的作业执行的。每日、每周和每月的作业也使用 run-parts 命令执行，但是从其他配置文件 /etc/anacrontab 执行。
+
+== 创建系统 cron job 统计每天系统上的用户数量
+
+[source, text]
+.*1 - 在 /etc/cron.daily 目录下创建脚本统计在线用户，并输入到系统日志*
+----
+# cat /etc/cron.daily/usercount.cron
+#!/bin/bash
+  USERCOUNT=$(w -h | wc -l)
+  logger "There are currently ${USERCOUNT} active users"
+----
+
+[source, bash]
+.*2 - 修改脚本权限，让脚本可执行*
+----
+chmod +x /etc/cron.daily/usercount.cron
+----
+
+== systemd-tmpfiles 管理临时文件
+
+现代系统需要大量的临时文件和目录。不仅有用户高度可见的临时文件和目录（例如常规用户所使用和滥用的 /tmp），还有更特定于任务的临时文件和目录（例如守护进程以及 /run 下特定于用户的易失性目录）。就此而言，易失性意味着存储这些文件的文件系统只存在于内存中。在系统重新启动或断电时，易失性存储器的所有内容都会丢失。
+
+为保持系统充分运行，有必要创建那些不存在的目录和文件，因为守护进程和脚本可能会依靠它们的存在，而清除旧文件后就不会填满磁盘空间或提供错误信息。
+
+过去，系统管理员依靠 RPM 软件包和 SystemV 初始脚本来创建这些目录，依靠名为 tmpwatch 的工具来从配置的目录中删除未使用的旧文件。
+
+在 RHEL 7 中，systemd 提供了一个更加结构化的可配置方法来管理临时目录和文件：systemd-tmpfiles。
+
+在 systemd 启动系统后，其中一个启动的服务单元是 systemd-tmpfiles-setup。该服务运行命令 systemd-tmpfiles --create --remove。该命令会从 /usr/lib/tmpfiles.d/*.conf、/run/tmpfiles.d/*.conf 和 /etc/tmpfiles.d/*.conf 读取配置文件。系统会删除这些配置文件中标记要删除的任何文件和目录，并且会创建标记要创建（或修复权限）的任何文件和目录，并使其拥有正确的权限（如有必要）。
+
+* /usr/lib/tmpfiles.d/ 中的文件是由相关 RPM 软件包提供的，不应由系统管理员进行编辑。
+* /run/tmpfiles.d/ 下的文件本身是易失性文件，通常由守护进程用来管理自己的运行时临时文件。如果 /run/tmpfiles.d/ 中的文件与 /usr/lib/tmpfiles.d/ 中的文件同名，则系统将使用 /run/tmpfiles.d/ 中的文件。
+* /etc/tmpfiles.d/ 下的文件旨在供管理员配置自定义临时位置，以及覆盖供应商提供的默认值。如果 /etc/tmpfiles.d/ 中的文件与 /run/tmpfiles.d/ 或 /usr/lib/tmpfiles.d/ 中的文件同名，则系统将使用 /etc/tmpfiles.d/ 中的文件。
+
+== 配置清除 /tmp 目录下大于 5 天的日志文件
+
+[source, text]
+.*默认系统日志的清除是在 /usr/lib/tmpfiles.d/ 文件中控制的，默认为 10 天，在 /etc/tmpfiles.d/ 中创建配置文件，覆盖默认配置*
+----
+# cp /usr/lib/tmpfiles.d/tmp.conf /etc/tmpfiles.d/
+----
+
+[source, text]
+.*修改配置文件，设置清除日志的时间为大于 5 天*
+----
+# cp /etc/tmpfiles.d/tmp.conf /etc/tmpfiles.d/tmp.conf.bak.$(date "+%Y%m%d%H%M%S");
+# sed -i '/^d .tmp /s/10d/5d/' /etc/tmpfiles.d/tmp.conf
+----
+
+
+[source, text]
+.*执行 systemd-tmpfiles --clean 测试*
+----
+# systemd-tmpfiles --clean tmp.conf
+----
 
