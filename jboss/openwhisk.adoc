@@ -1,0 +1,178 @@
+= OpenWhisk
+:toc: manual
+
+== 什么是 Serverless
+
+//TODO--
+
+== 部署 OpenWhisk 到 OpenShift
+
+=== 环境准备
+
+[source, bash]
+.*创建 faas 工程*
+----
+oc new-project faas --display-name="FaaS- Apache OpenWhisk"
+----
+
+[source, bash]
+.*使 OpenShift 用户对 faas 工程有管理员权限*
+----
+oc adm policy add-role-to-user admin developer -n faas
+----
+
+[source, bash]
+.*部署 OpenWhisk 到 OpenShift*
+----
+oc process -f https://git.io/vpnUR | oc create -f -
+----
+
+[source, bash]
+.*验证 OpenWhisk 部署成功*
+----
+while $(oc get pods -n faas controller-0 | grep 0/1 > /dev/null); do sleep 1; done
+while [ -z "`oc logs controller-0 -n faas 2>&1 | grep "invoker status changed"`" ]; do sleep 1; done
+----
+
+[source, bash]
+.*配置 OpenWhisk Ngnix Route 为 TLS*
+----
+oc patch route openwhisk --namespace faas -p '{"spec":{"tls": {"insecureEdgeTerminationPolicy": "Allow"}}}'
+----
+
+[source, bash]
+.*安装配置 wsk*
+----
+$ wget https://github.com/projectodd/openwhisk-openshift/releases/download/latest/OpenWhisk_CLI-latest-linux-386.tgz
+$ wsk --help
+$ AUTH_SECRET=$(oc get secret whisk.auth -o yaml | grep "system:" | awk '{print $2}' | base64 --decode)
+
+$ oc get route/openwhisk
+openwhisk-faas.192.168.42.102.nip.io
+
+$ wsk property set --auth $AUTH_SECRET --apihost openwhisk-faas.192.168.42.102.nip.io
+ok: whisk auth set. Run 'wsk property get --auth' to see the new value.
+ok: whisk API host set to openwhisk-faas.192.168.42.102.nip.io
+
+$ wsk -i property get
+client cert		
+Client key		
+whisk auth		789c46b1-71f6-4ed5-8c54-816aa4f8c502:fBw77lKEtyfKtlNSojUaNvaY71cQcBiD6mJSAW2tTPmNDIDpQEaatkS0y6OXRNBl
+whisk API host		openwhisk-faas.192.168.42.102.nip.io
+whisk API version	v1
+whisk namespace		_
+whisk CLI version	2018-04-18T17:58:43.480+0000
+whisk API build		2018-01-01T00:00:00Z
+whisk API build number	latest
+----
+
+[source, bash]
+.*验证环境准备正确*
+----
+$ wsk -i action list
+actions
+/whisk.system/alarmsWeb/alarmWebAction                                 private nodejs:6
+/whisk.system/alarms/interval                                          private nodejs:6
+/whisk.system/alarms/once                                              private nodejs:6
+/whisk.system/alarms/alarm                                             private nodejs:6
+/whisk.system/invokerHealthTestAction0                                 private 
+----
+
+=== 部署一个 JavaScript Function
+
+[source, bash]
+.*创建 greeter.js*
+----
+$ cat greeter.js 
+function main(params) {
+    var name = params.name || 'Guest';
+    return {payload: 'Welcome to OpenShift Cloud Functions, ' + name};
+}
+----
+
+
+[source, bash]
+.*部署 JavaScript Function*
+----
+$ wsk -i action create greeter greeter.js
+ok: created action greeter
+
+$ wsk -i action list | grep greeter
+/whisk.system/greeter                      private nodejs:6
+----
+
+[source, bash]
+.*调运 JavaScript Function*
+----
+$ wsk -i action invoke --result greeter
+{
+    "payload": "Welcome to OpenShift Cloud Functions, Guest"
+}
+
+$ wsk -i action invoke --result greeter --param name "调运 JavaScript Function 测试"
+{
+    "payload": "Welcome to OpenShift Cloud Functions, 调运 JavaScript Function 测试"
+}
+----
+
+[source, bash]
+.*查看调运日志*
+----
+$ wsk -i activation list
+activations
+213a9a04171143a0ba9a04171113a0e9 greeter             
+
+$ wsk -i activation get 213a9a04171143a0ba9a04171113a0e9
+ok: got activation 213a9a04171143a0ba9a04171113a0e9
+{
+    "namespace": "whisk.system",
+    "name": "greeter",
+    "version": "0.0.1",
+    "subject": "whisk.system",
+    "activationId": "213a9a04171143a0ba9a04171113a0e9",
+    "start": 1528120601992,
+    "end": 1528120601996,
+    "duration": 4,
+    "response": {
+        "status": "success",
+        "statusCode": 0,
+        "success": true,
+        "result": {
+            "payload": "Welcome to OpenShift Cloud Functions, 调运 JavaScript Function 测试"
+        }
+    },
+    "logs": [],
+    "annotations": [
+        {
+            "key": "limits",
+            "value": {
+                "logs": 10,
+                "memory": 256,
+                "timeout": 60000
+            }
+        },
+        {
+            "key": "path",
+            "value": "whisk.system/greeter"
+        },
+        {
+            "key": "kind",
+            "value": "nodejs:6"
+        },
+        {
+            "key": "waitTime",
+            "value": 126
+        }
+    ],
+    "publish": false
+}
+
+----
+
+=== y
+
+[source, bash]
+.**
+----
+
+----
