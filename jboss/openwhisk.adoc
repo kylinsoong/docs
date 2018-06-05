@@ -78,12 +78,11 @@ actions
 /whisk.system/invokerHealthTestAction0                                 private 
 ----
 
-=== 部署一个 JavaScript Function
+=== 部署 JavaScript Function
 
-[source, bash]
-.*创建 greeter.js*
-----
-$ cat greeter.js 
+[source, javascript]
+.*创建 greeter.js，内容如下*
+---- 
 function main(params) {
     var name = params.name || 'Guest';
     return {payload: 'Welcome to OpenShift Cloud Functions, ' + name};
@@ -169,10 +168,587 @@ ok: got activation 213a9a04171143a0ba9a04171113a0e9
 
 ----
 
-=== y
+=== 部署 Java Function
 
 [source, bash]
-.**
+.*创建一个 Maven 工程*
+----
+mvn archetype:generate -DgroupId=com.sample -DartifactId=sample -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 ----
 
+[source, bash]
+.*工程添加依赖*
 ----
+<dependency>
+  <groupId>com.google.code.gson</groupId>
+  <artifactId>gson</artifactId>
+  <version>2.8.2</version>
+</dependency>
+----
+
+[source, java]
+.*编辑 src/main/java/com/sample/App.java，添加如下方法* 
+----
+package com.sample;
+
+import com.google.gson.JsonObject;
+
+public class App  {
+
+    public static JsonObject main(JsonObject args) {
+        String name = "stranger";
+        if (args.has("name")) {
+            name = args.getAsJsonPrimitive("name").getAsString();
+        }
+        JsonObject response = new JsonObject();
+        response.addProperty("greeting", "Hello " + name + "!");
+        return response;
+    }
+
+}
+----
+
+[source, bash]
+.*编译部署 Java Function* 
+----
+$ mvn -q package
+
+$ wsk -i action create --web=true sample target/sample-1.0-SNAPSHOT.jar --main com.sample.App
+ok: created action sample
+----
+
+[source, bash]
+.*查看部署的 Java Function* 
+----
+$ wsk -i action list | grep sample
+/whisk.system/sample                                                   private java
+----
+
+[source, bash]
+.*访问测试*
+----
+$ wsk -i action invoke --result sample --param {"name": "test"}
+{
+    "greeting": "Hello stranger!"
+}
+
+$ wsk -i action invoke --result sample --param name "OpenWhisk on OpenShift"
+{
+    "greeting": "Hello OpenWhisk on OpenShift!"
+}
+----
+
+[source, bash]
+.*HTTP 访问测试方法* 
+----
+$ WEB_URL=`wsk -i action get sample --url | awk 'FNR==2{print $1}'`
+$ AUTH=`oc get secret whisk.auth -o yaml | grep "system:" | awk '{print $2}'`
+$ echo $WEB_URL
+https://openwhisk-faas.192.168.42.102.nip.io/api/v1/web/whisk.system/default/sample
+$ echo $AUTH
+Nzg5YzQ2YjEtNzFmNi00ZWQ1LThjNTQtODE2YWE0ZjhjNTAyOmZCdzc3bEtFdHlmS3RsTlNvalVhTnZhWTcxY1FjQmlENm1KU0FXMnRUUG1ORElEcFFFYWF0a1MweTZPWFJOQmw=
+
+$ curl -k https://openwhisk-faas.192.168.42.102.nip.io/api/v1/web/whisk.system/default/sample.json
+{
+  "greeting": "Hello stranger!"
+}
+
+$ curl -k https://openwhisk-faas.192.168.42.102.nip.io/api/v1/web/whisk.system/default/sample.json?name=OpenShift
+{
+  "greeting": "Hello OpenShift!"
+}
+----
+
+=== 基于 Sequence 创建 Action 链
+
+image:img/faas-action-chain.png[]
+
+如上图所示，Action 链共有三个 action:
+
+* *splitter*  - java 方法，接收字符串，根据匹配规则拆分字符串
+* *sorter*    - python 方法，接收 Json Array, 将 Array 中的字符串排序
+* *uppercase* - javaScript 方法，接收 Json Array, 将 Array 中的字符串转化为大写字母
+
+例如：给 Action 链传入字符串 `openshift,openstack,ceph,jboss,linux`，处理结果为 `["CEPH", "JBOSS", "LINUX", "OPENSHIFT", "OPENSTACK"]`。 
+
+[source, bash]
+.*01 - 创建一个 package*
+----
+$ wsk -i package create sequence
+----
+
+[source, bash]
+.*02 - 创建一个 Maven 工程*
+----
+mvn archetype:generate -DgroupId=com.sample -DartifactId=sample2 -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+----
+
+[source, xml]
+.*03 - 工程添加依赖*
+----
+<dependency>
+  <groupId>com.google.code.gson</groupId>
+  <artifactId>gson</artifactId>
+  <version>2.8.2</version>
+</dependency>
+----
+
+[source, java]
+.*04 - 编辑 src/main/java/com/sample/App.java，添加如下方法*
+----
+package com.sample;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+public class App  {
+
+    public static JsonObject main(JsonObject args) {
+        JsonObject response = new JsonObject();
+        String text = null;
+        if (args.has("text")) {
+            text = args.getAsJsonPrimitive("text").getAsString();
+        }
+        String[] results = new String[] { text };
+        if (text != null && text.indexOf(",") != -1) {
+            results = text.split(",");
+        }
+        JsonArray splitStrings = new JsonArray();
+        for (String var : results) {
+            splitStrings.add(var);
+        }
+        response.add("result", splitStrings);
+        return response;
+  }
+}
+----
+
+[source, bash]
+.*05 - 部署 action splitter*
+----
+$ wsk -i action create --web=true sequence/splitter target/sample2-1.0-SNAPSHOT.jar --main com.sample.App
+ok: created action sequence/splitter
+----
+
+[source, bash]
+.*06 - 测试 splitter action*
+----
+$ wsk -i action invoke sequence/splitter --result --param text "zebra,cat,antelope"
+{
+    "result": [
+        "zebra",
+        "cat",
+        "antelope"
+    ]
+}
+
+$ curl -k $WEB_URL.json?text="zebra,cat,antelope"
+{
+  "result": ["zebra", "cat", "antelope"]
+}
+----
+
+[source, python]
+.*07 - 创建 sorter.py 将 Array 内容排序，内容如下*
+----
+def main(args):
+    return {"result": sorted(args["result"]) }
+----
+
+[source, bash]
+.*08 - 部署 action sorter*
+----
+$ wsk -i action create --web=true sequence/sorter sorter.py 
+ok: created action sequence/sorter
+
+$ wsk -i action list | grep sequence
+/whisk.system/sequence/sorter                              private python:2
+/whisk.system/sequence/splitter                            private java
+----
+
+[source, bash]
+.*09 - 测试 sorter action*
+----
+$ wsk -i action invoke sequence/sorter --result --param-file ./split.json
+{
+    "result": [
+        "antelope",
+        "cat",
+        "zebra"
+    ]
+}
+----
+
+[source, javascript]
+.*10 - 创建 uppercase.js 将所有 Array 中的字符转变成大写字母，内容如下*
+----
+function main(args) {
+    return {"result": args["result"].map(s => s.toUpperCase()) }
+ }
+----
+
+[source, bash]
+.*11 - 部署 action uppercase*
+----
+$ wsk -i action create sequence/uppercase uppercase.js
+ok: created action sequence/uppercase
+
+$ wsk -i action list | grep sequence
+/whisk.system/sequence/uppercase                           private nodejs:6
+/whisk.system/sequence/sorter                              private python:2
+/whisk.system/sequence/splitter                            private java
+----
+
+[source, bash]
+.*12 - 测试 uppercase action 部署*
+----
+$ wsk -i action invoke sequence/uppercase --result --param-file ./sorted.json 
+{
+    "result": [
+        "ANTELOPE",
+        "CAT",
+        "ZEBRA"
+    ]
+}
+----
+
+[source, bash]
+.*13 - 创建 action 链*
+----
+$ wsk -i action create --web=true strings --sequence sequence/splitter,sequence/sorter,sequence/uppercase 
+ok: created action strings
+
+$  wsk -i action list | grep strings
+/whisk.system/strings                                      private sequence
+----
+
+[source, bash]
+.*14 - 测试 action 链*
+----
+$wsk -i action invoke strings --result --param text "openshift,openstack,ceph,jboss,linux"
+{
+    "result": [
+        "CEPH",
+        "JBOSS",
+        "LINUX",
+        "OPENSHIFT",
+        "OPENSTACK"
+    ]
+}
+
+
+$ WEB_URL=`wsk -i action get strings --url | awk 'FNR==2{print $1}'`
+$ curl -k $WEB_URL.json?text="openshift,openstack,ceph,jboss,linux"
+{
+  "result": ["CEPH", "JBOSS", "LINUX", "OPENSHIFT", "OPENSTACK"]
+}
+----
+
+=== 使用规则和触发器
+
+[source, javascript]
+.*01 - 创建 timestamp.js，添加如下内容*
+----
+function main(params) {
+  var date = new Date();
+  console.log("Invoked at: " + date.toLocaleString());
+  return { message: "Invoked at: " + date.toLocaleString() };
+}
+----
+
+[source, bash]
+.*02 - 部署 avtion timestamp*
+----
+$ wsk -i action create --web=true timestamp timestamp.js
+ok: created action timestamp
+
+$ wsk -i action list | grep timestamp
+/whisk.system/timestamp                                   private nodejs:6
+----
+
+[source, bash]
+.*03 - 使用 activation poll 拉取日志*
+----
+$ wsk -i activation poll
+----
+
+NOTE: activation poll 处于监控状态，Ctrl-c 可退出。
+
+[source, bash]
+.*04 - 测试 timestamp action*
+----
+$ wsk -i action invoke timestamp --result
+{
+    "message": "Invoked at: 6/5/2018, 12:51:37 PM"
+}
+----
+
+NOTE: 返回查看 03 步，会有 `2018-06-05T12:51:37.906110000Z stdout: Invoked at: 6/5/2018, 12:51:37 PM` 信息输出。
+
+[source, bash]
+.*05 - 创建 trigger every-5-seconds*
+----
+$ wsk -i trigger create every-5-seconds --feed  /whisk.system/alarms/alarm --param cron '*/2 * * * * *' --param maxTriggers 100
+ok: invoked /whisk.system/alarms/alarm with id d3e88126c14d4f18a88126c14def1880
+{
+    "activationId": "d3e88126c14d4f18a88126c14def1880",
+    "annotations": [
+        {
+            "key": "path",
+            "value": "whisk.system/alarms/alarm"
+        },
+        {
+            "key": "waitTime",
+            "value": 26
+        },
+        {
+            "key": "kind",
+            "value": "nodejs:6"
+        },
+        {
+            "key": "limits",
+            "value": {
+                "logs": 10,
+                "memory": 256,
+                "timeout": 60000
+            }
+        },
+        {
+            "key": "initTime",
+            "value": 380
+        }
+    ],
+    "duration": 2093,
+    "end": 1528203414270,
+    "logs": [],
+    "name": "alarm",
+    "namespace": "whisk.system",
+    "publish": false,
+    "response": {
+        "result": {
+            "status": "success"
+        },
+        "status": "success",
+        "success": true
+    },
+    "start": 1528203412177,
+    "subject": "whisk.system",
+    "version": "0.0.5"
+}
+ok: created trigger every-5-seconds
+----
+
+[source, bash]
+.*06 - 创建规则 invoke-periodically*
+----
+$ wsk -i rule create invoke-periodically every-5-seconds timestamp
+ok: created rule invoke-periodically
+----
+
+NOTE: 查看 03 步 Console 口会有相应的信息输出。
+
+[source, bash]
+.*07 - 删除规则和触发器*
+----
+$ wsk -i rule delete invoke-periodically
+ok: deleted rule invoke-periodically
+
+
+$ wsk -i trigger delete every-5-seconds
+ok: invoked /whisk.system/alarms/alarm with id 762be098ba4244f0abe098ba42d4f009
+----
+
+=== 使用 package 编排 action 
+
+[source, bash]
+.*01 - 查看所有 packshe*
+----
+$ wsk -i package list
+packages
+/whisk.system/alarmsWeb                                    private
+/whisk.system/alarms                                       shared
+/whisk.system/sequence                                     private
+----
+
+[source, bash]
+.*02 - 查看某一个 package 的明细*
+----
+$ wsk -i package get --summary alarms
+package /whisk.system/alarms: Alarms and periodic utility
+   (parameters: *apihost, *trigger_payload)
+ feed   /whisk.system/alarms/interval: Fire trigger at specified interval
+   (parameters: minutes, startDate, stopDate)
+ feed   /whisk.system/alarms/once: Fire trigger once when alarm occurs
+   (parameters: date, deleteAfterFire)
+ feed   /whisk.system/alarms/alarm: Fire trigger when alarm occurs
+   (parameters: cron, startDate, stopDate)
+----
+
+[source, bash]
+.*03 - 创建一个 package*
+----
+$ wsk -i package create conversions
+ok: created package conversions
+
+$ wsk -i package list | grep conversions
+/whisk.system/conversions                                  private
+----
+
+[source, javascript]
+.*04 - 创建 temperature.js，内容如下*
+----
+function main(args) {
+    temperature = args.temperature
+    scale = args.scale
+    target = args.target
+
+    switch (target) {
+        case "C":
+            converted = normalize(temperature, scale)
+            break;
+        case "F":
+            converted = normalize(temperature, scale) * 1.8 + 32
+            break;
+        case "K":
+            converted = normalize(temperature, scale) + 273.15
+            break;
+        default:
+            converted = null
+            break;
+    }
+
+    return { "result": temperature + scale + " is " + converted + target }
+}
+----
+
+[source, bash]
+.*05 - 创建 action temperature*
+----
+$ wsk -i action update conversions/temperature temperature.js
+ok: updated action conversions/temperature
+----
+
+[source, bash]
+.*06 - 测试 temperature action*
+----
+$ wsk -i action invoke --blocking --result conversions/temperature --param temperature 38 --param scale C --param target K
+{
+    "result": "38C is 311.15K"
+}
+
+$ wsk -i action invoke --blocking --result conversions/temperature --param temperature 38 --param scale C --param target F
+{
+    "result": "38C is 100.4F"
+}
+----
+
+[source, bash]
+.*07 - 定义默认的参数为 C，并测试*
+----
+$ wsk -i action update conversions/temperature --param target C
+ok: updated action conversions/temperature
+
+$ wsk -i action invoke --blocking --result conversions/temperature --param temperature 100.4 --param scale F
+{
+    "result": "100.4F is 38C"
+}
+----
+
+[source, bash]
+.*08 - 定义默认参数的顺序，并测试*
+----
+$ wsk -i action update conversions/temperature --param target C --param scale F
+ok: updated action conversions/temperature
+
+$ wsk -i action invoke --blocking --result conversions/temperature --param temperature 100.4 
+{
+    "result": "100.4F is 38C"
+}
+
+$ wsk -i action invoke --blocking --result conversions/temperature --param temperature 38 --param scale C --param target K
+{
+    "result": "38C is 311.15K"
+}
+----
+
+[source, bash]
+.*09 - 在 package 上定义参数的顺序，并测试*
+----
+$ wsk -i action delete conversions/temperature
+ok: deleted action conversions/temperature
+$ wsk -i action update conversions/temperature temperature.js
+ok: updated action conversions/temperature
+$ wsk -i package update conversions --param target C --param scale F
+ok: updated package conversions
+
+$ wsk -i action invoke --blocking --result conversions/temperature --param temperature 100.4 
+{
+    "result": "100.4F is 38C"
+}
+
+----
+
+[source, json]
+.*10 - 创建 parameters.json，内容如下*
+----
+{
+    "temperature": 104,
+    "scale": "F",
+     "target": "C"   
+}
+----
+
+[source, bash]
+.*11 - 调运 action 传递 json 文件*
+----
+$ wsk -i action invoke --blocking --result conversions/temperature --param-file parameters.json
+{
+    "result": "104F is 40C"
+}
+----
+
+[source, bash]
+.*12 - 创建 Package Binding 邦定参数，并测试*
+----
+$ wsk -i package bind /whisk.system/conversions kelvin --param scale K
+ok: created binding kelvin
+
+$ wsk -i package get --summary kelvin
+package /whisk.system/kelvin: Returns a result based on parameters scale and target
+   (parameters: *scale, *target)
+ action /whisk.system/kelvin/temperature
+   (parameters: none defined)
+
+$ wsk -i action invoke --blocking --result kelvin/temperature --param temperature 311.15
+{
+    "result": "311.15K is 38C"
+}
+----
+
+[source, bash]
+.*13 - 发布 package*
+----
+$ wsk -i package get conversions publish
+ok: got package conversions, displaying field publish
+false
+
+$ wsk -i package update conversions --shared yes
+ok: updated package conversions
+
+$ wsk -i package get conversions publish
+ok: got package conversions, displaying field publish
+true
+----
+
+[source, bash]
+.*14 - 查看所有 package*
+----
+$ wsk -i package list
+packages
+/whisk.system/conversions                                  shared
+/whisk.system/kelvin                                       private
+/whisk.system/alarmsWeb                                    private
+/whisk.system/alarms                                       shared
+/whisk.system/sequence                                     private
+----
+
