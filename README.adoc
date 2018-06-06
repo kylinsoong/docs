@@ -1,4 +1,4 @@
-= OpenShift Cookbook
+= Cookbook Docspace
 
 == 3 Steps to Contribute
 
@@ -15,7 +15,7 @@ Use any text editor to edit the adoc files, http://asciidoctor.org/docs/asciidoc
 
 *Step.3* Summit your change
 
-Once your change be merged the content of https://openshift.gitbooks.io/cookbook/content/index.html[documents] will updated automatically.
+Once your change be merged the content will show on page.
 
 == Test locally
 

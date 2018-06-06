@@ -1,5 +1,6 @@
 = Summary
 
+. link:README.adoc[INTRODUCTION]
 . link:linux/README.adoc[LINUX]
 .. link:linux/rhel/readme.adoc[安装]
 ... link:linux/rhel/pre-install.adoc[安装 DVD 制作]
