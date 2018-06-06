@@ -9,8 +9,8 @@
     "plugins": ["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],
     "pluginsConfig": {
         "donate": {
-          "wechat": "/images/wechat.png",
-          "alipay": "/images/alipay.png",
+          "wechat": "http://ksoong.org/docs/content/images/wechat.png",
+          "alipay": "http://ksoong.org/docs/content/images/alipay.png",
           "title": "",
           "button": "赞赏",
           "alipayText": "支付宝捐赠",
