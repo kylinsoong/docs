@@ -1,1 +1,80 @@
-= OCP Installation 
+= OpenShift 容器平台安装
+:toc: manual
+
+== 安装概述
+
+OpenShift 容器平台由红帽公司以 RPM 软件包和容器镜像的组合形式交付。RPM 软件包可通过订阅从标准的红帽 YUM 源下载，容器镜像则来自红帽私有容器仓库(https://access.redhat.com/containers/)下载。  
+
+OpenShift 容器平台安装需要多台服务器，它们可以是物理机和虚拟机的任意组合。其中一些称为管理节点，一些则为计算节点，还有基础设施节点，如下图为一安装架构图,
+
+image:img/openshift-install-arch.png[]
+
+通常，这些不同的节点分别需要不同的软件包和配置。为了方便安装，可以基于 Ansible 进行安装，通过 Ansible Playbook 脚本来自动化相关的安装流程。具体 OpenShift 安装分三个阶段：
+
+* 准备安装 - 包括 YUM 源配置，容器镜像下载，相关软件的下载安装，容器镜像下载与本地容器镜像仓库配置等
+* 安装 - 执行 Ansible Playbook 脚本安装
+* 后续安装 - 安全认证配置，等
+
+== 安装架构
+
+[cols="2,2,5a"]
+|===
+|ip 地址 |域名 |说明
+
+|192.168.122.101
+|master.example.com
+|
+* 管理节点
+* DNS 服务器
+* 基础设施节点（内部镜像仓库、日志、监控）
+
+|192.168.122.105
+|node1.example.com
+|
+* 计算节点
+* Router
+
+|192.168.122.106
+|node2.example.com
+|
+* 计算节点
+
+|10.66.192.104
+|yum.example.com registry.example.com  nfs.example.com
+|
+* 公共镜像仓库
+* yum 源服务器
+
+|10.66.192.100
+|workstation.example.com
+|
+* 操作控制节点 - 执行 ansible 脚本
+|===
+
+[source, bash]
+.*节点 IP 地址设定脚本*
+----
+nmcli connection modify eth0 ipv4.addresses 192.168.122.101/24
+nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+
+
+nmcli connection modify eth0 ipv4.addresses 192.168.122.105/24
+nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+
+
+nmcli connection modify eth0 ipv4.addresses 192.168.122.106/24
+nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+----
+

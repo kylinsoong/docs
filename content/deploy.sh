@@ -17,8 +17,9 @@ fi
 
 #rm -fr $DOCUMENT_VERSION
 
-echo "gitbook generate pages"
+echo "gitbook generate pages start ..."
 gitbook build ./ $DOCUMENT_VERSION
+echo "gitbook generate pages done"
 
 echo ""
 

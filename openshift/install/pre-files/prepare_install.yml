@@ -1,0 +1,99 @@
+- name: "OpenShift 容器平台 - 安装准备"
+  hosts: nodes
+  remote_user: root
+  vars:
+    local_docker: ""
+  tasks:
+    - name: "在所有节点上配置本地 yum 源"
+      copy:
+        src: conf/ocp.repo
+        dest: /etc/yum.repos.d
+        mode: 0600
+        owner: root
+        group: root
+        force: yes
+      when: inventory_hostname in groups['nodes']
+    
+    - name: "设定 Master hostname"
+      hostname:
+        name: "master.example.com"
+      when: inventory_hostname in groups['master']
+
+    - name: "设定 Node1 hostname"
+      hostname:
+        name: "node1.example.com"
+      when: inventory_hostname in groups['node1']
+
+    - name: "设定 Node2 hostname"
+      hostname:
+        name: "node2.example.com"
+      when: inventory_hostname in groups['node2']
+
+    - name: "在所有节点上设定静态域名解析"
+      shell: printf '192.168.122.101 master.example.com master\n192.168.122.105 node1.example.com node1\n192.168.122.106 node2.example.com node2\n10.66.192.104 registry.example.com yum.example.com nfs.example.com' >> /etc/hosts
+      when: inventory_hostname in groups['nodes']
+
+    - name: "Master 节点创建 /root/.ssh"
+      file:
+        path: /root/.ssh
+        mode: 0700
+        owner: root
+        group: root
+        state: directory
+      when: inventory_hostname in groups['master']
+
+    - name: "拷贝 ocp_rsa 到 Master /root/.ssh/id_rsa"
+      copy:
+        src: conf/ocp_rsa
+        dest: /root/.ssh/id_rsa
+        mode: 0600
+        owner: root
+        group: root
+        force: no
+      when: inventory_hostname in groups['master']
+
+    - name: "拷贝 ocp_rsa.pub 到 Master /root/.ssh/id_rsa.pub"
+      copy:
+        src: conf/ocp_rsa.pub
+        dest: /root/.ssh/id_rsa.pub
+        mode: 0644
+        owner: root
+        group: root
+        force: no
+      when: inventory_hostname in groups['nodes']
+
+    - name: "安装所需包"
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - wget
+        - git
+        - net-tools
+        - bind-utils
+        - docker
+        - iptables-services
+        - bridge-utils
+        - bash-completion
+        - kexec-tools
+        - sos
+        - psacct
+        - atomic-openshift-docker-excluder
+        - atomic-openshift-excluder
+
+    - name: "Customize /etc/sysconfig/docker-storage-setup"
+      copy:
+        src: conf/docker-storage-setup
+        dest: /etc/sysconfig/docker-storage-setup
+
+    - name: "Verify existence of /dev/docker-vg/docker-pool"
+      stat:
+        path: /dev/docker-vg/docker-pool
+      register: docker_vg_status
+
+    - name: "Start and Enable Docker"
+      service:
+        name: docker
+        state: started
+        enabled: true
+
