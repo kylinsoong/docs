@@ -1,0 +1,150 @@
+= 公共镜像仓库 Docker Registry 配置
+:toc: manual
+
+== Docker 镜像同步
+
+OpenShift 安装和运行依赖 4 大类 docker 镜像，分别是：
+
+* 安装所需核心镜像
+* 日志，管理等相关的镜像
+* Ansible broker 相关的镜像
+* S2I 应用镜像构建相关的镜像
+
+link:images-syncing.sh[images-syncing.sh] 可以用来同步镜像，具体执行 `./images-syncing.sh <registry> <version> <isSave>` 可同步，
+
+* registry - 红帽仓库地址
+* version - 镜像版本号
+* isSave - 是否导出镜像
+
+[source]
+----
+./images-syncing.sh registry.access.redhat.com v3.9.27 false
+----
+
+[source, text]
+.*验证下载完成的容器镜像*
+----
+# docker images 
+----
+
+== 安装并配置 Docker Registry
+
+[source, bash]
+.*安装*
+----
+yum -y install docker-distribution
+systemctl enable docker-distribution
+systemctl start docker-distribution
+systemctl status docker-distribution
+----
+
+=== 配置TLS
+
+为了启用TLS协议传输，需要生成自签名证书。命令如下：
+
+[source, bash]
+----
+mkdir /etc/crts/ && cd /etc/crts
+openssl req \
+   -newkey rsa:2048 -nodes -keyout example.com.key \
+   -x509 -days 365 -out example.com.crt -subj \
+   "/C=CN/ST=GD/L=SZ/O=Global Security/OU=IT Department/CN=*.example.com"
+----
+
+编辑镜像仓库服务配置文件`/etc/docker-distribution/registry/config.yml`。确认http的配置如下：
+
+[source, bash]
+----
+http:
+   addr: :443
+   tls:
+       certificate: /etc/crts/example.com.crt
+       key: /etc/crts/example.com.key
+----
+
+修改完毕后，刷新systemd配置。命令如下：
+
+[source, bash]
+----
+systemctl daemon-reload
+----
+
+重启Docker Distribution服务。命令如下：
+
+[source, bash]
+----
+systemctl restart docker-distribution
+----
+
+=== 客户端配置信任自签名证书
+
+客户端如果需要连接本地镜像仓库，需要配置信任自签名证书。并重启Docker服务
+
+[source, bash]
+----
+cp /etc/crts/example.com.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust extract
+----
+
+重起 Docker
+
+[source, bash]
+----
+systemctl restart docker
+----
+
+== 加载所有预先下载的 Docker 镜像
+
+如果 docker 镜像需要从压缩包中导入，执行如下步骤：
+
+[source, text]
+.*1 - 查看下载的镜像明细*
+----
+# ls -l /opt/images/
+total 18787276
+-rw-------. 1 root root 7161034240 Jan  3 16:30 ose-images-apps-latest_20180608.tar.gz
+-rw-------. 1 root root 5074610176 Dec 13 15:32 ose-images-core-20180608.tar.gz
+-rw-------. 1 root root 4293435392 Dec 13 15:46 ose-images-logging-metrics-20180608.tar.gz
+-rw-------. 1 root root 2709085696 Dec 13 16:58 ose-images-tp-v3.9-20180608.tar.gz
+----
+
+[source, text]
+.*2 - 加载 Docker 镜像*
+----
+# cd /opt/images
+# for i in `ls *.gz` ; do docker load -i $i; done;
+----
+
+[source, text]
+.*3 - docker images 验证*
+----
+# docker images 
+----
+
+== 推送镜像到本地 Docker Registry
+
+[source, bash]
+.*1 - 设定变量*
+----
+REDHAT_REG="registry.access.redhat.com"
+PRIVATE_REG="registry.example.com"
+----
+
+[source, bash]
+.*2 - 设定 docker tag*
+----
+for i in $(docker images|grep $REDHAT_REG|awk '{print $1":"$2}') ; do docker tag  $i "$PRIVATE_REG$(echo $i|awk -F 'com' {'print $2'})" ; done;
+----
+
+
+[source, bash]
+.*3 - 推送到本地镜像仓库*
+----
+for i in `docker images|grep $PRIVATE_REG|awk '{print $1":"$2}'` ; do  docker push $i; done;
+----
+
+[source, bash]
+.*4 - 验证能否可成功下载镜像*
+----
+docker pull registry.example.com/rhscl/mysql-57-rhel7:latest
+----

@@ -62,7 +62,8 @@
     --enable="rhel-7-server-rpms" \
     --enable="rhel-7-server-extras-rpms" \
     --enable="rhel-7-fast-datapath-rpms" \
-    --enable="rhel-7-server-ose-3.9-rpms"
+    --enable="rhel-7-server-ose-3.9-rpms" \
+    --enable="rhel-7-server-ansible-2.4-rpms"
 ----
 
 [source, bash]
@@ -72,16 +73,27 @@ for repo in \
 rhel-7-server-rpms \
 rhel-7-server-extras-rpms \
 rhel-7-fast-datapath-rpms \
-rhel-7-server-ose-3.9-rpms
+rhel-7-server-ose-3.9-rpms \
+rhel-7-server-ansible-2.4-rpms
 do
 reposync -lm --repoid=${repo} --download_path=/opt/ose
 createrepo -v /opt/ose/${repo} -o /opt/ose/${repo}
 done
 ----
 
-NOTE: 如果 reposync 不存在，可以通过 `yum install -y yum-utils` 安装 reposync 包。
+*reposync* 的作用是将 yum 源仓库同步到本地目录，如果 reposync 不存在，可以通过 `yum install -y yum-utils` 安装 reposync 包，reposync 通过相应的参数控制同步的过程：
 
-NOTE: `reposync -p /opt/ose -n` 仅下载 OpenShift 需要的最新 Repo; `reposync -p /var/www/html/repo -r <REPOID> -l` 基于已从在的目录同步。
+* `-l` 支持 yum 插件
+* `-m` 支持下载 comps.xml
+* `--repoid` 或 `-r` 指定要查询的repo id，可以多次指定（默认全部启用）
+* `--download_path` 或 `-p` 指定将软件包下载到的路径，默认为当前目录
+* `-n` 仅同步最新的包
+
+*createrepo* 的作用是基于一组 rpm 包创建一个repomd（基于 xml 的 rpm 元数据）仓库，相关控制参数如下:
+
+* `-v` - 冗余的方式运行
+* `-o` - 指定输出的目录
+* `--workers` - 读取 rpms 的并发数量
 
 [source, bash]
 .*4 - 执行如下命令更新 repodata*
@@ -149,6 +161,12 @@ baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.9-rpms
 enabled = 1
 gpgcheck = 0
 name = rhel-7-server-ose-3.9-rpms
+
+[rhel-7-server-ansible-2.4-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ansible-2.4-rpms
 EOF
 ----
 
