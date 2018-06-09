@@ -67,12 +67,14 @@ for i in master node1 node2; do ssh-copy-id $i; done;
 
 == 准备 Playbook 脚本
 
-* link:pre-files/prepare_install.yml[pre-files/prepare_install.yml]
-* link:pre-files/inventory[pre-files/inventory]
-* link:pre-files/conf/ocp.repo[pre-files/conf/ocp.repo]
-* link:pre-files/conf/ocp_rsa[pre-files/conf/ocp_rsa]
-* link:pre-files/conf/ocp_rsa.pub[pre-files/conf/ocp_rsa.pub]
-* link:pre-files/conf/docker-storage-setup[pre-files/conf/docker-storage-setup]
+* link:pre-files/prepare_install.yml[pre-files/prepare_install.yml] - Ansible Playbook 脚本
+* link:pre-files/inventory[pre-files/inventory] - 脚本组定义
+* link:pre-files/conf/ocp.repo[pre-files/conf/ocp.repo] - 本地 yum 仓库地址
+* link:pre-files/conf/ocp_rsa[pre-files/conf/ocp_rsa] - SSH 免密私钥
+* link:pre-files/conf/ocp_rsa.pub[pre-files/conf/ocp_rsa.pub] - SSH 免密公钥
+* link:pre-files/conf/docker-storage-setup[pre-files/conf/docker-storage-setup] - docker 存储配置文件
+* link:pre-files/conf/openshift-cluster.conf[pre-files/conf/openshift-cluster.conf] - dnsmasq 配置文件
+* link:pre-files/conf/example.com.crt
 
 如上文件目录结构为:
 
@@ -80,7 +82,14 @@ image:img/ocp-pre-files.png[]
 
 == 执行 Playbook 脚本
 
-[source, bash]
+[source, text]
 ----
-ansible-playbook -i inventory prepare_install.yml
+# ansible-playbook -i inventory prepare_install.yml
+
+...
+
+PLAY RECAP ****************************************************************************************
+master                     : ok=23   changed=21   unreachable=0    failed=0   
+node1                      : ok=14   changed=13   unreachable=0    failed=0   
+node2                      : ok=14   changed=13   unreachable=0    failed=0
 ----

@@ -15,7 +15,9 @@ image:img/openshift-install-arch.png[]
 * 安装 - 执行 Ansible Playbook 脚本安装
 * 后续安装 - 安全认证配置，等
 
-== 安装架构
+== 安装架构说明
+
+如下表所示，OpenShift 安装需要 5 台服务器，
 
 [cols="2,2,5a"]
 |===
@@ -51,8 +53,18 @@ image:img/openshift-install-arch.png[]
 * 操作控制节点 - 执行 ansible 脚本
 |===
 
+[source, text]
+.*5 台服务器都安装的是 Linux 操作系统*
+----
+# cat /etc/redhat-release 
+Red Hat Enterprise Linux Server release 7.5 (Maipo)
+----
+
+=== 静态 IP 地址配置
+
+在 master, node1, node1 分别配置 IP 地址为静态 IP 地址
+
 [source, bash]
-.*节点 IP 地址设定脚本*
 ----
 nmcli connection modify eth0 ipv4.addresses 192.168.122.101/24
 nmcli connection modify eth0 ipv4.gateway 192.168.122.1
@@ -61,14 +73,12 @@ nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
 
-
 nmcli connection modify eth0 ipv4.addresses 192.168.122.105/24
 nmcli connection modify eth0 ipv4.gateway 192.168.122.1
 nmcli connection modify eth0 ipv4.method manual
 nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
-
 
 nmcli connection modify eth0 ipv4.addresses 192.168.122.106/24
 nmcli connection modify eth0 ipv4.gateway 192.168.122.1
@@ -78,3 +88,41 @@ nmcli connection reload
 nmcli connection up eth0
 ----
 
+=== 禁用 libvirtd
+
+在 master, node1, node1 禁用 libvirtd, 并重起系统(Optional: 如果 RHEL 安装在 KVM 之上，这一步是必须)。
+
+[source, bash]
+----
+systemctl stop libvirtd.service
+systemctl disable libvirtd.service
+reboot
+----
+
+=== 设置 KVM 恢复快照
+
+在操作控制节点(KVM 宿主机)创建快照(Optional: 本部分只适用 KVM 虚拟机)。
+
+[source, text]
+.*1 - 创建快照*
+----
+# qemu-img snapshot -c 2018-06-09 /var/lib/libvirt/images/master.qcow2 
+# qemu-img snapshot -c 2018-06-09 /var/lib/libvirt/images/node1.qcow2 
+# qemu-img snapshot -c 2018-06-09 /var/lib/libvirt/images/node2.qcow2 
+----
+
+[source, text]
+.*2 - 查看快照*
+----
+# qemu-img snapshot -l /var/lib/libvirt/images/master.qcow2 
+# qemu-img snapshot -l /var/lib/libvirt/images/node1.qcow2 
+# qemu-img snapshot -l /var/lib/libvirt/images/node2.qcow2 
+----
+
+[source, text]
+.*3 - 恢复快照(Optional: 只在需要恢复时执行)*
+----
+# qemu-img snapshot -a 2018-06-09 /var/lib/libvirt/images/master.qcow2
+# qemu-img snapshot -a 2018-06-09 /var/lib/libvirt/images/node1.qcow2
+# qemu-img snapshot -a 2018-06-09 /var/lib/libvirt/images/node2.qcow2
+----
