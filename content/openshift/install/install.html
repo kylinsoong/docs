@@ -64,7 +64,7 @@
     <link rel="next" href="post-install.html" />
     
     
-    <link rel="prev" href="docker-repo-setup.html" />
+    <link rel="prev" href="pre-install.html" />
     
 
     </head>
@@ -831,12 +831,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.2" data-path="pre-install.html">
+        <li class="chapter " data-level="1.4.2.2" data-path="docker-dist.html">
+            
+                <a href="docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="pre-install.html">
             
                 <a href="pre-install.html">
             
                     
-                    安装准备
+                    前续安装
             
                 </a>
             
@@ -844,59 +857,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="static-dns-ssh.html">
-            
-                <a href="static-dns-ssh.html">
-            
-                    
-                    静态域名，SSH 互信
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.4" data-path="env-setup.html">
-            
-                <a href="env-setup.html">
-            
-                    
-                    软件包安装及环境准备
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.5" data-path="dns-setup.adoc">
-            
-                <span>
-            
-                    
-                    本地 DNS 服务器配置
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.6" data-path="docker-repo-setup.html">
-            
-                <a href="docker-repo-setup.html">
-            
-                    
-                    公共镜像仓库配置
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="1.4.2.7" data-path="install.html">
+        <li class="chapter active" data-level="1.4.2.4" data-path="install.html">
             
                 <a href="install.html">
             
@@ -909,7 +870,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.8" data-path="post-install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="post-install.html">
             
                 <a href="post-install.html">
             
@@ -922,7 +883,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.9" data-path="git-setup.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="git-setup.html">
             
                 <a href="git-setup.html">
             
@@ -2250,93 +2211,182 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">cat &gt; /etc/ansible/hosts &lt;&lt;EOF
+<span class="hljs-comment"># hosts file for ocp.com</span>
 [OSEv3:children]
 masters
-nodes
 etcd
+nodes
 nfs
-
 
 [OSEv3:vars]
 ansible_ssh_user=root
+openshift_deployment_<span class="hljs-built_in">type</span>=openshift-enterprise
 deployment_<span class="hljs-built_in">type</span>=openshift-enterprise
-openshift_release=v3.7
+openshift_release=3.9.27
 
-<span class="hljs-comment"># Enable cockpit</span>
 osm_use_cockpit=<span class="hljs-literal">true</span>
-<span class="hljs-comment">#</span>
-<span class="hljs-comment"># Set cockpit plugins</span>
 osm_cockpit_plugins=[<span class="hljs-string">&apos;cockpit-kubernetes&apos;</span>]
 
-oreg_url=registry.example.com:5000/openshift3/ose-<span class="hljs-variable">${component}</span>:v3.7
-openshift_docker_additional_registries=registry.example.com:5000
-openshift_docker_insecure_registries=registry.example.com:5000
+osm_cluster_network_cidr=10.128.0.0/14
+openshift_portal_net=172.30.0.0/16
+openshift_master_api_port=8443
+openshift_master_console_port=8443
+
+openshift_master_cluster_public_hostname=master.example.com
+openshift_master_cluster_hostname=master.example.com
+openshift_master_default_subdomain=apps.example.com
+openshift_master_identity_providers=[{<span class="hljs-string">&apos;name&apos;</span>: <span class="hljs-string">&apos;htpasswd_auth&apos;</span>, <span class="hljs-string">&apos;login&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>,<span class="hljs-string">&apos;challenge&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;kind&apos;</span>: <span class="hljs-string">&apos;HTPasswdPasswordIdentityProvider&apos;</span>, <span class="hljs-string">&apos;filename&apos;</span>: <span class="hljs-string">&apos;/etc/origin/master/htpasswd&apos;</span>}]
+openshift_master_cluster_method=native
+
+openshift_hosted_registry_selector=<span class="hljs-string">&apos;region=infra&apos;</span>
+openshift_hosted_registry_replicas=1
+openshift_hosted_registry_cert_expire_days=3650
+openshift_hosted_manage_registry=<span class="hljs-literal">true</span>
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=[<span class="hljs-string">&apos;ReadWriteMany&apos;</span>]
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options=<span class="hljs-string">&apos;*(rw,root_squash)&apos;</span>
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=10Gi
+oreg_url=registry.example.com/openshift3/ose-\<span class="hljs-variable">${component}</span>:\<span class="hljs-variable">${version}</span>
+openshift_docker_additional_registries=registry.example.com
+<span class="hljs-comment">#openshift_docker_insecure_registries=registry.example.com</span>
+openshift_docker_blocked_registries=registry.access.redhat.com,docker.io
+openshift_image_tag=3.9.27
 openshift_examples_modify_imagestreams=<span class="hljs-literal">true</span>
 
-openshift_master_identity_providers=[{<span class="hljs-string">&apos;name&apos;</span>: <span class="hljs-string">&apos;htpasswd_auth&apos;</span>, <span class="hljs-string">&apos;login&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;challenge&apos;</span>:<span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;kind&apos;</span>: <span class="hljs-string">&apos;HTPasswdPasswordIdentityProvider&apos;</span>, <span class="hljs-string">&apos;filename&apos;</span>: <span class="hljs-string">&apos;/etc/origin/master/htpasswd&apos;</span>}]
-
-openshift_hosted_registry_selector=<span class="hljs-string">&quot;infra=true&quot;</span>
-
-openshift_hosted_router_selector=<span class="hljs-string">&quot;router=true&quot;</span>
-
-openshift_master_cluster_method=native
-openshift_master_cluster_hostname=master.example.com
-openshift_master_cluster_public_hostname=master.example.com
-
-<span class="hljs-comment"># default subdomain to use for exposed routes</span>
-openshift_master_default_subdomain=apps.example.com
-
-openshift_node_kubelet_args={<span class="hljs-string">&apos;pods-per-core&apos;</span>: [<span class="hljs-string">&apos;10&apos;</span>], <span class="hljs-string">&apos;max-pods&apos;</span>:[<span class="hljs-string">&apos;60&apos;</span>]}
-
-openshift_metrics_install_metrics=<span class="hljs-literal">true</span>
-openshift_hosted_metrics_deploy=<span class="hljs-literal">true</span>
-openshift_hosted_metrics_public_url=https://hawkular-metrics.apps.example.com/hawkular/metrics
-openshift_metrics_image_prefix=registry.example.com:5000/openshift3/
-openshift_metrics_image_version=v3.6
-
-openshift_hosted_logging_deploy=<span class="hljs-literal">true</span>
-openshift_logging_image_prefix=registry.example.com:5000/openshift3/
-openshift_logging_image_version=v3.6
-
-<span class="hljs-comment"># enable ntp on masters to ensure proper failover</span>
-openshift_clock_enabled=<span class="hljs-literal">true</span>
-
-<span class="hljs-comment"># Enable service catalog</span>
 <span class="hljs-comment">#openshift_enable_service_catalog=true</span>
+<span class="hljs-comment">#template_service_broker_install=true</span>
+openshift_service_catalog_image_prefix=registry.example.com/openshift3/ose-
+openshift_service_catalog_image_version=3.9.27
+
+ansible_service_broker_image_prefix=registry.example.com/openshift3/ose-
+ansible_service_broker_image_tag=3.9.27
+ansible_service_broker_etcd_image_prefix=registry.example.com/rhel7/
+ansible_service_broker_registry_url=https://registry.example.com
+
+template_service_broker_prefix=registry.example.com/openshift3/ose-
+template_service_broker_version=3.9.27
 
 openshift_hosted_etcd_storage_kind=nfs
 openshift_hosted_etcd_storage_nfs_options=<span class="hljs-string">&quot;*(rw,root_squash,sync,no_wdelay)&quot;</span>
-openshift_hosted_etcd_storage_nfs_directory=/var/<span class="hljs-built_in">export</span>
-openshift_hosted_etcd_storage_volume_name=asb
+openshift_hosted_etcd_storage_nfs_directory=/exports
+openshift_hosted_etcd_storage_volume_name=etcd
 openshift_hosted_etcd_storage_access_modes=[<span class="hljs-string">&quot;ReadWriteOnce&quot;</span>]
 openshift_hosted_etcd_storage_volume_size=1G
 openshift_hosted_etcd_storage_labels={<span class="hljs-string">&apos;storage&apos;</span>: <span class="hljs-string">&apos;etcd&apos;</span>}
 
-<span class="hljs-comment">#Template service broker</span>
-<span class="hljs-comment">#openshift_template_service_broker_namespaces=[&apos;openshift&apos;,&apos;myproject&apos;]</span>
+ansible_service_broker_<span class="hljs-built_in">local</span>_registry_whitelist=[<span class="hljs-string">&apos;.*-apb$&apos;</span>]
+openshift_template_service_broker_namespaces=[<span class="hljs-string">&apos;openshift&apos;</span>,<span class="hljs-string">&apos;tsb&apos;</span>]
 
-<span class="hljs-comment">#Skip checking docker images &amp; memory</span>
-openshift_<span class="hljs-built_in">disable</span>_check=docker_image_availability,docker_storage,memory_availability,package_availability,package_version,disk_availability
+<span class="hljs-comment">#openshift_hosted_router_replicas=1</span>
+openshift_router_selector=<span class="hljs-string">&apos;router=true&apos;</span>
+openshift_registry_selector=<span class="hljs-string">&apos;infra=true&apos;</span>
 
-<span class="hljs-comment"># host group for masters</span>
-[masters]
-master.example.com
+<span class="hljs-comment">#openshift_set_node_ip=True</span>
+openshift_<span class="hljs-built_in">disable</span>_check=memory_availability,disk_availability,docker_image_availability,docker_storage,package_version
+openshift_cockpit_deployer_prefix=<span class="hljs-string">&apos;openshift3/&apos;</span>
+openshift_cockpit_deployer_version=3.9.27
 
-<span class="hljs-comment"># host group for etcd</span>
+<span class="hljs-comment">#openshift_node_kubelet_args={&apos;pods-per-core&apos;: [&apos;10&apos;], &apos;max-pods&apos;:[&apos;60&apos;]}</span>
+openshift_metrics_install_metrics=<span class="hljs-literal">true</span>
+openshift_metrics_storage_kind=nfs
+openshift_metrics_storage_access_modes=[<span class="hljs-string">&apos;ReadWriteOnce&apos;</span>]
+openshift_metrics_storage_host=nfs.example.com
+openshift_metrics_storage_nfs_directory=/exports
+openshift_metrics_storage_volume_name=metrics
+openshift_metrics_storage_volume_size=10Gi
+openshift_metrics_storage_labels={<span class="hljs-string">&apos;storage&apos;</span>: <span class="hljs-string">&apos;metrics&apos;</span>}
+openshift_metrics_hawkular_hostname=hawkular-metrics.apps.example.com
+openshift_metrics_image_prefix=registry.example.com/openshift3/
+openshift_metrics_image_version=3.9.27
+
+openshift_logging_install_logging=<span class="hljs-literal">true</span>
+openshift_logging_storage_kind=nfs
+openshift_logging_storage_access_modes=[<span class="hljs-string">&apos;ReadWriteOnce&apos;</span>]
+openshift_logging_storage_nfs_directory=/exports
+openshift_logging_storage_nfs_options=<span class="hljs-string">&apos;*(rw,root_squash)&apos;</span>
+openshift_logging_storage_volume_name=logging
+openshift_logging_storage_volume_size=10Gi
+openshift_logging_storage_labels={<span class="hljs-string">&apos;storage&apos;</span>: <span class="hljs-string">&apos;logging&apos;</span>}
+openshift_logging_kibana_hostname=logging.apps.example.com
+openshift_logging_es_cluster_size=1
+openshift_logging_image_prefix=registry.example.com/openshift3/
+openshift_logging_image_version=3.9.27
+openshift_logging_es_memory_<span class="hljs-built_in">limit</span>=1Gi
+
+
+openshift_hosted_prometheus_deploy=<span class="hljs-literal">true</span>
+openshift_prometheus_storage_kind=nfs
+openshift_prometheus_storage_access_modes=[<span class="hljs-string">&apos;ReadWriteOnce&apos;</span>]
+openshift_prometheus_storage_nfs_directory=/exports
+openshift_prometheus_storage_nfs_options=<span class="hljs-string">&apos;*(rw,root_squash)&apos;</span>
+openshift_prometheus_storage_volume_name=prometheus
+openshift_prometheus_storage_volume_size=10Gi
+openshift_prometheus_storage_labels={<span class="hljs-string">&apos;storage&apos;</span>: <span class="hljs-string">&apos;prometheus&apos;</span>}
+openshift_prometheus_storage_<span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;pvc&apos;</span>
+openshift_prometheus_alertmanager_storage_kind=nfs
+openshift_prometheus_alertmanager_storage_access_modes=[<span class="hljs-string">&apos;ReadWriteOnce&apos;</span>]
+openshift_prometheus_alertmanager_storage_nfs_directory=/exports
+openshift_prometheus_alertmanager_storage_nfs_options=<span class="hljs-string">&apos;*(rw,root_squash)&apos;</span>
+openshift_prometheus_alertmanager_storage_volume_name=prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_volume_size=10Gi
+openshift_prometheus_alertmanager_storage_labels={<span class="hljs-string">&apos;storage&apos;</span>: <span class="hljs-string">&apos;prometheus-alertmanager&apos;</span>}
+openshift_prometheus_alertmanager_storage_<span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;pvc&apos;</span>
+openshift_prometheus_alertbuffer_storage_kind=nfs
+openshift_prometheus_alertbuffer_storage_access_modes=[<span class="hljs-string">&apos;ReadWriteOnce&apos;</span>]
+openshift_prometheus_alertbuffer_storage_nfs_directory=/exports
+openshift_prometheus_alertbuffer_storage_nfs_options=<span class="hljs-string">&apos;*(rw,root_squash)&apos;</span>
+openshift_prometheus_alertbuffer_storage_volume_name=prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_volume_size=10Gi
+openshift_prometheus_alertbuffer_storage_labels={<span class="hljs-string">&apos;storage&apos;</span>: <span class="hljs-string">&apos;prometheus-alertbuffer&apos;</span>}
+openshift_prometheus_alertbuffer_storage_<span class="hljs-built_in">type</span>=<span class="hljs-string">&apos;pvc&apos;</span>
+openshift_prometheus_image_prefix=registry.example.com/openshift3/
+openshift_prometheus_image_version=3.9.27
+openshift_prometheus_proxy_image_prefix=registry.example.com/openshift3/
+openshift_prometheus_proxy_image_version=3.9.27
+openshift_prometheus_alertbuffer_image_prefix=registry.example.com/openshift3/
+openshift_prometheus_alertbuffer_image_version=3.9.27
+openshift_prometheus_altermanager_image_prefix=registry.example.com/openshift3/
+openshift_prometheus_alertmanager_image_version=3.9.27
+openshift_prometheus_node_exporter_image_prefix=registry.example.com/openshift3/
+openshift_prometheus_node_exporter_image_version=3.9.27
+
+openshift_web_console_prefix=registry.example.com/openshift3/ose-
+openshift_web_console_version=3.9.27
+openshift_clock_enabled=<span class="hljs-literal">true</span>
+
 [etcd]
 master.example.com
 
-<span class="hljs-comment"># host group for nodes, includes region info</span>
-[nodes]
+[masters]
 master.example.com
+
+[nodes]
+master.example.com openshift_node_labels=<span class="hljs-string">&quot;{&apos;region&apos;: &apos;master&apos;}&quot;</span>
 node1.example.com openshift_node_labels=<span class="hljs-string">&quot;{&apos;region&apos;: &apos;infra&apos;, &apos;zone&apos;: &apos;default&apos;,&apos;infra&apos;: &apos;true&apos;,&apos;router&apos;: &apos;true&apos;}&quot;</span>
 node2.example.com openshift_node_labels=<span class="hljs-string">&quot;{&apos;region&apos;: &apos;primary&apos;, &apos;zone&apos;: &apos;default&apos;}&quot;</span>
 
 [nfs]
 nfs.example.com
-
 EOF</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>&#x76F8;&#x5173; hosts &#x6587;&#x4EF6;</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="hosts/hosts-3.6">hosts-3.6</a></p>
+</li>
+<li>
+<p><a href="hosts/hosts-3.9.14">hosts-3.9.14</a></p>
+</li>
+<li>
+<p><a href="hosts/hosts-3.9.25">hosts-3.9.25</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -2345,7 +2395,7 @@ EOF</code></pre>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml</span></code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift_facts.yml</code></pre>
 </div>
 </div>
 </div>
@@ -2376,7 +2426,7 @@ EOF</code></pre>
 
             
                 
-                <a href="docker-repo-setup.html" class="navigation navigation-prev " aria-label="Previous page: 公共镜像仓库配置">
+                <a href="pre-install.html" class="navigation navigation-prev " aria-label="Previous page: 前续安装">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -2392,7 +2442,7 @@ EOF</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.7","depth":3,"next":{"title":"后续配置","level":"1.4.2.8","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"公共镜像仓库配置","level":"1.4.2.6","depth":3,"path":"openshift/install/docker-repo-setup.adoc","ref":"openshift/install/docker-repo-setup.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-06-01T01:29:20.171Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-07T12:02:58.819Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.4","depth":3,"next":{"title":"后续配置","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-06-11T04:26:07.370Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-11T04:28:41.027Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

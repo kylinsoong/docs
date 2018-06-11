@@ -21,3 +21,9 @@ baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.9-rpms
 enabled = 1
 gpgcheck = 0
 name = rhel-7-server-ose-3.9-rpms
+
+[rhel-7-server-ansible-2.4-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ansible-2.4-rpms

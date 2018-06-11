@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>公共镜像仓库配置 · GitBook</title>
+        <title>本地 docker 镜像仓库配置 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -61,10 +61,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="install.html" />
+    <link rel="next" href="pre-install.html" />
     
     
-    <link rel="prev" href="dns-setup.adoc" />
+    <link rel="prev" href="yum.html" />
     
 
     </head>
@@ -831,12 +831,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.2" data-path="pre-install.html">
+        <li class="chapter active" data-level="1.4.2.2" data-path="docker-dist.html">
+            
+                <a href="docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="pre-install.html">
             
                 <a href="pre-install.html">
             
                     
-                    安装准备
+                    前续安装
             
                 </a>
             
@@ -844,59 +857,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="static-dns-ssh.html">
-            
-                <a href="static-dns-ssh.html">
-            
-                    
-                    静态域名，SSH 互信
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.4" data-path="env-setup.html">
-            
-                <a href="env-setup.html">
-            
-                    
-                    软件包安装及环境准备
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.5" data-path="dns-setup.adoc">
-            
-                <span>
-            
-                    
-                    本地 DNS 服务器配置
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="1.4.2.6" data-path="docker-repo-setup.html">
-            
-                <a href="docker-repo-setup.html">
-            
-                    
-                    公共镜像仓库配置
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.7" data-path="install.html">
+        <li class="chapter " data-level="1.4.2.4" data-path="install.html">
             
                 <a href="install.html">
             
@@ -909,7 +870,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.8" data-path="post-install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="post-install.html">
             
                 <a href="post-install.html">
             
@@ -922,7 +883,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.9" data-path="git-setup.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="git-setup.html">
             
                 <a href="git-setup.html">
             
@@ -2211,7 +2172,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >公共镜像仓库配置</a>
+        <a href="../.." >本地 docker 镜像仓库配置</a>
     </h1>
 </div>
 
@@ -2227,196 +2188,67 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="&#x516C;&#x5171;&#x955C;&#x50CF;&#x4ED3;&#x5E93;-docker-registry-&#x914D;&#x7F6E;">&#x516C;&#x5171;&#x955C;&#x50CF;&#x4ED3;&#x5E93; Docker Registry &#x914D;&#x7F6E;</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>&#x672C;&#x90E8;&#x5206;&#x5305;&#x62EC;&#x516C;&#x5171;&#x955C;&#x50CF;&#x4ED3;&#x5E93; Docker Registry &#x914D;&#x7F6E;&#x3002;</p>
-</div>
-</div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__docker">&#x4E0B;&#x8F7D; docker &#x955C;&#x50CF;</a></li>
+<li><a href="#_docker">Docker &#x955C;&#x50CF;&#x540C;&#x6B65;</a></li>
 <li><a href="#__docker_registry">&#x5B89;&#x88C5;&#x5E76;&#x914D;&#x7F6E; Docker Registry</a>
 <ul class="sectlevel2">
 <li><a href="#__tls">&#x914D;&#x7F6E;TLS</a></li>
+<li><a href="#__">&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;&#x4FE1;&#x4EFB;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</a></li>
 </ul>
 </li>
-<li><a href="#__docker_2">&#x52A0;&#x8F7D;&#x6240;&#x6709;&#x9884;&#x5148;&#x4E0B;&#x8F7D;&#x7684; Docker &#x955C;&#x50CF;</a></li>
+<li><a href="#__docker">&#x52A0;&#x8F7D;&#x6240;&#x6709;&#x9884;&#x5148;&#x4E0B;&#x8F7D;&#x7684; Docker &#x955C;&#x50CF;</a></li>
 <li><a href="#__docker_registry_2">&#x63A8;&#x9001;&#x955C;&#x50CF;&#x5230;&#x672C;&#x5730; Docker Registry</a></li>
-<li><a href="#__">&#x9A8C;&#x8BC1;&#x80FD;&#x5426;&#x53EF;&#x6210;&#x529F;&#x4E0B;&#x8F7D;&#x955C;&#x50CF; &#xFF08;&#x5728;&#x6240;&#x6709;&#x673A;&#x5668;&#x4E0A;&#x64CD;&#x4F5C;&#xFF09;</a></li>
 </ul>
 </div>
-</div>
 <div class="sect1">
-<h2 id="__docker">&#x4E0B;&#x8F7D; docker &#x955C;&#x50CF;</h2>
+<h2 id="_docker">Docker &#x955C;&#x50CF;&#x540C;&#x6B65;</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>OpenShift &#x5B89;&#x88C5;&#x548C;&#x8FD0;&#x884C;&#x4F9D;&#x8D56; 4 &#x5927;&#x7C7B; docker &#x955C;&#x50CF;&#xFF0C;&#x5206;&#x522B;&#x662F;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5B89;&#x88C5;&#x6240;&#x9700;&#x6838;&#x5FC3;&#x955C;&#x50CF;</p>
+</li>
+<li>
+<p>&#x65E5;&#x5FD7;&#xFF0C;&#x7BA1;&#x7406;&#x7B49;&#x76F8;&#x5173;&#x7684;&#x955C;&#x50CF;</p>
+</li>
+<li>
+<p>Ansible broker &#x76F8;&#x5173;&#x7684;&#x955C;&#x50CF;</p>
+</li>
+<li>
+<p>S2I &#x5E94;&#x7528;&#x955C;&#x50CF;&#x6784;&#x5EFA;&#x76F8;&#x5173;&#x7684;&#x955C;&#x50CF;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a href="images-syncing.sh">images-syncing.sh</a> &#x53EF;&#x4EE5;&#x7528;&#x6765;&#x540C;&#x6B65;&#x955C;&#x50CF;&#xFF0C;&#x5177;&#x4F53;&#x6267;&#x884C; <code>./images-syncing.sh &lt;registry&gt; &lt;version&gt; &lt;isSave&gt;</code> &#x53EF;&#x540C;&#x6B65;&#xFF0C;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>registry - &#x7EA2;&#x5E3D;&#x4ED3;&#x5E93;&#x5730;&#x5740;</p>
+</li>
+<li>
+<p>version - &#x955C;&#x50CF;&#x7248;&#x672C;&#x53F7;</p>
+</li>
+<li>
+<p>isSave - &#x662F;&#x5426;&#x5BFC;&#x51FA;&#x955C;&#x50CF;</p>
+</li>
+</ul>
+</div>
 <div class="listingblock">
-<div class="title"><strong>&#x8BBE;&#x5B9A;&#x73AF;&#x5883;&#x53D8;&#x91CF;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">REGISTRY=<span class="hljs-string">&quot;registry.access.redhat.com&quot;</span>;PTH=<span class="hljs-string">&quot;openshift3&quot;</span>;VERSION=<span class="hljs-string">&quot;v3.6&quot;</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x4E0B;&#x8F7D;&#x6838;&#x5FC3;&#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-ansible:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-cluster-capacity:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-deployer:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-docker-builder:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-docker-registry:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-egress-http-proxy:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-egress-router:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose<span class="hljs-_">-f</span>5-router:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-federation:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-haproxy-router:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-keepalived-ipfailover:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-pod:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-sti-builder:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/container-engine:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/efs-provisioner:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/node:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/openvswitch:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/registry-console:<span class="hljs-variable">$VERSION</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5BFC;&#x51FA;&#x6838;&#x5FC3;&#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">cd</span> /opt/images/
-docker save -o ose-images-core-<span class="hljs-variable">$VERSION_</span>`date +<span class="hljs-string">&apos;%Y%m%d&apos;</span>`.tar.gz \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-ansible:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-cluster-capacity:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-deployer:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-docker-builder:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-docker-registry:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-egress-http-proxy:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-egress-router:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose<span class="hljs-_">-f</span>5-router:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-federation:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-haproxy-router:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-keepalived-ipfailover:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-pod:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-sti-builder:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/container-engine:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/efs-provisioner:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/node:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/openvswitch:<span class="hljs-variable">$VERSION</span>
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/registry-console:<span class="hljs-variable">$VERSIO</span></code></pre>
+<pre class="highlight"><code>./images-syncing.sh registry.access.redhat.com v3.9.27 false</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x4E0B;&#x8F7D; logging &#x548C; metrics &#x955C;&#x50CF;</strong></div>
+<div class="title"><strong>&#x9A8C;&#x8BC1;&#x4E0B;&#x8F7D;&#x5B8C;&#x6210;&#x7684;&#x5BB9;&#x5668;&#x955C;&#x50CF;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-deployer:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-elasticsearch:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-kibana:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-fluentd:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-curator:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-auth-proxy:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-deployer:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-hawkular-metrics:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-cassandra:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-hawkular-openshift-agent:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-heapster:<span class="hljs-variable">$VERSION</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5BFC;&#x51FA; logging &#x548C; metrics &#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">cd</span> /opt/images/
-docker save -o ose-images-logging-metrics-<span class="hljs-variable">$VERSION_</span>`date +<span class="hljs-string">&apos;%Y%m%d&apos;</span>`.tar.gz \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-deployer:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-elasticsearch:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-kibana:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-fluentd:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-curator:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/logging-auth-proxy:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-deployer:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-hawkular-metrics:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-cassandra:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-hawkular-openshift-agent:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/metrics-heapster:<span class="hljs-variable">$VERSION</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x4E0B;&#x8F7D; TP &#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-service-catalog:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-ansible-service-broker:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/mediawiki-apb:<span class="hljs-variable">$VERSION</span>
-docker pull <span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/postgresql-apb:<span class="hljs-variable">$VERSION</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5BFC;&#x51FA; TP &#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">cd</span> /opt/images/
-docker save -o ose-images-tp-<span class="hljs-variable">$VERSION</span>-`date +<span class="hljs-string">&apos;%Y%m%d&apos;</span>`.tar.gz \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-service-catalog:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/ose-ansible-service-broker:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/mediawiki-apb:<span class="hljs-variable">$VERSION</span> \
-<span class="hljs-variable">$REGISTRY</span>/<span class="hljs-variable">$PTH</span>/postgresql-apb:<span class="hljs-variable">$VERSION</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x4E0B;&#x8F7D;&#x5E94;&#x7528;&#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-webserver-3/webserver31-tomcat7-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-webserver-3/webserver31-tomcat8-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-eap-7/eap70-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-processserver-6/processserver64-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-decisionserver-6/decisionserver64-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/redhat-sso-7/sso71-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-datavirt-6/datavirt63-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-amq-6/amq63-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-datagrid-6/datagrid65-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-datagrid-7/datagrid71-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/jboss-fuse-6/fis-java-openshift:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/mongodb-32-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/mysql-57-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/php-56-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/php-70-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/python-36-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/ruby-24-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/redis-32-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-1-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-2-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-slave-base-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-slave-maven-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-slave-nodejs-rhel7:latest;
-docker pull <span class="hljs-variable">$REGISTRY</span>/rhscl/nodejs-6-rhel7:latest;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5BFC;&#x51FA;&#x5E94;&#x7528;&#x955C;&#x50CF;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">docker save -o ose-images-apps-latest_`date +<span class="hljs-string">&apos;%Y%m%d&apos;</span>`.tar.gz <span class="hljs-variable">$REGISTRY</span>/jboss-webserver-3/webserver31-tomcat7-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-webserver-3/webserver31-tomcat8-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-eap-7/eap70-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-processserver-6/processserver64-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-decisionserver-6/decisionserver64-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/redhat-sso-7/sso71-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-datavirt-6/datavirt63-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-amq-6/amq63-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-datagrid-6/datagrid65-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-datagrid-7/datagrid71-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/jboss-fuse-6/fis-java-openshift:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/mongodb-32-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/mysql-57-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/php-56-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/php-70-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/python-36-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/ruby-24-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/redis-32-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-1-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-2-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-slave-base-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-slave-maven-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/openshift3/jenkins-slave-nodejs-rhel7:latest \
-<span class="hljs-variable">$REGISTRY</span>/rhscl/nodejs-6-rhel7:latest</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># docker images</code></pre>
 </div>
 </div>
 </div>
@@ -2475,8 +2307,11 @@ openssl req \
 <pre class="highlight"><code class="language-bash" data-lang="bash">systemctl restart docker-distribution</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="__">&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;&#x4FE1;&#x4EFB;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</h3>
 <div class="paragraph">
-<p>Master &#x53CA; Nodes &#x914D;&#x7F6E;&#x4FE1;&#x4EFB;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;&#x3002;&#x5E76;&#x91CD;&#x542F;Docker&#x670D;&#x52A1;</p>
+<p>&#x5BA2;&#x6237;&#x7AEF;&#x5982;&#x679C;&#x9700;&#x8981;&#x8FDE;&#x63A5;&#x672C;&#x5730;&#x955C;&#x50CF;&#x4ED3;&#x5E93;&#xFF0C;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4FE1;&#x4EFB;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;&#x3002;&#x5E76;&#x91CD;&#x542F;Docker&#x670D;&#x52A1;</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2496,64 +2331,33 @@ update-ca-trust extract</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="__docker_2">&#x52A0;&#x8F7D;&#x6240;&#x6709;&#x9884;&#x5148;&#x4E0B;&#x8F7D;&#x7684; Docker &#x955C;&#x50CF;</h2>
+<h2 id="__docker">&#x52A0;&#x8F7D;&#x6240;&#x6709;&#x9884;&#x5148;&#x4E0B;&#x8F7D;&#x7684; Docker &#x955C;&#x50CF;</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>&#x5982;&#x679C; docker &#x955C;&#x50CF;&#x9700;&#x8981;&#x4ECE;&#x538B;&#x7F29;&#x5305;&#x4E2D;&#x5BFC;&#x5165;&#xFF0C;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x6B65;&#x9AA4;&#xFF1A;</p>
+</div>
 <div class="listingblock">
-<div class="title"><strong>&#x67E5;&#x770B;&#x4E0B;&#x8F7D;&#x7684;&#x955C;&#x50CF;&#x660E;&#x7EC6;</strong></div>
+<div class="title"><strong>1 - &#x67E5;&#x770B;&#x4E0B;&#x8F7D;&#x7684;&#x955C;&#x50CF;&#x660E;&#x7EC6;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># ls -l /opt/images/
 total 18787276
--rw-------. 1 root root 7161034240 Jan  3 16:30 ose-images-apps-latest_20180103.tar.gz
--rw-------. 1 root root 5074610176 Dec 13 15:32 ose-images-core-20171213.tar.gz
--rw-------. 1 root root 4293435392 Dec 13 15:46 ose-images-logging-metrics-20171213.tar.gz
--rw-------. 1 root root 2709085696 Dec 13 16:58 ose-images-tp-v3.6-20171213.tar.gz</code></pre>
+-rw-------. 1 root root 7161034240 Jan  3 16:30 ose-images-apps-latest_20180608.tar.gz
+-rw-------. 1 root root 5074610176 Dec 13 15:32 ose-images-core-20180608.tar.gz
+-rw-------. 1 root root 4293435392 Dec 13 15:46 ose-images-logging-metrics-20180608.tar.gz
+-rw-------. 1 root root 2709085696 Dec 13 16:58 ose-images-tp-v3.9-20180608.tar.gz</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x52A0;&#x8F7D; Docker &#x955C;&#x50CF;</strong></div>
+<div class="title"><strong>2 - &#x52A0;&#x8F7D; Docker &#x955C;&#x50CF;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># cd /opt/images
 # for i in `ls *.gz` ; do docker load -i $i; done;</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>docker images &#x9A8C;&#x8BC1;</strong></div>
+<div class="title"><strong>3 - docker images &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># docker images
-REPOSITORY                                                               TAG                 IMAGE ID            CREATED             SIZE
-registry.access.redhat.com/openshift3/logging-elasticsearch              v3.6                f01bfebd1ad8        13 days ago         434.2 MB
-registry.access.redhat.com/openshift3/metrics-deployer                   v3.6                42c7b25506af        2 weeks ago         1.141 GB
-registry.access.redhat.com/openshift3/logging-deployer                   v3.6                e08af2020452        2 weeks ago         1.134 GB
-registry.access.redhat.com/openshift3/openvswitch                        v3.6                02d39c2dd01a        2 weeks ago         1.159 GB
-registry.access.redhat.com/openshift3/container-engine                   v3.6                e163224ed46c        2 weeks ago         334.5 MB
-registry.access.redhat.com/openshift3/ose-egress-http-proxy              v3.6                d9e96d936ccd        2 weeks ago         391.1 MB
-registry.access.redhat.com/openshift3/ose-cluster-capacity               v3.6                de44142f3851        2 weeks ago         934.5 MB
-registry.access.redhat.com/openshift3/ose-federation                     v3.6                10d0c1efa621        2 weeks ago         1.163 GB
-registry.access.redhat.com/openshift3/ose-service-catalog                v3.6                d8882e7cf28f        2 weeks ago         999.2 MB
-registry.access.redhat.com/openshift3/metrics-heapster                   v3.6                939d1957493f        2 weeks ago         277.7 MB
-registry.access.redhat.com/openshift3/logging-kibana                     v3.6                6415584e452f        2 weeks ago         619.4 MB
-registry.access.redhat.com/openshift3/metrics-hawkular-metrics           v3.6                3c555d497d60        2 weeks ago         1.02 GB
-registry.access.redhat.com/openshift3/metrics-cassandra                  v3.6                f91848f51fc5        2 weeks ago         783.8 MB
-registry.access.redhat.com/openshift3/metrics-hawkular-openshift-agent   v3.6                418801e83ce3        2 weeks ago         239 MB
-registry.access.redhat.com/openshift3/logging-fluentd                    v3.6                bb293aa9dc7f        2 weeks ago         235.2 MB
-registry.access.redhat.com/openshift3/logging-auth-proxy                 v3.6                5b153816556e        2 weeks ago         218.5 MB
-registry.access.redhat.com/openshift3/logging-curator                    v3.6                53ffb38d0903        2 weeks ago         222.3 MB
-registry.access.redhat.com/openshift3/ose-docker-builder                 v3.6                4d495bc08548        2 weeks ago         970.6 MB
-registry.access.redhat.com/openshift3/ose-sti-builder                    v3.6                5eb453a27189        2 weeks ago         970.6 MB
-registry.access.redhat.com/openshift3/node                               v3.6                eab3d672a779        2 weeks ago         1.157 GB
-registry.access.redhat.com/openshift3/ose-haproxy-router                 v3.6                d424c31da941        2 weeks ago         989.3 MB
-registry.access.redhat.com/openshift3/ose-deployer                       v3.6                5468323906f0        2 weeks ago         970.6 MB
-registry.access.redhat.com/openshift3/ose-f5-router                      v3.6                7e856efa8abc        2 weeks ago         970.6 MB
-registry.access.redhat.com/openshift3/ose-keepalived-ipfailover          v3.6                d04eddab37d8        2 weeks ago         385.2 MB
-registry.access.redhat.com/openshift3/ose-docker-registry                v3.6                0845725ae621        2 weeks ago         1.059 GB
-registry.access.redhat.com/openshift3/ose-egress-router                  v3.6                24cc3c77dbed        2 weeks ago         364.3 MB
-registry.access.redhat.com/openshift3/ose                                v3.6                ece5efd2a3c1        2 weeks ago         970.6 MB
-registry.access.redhat.com/openshift3/ose-pod                            v3.6                9a0f670643ae        2 weeks ago         208.6 MB
-registry.access.redhat.com/openshift3/ose-ansible                        v3.6                0fa85764161f        3 weeks ago         768.3 MB
-registry.access.redhat.com/openshift3/ose-ansible-service-broker         v3.6                6ecb3f6211a8        4 weeks ago         603.8 MB
-registry.access.redhat.com/openshift3/efs-provisioner                    v3.6                cf6b41663ce8        5 weeks ago         241.6 MB
-registry.access.redhat.com/openshift3/postgresql-apb                     v3.6                16381a30e9ea        4 months ago        950 MB
-registry.access.redhat.com/openshift3/mediawiki-apb                      v3.6                27f4d4dc629a        4 months ago        950 MB</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># docker images</code></pre>
 </div>
 </div>
 </div>
@@ -2562,32 +2366,28 @@ registry.access.redhat.com/openshift3/mediawiki-apb                      v3.6   
 <h2 id="__docker_registry_2">&#x63A8;&#x9001;&#x955C;&#x50CF;&#x5230;&#x672C;&#x5730; Docker Registry</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="title"><strong>&#x8BBE;&#x5B9A;&#x53D8;&#x91CF;</strong></div>
+<div class="title"><strong>1 - &#x8BBE;&#x5B9A;&#x53D8;&#x91CF;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">REDHAT_REG=<span class="hljs-string">&quot;registry.access.redhat.com&quot;</span>
-PRIVATE_REG=<span class="hljs-string">&quot;registry.example.com:5000&quot;</span></code></pre>
+PRIVATE_REG=<span class="hljs-string">&quot;registry.example.com&quot;</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x8BBE;&#x5B9A; docker tag</strong></div>
+<div class="title"><strong>2 - &#x8BBE;&#x5B9A; docker tag</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># for i in $(docker images|grep $REDHAT_REG|awk &apos;{print $1&quot;:&quot;$2}&apos;) ; do docker tag  $i &quot;$PRIVATE_REG$(echo $i|awk -F &apos;com&apos; {&apos;print $2&apos;})&quot; ; done;</span></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> $(docker images|grep <span class="hljs-variable">$REDHAT_REG</span>|awk <span class="hljs-string">&apos;{print $1&quot;:&quot;$2}&apos;</span>) ; <span class="hljs-keyword">do</span> docker tag  <span class="hljs-variable">$i</span> <span class="hljs-string">&quot;<span class="hljs-variable">$PRIVATE_REG</span><span class="hljs-variable">$(echo $i|awk -F &apos;com&apos; {&apos;print $2&apos;})</span>&quot;</span> ; <span class="hljs-keyword">done</span>;</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x63A8;&#x9001;&#x5230;&#x672C;&#x5730;&#x955C;&#x50CF;&#x4ED3;&#x5E93;</strong></div>
+<div class="title"><strong>3 - &#x63A8;&#x9001;&#x5230;&#x672C;&#x5730;&#x955C;&#x50CF;&#x4ED3;&#x5E93;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># for i in `docker images|grep $PRIVATE_REG|awk &apos;{print $1&quot;:&quot;$2}&apos;` ; do  docker push $i; done;</span></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> `docker images|grep <span class="hljs-variable">$PRIVATE_REG</span>|awk <span class="hljs-string">&apos;{print $1&quot;:&quot;$2}&apos;</span>` ; <span class="hljs-keyword">do</span>  docker push <span class="hljs-variable">$i</span>; <span class="hljs-keyword">done</span>;</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="__">&#x9A8C;&#x8BC1;&#x80FD;&#x5426;&#x53EF;&#x6210;&#x529F;&#x4E0B;&#x8F7D;&#x955C;&#x50CF; &#xFF08;&#x5728;&#x6240;&#x6709;&#x673A;&#x5668;&#x4E0A;&#x64CD;&#x4F5C;&#xFF09;</h2>
-<div class="sectionbody">
 <div class="listingblock">
+<div class="title"><strong>4 - &#x9A8C;&#x8BC1;&#x80FD;&#x5426;&#x53EF;&#x6210;&#x529F;&#x4E0B;&#x8F7D;&#x955C;&#x50CF;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">docker pull registry.example.com:5000/openshift3/ose-pod:v3.6</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">docker pull registry.example.com/rhscl/mysql-57-rhel7:latest</code></pre>
 </div>
 </div>
 </div>
@@ -2618,12 +2418,12 @@ PRIVATE_REG=<span class="hljs-string">&quot;registry.example.com:5000&quot;</spa
 
             
                 
-                <a href="dns-setup.adoc" class="navigation navigation-prev " aria-label="Previous page: 本地 DNS 服务器配置">
+                <a href="yum.html" class="navigation navigation-prev " aria-label="Previous page: 本地 yum 源配置">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="install.html" class="navigation navigation-next " aria-label="Next page: 安装">
+                <a href="pre-install.html" class="navigation navigation-next " aria-label="Next page: 前续安装">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2634,7 +2434,7 @@ PRIVATE_REG=<span class="hljs-string">&quot;registry.example.com:5000&quot;</spa
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"公共镜像仓库配置","level":"1.4.2.6","depth":3,"next":{"title":"安装","level":"1.4.2.7","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"previous":{"title":"本地 DNS 服务器配置","level":"1.4.2.5","depth":3,"path":"openshift/install/dns-setup.adoc","ref":"openshift/install/dns-setup.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/docker-repo-setup.adoc","mtime":"2018-06-01T01:29:20.170Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-07T12:02:58.819Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"next":{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"previous":{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/docker-dist.adoc","mtime":"2018-06-08T05:51:30.200Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-11T04:28:41.027Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

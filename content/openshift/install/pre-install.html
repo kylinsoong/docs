@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>安装准备 · GitBook</title>
+        <title>前续安装 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -61,10 +61,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="static-dns-ssh.html" />
+    <link rel="next" href="install.html" />
     
     
-    <link rel="prev" href="yum.html" />
+    <link rel="prev" href="docker-dist.html" />
     
 
     </head>
@@ -831,12 +831,25 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.2.2" data-path="pre-install.html">
+        <li class="chapter " data-level="1.4.2.2" data-path="docker-dist.html">
+            
+                <a href="docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2.3" data-path="pre-install.html">
             
                 <a href="pre-install.html">
             
                     
-                    安装准备
+                    前续安装
             
                 </a>
             
@@ -844,59 +857,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="static-dns-ssh.html">
-            
-                <a href="static-dns-ssh.html">
-            
-                    
-                    静态域名，SSH 互信
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.4" data-path="env-setup.html">
-            
-                <a href="env-setup.html">
-            
-                    
-                    软件包安装及环境准备
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.5" data-path="dns-setup.adoc">
-            
-                <span>
-            
-                    
-                    本地 DNS 服务器配置
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.6" data-path="docker-repo-setup.html">
-            
-                <a href="docker-repo-setup.html">
-            
-                    
-                    公共镜像仓库配置
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.2.7" data-path="install.html">
+        <li class="chapter " data-level="1.4.2.4" data-path="install.html">
             
                 <a href="install.html">
             
@@ -909,7 +870,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.8" data-path="post-install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="post-install.html">
             
                 <a href="post-install.html">
             
@@ -922,7 +883,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.9" data-path="git-setup.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="git-setup.html">
             
                 <a href="git-setup.html">
             
@@ -2211,7 +2172,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >安装准备</a>
+        <a href="../.." >前续安装</a>
     </h1>
 </div>
 
@@ -2312,22 +2273,28 @@ The key&apos;s randomart image is:
 <div class="ulist">
 <ul>
 <li>
-<p><a href="pre-files/prepare_install.yml">pre-files/prepare_install.yml</a></p>
+<p><a href="pre-files/prepare_install.yml">pre-files/prepare_install.yml</a> - Ansible Playbook &#x811A;&#x672C;</p>
 </li>
 <li>
-<p><a href="pre-files/inventory">pre-files/inventory</a></p>
+<p><a href="pre-files/inventory">pre-files/inventory</a> - &#x811A;&#x672C;&#x7EC4;&#x5B9A;&#x4E49;</p>
 </li>
 <li>
-<p><a href="pre-files/conf/ocp.repo">pre-files/conf/ocp.repo</a></p>
+<p><a href="pre-files/conf/ocp.repo">pre-files/conf/ocp.repo</a> - &#x672C;&#x5730; yum &#x4ED3;&#x5E93;&#x5730;&#x5740;</p>
 </li>
 <li>
-<p><a href="pre-files/conf/ocp_rsa">pre-files/conf/ocp_rsa</a></p>
+<p><a href="pre-files/conf/ocp_rsa">pre-files/conf/ocp_rsa</a> - SSH &#x514D;&#x5BC6;&#x79C1;&#x94A5;</p>
 </li>
 <li>
-<p><a href="pre-files/conf/ocp_rsa.pub">pre-files/conf/ocp_rsa.pub</a></p>
+<p><a href="pre-files/conf/ocp_rsa.pub">pre-files/conf/ocp_rsa.pub</a> - SSH &#x514D;&#x5BC6;&#x516C;&#x94A5;</p>
 </li>
 <li>
-<p><a href="pre-files/conf/docker-storage-setup">pre-files/conf/docker-storage-setup</a></p>
+<p><a href="pre-files/conf/docker-storage-setup">pre-files/conf/docker-storage-setup</a> - docker &#x5B58;&#x50A8;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</p>
+</li>
+<li>
+<p><a href="pre-files/conf/openshift-cluster.conf">pre-files/conf/openshift-cluster.conf</a> - dnsmasq &#x914D;&#x7F6E;&#x6587;&#x4EF6;</p>
+</li>
+<li>
+<p>link:pre-files/conf/example.com.crt</p>
 </li>
 </ul>
 </div>
@@ -2344,7 +2311,14 @@ The key&apos;s randomart image is:
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">ansible-playbook -i inventory prepare_install.yml</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># ansible-playbook -i inventory prepare_install.yml
+
+...
+
+PLAY RECAP ****************************************************************************************
+master                     : ok=23   changed=21   unreachable=0    failed=0
+node1                      : ok=14   changed=13   unreachable=0    failed=0
+node2                      : ok=14   changed=13   unreachable=0    failed=0</code></pre>
 </div>
 </div>
 </div>
@@ -2375,12 +2349,12 @@ The key&apos;s randomart image is:
 
             
                 
-                <a href="yum.html" class="navigation navigation-prev " aria-label="Previous page: 本地 yum 源配置">
+                <a href="docker-dist.html" class="navigation navigation-prev " aria-label="Previous page: 本地 docker 镜像仓库配置">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="static-dns-ssh.html" class="navigation navigation-next " aria-label="Next page: 静态域名，SSH 互信">
+                <a href="install.html" class="navigation navigation-next " aria-label="Next page: 安装">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2391,7 +2365,7 @@ The key&apos;s randomart image is:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安装准备","level":"1.4.2.2","depth":3,"next":{"title":"静态域名，SSH 互信","level":"1.4.2.3","depth":3,"path":"openshift/install/static-dns-ssh.adoc","ref":"openshift/install/static-dns-ssh.adoc","articles":[]},"previous":{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/pre-install.adoc","mtime":"2018-06-07T11:55:52.252Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-07T12:02:58.819Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"前续安装","level":"1.4.2.3","depth":3,"next":{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"previous":{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/pre-install.adoc","mtime":"2018-06-09T08:31:47.721Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-11T04:28:41.027Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

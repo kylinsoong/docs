@@ -62,7 +62,18 @@
         force: no
       when: inventory_hostname in groups['nodes']
 
-    - name: "安装所需包"
+    - name: "在所有节点上禁用 firewalld"
+      service:
+        name: firewalld
+        state: stopped
+        enabled: no
+
+    - name: "在所有节点上 disable selinux"
+      selinux:
+        policy: targeted
+        state: permissive
+
+    - name: "master, node1, node2 - 安装所需包"
       yum:
         name: "{{ item }}"
         state: latest
@@ -81,19 +92,87 @@
         - atomic-openshift-docker-excluder
         - atomic-openshift-excluder
 
-    - name: "Customize /etc/sysconfig/docker-storage-setup"
+    - name: "master - 安装 OpenShift 工具包"
+      yum:
+        name: atomic-openshift-utils
+        state: latest
+      when: inventory_hostname in groups['master']
+
+    - name: "向 DNS 服务器拷贝配置文件"
+      copy:
+        src: conf/openshift-cluster.conf
+        dest: /etc/dnsmasq.d/openshift-cluster.conf
+        mode: 0600
+        owner: root
+        group: root
+        force: yes
+      when: inventory_hostname in groups['master']
+
+    - name: "master - Back up iptables 配置"
+      copy:
+        remote_src: yes
+        src: /etc/sysconfig/iptables
+        dest: /etc/sysconfig/iptables.bak
+        mode: 0600
+        owner: root
+        group: root
+        force: yes
+      when: inventory_hostname in groups['master']
+
+    - name: "master - ACCEPT TCP 53"
+      command: sed -i '/.*--dport 22 -j ACCEPT.*/a\-A INPUT -p tcp -m state --state NEW -m tcp --dport 53 -j ACCEPT' /etc/sysconfig/iptables
+      when: inventory_hostname in groups['master']
+
+    - name: "master - ACCEPT UDP 53"
+      command: sed -i '/.*--dport 22 -j ACCEPT.*/a\-A INPUT -p udp -m state --state NEW -m udp --dport 53 -j ACCEPT' /etc/sysconfig/iptables
+      when: inventory_hostname in groups['master']
+
+    - name: "master - 重启 iptables"
+      service:
+        name: iptables
+        state: reloaded
+      when: inventory_hostname in groups['master']
+
+    - name: "master - Start and Enable dnsmasq"
+      service:
+        name: dnsmasq
+        state:  restarted
+        enabled: yes
+      when: inventory_hostname in groups['master']
+
+    - name: "master, node1, node2 - 配置 DNS 服务器"
+      command: nmcli connection modify eth0 ipv4.dns 192.168.122.101
+
+    - name: "master, node1, node2 - restart network"
+      service:
+        name: network
+        state: restarted
+
+    - name: "master, node1, node2 - Customize /etc/sysconfig/docker-storage-setup"
       copy:
         src: conf/docker-storage-setup
         dest: /etc/sysconfig/docker-storage-setup
 
-    - name: "Verify existence of /dev/docker-vg/docker-pool"
-      stat:
-        path: /dev/docker-vg/docker-pool
-      register: docker_vg_status
+#    - name: "master, node1, node2 - 创建 VG docker-vg"
+#      lvg:
+#        vg: docker-vg
+#        pvs: /dev/vdb
+#        pesize: 64
 
-    - name: "Start and Enable Docker"
+#    - name: "master, node1, node2 - 运行 docker-storage-setup"
+#      command: docker-storage-setup
+
+    - name: "master, node1, node2 - 拷贝信任自签名证书"
+      copy:
+        src: conf/example.com.crt
+        dest: /etc/pki/ca-trust/source/anchors/example.com.crt
+
+    - name: "master, node1, node2 - 配置信任自签名证书"
+      command: update-ca-trust extract
+
+    - name: "master, node1, node2 - Start and Enable Docker"
       service:
         name: docker
-        state: started
-        enabled: true
+        state: restarted
+        enabled: yes
 
