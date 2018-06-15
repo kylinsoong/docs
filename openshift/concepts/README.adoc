@@ -1,19 +1,21 @@
-= OPENSHIFT 概念概述 
+= OPENSHIFT 介绍 
 :toc: manual
 
-== Container
+== 基本概念
+
+=== Container
 
 `Container` 是 OpenShift 的最小计算单元。
 
 image:files/concepts-overview-container.png[Container]
 
-== Container Image
+=== Container Image
 
 `Container` 是从 `Container Image` 创建而来。
 
 image:files/concepts-overview-container-image.png[Container Image]
 
-== Image Registry
+=== Image Registry
 
 `Image Registry` 用来保存不同版本的 `Container Image`。
 
@@ -21,25 +23,25 @@ image:files/concepts-overview-image-registry.png[Image Registry]
 
 NOTE: OPENSHIFT Image Registry 分为两种：内部(built-in)，外部(Upstream)。内部 Image Registry 用来保存 S2I *生成* 的镜像及从外部 *下载* 的镜像。外部 Image Registry 可以是 Docker Hub(https://hub.docker.com), Red Hat registry(https://registry.access.redhat.com/) 或本地私有镜像仓库中的 `Image Registry`，如果当镜像在内部中找不到时会从外部中去查找。
 
-== Image Repository
+=== Image Repository
 
 `Image Repository` 中保存着所有的 `Image Registry`。
 
 image:files/concepts-overview-image-repository.png[Image Repository]
 
-== Pod
+=== Pod
 
 一个或多个 `Container` 被包装成一个 `Pod`，`Pod` 通常是部署、管理等的最小单元。
 
 image:files/concepts-overview-pod.png[Pod]
 
-== Deployment
+=== Deployment
 
 Pods 的配置定义在 `Deployment` 中。
 
 image:files/concepts-overview-deployment.png[Deployment]
 
-== Service
+=== Service
 
 `Service` 在多个 Pod 之上并提供内部负载均衡和服务发现。
 
@@ -49,14 +51,44 @@ image:files/concepts-overview-service.png[Service]
 
 image:files/concepts-overview-service-2.png[Service 2]
 
-== Route
+=== Route
 
 `Route` 将服务添加到外部负载均衡器，使服务可以外部可见。
 
 image:files/concepts-overview-route.png[Route]
 
-== Project
+=== Project
 
 `Project` 将应用在不同的部门、环境、团队中隔离。
 
 image:files/concepts-overview-project.png[Project]
+
+== 架构概述
+
+image:files/ocp-arch.png[架构]
+
+=== 支持的基础架构
+
+* 任何支持红帽企业 Linux 的环境都支持 OpenShift：
+** 在裸机物理计算机或虚拟化基础架构中，以及私有云或认证公有云中
+*** 包括所有支持的虚拟化平台：红帽虚拟化、vSphere 和 Hyper-V
+** 红帽 OpenStack 平台，以及 Amazon、Google 和 Azure 等认证公有云提供商
+* 混合方式支持在所有这些基础架构中部署 OpenShift 实例
+** 仅支持 x86 平台
+
+=== 计算节点主机
+
+* OpenShift 可在 RHEL 或 Red Hat Enterprise Atomic Host 上运行
+* OpenShift 具有两种类型的主机：计算节点和主控节点
+* 计算节点是安装有 OpenShift 的 RHEL 7 或 Red Hat Atomic Host 的实例
+** 计算节点上运行最终用户应用
+** 计算节点由主控节点进行调度
+* 计算节点守护进程和其他软件在计算节点上运行
+
+=== 主控节点主机
+
+* 也是红帽企业 Linux 或 Red Hat Atomic Host 的实例
+* 主要功能：
+** 调度计算节点上的所有活动
+** 了解和维护 OpenShift 环境内的状态
+* 利用多个主控节点实现高可用性

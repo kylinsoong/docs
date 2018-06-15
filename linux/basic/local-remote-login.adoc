@@ -56,6 +56,44 @@ and check to make sure that only the key(s) you wanted were added.
 test2.example.com
 ----
 
+=== 远程配置 docker 示例
+
+[source, text]
+.*拷贝并覆盖远程文件*
+----
+# for i in master yum node1 node2 node3 node4 infra nfs; do scp /etc/hosts $i.example.com:/etc ; done
+----
+
+[source, text]
+.*查看远程 docker 运行状态*
+----
+# for i in node1 node2 node3 node4 infra ; do ssh $i.example.com 'hostname; systemctl status docker.service; echo' ; done
+----
+
+[source, text]
+.*远程创建 PV， VG*
+----
+# for i in node1 node2 node3 node4 infra ; do ssh $i.example.com 'hostname; pvcreate /dev/vdb ; vgcreate docker-vg /dev/vdb; echo' ; done
+----
+
+[source, text]
+.*查看远程 PV， VG， LV*
+----
+# for i in master node1 node2 node3 node4 infra ; do ssh $i.example.com 'hostname; pvdisplay; vgdisplay; lvdisplay; echo' ; done
+----
+
+[source, text]
+.*远程配置 docker*
+----
+# for i in node1 node2 node3 node4 infra ; do ssh $i.example.com 'hostname; rm -fr /var/lib/docker/*; docker-storage-setup; systemctl restart docker ; echo' ; done
+----
+
+[source, text]
+.*查看远程服务信息*
+----
+# for i in master yum node1 node2 node3 node4 infra ; do ssh $i.example.com 'hostname; systemctl is-enabled docker.service; echo' ; done
+----
+
 == 收集和查看 sos report 
 
 [source, text]
