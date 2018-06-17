@@ -30,7 +30,13 @@
       when: inventory_hostname in groups['node2']
 
     - name: "在所有节点上设定静态域名解析"
-      shell: printf '192.168.122.101 master.example.com master\n192.168.122.105 node1.example.com node1\n192.168.122.106 node2.example.com node2\n10.66.192.104 registry.example.com yum.example.com nfs.example.com' >> /etc/hosts
+      copy:
+        src: conf/hosts
+        dest: /etc/hosts
+        mode: 0600
+        owner: root
+        group: root
+        force: yes
       when: inventory_hostname in groups['nodes']
 
     - name: "Master 节点创建 /root/.ssh"
@@ -60,7 +66,7 @@
         owner: root
         group: root
         force: no
-      when: inventory_hostname in groups['nodes']
+      when: inventory_hostname in groups['master']
 
     - name: "在所有节点上禁用 firewalld"
       service:
@@ -175,4 +181,14 @@
         name: docker
         state: restarted
         enabled: yes
+
+    - name: "Master 拷贝 OCP 安装 inventory"
+      copy:
+        src: conf/hosts.yml
+        dest: /etc/ansible/hosts
+        mode: 0644
+        owner: root
+        group: root
+        force: yes
+      when: inventory_hostname in groups['master']
 

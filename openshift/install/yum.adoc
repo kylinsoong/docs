@@ -61,8 +61,8 @@
 # subscription-manager repos \
     --enable="rhel-7-server-rpms" \
     --enable="rhel-7-server-extras-rpms" \
-    --enable="rhel-7-fast-datapath-rpms" \
     --enable="rhel-7-server-ose-3.9-rpms" \
+    --enable="rhel-7-fast-datapath-rpms" \
     --enable="rhel-7-server-ansible-2.4-rpms"
 ----
 
@@ -72,8 +72,8 @@
 for repo in \
 rhel-7-server-rpms \
 rhel-7-server-extras-rpms \
-rhel-7-fast-datapath-rpms \
 rhel-7-server-ose-3.9-rpms \
+rhel-7-fast-datapath-rpms \
 rhel-7-server-ansible-2.4-rpms
 do
 reposync -lm --repoid=${repo} --download_path=/opt/ose
@@ -131,6 +131,15 @@ systemctl enable httpd
 systemctl restart httpd
 ----
 
+[source, bash]
+.*4-  添加 iptables 规则，运行 80 端口访问*
+----
+cp /etc/sysconfig/iptables /etc/sysconfig/iptables.bak.$(date "+%Y%m%d%H%M%S");
+sed -i '/.*--dport 22 -j ACCEPT.*/a\-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT' /etc/sysconfig/iptables;
+sed -i '/.*--dport 22 -j ACCEPT.*/a\-A INPUT -p udp -m state --state NEW -m udp --dport 80 -j ACCEPT' /etc/sysconfig/iptables;
+systemctl restart iptables.service
+----
+
 == 测试 YUM 源配置
 
 
@@ -150,17 +159,17 @@ enabled = 1
 gpgcheck = 0
 name = rhel-7-server-extras-rpms
 
-[rhel-7-fast-datapath-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-fast-datapath-rpms
-
 [rhel-7-server-ose-3.9-rpms]
 baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.9-rpms
 enabled = 1
 gpgcheck = 0
 name = rhel-7-server-ose-3.9-rpms
+
+[rhel-7-fast-datapath-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-fast-datapath-rpms
 
 [rhel-7-server-ansible-2.4-rpms]
 baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
@@ -175,5 +184,5 @@ EOF
 [source, bash]
 .*2 - 执行输出如下命令测试 YUM 源配置*
 ----
-yum list | grep -i atomic-openshift
+yum list | grep -i atomic-openshift-client
 ----

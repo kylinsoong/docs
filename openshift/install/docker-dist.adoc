@@ -76,6 +76,16 @@ systemctl daemon-reload
 systemctl restart docker-distribution
 ----
 
+添加 iptables 规则，运行 443 端口访问
+
+[source, bash]
+----
+cp /etc/sysconfig/iptables /etc/sysconfig/iptables.bak.$(date "+%Y%m%d%H%M%S");
+sed -i '/.*--dport 22 -j ACCEPT.*/a\-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT' /etc/sysconfig/iptables;
+sed -i '/.*--dport 22 -j ACCEPT.*/a\-A INPUT -p udp -m state --state NEW -m udp --dport 443 -j ACCEPT' /etc/sysconfig/iptables;
+systemctl restart iptables.service
+----
+
 === 客户端配置信任自签名证书
 
 客户端如果需要连接本地镜像仓库，需要配置信任自签名证书。并重启Docker服务

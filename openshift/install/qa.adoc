@@ -1,0 +1,143 @@
+
+= Q & A
+:toc: manual
+
+== nfs is an unsupported type 
+
+.*问题*
+---- 
+TASK [Run variable sanity checks] ************************************************************************************************************************************************************
+fatal: [master.example.com]: FAILED! => {"failed": true, "msg": "last_checked_host: master.example.com, last_checked_var: openshift_hosted_registry_storage_kind;nfs is an unsupported type for openshift_hosted_registry_storage_kind. openshift_enable_unsupported_configurations=True mustbe specified to continue with this configuration."}
+----
+
+.*原因及解决办法*
+----
+The use of NFS for the core OpenShift Components was never recommended, as NFS (and the NFS Protocol) does not 
+provide the proper consistency needed for the applications that make up the OpenShift infrastructure.
+
+As a result, the installer/update playbooks now require an option to enable the use of NFS with core infrastructure components.
+
+In ansible inventory file you should specify the following:
+
+openshift_enable_unsupported_configurations=True
+----
+
+== Package atomic-openshift-clients-3.9.27 not available
+
+.*问题*
+----
+TASK [openshift_cli : Install clients] *******************************************************************************************************************************************************
+FAILED - RETRYING: Install clients (2 retries left).
+FAILED - RETRYING: Install clients (1 retries left).
+fatal: [master.example.com]: FAILED! => {"attempts": 2, "changed": false, "failed": true, "msg": "No package matching 'atomic-openshift-clients-3.9.27' found available, installed or updated", "rc": 126, "results": ["No package matching 'atomic-openshift-clients-3.9.27' found available, installed or updated"]}
+----
+
+.*原因及解决办法*
+----
+
+----
+
+== docker-registry deploy took longer than 600 seconds
+
+[source, json]
+.*问题*
+----
+TASK [openshift_hosted : Poll for OpenShift pod deployment success] **************************************************************************************************************************
+FAILED - RETRYING: Poll for OpenShift pod deployment success (60 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (59 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (58 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (57 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (56 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (55 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (54 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (53 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (52 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (51 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (50 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (49 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (48 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (47 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (46 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (45 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (44 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (43 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (42 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (41 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (40 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (39 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (38 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (37 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (36 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (35 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (34 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (33 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (32 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (31 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (30 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (29 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (28 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (27 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (26 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (25 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (24 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (23 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (22 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (21 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (20 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (19 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (18 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (17 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (16 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (15 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (14 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (13 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (12 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (11 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (10 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (9 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (8 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (7 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (6 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (5 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (4 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (3 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (2 retries left).
+FAILED - RETRYING: Poll for OpenShift pod deployment success (1 retries left).
+failed: [master.example.com] (item=[{u'namespace': u'default', u'name': u'docker-registry'}, {'_ansible_parsed': True, 'stderr_lines': [], u'cmd': [u'oc', u'get', u'deploymentconfig', u'docker-registry', u'--namespace', u'default', u'--config', u'/etc/origin/master/admin.kubeconfig', u'-o', u'jsonpath={ .status.latestVersion }'], u'end': u'2018-06-17 10:04:10.045056', '_ansible_no_log': False, u'stdout': u'3', '_ansible_item_result': True, u'changed': True, 'item': {u'namespace': u'default', u'name': u'docker-registry'}, u'delta': u'0:00:00.227236', u'stderr': u'', u'rc': 0, u'invocation': {u'module_args': {u'warn': True, u'executable': None, u'_uses_shell': False, u'_raw_params': u"oc get deploymentconfig docker-registry --namespace default --config /etc/origin/master/admin.kubeconfig -o jsonpath='{ .status.latestVersion }'", u'removes': None, u'creates': None, u'chdir': None, u'stdin': None}}, 'stdout_lines': [u'3'], u'start': u'2018-06-17 10:04:09.817820', '_ansible_ignore_errors': None, 'failed': False}]) => {"attempts": 60, "changed": true, "cmd": ["oc", "get", "replicationcontroller", "docker-registry-3", "--namespace", "default", "--config", "/etc/origin/master/admin.kubeconfig", "-o", "jsonpath={ .metadata.annotations.openshift\\.io/deployment\\.phase }"], "delta": "0:00:00.196019", "end": "2018-06-17 10:14:37.184958", "failed": true, "failed_when_result": true, "item": [{"name": "docker-registry", "namespace": "default"}, {"_ansible_ignore_errors": null, "_ansible_item_result": true, "_ansible_no_log": false, "_ansible_parsed": true, "changed": true, "cmd": ["oc", "get", "deploymentconfig", "docker-registry", "--namespace", "default", "--config", "/etc/origin/master/admin.kubeconfig", "-o", "jsonpath={ .status.latestVersion }"], "delta": "0:00:00.227236", "end": "2018-06-17 10:04:10.045056", "failed": false, "invocation": {"module_args": {"_raw_params": "oc get deploymentconfig docker-registry --namespace default --config /etc/origin/master/admin.kubeconfig -o jsonpath='{ .status.latestVersion }'", "_uses_shell": false, "chdir": null, "creates": null, "executable": null, "removes": null, "stdin": null, "warn": true}}, "item": {"name": "docker-registry", "namespace": "default"}, "rc": 0, "start": "2018-06-17 10:04:09.817820", "stderr": "", "stderr_lines": [], "stdout": "3", "stdout_lines": ["3"]}], "rc": 0, "start": "2018-06-17 10:14:36.988939", "stderr": "", "stderr_lines": [], "stdout": "Failed", "stdout_lines": ["Failed"]}
+	to retry, use: --limit @/usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.retry
+
+PLAY RECAP ***********************************************************************************************************************************************************************************
+localhost                  : ok=13   changed=0    unreachable=0    failed=0   
+master.example.com         : ok=460  changed=69   unreachable=0    failed=1   
+nfs.example.com            : ok=30   changed=1    unreachable=0    failed=0   
+node1.example.com          : ok=120  changed=13   unreachable=0    failed=0   
+node2.example.com          : ok=120  changed=13   unreachable=0    failed=0   
+
+
+INSTALLER STATUS *****************************************************************************************************************************************************************************
+Initialization             : Complete (0:00:31)
+Health Check               : Complete (0:00:05)
+etcd Install               : Complete (0:00:28)
+NFS Install                : Complete (0:00:54)
+Master Install             : Complete (0:07:44)
+Master Additional Install  : Complete (0:00:33)
+Node Install               : Complete (0:01:42)
+Hosted Install             : In Progress (0:21:02)
+	This phase can be restarted by running: playbooks/openshift-hosted/config.yml
+
+
+
+Failure summary:
+
+
+  1. Hosts:    master.example.com
+     Play:     Poll for hosted pod deployments
+     Task:     Poll for OpenShift pod deployment success
+     Message:  All items completed
+----
+
+[source, json]
+.*原因及解决办法*
+----
+
+----

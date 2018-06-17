@@ -29,20 +29,31 @@ NOTE: 本部分在实验环境可以忽略
 [source, bash]
 .*重启OpenShift，使配置修改生效*
 ----
-systemctl restart atomic-openshift-master 
+systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers
 systemctl restart atomic-openshift-node
 ----
 
-== 常见问题解决总结
+== Gitlab 安装与配置
 
 [source, text]
-.*import-image 导入*
+.*安装*
 ----
-# oc get imagestream -n openshift
-# oc import-image <IMG_NAME>
+# rpm -ivh gitlab-ee-10.4.0-ee.0.el7.x86_64.rpm
 ----
 
 [source, bash]
-.**
+.*修改/etc/gitlab/gitlab.rb将external_url设置成如下*
 ----
+external_url 'http://gitlab.example.com'
 ----
+
+NOTE: 记得修改所有客户端的/etc/hosts表，加入 gitlab.example.com 的地址。
+
+[source, text]
+.*执行如下命令完成 gitlab 配置及启动 gitlab*
+----
+# gitlab-ctl reconfigure
+# gitlab-ctl start
+----
+
+NOTE: 启动完成后通过浏览器访问 http://gitlab.example.com，第一次访问的时候会提示创建密码，密码必须是6位登录名是root。
