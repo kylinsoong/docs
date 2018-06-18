@@ -32,10 +32,12 @@ FAILED - RETRYING: Install clients (1 retries left).
 fatal: [master.example.com]: FAILED! => {"attempts": 2, "changed": false, "failed": true, "msg": "No package matching 'atomic-openshift-clients-3.9.27' found available, installed or updated", "rc": 126, "results": ["No package matching 'atomic-openshift-clients-3.9.27' found available, installed or updated"]}
 ----
 
-.*原因及解决办法*
-----
+*原因及解决办法:*
 
-----
+在本地 yum 源仓库执行 find 确认包是否存在，如果存在，那是因为依赖冲突导致，两种解决办法：
+
+* 在同步 yum 源时确保包为唯一，即 `reposync -lmn` 同步 yum 源，`-n` 仅同步最新的包
+* 将相应的包 `atomic-openshift-clients-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 及其依赖 `atomic-openshift-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 拷贝到 master, 本地安装
 
 == docker-registry deploy took longer than 600 seconds
 
@@ -136,8 +138,28 @@ Failure summary:
      Message:  All items completed
 ----
 
-[source, json]
-.*原因及解决办法*
+[source, text]
+.*问题分析: describe DC*
+----
+# oc describe deploymentconfigs/docker-registry
+Name:		docker-registry
+Namespace:	default
+Created:	2 hours ago
+Labels:		docker-registry=default
+Annotations:	<none>
+Latest Version:	2
+Selector:	docker-registry=default
+Replicas:	1
+Triggers:	Config
+Strategy:	Rolling
+Template:
+Pod Template:
+  Labels:		docker-registry=default
+  Service Account:	registry
+  Containers:
+   registry:
+    Image:	registry.example.com/openshift3/ose-docker-registry:v3.9.30
+    Port:	5000/TCP
 ----
 
-----
+NOTE: Check the Image is really exist and the Port are correct.

@@ -52,7 +52,7 @@
 [source, bash]
 .*1 - 创建本地目录*
 ----
-# mkdir -p /opt/ose
+mkdir -p /opt/ocp
 ----
 
 [source, bash]
@@ -76,8 +76,8 @@ rhel-7-server-ose-3.9-rpms \
 rhel-7-fast-datapath-rpms \
 rhel-7-server-ansible-2.4-rpms
 do
-reposync -lm --repoid=${repo} --download_path=/opt/ose
-createrepo -v /opt/ose/${repo} -o /opt/ose/${repo}
+reposync -lmn --repoid=${repo} --download_path=/opt/ocp
+createrepo -v /opt/ocp/${repo} -o /opt/ocp/${repo}
 done
 ----
 
@@ -98,7 +98,7 @@ done
 [source, bash]
 .*4 - 执行如下命令更新 repodata*
 ----
-createrepo --workers=5 /opt/ose/
+createrepo --workers=5 /opt/ocp/
 ----
 
 === 安装配置 httpd
@@ -113,8 +113,8 @@ yum -y install httpd
 .*2 - 创建 httpd 配置文件，以发布 YUM 源*
 ----
 cat << EOF > /etc/httpd/conf.d/yum.conf
-Alias /repo "/opt/ose"
-<Directory "/opt/ose">
+Alias /repo "/opt/ocp"
+<Directory "/opt/ocp">
   Options +Indexes +FollowSymLinks
   Require all granted
 </Directory>

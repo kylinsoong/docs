@@ -92,3 +92,83 @@ image:files/ocp-arch.png[架构]
 ** 调度计算节点上的所有活动
 ** 了解和维护 OpenShift 环境内的状态
 * 利用多个主控节点实现高可用性
+
+=== Replication Controller
+
+Replication Controller 确保任意时刻始终运行指定数目的 Pod 的副本。 如果一个 Pod 退出或被删除，则 Replication Controller 将执行实例化操作，确保 Pod 的副本数量为指定的数量。同样，如果运行中的 pod 超过所需的数目，replication controller 会根据需要删除相应的数量。
+
+一个 Replication Controller 的配置包括：
+
+1. 需要运行 Pod 的副本数，并且运行时可随时调整
+2. 用于创建复制一个 pod 的定义声明
+3. 用于识别管理 Pod 的一个 selector
+
+[source, yaml]
+.*RC 定义示例*
+----
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  annotations:
+  labels:
+    openshift.io/deployment-config.name: router
+    router: router
+  name: router-7
+spec:
+  replicas: 1
+  selector:
+    deployment: router-7
+    deploymentconfig: router
+    router: router
+  template:
+    metadata:
+      annotations:
+        openshift.io/deployment-config.latest-version: "7"
+        openshift.io/deployment-config.name: router
+        openshift.io/deployment.name: router-7
+      creationTimestamp: null
+      labels:
+        deployment: router-7
+        deploymentconfig: router
+        router: router
+----
+
+=== Deployment Configuration
+
+OpenShift 扩展了软件部署及软件开发和部署生命周期的概念，增加了更多的支持。 在最简单的情况下，一个部署只是创建一个新的 Replication Controller，并让它启动 pod。 但是，实际生产中部署还需要提供从现有部署镜像转换生成新的镜像的能力，并且还增加了定义 hook 的能力，在创建 Replication Controller 之前就执行 hook 定义。
+
+OpenShift DeploymentConfig 定义部署的描述如下:
+
+1. 定义 ReplicationController 的元素
+2. 能够创建一个部署的触发器
+3. 部署之间转换的策略
+4. hook 的生命周期
+
+[source, yaml]
+.*DC 定义示例*
+----
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  generation: 1
+  labels:
+    router: router
+  name: router
+spec:
+  replicas: 1
+  selector:
+    router: router
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 0
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+----
+

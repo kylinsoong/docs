@@ -88,15 +88,14 @@
         - git
         - net-tools
         - bind-utils
-        - docker
+        - yum-utils
+        - docker-1.13.1
         - iptables-services
         - bridge-utils
         - bash-completion
         - kexec-tools
         - sos
         - psacct
-        - atomic-openshift-docker-excluder
-        - atomic-openshift-excluder
 
     - name: "master - 安装 OpenShift 工具包"
       yum:

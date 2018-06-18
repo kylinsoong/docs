@@ -35,15 +35,18 @@ docker pull $REGISTRY/openshift3/ose-haproxy-router:$VERSION
 docker pull $REGISTRY/openshift3/ose-keepalived-ipfailover:$VERSION
 docker pull $REGISTRY/openshift3/ose-pod:$VERSION
 docker pull $REGISTRY/openshift3/ose-sti-builder:$VERSION
+docker pull $REGISTRY/openshift3/ose-template-service-broker:$VERSION
+docker pull $REGISTRY/openshift3/ose-web-console:$VERSION
 docker pull $REGISTRY/openshift3/ose:$VERSION
 docker pull $REGISTRY/openshift3/container-engine:$VERSION
 docker pull $REGISTRY/openshift3/node:$VERSION
 docker pull $REGISTRY/openshift3/openvswitch:$VERSION
+docker pull $REGISTRY/openshift3/ose-recycler:$VERSION
 docker pull $REGISTRY/rhel7/etcd
 
 if [ "$ISSAVE" = true ] ; then
     echo 'Save the required OpenShift Container Platform containerized components'
-    docker save -o ose-images-core-$VERSION_`date +'%Y%m%d'`.tar.gz $REGISTRY/openshift3/ose-ansible:$VERSION $REGISTRY/openshift3/ose-cluster-capacity:$VERSION $REGISTRY/openshift3/ose-deployer:$VERSION $REGISTRY/openshift3/ose-docker-builder:$VERSION $REGISTRY/openshift3/ose-docker-registry:$VERSION $REGISTRY/openshift3/ose-egress-http-proxy:$VERSION $REGISTRY/openshift3/ose-egress-router:$VERSION $REGISTRY/openshift3/ose-f5-router:$VERSION $REGISTRY/openshift3/ose-haproxy-router:$VERSION $REGISTRY/openshift3/ose-keepalived-ipfailover:$VERSION $REGISTRY/openshift3/ose-pod:$VERSION $REGISTRY/openshift3/ose-sti-builder:$VERSION $REGISTRY/openshift3/ose:$VERSION $REGISTRY/openshift3/container-engine:$VERSION $REGISTRY/openshift3/node:$VERSION $REGISTRY/openshift3/openvswitch:$VERSION $REGISTRY/rhel7/etcd 
+    docker save -o ose-images-core-$VERSION_`date +'%Y%m%d'`.tar.gz $REGISTRY/openshift3/ose-ansible:$VERSION $REGISTRY/openshift3/ose-cluster-capacity:$VERSION $REGISTRY/openshift3/ose-deployer:$VERSION $REGISTRY/openshift3/ose-docker-builder:$VERSION $REGISTRY/openshift3/ose-docker-registry:$VERSION $REGISTRY/openshift3/ose-egress-http-proxy:$VERSION $REGISTRY/openshift3/ose-egress-router:$VERSION $REGISTRY/openshift3/ose-f5-router:$VERSION $REGISTRY/openshift3/ose-haproxy-router:$VERSION $REGISTRY/openshift3/ose-keepalived-ipfailover:$VERSION $REGISTRY/openshift3/ose-pod:$VERSION $REGISTRY/openshift3/ose-sti-builder:$VERSION $REGISTRY/openshift3/ose-template-service-broker:$VERSION $REGISTRY/openshift3/ose-web-console:$VERSION $REGISTRY/openshift3/ose:$VERSION $REGISTRY/openshift3/container-engine:$VERSION $REGISTRY/openshift3/node:$VERSION $REGISTRY/openshift3/openvswitch:$VERSION docker pull $REGISTRY/openshift3/ose-recycler:$VERSION $REGISTRY/rhel7/etcd
 fi
 
 
@@ -54,6 +57,7 @@ docker pull $REGISTRY/openshift3/logging-curator:$VERSION
 docker pull $REGISTRY/openshift3/logging-elasticsearch:$VERSION
 docker pull $REGISTRY/openshift3/logging-fluentd:$VERSION
 docker pull $REGISTRY/openshift3/logging-kibana:$VERSION
+docker pull $REGISTRY/openshift3/oauth-proxy:$VERSION
 docker pull $REGISTRY/openshift3/metrics-cassandra:$VERSION
 docker pull $REGISTRY/openshift3/metrics-hawkular-metrics:$VERSION
 docker pull $REGISTRY/openshift3/metrics-hawkular-openshift-agent:$VERSION
@@ -76,7 +80,7 @@ docker pull $REGISTRY/rhgs3/rhgs-s3-server-rhel7:$VERSION
 
 if [ "$ISSAVE" = true ] ; then
     echo 'Save the additional centralized log aggregation and metrics aggregation components'
-    docker save -o ose-images-logging-metrics-$VERSION_`date +'%Y%m%d'`.tar.gz $REGISTRY/openshift3/logging-auth-proxy:$VERSION $REGISTRY/openshift3/logging-curator:$VERSION $REGISTRY/openshift3/logging-elasticsearch:$VERSION $REGISTRY/openshift3/logging-fluentd:$VERSION $REGISTRY/openshift3/logging-kibana:$VERSION $REGISTRY/openshift3/metrics-cassandra:$VERSION $REGISTRY/openshift3/metrics-hawkular-metrics:$VERSION $REGISTRY/openshift3/metrics-hawkular-openshift-agent:$VERSION $REGISTRY/openshift3/metrics-heapster:$VERSION $REGISTRY/openshift3/prometheus:$VERSION $REGISTRY/openshift3/prometheus-alert-buffer:$VERSION $REGISTRY/openshift3/prometheus-alertmanager:$VERSION $REGISTRY/openshift3/prometheus-node-exporter:$VERSION $REGISTRY/cloudforms46/cfme-openshift-postgresql:$VERSION $REGISTRY/cloudforms46/cfme-openshift-memcached:$VERSION $REGISTRY/cloudforms46/cfme-openshift-app-ui:$VERSION $REGISTRY/cloudforms46/cfme-openshift-app:$VERSION $REGISTRY/cloudforms46/cfme-openshift-embedded-ansible:$VERSION $REGISTRY/cloudforms46/cfme-openshift-httpd:$VERSION $REGISTRY/cloudforms46/cfme-httpd-configmap-generator:$VERSION $REGISTRY/rhgs3/rhgs-server-rhel7:$VERSION $REGISTRY/rhgs3/rhgs-volmanager-rhel7:$VERSION $REGISTRY/rhgs3/rhgs-gluster-block-prov-rhel7:$VERSION $REGISTRY/rhgs3/rhgs-s3-server-rhel7:$VERSION
+    docker save -o ose-images-logging-metrics-$VERSION_`date +'%Y%m%d'`.tar.gz $REGISTRY/openshift3/logging-auth-proxy:$VERSION $REGISTRY/openshift3/logging-curator:$VERSION $REGISTRY/openshift3/logging-elasticsearch:$VERSION $REGISTRY/openshift3/logging-fluentd:$VERSION $REGISTRY/openshift3/logging-kibana:$VERSION docker pull $REGISTRY/openshift3/oauth-proxy:$VERSION $REGISTRY/openshift3/metrics-cassandra:$VERSION $REGISTRY/openshift3/metrics-hawkular-metrics:$VERSION $REGISTRY/openshift3/metrics-hawkular-openshift-agent:$VERSION $REGISTRY/openshift3/metrics-heapster:$VERSION $REGISTRY/openshift3/prometheus:$VERSION $REGISTRY/openshift3/prometheus-alert-buffer:$VERSION $REGISTRY/openshift3/prometheus-alertmanager:$VERSION $REGISTRY/openshift3/prometheus-node-exporter:$VERSION $REGISTRY/cloudforms46/cfme-openshift-postgresql:$VERSION $REGISTRY/cloudforms46/cfme-openshift-memcached:$VERSION $REGISTRY/cloudforms46/cfme-openshift-app-ui:$VERSION $REGISTRY/cloudforms46/cfme-openshift-app:$VERSION $REGISTRY/cloudforms46/cfme-openshift-embedded-ansible:$VERSION $REGISTRY/cloudforms46/cfme-openshift-httpd:$VERSION $REGISTRY/cloudforms46/cfme-httpd-configmap-generator:$VERSION $REGISTRY/rhgs3/rhgs-server-rhel7:$VERSION $REGISTRY/rhgs3/rhgs-volmanager-rhel7:$VERSION $REGISTRY/rhgs3/rhgs-gluster-block-prov-rhel7:$VERSION $REGISTRY/rhgs3/rhgs-s3-server-rhel7:$VERSION
 fi
 
 echo ""
@@ -91,6 +95,14 @@ if [ "$ISSAVE" = true ] ; then
     docker save -o ose-images-ansible-broker-$VERSION_`date +'%Y%m%d'`.tar.gz $REGISTRY/openshift3/ose-service-catalog:$VERSION $REGISTRY/openshift3/ose-ansible-service-broker:$VERSION $REGISTRY/openshift3/mediawiki-apb:$VERSION $REGISTRY/openshift3/postgresql-apb:$VERSION
 fi
 
+echo ""
+echo "Pull the registry console for using a stand-alone registry"
+docker pull $REGISTRY/openshift3/registry-console:$VERSION
+
+if [ "$ISSAVE" = true ] ; then
+    echo 'Save the registry console for using a stand-alone registry'
+    docker save -o ose-images-registry-console-$VERSION_`date +'%Y%m%d'`.tar.gz $REGISTRY/openshift3/registry-console:$VERSION
+fi
 
 echo ""
 echo "Pull Red Hat-certified Source-to-Image (S2I) builder images that you intend to use in your OpenShift environment"
