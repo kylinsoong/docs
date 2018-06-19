@@ -6,30 +6,42 @@
 本部分包括安装完成后续的配置。本部分操作在 Master 结点上执行。
 
 
-== 配置用户及子域名
+== 配置用户
 
 [source, bash]
-.*安装Httpd-tools，并创建用户及密码*
+.*创建管理员用户*
 ----
-yum -y install httpd-tools
-htpasswd -cb /etc/origin/master/htpasswd redhat welcome1
 htpasswd -b /etc/origin/master/htpasswd admin admin
-oadm policy add-cluster-role-to-user admin admin
+oc login -u system:admin
+oc adm policy add-role-to-user system:image-builder admin
+oc adm policy add-role-to-user admin admin -n openshift
+oc adm policy add-cluster-role-to-user admin admin
+oc adm policy add-cluster-role-to-user cluster-admin admin
+----
+
+NOTE: 如果 htpasswd 不存在，需要安装 `httpd-tools` 包。
+
+[source, bash]
+.*创建普通用户*
+----
+htpasswd -b /etc/origin/master/htpasswd user01 redhat
+htpasswd -b /etc/origin/master/htpasswd user02 redhat
+oc login -u system:admin
+oc adm policy add-role-to-user self-provisioner user01
+oc adm policy add-role-to-user self-provisioner user02
+----
+
+== OpenShift 重启
+ 
+[source, bash]
+.*重启 OpenShift Master 节点*
+----
+systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers atomic-openshift-node
 ----
 
 [source, bash]
-.*修改配置文件/etc/origin/master/master-config.yaml内的用户验证配置*
+.*重启 OpenShift Node 节点*
 ----
-cp /etc/origin/master/master-config.yaml /etc/origin/master/master-config.yaml.bak.$(date "+%Y%m%d%H%M%S");
-sed -i 's/.*subdomain.*/  subdomain: apps.example.com/' /etc/origin/master/master-config.yaml ;
-----
-
-NOTE: 本部分在实验环境可以忽略
-
-[source, bash]
-.*重启OpenShift，使配置修改生效*
-----
-systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers
 systemctl restart atomic-openshift-node
 ----
 
@@ -44,10 +56,10 @@ systemctl restart atomic-openshift-node
 [source, bash]
 .*修改/etc/gitlab/gitlab.rb将external_url设置成如下*
 ----
-external_url 'http://gitlab.example.com'
+external_url 'http://git.example.com'
 ----
 
-NOTE: 记得修改所有客户端的/etc/hosts表，加入 gitlab.example.com 的地址。
+NOTE: 记得修改所有客户端的/etc/hosts表，加入 git.example.com 的地址。
 
 [source, text]
 .*执行如下命令完成 gitlab 配置及启动 gitlab*
@@ -56,4 +68,54 @@ NOTE: 记得修改所有客户端的/etc/hosts表，加入 gitlab.example.com �
 # gitlab-ctl start
 ----
 
-NOTE: 启动完成后通过浏览器访问 http://gitlab.example.com，第一次访问的时候会提示创建密码，密码必须是6位登录名是root。
+NOTE: 启动完成后通过浏览器访问 http://git.example.com，第一次访问的时候会提示创建密码，密码必须是8位登录名是root。
+
+
+== ImageStream 配置
+
+=== php IS 配置示例
+
+[source, text]
+.*1 - 确保外部镜像仓库中的镜像*
+----
+# docker images | grep php
+registry.example.com/rhscl/php-70-rhel7                        latest              49a451388c11        3 weeks ago         579 MB
+registry.example.com/rhscl/php-56-rhel7                        latest              520f0e9ceee7        2 months ago        581 MB
+----
+
+[source, bash]
+.*2 - 编辑 IS*
+----
+oc edit is php -n openshift 
+----
+
+NOTE: 编辑可删除多余的 Tag.
+
+[source, bash]
+.*3 - 重新导入 Image*
+----
+oc import-image php -n openshift --all
+----
+
+NOTE: 这一步时可选，Image 导入成功后，IS 描述中会由类似 `registry.example.com/rhscl/php-70-rhel7@sha256:f1816ef319ef2561686c7a9cfcc4f6fd4e876a0924b2ebac9b0c7edc7e41a89a` 的信息，这表明内部镜像仓库已经从外部仓库中拉取到了东西。 
+
+[source, bash]
+.*4 - 测试*
+----
+$ oc login https://master.example.com:8443 -u user01 -p redhat
+
+$ oc new-project test01
+
+$ oc new-app php:7.0~http://git.example.com/open-source/php-helloworld.git --name=php-helloworld
+$ oc expose svc/php-helloworld
+
+$ oc get routes
+NAME             HOST/PORT                                PATH      SERVICES         PORT       TERMINATION   WILDCARD
+php-helloworld   php-helloworld-test01.apps.example.com             php-helloworld   8080-tcp                 None
+
+$ curl http://php-helloworld-test01.apps.example.com
+Hello, World! php version is 7.0.27
+
+$ oc delete project test01
+----
+
