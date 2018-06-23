@@ -2278,7 +2278,7 @@
 <div class="listingblock">
 <div class="title"><strong>1 - &#x521B;&#x5EFA;&#x672C;&#x5730;&#x76EE;&#x5F55;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># mkdir -p /opt/ose</span></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir -p /opt/ocp</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -2302,8 +2302,8 @@ rhel-7-server-ose-3.9-rpms \
 rhel-7-fast-datapath-rpms \
 rhel-7-server-ansible-2.4-rpms
 <span class="hljs-keyword">do</span>
-reposync -lm --repoid=<span class="hljs-variable">${repo}</span> --download_path=/opt/ose
-createrepo -v /opt/ose/<span class="hljs-variable">${repo}</span> -o /opt/ose/<span class="hljs-variable">${repo}</span>
+reposync -lmn --repoid=<span class="hljs-variable">${repo}</span> --download_path=/opt/ocp
+createrepo -v /opt/ocp/<span class="hljs-variable">${repo}</span> -o /opt/ocp/<span class="hljs-variable">${repo}</span>
 <span class="hljs-keyword">done</span></code></pre>
 </div>
 </div>
@@ -2348,7 +2348,7 @@ createrepo -v /opt/ose/<span class="hljs-variable">${repo}</span> -o /opt/ose/<s
 <div class="listingblock">
 <div class="title"><strong>4 - &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x66F4;&#x65B0; repodata</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">createrepo --workers=5 /opt/ose/</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">createrepo --workers=5 /opt/ocp/</code></pre>
 </div>
 </div>
 </div>
@@ -2364,8 +2364,8 @@ createrepo -v /opt/ose/<span class="hljs-variable">${repo}</span> -o /opt/ose/<s
 <div class="title"><strong>2 - &#x521B;&#x5EFA; httpd &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x4EE5;&#x53D1;&#x5E03; YUM &#x6E90;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">cat &lt;&lt; EOF &gt; /etc/httpd/conf.d/yum.conf
-Alias /repo <span class="hljs-string">&quot;/opt/ose&quot;</span>
-&lt;Directory <span class="hljs-string">&quot;/opt/ose&quot;</span>&gt;
+Alias /repo <span class="hljs-string">&quot;/opt/ocp&quot;</span>
+&lt;Directory <span class="hljs-string">&quot;/opt/ocp&quot;</span>&gt;
   Options +Indexes +FollowSymLinks
   Require all granted
 &lt;/Directory&gt;
@@ -2486,7 +2486,7 @@ EOF</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"next":{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},"previous":{"title":"安装","level":"1.4.2","depth":2,"path":"openshift/install/README.adoc","ref":"openshift/install/README.adoc","articles":[{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/yum.adoc","mtime":"2018-06-17T08:08:17.513Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-17T11:07:47.747Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"next":{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},"previous":{"title":"安装","level":"1.4.2","depth":2,"path":"openshift/install/README.adoc","ref":"openshift/install/README.adoc","articles":[{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/yum.adoc","mtime":"2018-06-17T16:29:38.729Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-23T16:17:10.982Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

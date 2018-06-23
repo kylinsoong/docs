@@ -39,10 +39,10 @@ fatal: [master.example.com]: FAILED! => {"attempts": 2, "changed": false, "faile
 * 在同步 yum 源时确保包为唯一，即 `reposync -lmn` 同步 yum 源，`-n` 仅同步最新的包
 * 将相应的包 `atomic-openshift-clients-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 及其依赖 `atomic-openshift-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 拷贝到 master, 本地安装
 
-== docker-registry deploy took longer than 600 seconds
+== NFS mount registry-volume failed
 
 [source, json]
-.*问题*
+.*问题: docker-registry Pod Start Failed due to NFS Server mount registry-volume failed*
 ----
 TASK [openshift_hosted : Poll for OpenShift pod deployment success] **************************************************************************************************************************
 FAILED - RETRYING: Poll for OpenShift pod deployment success (60 retries left).
@@ -139,27 +139,25 @@ Failure summary:
 ----
 
 [source, text]
-.*问题分析: describe DC*
+.*问题分析-1: 查看 docker-registry Pod*
 ----
-# oc describe deploymentconfigs/docker-registry
-Name:		docker-registry
-Namespace:	default
-Created:	2 hours ago
-Labels:		docker-registry=default
-Annotations:	<none>
-Latest Version:	2
-Selector:	docker-registry=default
-Replicas:	1
-Triggers:	Config
-Strategy:	Rolling
-Template:
-Pod Template:
-  Labels:		docker-registry=default
-  Service Account:	registry
-  Containers:
-   registry:
-    Image:	registry.example.com/openshift3/ose-docker-registry:v3.9.30
-    Port:	5000/TCP
+# oc get pods | grep docker-registry
+docker-registry-3-deploy   1/1       Running             0          9m
+docker-registry-3-g7l84    0/1       ContainerCreating   0          9m
 ----
 
-NOTE: Check the Image is really exist and the Port are correct.
+[source, text]
+.*问题分析-2: 查看 docker-registry-3-g7l84 Pod*
+----
+# oc describe po/docker-registry-3-g7l84
+...
+  Warning  FailedMount  8m  kubelet, node1.example.com  MountVolume.SetUp failed for volume "registry-volume" : mount failed: exit status 32
+Mounting command: systemd-run
+Mounting arguments: --description=Kubernetes transient mount for /var/lib/origin/openshift.local.volumes/pods/aee76710-76fd-11e8-956e-5254006bf7c5/volumes/kubernetes.io~nfs/registry-volume --scope -- mount -t nfs nfs.example.com:/exports/registry /var/lib/origin/openshift.local.volumes/pods/aee76710-76fd-11e8-956e-5254006bf7c5/volumes/kubernetes.io~nfs/registry-volume
+Output: Running scope as unit run-2262.scope.
+mount.nfs: Protocol not supported
+...
+----
+
+*问题原因：docker-registry Mount NFS 服务器不成功*
+

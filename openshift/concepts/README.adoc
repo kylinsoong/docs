@@ -93,9 +93,13 @@ image:files/ocp-arch.png[架构]
 ** 了解和维护 OpenShift 环境内的状态
 * 利用多个主控节点实现高可用性
 
-=== Replication Controller
+=== ReplicationController
 
-Replication Controller 确保任意时刻始终运行指定数目的 Pod 的副本。 如果一个 Pod 退出或被删除，则 Replication Controller 将执行实例化操作，确保 Pod 的副本数量为指定的数量。同样，如果运行中的 pod 超过所需的数目，replication controller 会根据需要删除相应的数量。
+Replication Controller 确保任意时刻始终运行指定数目的 Pod 的副本，确保了 Pod 可用。 
+
+如果一个 Pod 退出或被删除，则 Replication Controller 将执行实例化操作，确保 Pod 的副本数量为指定的数量。同样，如果运行中的 pod 超过所需的数目，replication controller 会根据需要删除相应的数量。
+
+https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/[kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/]
 
 一个 Replication Controller 的配置包括：
 
@@ -103,72 +107,148 @@ Replication Controller 确保任意时刻始终运行指定数目的 Pod 的副�
 2. 用于创建复制一个 pod 的定义声明
 3. 用于识别管理 Pod 的一个 selector
 
+==== 创建 ReplicationController 示例
+
+本示例 ReplicationController 配置运行一个 mysql Pod。
+
 [source, yaml]
-.*RC 定义示例*
+.*1 - ReplicationController 配置文件 link:files/replication.yaml[replication.yaml]*
 ----
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  annotations:
-  labels:
-    openshift.io/deployment-config.name: router
-    router: router
-  name: router-7
+  name: mysql
 spec:
   replicas: 1
   selector:
-    deployment: router-7
-    deploymentconfig: router
-    router: router
+    app: mysql
   template:
     metadata:
-      annotations:
-        openshift.io/deployment-config.latest-version: "7"
-        openshift.io/deployment-config.name: router
-        openshift.io/deployment.name: router-7
-      creationTimestamp: null
+      name: mysql
       labels:
-        deployment: router-7
-        deploymentconfig: router
-        router: router
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: registry.example.com/rhscl/mysql-57-rhel7:latest
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: redhat
+          - name: MYSQL_USER
+            value: wp_user
+          - name: MYSQL_PASSWORD
+            value: wp_pass
+          - name: MYSQL_DATABASE
+            value: wp_db
+        ports:
+          - containerPort: 3306
+            name: mysql
 ----
 
-=== Deployment Configuration
+[source, bash]
+.*2 - oc 命令创建 ReplicationController*
+---- 
+$ oc create -f ./replication.yaml 
+replicationcontroller "mysql" created
+----
 
-OpenShift 扩展了软件部署及软件开发和部署生命周期的概念，增加了更多的支持。 在最简单的情况下，一个部署只是创建一个新的 Replication Controller，并让它启动 pod。 但是，实际生产中部署还需要提供从现有部署镜像转换生成新的镜像的能力，并且还增加了定义 hook 的能力，在创建 Replication Controller 之前就执行 hook 定义。
+[source, bash]
+.*3 - oc 命令查看 ReplicationController*
+---- 
+$ oc describe rc/mysql | grep "Pods Status"
+Pods Status:  1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+----
+
+[source, bash]
+.*4 - oc 命令查看 Pod*
+---- 
+$ oc get pods --selector=app=mysql --output=jsonpath={.items..metadata.name}
+mysql-tg8cq
+----
+
+=== DeploymentConfig
+
+Openshift 的 DeploymentConfig 是对 kubernetes Deployment 概念的扩展，同样 DeploymentConfig 构建于 ReplicationController 之上，但扩展支持软件开发和部署生命周期的概念，增加了更多的支持。 
+
+在最简单的情况下，一个 DeploymentConfig 只是创建一个新的 ReplicationController，ReplicationController 根据定义启动 pods。 但是，实际生产中部署还需要提供从现有部署镜像转换生成新的镜像的能力，并且还可能需要了定义 hook 的能力，在 ReplicationController 创建之前或之后执行 hook 定义。
 
 OpenShift DeploymentConfig 定义部署的描述如下:
 
-1. 定义 ReplicationController 的元素
-2. 能够创建一个部署的触发器
+1. ReplicationController 的定义
+2. 能够自动创建一个新部署的触发器
 3. 部署之间转换的策略
 4. hook 的生命周期
 
+==== 创建 DeploymentConfig 示例
+
 [source, yaml]
-.*DC 定义示例*
+.*1 - DeploymentConfig 配置文件 link:files/deployment.yaml[deployment.yaml]*
 ----
 apiVersion: v1
 kind: DeploymentConfig
 metadata:
-  creationTimestamp: null
-  generation: 1
-  labels:
-    router: router
-  name: router
+  name: mysql
 spec:
   replicas: 1
   selector:
-    router: router
-  strategy:
-    activeDeadlineSeconds: 21600
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 0
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
+    app: mysql
   template:
+    metadata:
+      name: mysql
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: registry.example.com/rhscl/mysql-57-rhel7:latest
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: redhat
+          - name: MYSQL_USER
+            value: wp_user
+          - name: MYSQL_PASSWORD
+            value: wp_pass
+          - name: MYSQL_DATABASE
+            value: wp_db
+        ports:
+          - containerPort: 3306
+            name: mysql
+strategy:
+  type: Rolling
+----
+
+[source, bash]
+.*2 - oc 命令创建 DeploymentConfig*
+----
+$ oc create -f ./deployment.yaml
+deploymentconfig "mysql" created
+----
+
+[source, yaml]
+.*3 - 查看 Deployment Pod*
+----
+$ oc describe po/mysql-1-deploy | tail -n 8
+Events:
+  Type    Reason                 Age   From                         Message
+  ----    ------                 ----  ----                         -------
+  Normal  Scheduled              4s    default-scheduler            Successfully assigned mysql-1-deploy to master.example.com
+  Normal  SuccessfulMountVolume  4s    kubelet, master.example.com  MountVolume.SetUp succeeded for volume "deployer-token-fxs2m"
+  Normal  Pulled                 2s    kubelet, master.example.com  Container image "registry.example.com/openshift3/ose-deployer:v3.9.30" already present on machine
+  Normal  Created                2s    kubelet, master.example.com  Created container
+  Normal  Started                2s    kubelet, master.example.com  Started container
+----
+
+[source, bash]
+.*4 - 查看 DeploymentConfig 创建的 ReplicationController*
+----
+$ oc describe rc mysql-1 | grep "Pods Status"
+Pods Status:  1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+----
+
+[source, bash]
+.*5 - oc 命令查看 Pod*
+----
+$ oc get pods --selector=app=mysql --output=jsonpath={.items..metadata.name}
+mysql-1-8wwr5
 ----
 

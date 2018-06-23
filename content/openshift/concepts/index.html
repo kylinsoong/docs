@@ -2222,6 +2222,8 @@
 <li><a href="#___3">&#x652F;&#x6301;&#x7684;&#x57FA;&#x7840;&#x67B6;&#x6784;</a></li>
 <li><a href="#___4">&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#x4E3B;&#x673A;</a></li>
 <li><a href="#___5">&#x4E3B;&#x63A7;&#x8282;&#x70B9;&#x4E3B;&#x673A;</a></li>
+<li><a href="#_replicationcontroller">ReplicationController</a></li>
+<li><a href="#_deploymentconfig">DeploymentConfig</a></li>
 </ul>
 </li>
 </ul>
@@ -2428,6 +2430,197 @@ OPENSHIFT Image Registry &#x5206;&#x4E3A;&#x4E24;&#x79CD;&#xFF1A;&#x5185;&#x90E8
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_replicationcontroller">ReplicationController</h3>
+<div class="paragraph">
+<p>Replication Controller &#x786E;&#x4FDD;&#x4EFB;&#x610F;&#x65F6;&#x523B;&#x59CB;&#x7EC8;&#x8FD0;&#x884C;&#x6307;&#x5B9A;&#x6570;&#x76EE;&#x7684; Pod &#x7684;&#x526F;&#x672C;&#xFF0C;&#x786E;&#x4FDD;&#x4E86; Pod &#x53EF;&#x7528;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x4E00;&#x4E2A; Pod &#x9000;&#x51FA;&#x6216;&#x88AB;&#x5220;&#x9664;&#xFF0C;&#x5219; Replication Controller &#x5C06;&#x6267;&#x884C;&#x5B9E;&#x4F8B;&#x5316;&#x64CD;&#x4F5C;&#xFF0C;&#x786E;&#x4FDD; Pod &#x7684;&#x526F;&#x672C;&#x6570;&#x91CF;&#x4E3A;&#x6307;&#x5B9A;&#x7684;&#x6570;&#x91CF;&#x3002;&#x540C;&#x6837;&#xFF0C;&#x5982;&#x679C;&#x8FD0;&#x884C;&#x4E2D;&#x7684; pod &#x8D85;&#x8FC7;&#x6240;&#x9700;&#x7684;&#x6570;&#x76EE;&#xFF0C;replication controller &#x4F1A;&#x6839;&#x636E;&#x9700;&#x8981;&#x5220;&#x9664;&#x76F8;&#x5E94;&#x7684;&#x6570;&#x91CF;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/" target="_blank">kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/</a></p>
+</div>
+<div class="paragraph">
+<p>&#x4E00;&#x4E2A; Replication Controller &#x7684;&#x914D;&#x7F6E;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x9700;&#x8981;&#x8FD0;&#x884C; Pod &#x7684;&#x526F;&#x672C;&#x6570;&#xFF0C;&#x5E76;&#x4E14;&#x8FD0;&#x884C;&#x65F6;&#x53EF;&#x968F;&#x65F6;&#x8C03;&#x6574;</p>
+</li>
+<li>
+<p>&#x7528;&#x4E8E;&#x521B;&#x5EFA;&#x590D;&#x5236;&#x4E00;&#x4E2A; pod &#x7684;&#x5B9A;&#x4E49;&#x58F0;&#x660E;</p>
+</li>
+<li>
+<p>&#x7528;&#x4E8E;&#x8BC6;&#x522B;&#x7BA1;&#x7406; Pod &#x7684;&#x4E00;&#x4E2A; selector</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="__replicationcontroller">&#x521B;&#x5EFA; ReplicationController &#x793A;&#x4F8B;</h4>
+<div class="paragraph">
+<p>&#x672C;&#x793A;&#x4F8B; ReplicationController &#x914D;&#x7F6E;&#x8FD0;&#x884C;&#x4E00;&#x4E2A; mysql Pod&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1 - ReplicationController &#x914D;&#x7F6E;&#x6587;&#x4EF6; <a href="files/replication.yaml">replication.yaml</a></strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> ReplicationController
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  name:</span> mysql
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  replicas:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">  selector:</span>
+<span class="hljs-attr">    app:</span> mysql
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    metadata:</span>
+<span class="hljs-attr">      name:</span> mysql
+<span class="hljs-attr">      labels:</span>
+<span class="hljs-attr">        app:</span> mysql
+<span class="hljs-attr">    spec:</span>
+<span class="hljs-attr">      containers:</span>
+<span class="hljs-attr">      - name:</span> mysql
+<span class="hljs-attr">        image:</span> registry.example.com/rhscl/mysql<span class="hljs-bullet">-57</span>-rhel7:latest
+<span class="hljs-attr">        env:</span>
+<span class="hljs-attr">          - name:</span> MYSQL_ROOT_PASSWORD
+<span class="hljs-attr">            value:</span> redhat
+<span class="hljs-attr">          - name:</span> MYSQL_USER
+<span class="hljs-attr">            value:</span> wp_user
+<span class="hljs-attr">          - name:</span> MYSQL_PASSWORD
+<span class="hljs-attr">            value:</span> wp_pass
+<span class="hljs-attr">          - name:</span> MYSQL_DATABASE
+<span class="hljs-attr">            value:</span> wp_db
+<span class="hljs-attr">        ports:</span>
+<span class="hljs-attr">          - containerPort:</span> <span class="hljs-number">3306</span>
+<span class="hljs-attr">            name:</span> mysql</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - oc &#x547D;&#x4EE4;&#x521B;&#x5EFA; ReplicationController</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc create <span class="hljs-_">-f</span> ./replication.yaml
+replicationcontroller <span class="hljs-string">&quot;mysql&quot;</span> created</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - oc &#x547D;&#x4EE4;&#x67E5;&#x770B; ReplicationController</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc describe rc/mysql | grep <span class="hljs-string">&quot;Pods Status&quot;</span>
+Pods Status:  1 Running / 0 Waiting / 0 Succeeded / 0 Failed</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - oc &#x547D;&#x4EE4;&#x67E5;&#x770B; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get pods --selector=app=mysql --output=jsonpath={.items..metadata.name}
+mysql-tg8cq</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploymentconfig">DeploymentConfig</h3>
+<div class="paragraph">
+<p>Openshift &#x7684; DeploymentConfig &#x662F;&#x5BF9; kubernetes Deployment &#x6982;&#x5FF5;&#x7684;&#x6269;&#x5C55;&#xFF0C;&#x540C;&#x6837; DeploymentConfig &#x6784;&#x5EFA;&#x4E8E; ReplicationController &#x4E4B;&#x4E0A;&#xFF0C;&#x4F46;&#x6269;&#x5C55;&#x652F;&#x6301;&#x8F6F;&#x4EF6;&#x5F00;&#x53D1;&#x548C;&#x90E8;&#x7F72;&#x751F;&#x547D;&#x5468;&#x671F;&#x7684;&#x6982;&#x5FF5;&#xFF0C;&#x589E;&#x52A0;&#x4E86;&#x66F4;&#x591A;&#x7684;&#x652F;&#x6301;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x6700;&#x7B80;&#x5355;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x4E00;&#x4E2A; DeploymentConfig &#x53EA;&#x662F;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0;&#x7684; ReplicationController&#xFF0C;ReplicationController &#x6839;&#x636E;&#x5B9A;&#x4E49;&#x542F;&#x52A8; pods&#x3002; &#x4F46;&#x662F;&#xFF0C;&#x5B9E;&#x9645;&#x751F;&#x4EA7;&#x4E2D;&#x90E8;&#x7F72;&#x8FD8;&#x9700;&#x8981;&#x63D0;&#x4F9B;&#x4ECE;&#x73B0;&#x6709;&#x90E8;&#x7F72;&#x955C;&#x50CF;&#x8F6C;&#x6362;&#x751F;&#x6210;&#x65B0;&#x7684;&#x955C;&#x50CF;&#x7684;&#x80FD;&#x529B;&#xFF0C;&#x5E76;&#x4E14;&#x8FD8;&#x53EF;&#x80FD;&#x9700;&#x8981;&#x4E86;&#x5B9A;&#x4E49; hook &#x7684;&#x80FD;&#x529B;&#xFF0C;&#x5728; ReplicationController &#x521B;&#x5EFA;&#x4E4B;&#x524D;&#x6216;&#x4E4B;&#x540E;&#x6267;&#x884C; hook &#x5B9A;&#x4E49;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>OpenShift DeploymentConfig &#x5B9A;&#x4E49;&#x90E8;&#x7F72;&#x7684;&#x63CF;&#x8FF0;&#x5982;&#x4E0B;:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ReplicationController &#x7684;&#x5B9A;&#x4E49;</p>
+</li>
+<li>
+<p>&#x80FD;&#x591F;&#x81EA;&#x52A8;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0;&#x90E8;&#x7F72;&#x7684;&#x89E6;&#x53D1;&#x5668;</p>
+</li>
+<li>
+<p>&#x90E8;&#x7F72;&#x4E4B;&#x95F4;&#x8F6C;&#x6362;&#x7684;&#x7B56;&#x7565;</p>
+</li>
+<li>
+<p>hook &#x7684;&#x751F;&#x547D;&#x5468;&#x671F;</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="__deploymentconfig">&#x521B;&#x5EFA; DeploymentConfig &#x793A;&#x4F8B;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - DeploymentConfig &#x914D;&#x7F6E;&#x6587;&#x4EF6; <a href="files/deployment.yaml">deployment.yaml</a></strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> DeploymentConfig
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  name:</span> mysql
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  replicas:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">  selector:</span>
+<span class="hljs-attr">    app:</span> mysql
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    metadata:</span>
+<span class="hljs-attr">      name:</span> mysql
+<span class="hljs-attr">      labels:</span>
+<span class="hljs-attr">        app:</span> mysql
+<span class="hljs-attr">    spec:</span>
+<span class="hljs-attr">      containers:</span>
+<span class="hljs-attr">      - name:</span> mysql
+<span class="hljs-attr">        image:</span> registry.example.com/rhscl/mysql<span class="hljs-bullet">-57</span>-rhel7:latest
+<span class="hljs-attr">        env:</span>
+<span class="hljs-attr">          - name:</span> MYSQL_ROOT_PASSWORD
+<span class="hljs-attr">            value:</span> redhat
+<span class="hljs-attr">          - name:</span> MYSQL_USER
+<span class="hljs-attr">            value:</span> wp_user
+<span class="hljs-attr">          - name:</span> MYSQL_PASSWORD
+<span class="hljs-attr">            value:</span> wp_pass
+<span class="hljs-attr">          - name:</span> MYSQL_DATABASE
+<span class="hljs-attr">            value:</span> wp_db
+<span class="hljs-attr">        ports:</span>
+<span class="hljs-attr">          - containerPort:</span> <span class="hljs-number">3306</span>
+<span class="hljs-attr">            name:</span> mysql
+<span class="hljs-attr">strategy:</span>
+<span class="hljs-attr">  type:</span> Rolling</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - oc &#x547D;&#x4EE4;&#x521B;&#x5EFA; DeploymentConfig</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc create <span class="hljs-_">-f</span> ./deployment.yaml
+deploymentconfig <span class="hljs-string">&quot;mysql&quot;</span> created</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x67E5;&#x770B; Deployment Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">$ oc describe po/mysql<span class="hljs-bullet">-1</span>-deploy | tail -n <span class="hljs-number">8</span>
+<span class="hljs-attr">Events:</span>
+  Type    Reason                 Age   From                         Message
+<span class="hljs-bullet">  -</span>---    ------                 ----  ----                         -------
+  Normal  Scheduled              <span class="hljs-number">4</span>s    default-scheduler            Successfully assigned mysql<span class="hljs-bullet">-1</span>-deploy to master.example.com
+  Normal  SuccessfulMountVolume  <span class="hljs-number">4</span>s    kubelet, master.example.com  MountVolume.SetUp succeeded for volume <span class="hljs-string">&quot;deployer-token-fxs2m&quot;</span>
+  Normal  Pulled                 <span class="hljs-number">2</span>s    kubelet, master.example.com  Container image <span class="hljs-string">&quot;registry.example.com/openshift3/ose-deployer:v3.9.30&quot;</span> already present on machine
+  Normal  Created                <span class="hljs-number">2</span>s    kubelet, master.example.com  Created container
+  Normal  Started                <span class="hljs-number">2</span>s    kubelet, master.example.com  Started container</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x67E5;&#x770B; DeploymentConfig &#x521B;&#x5EFA;&#x7684; ReplicationController</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc describe rc mysql-1 | grep <span class="hljs-string">&quot;Pods Status&quot;</span>
+Pods Status:  1 Running / 0 Waiting / 0 Succeeded / 0 Failed</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - oc &#x547D;&#x4EE4;&#x67E5;&#x770B; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get pods --selector=app=mysql --output=jsonpath={.items..metadata.name}
+mysql-1-8wwr5</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
                                 
@@ -2472,7 +2665,7 @@ OPENSHIFT Image Registry &#x5206;&#x4E3A;&#x4E24;&#x79CD;&#xFF1A;&#x5185;&#x90E8
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"概念","level":"1.4.1","depth":2,"next":{"title":"安装","level":"1.4.2","depth":2,"path":"openshift/install/README.adoc","ref":"openshift/install/README.adoc","articles":[{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]}]},"previous":{"title":"OPENSHIFT","level":"1.4","depth":1,"path":"openshift/openshift.adoc","ref":"openshift/openshift.adoc","articles":[{"title":"概念","level":"1.4.1","depth":2,"path":"openshift/concepts/README.adoc","ref":"openshift/concepts/README.adoc","articles":[]},{"title":"安装","level":"1.4.2","depth":2,"path":"openshift/install/README.adoc","ref":"openshift/install/README.adoc","articles":[{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]}]},{"title":"示例","level":"1.4.3","depth":2,"path":"openshift/samples/samples.adoc","ref":"openshift/samples/samples.adoc","articles":[{"title":"deploy image to docker registry","level":"1.4.3.1","depth":3,"path":"openshift/samples/deploy-image-to-docker-registry.adoc","ref":"openshift/samples/deploy-image-to-docker-registry.adoc","articles":[]},{"title":"elasticsearch and spark","level":"1.4.3.2","depth":3,"path":"openshift/samples/elastic-spark.adoc","ref":"openshift/samples/elastic-spark.adoc","articles":[]},{"title":"部署 mysql 数据库","level":"1.4.3.3","depth":3,"path":"openshift/samples/deploy-mysql-db.adoc","ref":"openshift/samples/deploy-mysql-db.adoc","articles":[]},{"title":"通过 s2i 构建容器化的应用","level":"1.4.3.4","depth":3,"path":"openshift/samples/new-app-s2i.adoc","ref":"openshift/samples/new-app-s2i.adoc","articles":[]},{"title":"wordpress","level":"1.4.3.5","depth":3,"path":"openshift/samples/wordpress/wp.adoc","ref":"openshift/samples/wordpress/wp.adoc","articles":[]},{"title":"CICD Pipeline","level":"1.4.3.6","depth":3,"path":"openshift/samples/cicd.adoc","ref":"openshift/samples/cicd.adoc","articles":[]},{"title":"parksmap","level":"1.4.3.7","depth":3,"path":"openshift/samples/parksmap/os-parksmap.adoc","ref":"openshift/samples/parksmap/os-parksmap.adoc","articles":[{"title":"1. Installing","level":"1.4.3.7.1","depth":4,"path":"openshift/samples/parksmap/os-parksmap-1.adoc","ref":"openshift/samples/parksmap/os-parksmap-1.adoc","articles":[]},{"title":"2. Exploring","level":"1.4.3.7.2","depth":4,"path":"openshift/samples/parksmap/os-parksmap-2.adoc","ref":"openshift/samples/parksmap/os-parksmap-2.adoc","articles":[]},{"title":"3. Architecture Overview","level":"1.4.3.7.3","depth":4,"path":"openshift/samples/parksmap/os-parksmap-3.adoc","ref":"openshift/samples/parksmap/os-parksmap-3.adoc","articles":[]},{"title":"4. Deploying Docker Image","level":"1.4.3.7.4","depth":4,"path":"openshift/samples/parksmap/os-parksmap-4.adoc","ref":"openshift/samples/parksmap/os-parksmap-4.adoc","articles":[]},{"title":"5. Scaling","level":"1.4.3.7.5","depth":4,"path":"openshift/samples/parksmap/os-parksmap-5.adoc","ref":"openshift/samples/parksmap/os-parksmap-5.adoc","articles":[]},{"title":"6. Creating Routes","level":"1.4.3.7.6","depth":4,"path":"openshift/samples/parksmap/os-parksmap-6.adoc","ref":"openshift/samples/parksmap/os-parksmap-6.adoc","articles":[]},{"title":"7. Role-Based Access Control","level":"1.4.3.7.7","depth":4,"path":"openshift/samples/parksmap/os-parksmap-7.adoc","ref":"openshift/samples/parksmap/os-parksmap-7.adoc","articles":[]},{"title":"8. Deploying Python","level":"1.4.3.7.8","depth":4,"path":"openshift/samples/parksmap/os-parksmap-8.adoc","ref":"openshift/samples/parksmap/os-parksmap-8.adoc","articles":[]},{"title":"9. Adding MongoDB","level":"1.4.3.7.9","depth":4,"path":"openshift/samples/parksmap/os-parksmap-9.adoc","ref":"openshift/samples/parksmap/os-parksmap-9.adoc","articles":[]},{"title":"10. Application Health","level":"1.4.3.7.10","depth":4,"path":"openshift/samples/parksmap/os-parksmap-10.adoc","ref":"openshift/samples/parksmap/os-parksmap-10.adoc","articles":[]},{"title":"11. CI/CD","level":"1.4.3.7.11","depth":4,"path":"openshift/samples/parksmap/os-parksmap-11.adoc","ref":"openshift/samples/parksmap/os-parksmap-11.adoc","articles":[]},{"title":"12. Using Templates","level":"1.4.3.7.12","depth":4,"path":"openshift/samples/parksmap/os-parksmap-12.adoc","ref":"openshift/samples/parksmap/os-parksmap-12.adoc","articles":[]}]},{"title":"Teiid Data Service","level":"1.4.3.8","depth":3,"path":"openshift/samples/vdb-data-svc.adoc","ref":"openshift/samples/vdb-data-svc.adoc","articles":[]}]},{"title":"DevOps","level":"1.4.4","depth":2,"path":"openshift/devops.adoc","ref":"openshift/devops.adoc","articles":[]},{"title":"PlaceHolder","level":"1.4.5","depth":2,"path":"openshift/100/README.adoc","ref":"openshift/100/README.adoc","articles":[{"title":"Create an App from a Docker image","level":"1.4.5.1","depth":3,"path":"openshift/100/001.adoc","ref":"openshift/100/001.adoc","articles":[]},{"title":"Create an App using Docker build","level":"1.4.5.2","depth":3,"path":"openshift/100/002.adoc","ref":"openshift/100/002.adoc","articles":[]},{"title":"Using Web Console","level":"1.4.5.3","depth":3,"path":"openshift/100/003.adoc","ref":"openshift/100/003.adoc","articles":[]},{"title":"Create an App using JBoss EAP builder image","level":"1.4.5.4","depth":3,"path":"openshift/100/004.adoc","ref":"openshift/100/004.adoc","articles":[]},{"title":"Using Templates","level":"1.4.5.5","depth":3,"path":"openshift/100/005.adoc","ref":"openshift/100/005.adoc","articles":[]},{"title":"Scale up/down and Idle the app","level":"1.4.5.6","depth":3,"path":"openshift/100/006.adoc","ref":"openshift/100/006.adoc","articles":[]},{"title":"Binary Deployment","level":"1.4.5.7","depth":3,"path":"openshift/100/007.adoc","ref":"openshift/100/007.adoc","articles":[]},{"title":"Using SSL","level":"1.4.5.8","depth":3,"path":"openshift/100/008.adoc","ref":"openshift/100/008.adoc","articles":[]},{"title":"Horizontal Auto Scaling","level":"1.4.5.9","depth":3,"path":"openshift/100/009.adoc","ref":"openshift/100/009.adoc","articles":[]},{"title":"Blue-Green Deployments","level":"1.4.5.10","depth":3,"path":"openshift/100/010.adoc","ref":"openshift/100/010.adoc","articles":[]},{"title":"SCM Web Hooks","level":"1.4.5.11","depth":3,"path":"openshift/100/011.adoc","ref":"openshift/100/011.adoc","articles":[]},{"title":"Rollback Applications","level":"1.4.5.12","depth":3,"path":"openshift/100/012.adoc","ref":"openshift/100/012.adoc","articles":[]},{"title":"Code Promotion across Environments","level":"1.4.5.13","depth":3,"path":"openshift/100/013.adoc","ref":"openshift/100/013.adoc","articles":[]},{"title":"JBoss Developer Studio","level":"1.4.5.14","depth":3,"path":"openshift/100/014.adoc","ref":"openshift/100/014.adoc","articles":[]},{"title":"Deploy a SpringBoot Application","level":"1.4.5.15","depth":3,"path":"openshift/100/015.adoc","ref":"openshift/100/015.adoc","articles":[]},{"title":"DaemonSets","level":"1.4.5.16","depth":3,"path":"openshift/100/016.adoc","ref":"openshift/100/016.adoc","articles":[]},{"title":"StatefulSets","level":"1.4.5.17","depth":3,"path":"openshift/100/017.adoc","ref":"openshift/100/017.adoc","articles":[]},{"title":"Jobs","level":"1.4.5.18","depth":3,"path":"openshift/100/018.adoc","ref":"openshift/100/018.adoc","articles":[]},{"title":"ConfigMap","level":"1.4.5.19","depth":3,"path":"openshift/100/019.adoc","ref":"openshift/100/019.adoc","articles":[]},{"title":"Secrets","level":"1.4.5.20","depth":3,"path":"openshift/100/020.adoc","ref":"openshift/100/020.adoc","articles":[]},{"title":"PersistentVolumes","level":"1.4.5.21","depth":3,"path":"openshift/100/021.adoc","ref":"openshift/100/021.adoc","articles":[]},{"title":"PersistentVolumeClaims","level":"1.4.5.22","depth":3,"path":"openshift/100/022.adoc","ref":"openshift/100/022.adoc","articles":[]},{"title":"Migrating Applications","level":"1.4.5.23","depth":3,"path":"openshift/100/023.adoc","ref":"openshift/100/023.adoc","articles":[]},{"title":"Template Creation","level":"1.4.5.24","depth":3,"path":"openshift/100/024.adoc","ref":"openshift/100/024.adoc","articles":[]},{"title":"Deployment Strategies","level":"1.4.5.25","depth":3,"path":"openshift/100/025.adoc","ref":"openshift/100/025.adoc","articles":[]},{"title":"Port Forwarding","level":"1.4.5.26","depth":3,"path":"openshift/100/026.adoc","ref":"openshift/100/026.adoc","articles":[]},{"title":"Exposing non HTTP Services","level":"1.4.5.27","depth":3,"path":"openshift/100/027.adoc","ref":"openshift/100/027.adoc","articles":[]},{"title":"Persistent Volume Access Modes","level":"1.4.5.28","depth":3,"path":"openshift/100/028.adoc","ref":"openshift/100/028.adoc","articles":[]},{"title":"Pipelines Using Jenkins","level":"1.4.5.29","depth":3,"path":"openshift/100/029.adoc","ref":"openshift/100/029.adoc","articles":[]},{"title":"Binary Input Builds","level":"1.4.5.30","depth":3,"path":"openshift/100/030.adoc","ref":"openshift/100/030.adoc","articles":[]},{"title":"Docker Builds","level":"1.4.5.31","depth":3,"path":"openshift/100/031.adoc","ref":"openshift/100/031.adoc","articles":[]},{"title":"Writing Your Own S2I builders","level":"1.4.5.32","depth":3,"path":"openshift/100/032.adoc","ref":"openshift/100/032.adoc","articles":[]},{"title":"开发","level":"1.4.5.33","depth":3,"path":"openshift/100/development.adoc","ref":"openshift/100/development.adoc","articles":[{"title":"Git 服务器配置","level":"1.4.5.33.1","depth":4,"path":"openshift/100/040.adoc","ref":"openshift/100/040.adoc","articles":[]}]}]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/concepts/README.adoc","mtime":"2018-06-15T01:21:12.747Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-17T11:07:47.747Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"概念","level":"1.4.1","depth":2,"next":{"title":"安装","level":"1.4.2","depth":2,"path":"openshift/install/README.adoc","ref":"openshift/install/README.adoc","articles":[{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]}]},"previous":{"title":"OPENSHIFT","level":"1.4","depth":1,"path":"openshift/openshift.adoc","ref":"openshift/openshift.adoc","articles":[{"title":"概念","level":"1.4.1","depth":2,"path":"openshift/concepts/README.adoc","ref":"openshift/concepts/README.adoc","articles":[]},{"title":"安装","level":"1.4.2","depth":2,"path":"openshift/install/README.adoc","ref":"openshift/install/README.adoc","articles":[{"title":"本地 yum 源配置","level":"1.4.2.1","depth":3,"path":"openshift/install/yum.adoc","ref":"openshift/install/yum.adoc","articles":[]},{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]}]},{"title":"示例","level":"1.4.3","depth":2,"path":"openshift/samples/samples.adoc","ref":"openshift/samples/samples.adoc","articles":[{"title":"deploy image to docker registry","level":"1.4.3.1","depth":3,"path":"openshift/samples/deploy-image-to-docker-registry.adoc","ref":"openshift/samples/deploy-image-to-docker-registry.adoc","articles":[]},{"title":"elasticsearch and spark","level":"1.4.3.2","depth":3,"path":"openshift/samples/elastic-spark.adoc","ref":"openshift/samples/elastic-spark.adoc","articles":[]},{"title":"部署 mysql 数据库","level":"1.4.3.3","depth":3,"path":"openshift/samples/deploy-mysql-db.adoc","ref":"openshift/samples/deploy-mysql-db.adoc","articles":[]},{"title":"通过 s2i 构建容器化的应用","level":"1.4.3.4","depth":3,"path":"openshift/samples/new-app-s2i.adoc","ref":"openshift/samples/new-app-s2i.adoc","articles":[]},{"title":"wordpress","level":"1.4.3.5","depth":3,"path":"openshift/samples/wordpress/wp.adoc","ref":"openshift/samples/wordpress/wp.adoc","articles":[]},{"title":"CICD Pipeline","level":"1.4.3.6","depth":3,"path":"openshift/samples/cicd.adoc","ref":"openshift/samples/cicd.adoc","articles":[]},{"title":"parksmap","level":"1.4.3.7","depth":3,"path":"openshift/samples/parksmap/os-parksmap.adoc","ref":"openshift/samples/parksmap/os-parksmap.adoc","articles":[{"title":"1. Installing","level":"1.4.3.7.1","depth":4,"path":"openshift/samples/parksmap/os-parksmap-1.adoc","ref":"openshift/samples/parksmap/os-parksmap-1.adoc","articles":[]},{"title":"2. Exploring","level":"1.4.3.7.2","depth":4,"path":"openshift/samples/parksmap/os-parksmap-2.adoc","ref":"openshift/samples/parksmap/os-parksmap-2.adoc","articles":[]},{"title":"3. Architecture Overview","level":"1.4.3.7.3","depth":4,"path":"openshift/samples/parksmap/os-parksmap-3.adoc","ref":"openshift/samples/parksmap/os-parksmap-3.adoc","articles":[]},{"title":"4. Deploying Docker Image","level":"1.4.3.7.4","depth":4,"path":"openshift/samples/parksmap/os-parksmap-4.adoc","ref":"openshift/samples/parksmap/os-parksmap-4.adoc","articles":[]},{"title":"5. Scaling","level":"1.4.3.7.5","depth":4,"path":"openshift/samples/parksmap/os-parksmap-5.adoc","ref":"openshift/samples/parksmap/os-parksmap-5.adoc","articles":[]},{"title":"6. Creating Routes","level":"1.4.3.7.6","depth":4,"path":"openshift/samples/parksmap/os-parksmap-6.adoc","ref":"openshift/samples/parksmap/os-parksmap-6.adoc","articles":[]},{"title":"7. Role-Based Access Control","level":"1.4.3.7.7","depth":4,"path":"openshift/samples/parksmap/os-parksmap-7.adoc","ref":"openshift/samples/parksmap/os-parksmap-7.adoc","articles":[]},{"title":"8. Deploying Python","level":"1.4.3.7.8","depth":4,"path":"openshift/samples/parksmap/os-parksmap-8.adoc","ref":"openshift/samples/parksmap/os-parksmap-8.adoc","articles":[]},{"title":"9. Adding MongoDB","level":"1.4.3.7.9","depth":4,"path":"openshift/samples/parksmap/os-parksmap-9.adoc","ref":"openshift/samples/parksmap/os-parksmap-9.adoc","articles":[]},{"title":"10. Application Health","level":"1.4.3.7.10","depth":4,"path":"openshift/samples/parksmap/os-parksmap-10.adoc","ref":"openshift/samples/parksmap/os-parksmap-10.adoc","articles":[]},{"title":"11. CI/CD","level":"1.4.3.7.11","depth":4,"path":"openshift/samples/parksmap/os-parksmap-11.adoc","ref":"openshift/samples/parksmap/os-parksmap-11.adoc","articles":[]},{"title":"12. Using Templates","level":"1.4.3.7.12","depth":4,"path":"openshift/samples/parksmap/os-parksmap-12.adoc","ref":"openshift/samples/parksmap/os-parksmap-12.adoc","articles":[]}]},{"title":"Teiid Data Service","level":"1.4.3.8","depth":3,"path":"openshift/samples/vdb-data-svc.adoc","ref":"openshift/samples/vdb-data-svc.adoc","articles":[]}]},{"title":"DevOps","level":"1.4.4","depth":2,"path":"openshift/devops.adoc","ref":"openshift/devops.adoc","articles":[]},{"title":"PlaceHolder","level":"1.4.5","depth":2,"path":"openshift/100/README.adoc","ref":"openshift/100/README.adoc","articles":[{"title":"Create an App from a Docker image","level":"1.4.5.1","depth":3,"path":"openshift/100/001.adoc","ref":"openshift/100/001.adoc","articles":[]},{"title":"Create an App using Docker build","level":"1.4.5.2","depth":3,"path":"openshift/100/002.adoc","ref":"openshift/100/002.adoc","articles":[]},{"title":"Using Web Console","level":"1.4.5.3","depth":3,"path":"openshift/100/003.adoc","ref":"openshift/100/003.adoc","articles":[]},{"title":"Create an App using JBoss EAP builder image","level":"1.4.5.4","depth":3,"path":"openshift/100/004.adoc","ref":"openshift/100/004.adoc","articles":[]},{"title":"Using Templates","level":"1.4.5.5","depth":3,"path":"openshift/100/005.adoc","ref":"openshift/100/005.adoc","articles":[]},{"title":"Scale up/down and Idle the app","level":"1.4.5.6","depth":3,"path":"openshift/100/006.adoc","ref":"openshift/100/006.adoc","articles":[]},{"title":"Binary Deployment","level":"1.4.5.7","depth":3,"path":"openshift/100/007.adoc","ref":"openshift/100/007.adoc","articles":[]},{"title":"Using SSL","level":"1.4.5.8","depth":3,"path":"openshift/100/008.adoc","ref":"openshift/100/008.adoc","articles":[]},{"title":"Horizontal Auto Scaling","level":"1.4.5.9","depth":3,"path":"openshift/100/009.adoc","ref":"openshift/100/009.adoc","articles":[]},{"title":"Blue-Green Deployments","level":"1.4.5.10","depth":3,"path":"openshift/100/010.adoc","ref":"openshift/100/010.adoc","articles":[]},{"title":"SCM Web Hooks","level":"1.4.5.11","depth":3,"path":"openshift/100/011.adoc","ref":"openshift/100/011.adoc","articles":[]},{"title":"Rollback Applications","level":"1.4.5.12","depth":3,"path":"openshift/100/012.adoc","ref":"openshift/100/012.adoc","articles":[]},{"title":"Code Promotion across Environments","level":"1.4.5.13","depth":3,"path":"openshift/100/013.adoc","ref":"openshift/100/013.adoc","articles":[]},{"title":"JBoss Developer Studio","level":"1.4.5.14","depth":3,"path":"openshift/100/014.adoc","ref":"openshift/100/014.adoc","articles":[]},{"title":"Deploy a SpringBoot Application","level":"1.4.5.15","depth":3,"path":"openshift/100/015.adoc","ref":"openshift/100/015.adoc","articles":[]},{"title":"DaemonSets","level":"1.4.5.16","depth":3,"path":"openshift/100/016.adoc","ref":"openshift/100/016.adoc","articles":[]},{"title":"StatefulSets","level":"1.4.5.17","depth":3,"path":"openshift/100/017.adoc","ref":"openshift/100/017.adoc","articles":[]},{"title":"Jobs","level":"1.4.5.18","depth":3,"path":"openshift/100/018.adoc","ref":"openshift/100/018.adoc","articles":[]},{"title":"ConfigMap","level":"1.4.5.19","depth":3,"path":"openshift/100/019.adoc","ref":"openshift/100/019.adoc","articles":[]},{"title":"Secrets","level":"1.4.5.20","depth":3,"path":"openshift/100/020.adoc","ref":"openshift/100/020.adoc","articles":[]},{"title":"PersistentVolumes","level":"1.4.5.21","depth":3,"path":"openshift/100/021.adoc","ref":"openshift/100/021.adoc","articles":[]},{"title":"PersistentVolumeClaims","level":"1.4.5.22","depth":3,"path":"openshift/100/022.adoc","ref":"openshift/100/022.adoc","articles":[]},{"title":"Migrating Applications","level":"1.4.5.23","depth":3,"path":"openshift/100/023.adoc","ref":"openshift/100/023.adoc","articles":[]},{"title":"Template Creation","level":"1.4.5.24","depth":3,"path":"openshift/100/024.adoc","ref":"openshift/100/024.adoc","articles":[]},{"title":"Deployment Strategies","level":"1.4.5.25","depth":3,"path":"openshift/100/025.adoc","ref":"openshift/100/025.adoc","articles":[]},{"title":"Port Forwarding","level":"1.4.5.26","depth":3,"path":"openshift/100/026.adoc","ref":"openshift/100/026.adoc","articles":[]},{"title":"Exposing non HTTP Services","level":"1.4.5.27","depth":3,"path":"openshift/100/027.adoc","ref":"openshift/100/027.adoc","articles":[]},{"title":"Persistent Volume Access Modes","level":"1.4.5.28","depth":3,"path":"openshift/100/028.adoc","ref":"openshift/100/028.adoc","articles":[]},{"title":"Pipelines Using Jenkins","level":"1.4.5.29","depth":3,"path":"openshift/100/029.adoc","ref":"openshift/100/029.adoc","articles":[]},{"title":"Binary Input Builds","level":"1.4.5.30","depth":3,"path":"openshift/100/030.adoc","ref":"openshift/100/030.adoc","articles":[]},{"title":"Docker Builds","level":"1.4.5.31","depth":3,"path":"openshift/100/031.adoc","ref":"openshift/100/031.adoc","articles":[]},{"title":"Writing Your Own S2I builders","level":"1.4.5.32","depth":3,"path":"openshift/100/032.adoc","ref":"openshift/100/032.adoc","articles":[]},{"title":"开发","level":"1.4.5.33","depth":3,"path":"openshift/100/development.adoc","ref":"openshift/100/development.adoc","articles":[{"title":"Git 服务器配置","level":"1.4.5.33.1","depth":4,"path":"openshift/100/040.adoc","ref":"openshift/100/040.adoc","articles":[]}]}]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/concepts/README.adoc","mtime":"2018-06-23T15:49:27.083Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-23T16:17:10.982Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

@@ -2210,28 +2210,29 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__">&#x914D;&#x7F6E;&#x7528;&#x6237;&#x53CA;&#x5B50;&#x57DF;&#x540D;</a></li>
+<li><a href="#__">&#x914D;&#x7F6E;&#x7528;&#x6237;</a></li>
+<li><a href="#_openshift">OpenShift &#x91CD;&#x542F;</a></li>
 <li><a href="#_gitlab">Gitlab &#x5B89;&#x88C5;&#x4E0E;&#x914D;&#x7F6E;</a></li>
+<li><a href="#_imagestream">ImageStream &#x914D;&#x7F6E;</a>
+<ul class="sectlevel2">
+<li><a href="#_php_is">php IS &#x914D;&#x7F6E;&#x793A;&#x4F8B;</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div class="sect1">
-<h2 id="__">&#x914D;&#x7F6E;&#x7528;&#x6237;&#x53CA;&#x5B50;&#x57DF;&#x540D;</h2>
+<h2 id="__">&#x914D;&#x7F6E;&#x7528;&#x6237;</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="title"><strong>&#x5B89;&#x88C5;Httpd-tools&#xFF0C;&#x5E76;&#x521B;&#x5EFA;&#x7528;&#x6237;&#x53CA;&#x5BC6;&#x7801;</strong></div>
+<div class="title"><strong>&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x5458;&#x7528;&#x6237;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">yum -y install httpd-tools
-htpasswd -cb /etc/origin/master/htpasswd redhat welcome1
-htpasswd -b /etc/origin/master/htpasswd admin admin
-oadm policy add-cluster-role-to-user admin admin</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x4FEE;&#x6539;&#x914D;&#x7F6E;&#x6587;&#x4EF6;/etc/origin/master/master-config.yaml&#x5185;&#x7684;&#x7528;&#x6237;&#x9A8C;&#x8BC1;&#x914D;&#x7F6E;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">cp /etc/origin/master/master-config.yaml /etc/origin/master/master-config.yaml.bak.$(date <span class="hljs-string">&quot;+%Y%m%d%H%M%S&quot;</span>);
-sed -i <span class="hljs-string">&apos;s/.*subdomain.*/  subdomain: apps.example.com/&apos;</span> /etc/origin/master/master-config.yaml ;</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">htpasswd -b /etc/origin/master/htpasswd admin admin
+oc login -u system:admin
+oc adm policy add-role-to-user system:image-builder admin
+oc adm policy add-role-to-user admin admin -n openshift
+oc adm policy add-cluster-role-to-user admin admin
+oc adm policy add-cluster-role-to-user cluster-admin admin</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2241,16 +2242,36 @@ sed -i <span class="hljs-string">&apos;s/.*subdomain.*/  subdomain: apps.example
 <div class="title">Note</div>
 </td>
 <td class="content">
-&#x672C;&#x90E8;&#x5206;&#x5728;&#x5B9E;&#x9A8C;&#x73AF;&#x5883;&#x53EF;&#x4EE5;&#x5FFD;&#x7565;
+&#x5982;&#x679C; htpasswd &#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x9700;&#x8981;&#x5B89;&#x88C5; <code>httpd-tools</code> &#x5305;&#x3002;
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x91CD;&#x542F;OpenShift&#xFF0C;&#x4F7F;&#x914D;&#x7F6E;&#x4FEE;&#x6539;&#x751F;&#x6548;</strong></div>
+<div class="title"><strong>&#x521B;&#x5EFA;&#x666E;&#x901A;&#x7528;&#x6237;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers
-systemctl restart atomic-openshift-node</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">htpasswd -b /etc/origin/master/htpasswd user01 redhat
+htpasswd -b /etc/origin/master/htpasswd user02 redhat
+oc login -u system:admin
+oc adm policy add-role-to-user self-provisioner user01
+oc adm policy add-role-to-user self-provisioner user02</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openshift">OpenShift &#x91CD;&#x542F;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>&#x91CD;&#x542F; OpenShift Master &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers atomic-openshift-node</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x91CD;&#x542F; OpenShift Node &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl restart atomic-openshift-node</code></pre>
 </div>
 </div>
 </div>
@@ -2267,7 +2288,7 @@ systemctl restart atomic-openshift-node</code></pre>
 <div class="listingblock">
 <div class="title"><strong>&#x4FEE;&#x6539;/etc/gitlab/gitlab.rb&#x5C06;external_url&#x8BBE;&#x7F6E;&#x6210;&#x5982;&#x4E0B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">external_url <span class="hljs-string">&apos;http://gitlab.example.com&apos;</span></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">external_url <span class="hljs-string">&apos;http://git.example.com&apos;</span></code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2277,7 +2298,7 @@ systemctl restart atomic-openshift-node</code></pre>
 <div class="title">Note</div>
 </td>
 <td class="content">
-&#x8BB0;&#x5F97;&#x4FEE;&#x6539;&#x6240;&#x6709;&#x5BA2;&#x6237;&#x7AEF;&#x7684;/etc/hosts&#x8868;&#xFF0C;&#x52A0;&#x5165; gitlab.example.com &#x7684;&#x5730;&#x5740;&#x3002;
+&#x8BB0;&#x5F97;&#x4FEE;&#x6539;&#x6240;&#x6709;&#x5BA2;&#x6237;&#x7AEF;&#x7684;/etc/hosts&#x8868;&#xFF0C;&#x52A0;&#x5165; git.example.com &#x7684;&#x5730;&#x5740;&#x3002;
 </td>
 </tr>
 </table>
@@ -2296,10 +2317,82 @@ systemctl restart atomic-openshift-node</code></pre>
 <div class="title">Note</div>
 </td>
 <td class="content">
-&#x542F;&#x52A8;&#x5B8C;&#x6210;&#x540E;&#x901A;&#x8FC7;&#x6D4F;&#x89C8;&#x5668;&#x8BBF;&#x95EE; <a href="http://gitlab.example.com&#xFF0C;&#x7B2C;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x63D0;&#x793A;&#x521B;&#x5EFA;&#x5BC6;&#x7801;&#xFF0C;&#x5BC6;&#x7801;&#x5FC5;&#x987B;&#x662F;6&#x4F4D;&#x767B;&#x5F55;&#x540D;&#x662F;root&#x3002;" class="bare" target="_blank">http://gitlab.example.com&#xFF0C;&#x7B2C;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x63D0;&#x793A;&#x521B;&#x5EFA;&#x5BC6;&#x7801;&#xFF0C;&#x5BC6;&#x7801;&#x5FC5;&#x987B;&#x662F;6&#x4F4D;&#x767B;&#x5F55;&#x540D;&#x662F;root&#x3002;</a>
+&#x542F;&#x52A8;&#x5B8C;&#x6210;&#x540E;&#x901A;&#x8FC7;&#x6D4F;&#x89C8;&#x5668;&#x8BBF;&#x95EE; <a href="http://git.example.com&#xFF0C;&#x7B2C;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x63D0;&#x793A;&#x521B;&#x5EFA;&#x5BC6;&#x7801;&#xFF0C;&#x5BC6;&#x7801;&#x5FC5;&#x987B;&#x662F;8&#x4F4D;&#x767B;&#x5F55;&#x540D;&#x662F;root&#x3002;" class="bare" target="_blank">http://git.example.com&#xFF0C;&#x7B2C;&#x4E00;&#x6B21;&#x8BBF;&#x95EE;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x63D0;&#x793A;&#x521B;&#x5EFA;&#x5BC6;&#x7801;&#xFF0C;&#x5BC6;&#x7801;&#x5FC5;&#x987B;&#x662F;8&#x4F4D;&#x767B;&#x5F55;&#x540D;&#x662F;root&#x3002;</a>
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_imagestream">ImageStream &#x914D;&#x7F6E;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_php_is">php IS &#x914D;&#x7F6E;&#x793A;&#x4F8B;</h3>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x786E;&#x4FDD;&#x5916;&#x90E8;&#x955C;&#x50CF;&#x4ED3;&#x5E93;&#x4E2D;&#x7684;&#x955C;&#x50CF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># docker images | grep php
+registry.example.com/rhscl/php-70-rhel7                        latest              49a451388c11        3 weeks ago         579 MB
+registry.example.com/rhscl/php-56-rhel7                        latest              520f0e9ceee7        2 months ago        581 MB</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x7F16;&#x8F91; IS</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">oc edit is php -n openshift</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x7F16;&#x8F91;&#x53EF;&#x5220;&#x9664;&#x591A;&#x4F59;&#x7684; Tag.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x91CD;&#x65B0;&#x5BFC;&#x5165; Image</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">oc import-image php -n openshift --all</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x8FD9;&#x4E00;&#x6B65;&#x65F6;&#x53EF;&#x9009;&#xFF0C;Image &#x5BFC;&#x5165;&#x6210;&#x529F;&#x540E;&#xFF0C;IS &#x63CF;&#x8FF0;&#x4E2D;&#x4F1A;&#x7531;&#x7C7B;&#x4F3C; <code>registry.example.com/rhscl/php-70-rhel7@sha256:f1816ef319ef2561686c7a9cfcc4f6fd4e876a0924b2ebac9b0c7edc7e41a89a</code> &#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x8FD9;&#x8868;&#x660E;&#x5185;&#x90E8;&#x955C;&#x50CF;&#x4ED3;&#x5E93;&#x5DF2;&#x7ECF;&#x4ECE;&#x5916;&#x90E8;&#x4ED3;&#x5E93;&#x4E2D;&#x62C9;&#x53D6;&#x5230;&#x4E86;&#x4E1C;&#x897F;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc login https://master.example.com:8443 -u user01 -p redhat
+
+$ oc new-project <span class="hljs-built_in">test</span>01
+
+$ oc new-app php:7.0~http://git.example.com/open-source/php-helloworld.git --name=php-helloworld
+$ oc expose svc/php-helloworld
+
+$ oc get routes
+NAME             HOST/PORT                                PATH      SERVICES         PORT       TERMINATION   WILDCARD
+php-helloworld   php-helloworld-test01.apps.example.com             php-helloworld   8080-tcp                 None
+
+$ curl http://php-helloworld-test01.apps.example.com
+Hello, World! php version is 7.0.27
+
+$ oc delete project <span class="hljs-built_in">test</span>01</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2345,7 +2438,7 @@ systemctl restart atomic-openshift-node</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"后续安装","level":"1.4.2.5","depth":3,"next":{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]},"previous":{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/post-install.adoc","mtime":"2018-06-17T08:50:48.175Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-17T11:07:47.747Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"后续安装","level":"1.4.2.5","depth":3,"next":{"title":"常见问题","level":"1.4.2.6","depth":3,"path":"openshift/install/qa.adoc","ref":"openshift/install/qa.adoc","articles":[]},"previous":{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/post-install.adoc","mtime":"2018-06-19T04:59:34.212Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-06-23T16:17:10.982Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
