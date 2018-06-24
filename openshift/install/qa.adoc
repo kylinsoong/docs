@@ -4,13 +4,22 @@
 
 == nfs is an unsupported type 
 
-.*问题*
+=== 安装环境
+
+* OpenShift 3.9
+* RHEL 7.5
+
+=== 问题描述
+
+Ansible 执行 playbooks prerequisites.yml 检测出错： 
+
 ---- 
 TASK [Run variable sanity checks] ************************************************************************************************************************************************************
 fatal: [master.example.com]: FAILED! => {"failed": true, "msg": "last_checked_host: master.example.com, last_checked_var: openshift_hosted_registry_storage_kind;nfs is an unsupported type for openshift_hosted_registry_storage_kind. openshift_enable_unsupported_configurations=True mustbe specified to continue with this configuration."}
 ----
 
-.*原因及解决办法*
+=== 原因及解决办法
+
 ----
 The use of NFS for the core OpenShift Components was never recommended, as NFS (and the NFS Protocol) does not 
 provide the proper consistency needed for the applications that make up the OpenShift infrastructure.
@@ -24,7 +33,15 @@ openshift_enable_unsupported_configurations=True
 
 == Package atomic-openshift-clients-3.9.27 not available
 
-.*问题*
+=== 安装环境
+
+* OpenShift 3.9
+* RHEL 7.5
+
+=== 问题描述
+
+Ansible 执行 playbooks deploy_cluster.yml 过程报错：
+
 ----
 TASK [openshift_cli : Install clients] *******************************************************************************************************************************************************
 FAILED - RETRYING: Install clients (2 retries left).
@@ -32,17 +49,32 @@ FAILED - RETRYING: Install clients (1 retries left).
 fatal: [master.example.com]: FAILED! => {"attempts": 2, "changed": false, "failed": true, "msg": "No package matching 'atomic-openshift-clients-3.9.27' found available, installed or updated", "rc": 126, "results": ["No package matching 'atomic-openshift-clients-3.9.27' found available, installed or updated"]}
 ----
 
-*原因及解决办法:*
+=== 问题原因
 
-在本地 yum 源仓库执行 find 确认包是否存在，如果存在，那是因为依赖冲突导致，两种解决办法：
+atomic-openshift-clients 包在 Master 节点由于一些依赖冲突导致找不到。
+
+=== 解决办法
 
 * 在同步 yum 源时确保包为唯一，即 `reposync -lmn` 同步 yum 源，`-n` 仅同步最新的包
-* 将相应的包 `atomic-openshift-clients-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 及其依赖 `atomic-openshift-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 拷贝到 master, 本地安装
+* 将相应的包 `atomic-openshift-clients-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 及其依赖 `atomic-openshift-3.9.27-1.git.0.964617d.el7.x86_64.rpm` 拷贝到 master, 本地安装。
+
+=== 分析步骤
+
+1. 在本地 yum 源仓库执行 find 确认包是否存在（`find -name atomic-openshift-clients*`），如果存在执行第二步
+2. 在 Master 节点执行 `yum search`，如果包不存在，则说明依赖冲突导致某些包别屏蔽
 
 == NFS mount registry-volume failed
 
+=== 安装环境
+
+* OpenShift 3.9
+* RHEL 7.5
+
+=== 问题描述
+
+Ansible 执行 playbooks deploy_cluster.yml 过程报错：
+
 [source, json]
-.*问题: docker-registry Pod Start Failed due to NFS Server mount registry-volume failed*
 ----
 TASK [openshift_hosted : Poll for OpenShift pod deployment success] **************************************************************************************************************************
 FAILED - RETRYING: Poll for OpenShift pod deployment success (60 retries left).
@@ -138,8 +170,23 @@ Failure summary:
      Message:  All items completed
 ----
 
+=== 问题原因
+
+* docker-registry Mount NFS 服务器不成功，docker-registry Pod Start Failed due to NFS Server mount registry-volume failed
+* mount.nfs: Protocol not supported
+
+=== 解决办法
+
+[source, bash]
+.*解决方法-1：Skip hosted_manage_registry, 设置 openshift_hosted_manage_registry 为 false，这样会跳过安装 docker-registry*
+----
+openshift_hosted_manage_registry=false
+----
+
+=== 分析步骤
+
 [source, text]
-.*问题分析-1: 查看 docker-registry Pod*
+.*1 - 安装过程查看 docker-registry 相关的 Pod*
 ----
 # oc get pods | grep docker-registry
 docker-registry-3-deploy   1/1       Running             0          9m
@@ -147,7 +194,7 @@ docker-registry-3-g7l84    0/1       ContainerCreating   0          9m
 ----
 
 [source, text]
-.*问题分析-2: 查看 docker-registry-3-g7l84 Pod*
+.*2 - docker-registry-deploy Pod 启动成功后查看docker-registry Pod 启动情况*
 ----
 # oc describe po/docker-registry-3-g7l84
 ...
@@ -159,5 +206,198 @@ mount.nfs: Protocol not supported
 ...
 ----
 
-*问题原因：docker-registry Mount NFS 服务器不成功*
+== api server not ready
 
+=== 安装环境
+
+* OpenShift 3.9
+* RHEL 7.5
+
+=== 问题描述
+
+Ansible 执行 playbooks deploy_cluster.yml 过程报错：
+
+[source, json]
+----
+TASK [openshift_service_catalog : wait for api server to be ready] ***************************************************************************************************************************
+fatal: [master.example.com]: FAILED! => {"attempts": 1, "changed": false, "connection": "close", "content": "[+]ping ok\n[+]poststarthook/generic-apiserver-start-informers ok\n[+]poststarthook/start-service-catalog-apiserver-informers ok\n[-]etcd failed: reason withheld\nhealthz check failed\n", "content_length": "180", "content_type": "text/plain; charset=utf-8", "date": "Sat, 23 Jun 2018 23:29:40 GMT", "failed": true, "msg": "Status code was not [200]: HTTP Error 500: Internal Server Error", "redirected": false, "status": 500, "url": "https://apiserver.kube-service-catalog.svc/healthz", "x_content_type_options": "nosniff"}
+	to retry, use: --limit @/usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.retry
+
+PLAY RECAP ***********************************************************************************************************************************************************************************
+localhost                  : ok=13   changed=0    unreachable=0    failed=0   
+master.example.com         : ok=641  changed=130  unreachable=0    failed=1   
+nfs.example.com            : ok=29   changed=1    unreachable=0    failed=0   
+node1.example.com          : ok=120  changed=13   unreachable=0    failed=0   
+node2.example.com          : ok=120  changed=13   unreachable=0    failed=0   
+
+
+INSTALLER STATUS *****************************************************************************************************************************************************************************
+Initialization             : Complete (0:00:32)
+Health Check               : Complete (0:00:04)
+etcd Install               : Complete (0:00:30)
+NFS Install                : Complete (0:00:38)
+Master Install             : Complete (0:01:34)
+Master Additional Install  : Complete (0:00:28)
+Node Install               : Complete (0:01:37)
+Hosted Install             : Complete (0:00:31)
+Metrics Install            : Complete (0:01:42)
+Service Catalog Install    : In Progress (0:00:48)
+	This phase can be restarted by running: playbooks/openshift-service-catalog/config.yml
+
+
+
+Failure summary:
+
+
+  1. Hosts:    master.example.com
+     Play:     Service Catalog
+     Task:     wait for api server to be ready
+     Message:  Status code was not [200]: HTTP Error 500: Internal Server Error
+----
+
+=== 问题原因
+
+缺少 docker 镜像导致 Service Catalog Install 安装失败。
+
+=== 解决方法
+
+下载安装缺少的包。
+
+=== 分析步骤
+
+[source, txt]
+.*1 - 查看 journalctl 日志*
+----
+# journalctl > out
+# cat out | grep err
+...
+Jun 24 13:47:31 master.example.com dockerd-current[35823]: time="2018-06-24T13:47:31.039877646+08:00" level=error msg="Handler for GET /v1.26/images/registry.example.com/openshift3/metrics-hawkular-metrics:v3.9.30/json returned error: No such image: registry.example.com/openshift3/metrics-hawkular-metrics:v3.9.30"
+...
+----
+
+[source, txt]
+.*2 - 本地 docker registry 仓库查看是否有 metrics-hawkular-metrics*
+----
+# docker images |grep metrics-hawkular-metrics
+----
+
+== Too many requests
+
+=== 安装环境
+
+* OpenShift 3.9
+* RHEL 7.5
+
+=== 问题描述
+
+Ansible 执行 playbooks deploy_cluster.yml 过程报错：
+
+[source, json]
+----
+TASK [openshift_service_catalog : wait for api server to be ready] ***************************************************************************************************************************
+FAILED - RETRYING: wait for api server to be ready (60 retries left).
+FAILED - RETRYING: wait for api server to be ready (59 retries left).
+FAILED - RETRYING: wait for api server to be ready (58 retries left).
+FAILED - RETRYING: wait for api server to be ready (57 retries left).
+FAILED - RETRYING: wait for api server to be ready (56 retries left).
+FAILED - RETRYING: wait for api server to be ready (55 retries left).
+FAILED - RETRYING: wait for api server to be ready (54 retries left).
+FAILED - RETRYING: wait for api server to be ready (53 retries left).
+FAILED - RETRYING: wait for api server to be ready (52 retries left).
+FAILED - RETRYING: wait for api server to be ready (51 retries left).
+FAILED - RETRYING: wait for api server to be ready (50 retries left).
+FAILED - RETRYING: wait for api server to be ready (49 retries left).
+FAILED - RETRYING: wait for api server to be ready (48 retries left).
+FAILED - RETRYING: wait for api server to be ready (47 retries left).
+FAILED - RETRYING: wait for api server to be ready (46 retries left).
+FAILED - RETRYING: wait for api server to be ready (45 retries left).
+FAILED - RETRYING: wait for api server to be ready (44 retries left).
+FAILED - RETRYING: wait for api server to be ready (43 retries left).
+FAILED - RETRYING: wait for api server to be ready (42 retries left).
+FAILED - RETRYING: wait for api server to be ready (41 retries left).
+FAILED - RETRYING: wait for api server to be ready (40 retries left).
+FAILED - RETRYING: wait for api server to be ready (39 retries left).
+FAILED - RETRYING: wait for api server to be ready (38 retries left).
+FAILED - RETRYING: wait for api server to be ready (37 retries left).
+FAILED - RETRYING: wait for api server to be ready (36 retries left).
+FAILED - RETRYING: wait for api server to be ready (35 retries left).
+FAILED - RETRYING: wait for api server to be ready (34 retries left).
+FAILED - RETRYING: wait for api server to be ready (33 retries left).
+FAILED - RETRYING: wait for api server to be ready (32 retries left).
+FAILED - RETRYING: wait for api server to be ready (31 retries left).
+FAILED - RETRYING: wait for api server to be ready (30 retries left).
+FAILED - RETRYING: wait for api server to be ready (29 retries left).
+FAILED - RETRYING: wait for api server to be ready (28 retries left).
+FAILED - RETRYING: wait for api server to be ready (27 retries left).
+FAILED - RETRYING: wait for api server to be ready (26 retries left).
+FAILED - RETRYING: wait for api server to be ready (25 retries left).
+FAILED - RETRYING: wait for api server to be ready (24 retries left).
+FAILED - RETRYING: wait for api server to be ready (23 retries left).
+FAILED - RETRYING: wait for api server to be ready (22 retries left).
+FAILED - RETRYING: wait for api server to be ready (21 retries left).
+FAILED - RETRYING: wait for api server to be ready (20 retries left).
+FAILED - RETRYING: wait for api server to be ready (19 retries left).
+FAILED - RETRYING: wait for api server to be ready (18 retries left).
+FAILED - RETRYING: wait for api server to be ready (17 retries left).
+FAILED - RETRYING: wait for api server to be ready (16 retries left).
+FAILED - RETRYING: wait for api server to be ready (15 retries left).
+FAILED - RETRYING: wait for api server to be ready (14 retries left).
+FAILED - RETRYING: wait for api server to be ready (13 retries left).
+FAILED - RETRYING: wait for api server to be ready (12 retries left).
+FAILED - RETRYING: wait for api server to be ready (11 retries left).
+FAILED - RETRYING: wait for api server to be ready (10 retries left).
+FAILED - RETRYING: wait for api server to be ready (9 retries left).
+FAILED - RETRYING: wait for api server to be ready (8 retries left).
+FAILED - RETRYING: wait for api server to be ready (7 retries left).
+FAILED - RETRYING: wait for api server to be ready (6 retries left).
+FAILED - RETRYING: wait for api server to be ready (5 retries left).
+FAILED - RETRYING: wait for api server to be ready (4 retries left).
+FAILED - RETRYING: wait for api server to be ready (3 retries left).
+FAILED - RETRYING: wait for api server to be ready (2 retries left).
+FAILED - RETRYING: wait for api server to be ready (1 retries left).
+fatal: [master.example.com]: FAILED! => {"attempts": 60, "changed": false, "connection": "close", "content": "Too many requests, please try again later.\n", "content_length": "43", "content_type": "text/plain; charset=utf-8", "date": "Sun, 24 Jun 2018 06:28:47 GMT", "failed": true, "msg": "Status code was not [200]: HTTP Error 429: Too Many Requests", "redirected": false, "retry_after": "1", "status": 429, "url": "https://apiserver.kube-service-catalog.svc/healthz", "x_content_type_options": "nosniff"}
+	to retry, use: --limit @/usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.retry
+
+PLAY RECAP ***********************************************************************************************************************************************************************************
+localhost                  : ok=13   changed=0    unreachable=0    failed=0   
+master.example.com         : ok=653  changed=121  unreachable=0    failed=1   
+nfs.example.com            : ok=29   changed=1    unreachable=0    failed=0   
+node1.example.com          : ok=120  changed=13   unreachable=0    failed=0   
+node2.example.com          : ok=120  changed=13   unreachable=0    failed=0   
+
+
+INSTALLER STATUS *****************************************************************************************************************************************************************************
+Initialization             : Complete (0:00:57)
+Health Check               : Complete (0:00:07)
+etcd Install               : Complete (0:00:48)
+NFS Install                : Complete (0:01:03)
+Master Install             : Complete (0:02:50)
+Master Additional Install  : Complete (0:00:35)
+Node Install               : Complete (0:01:54)
+Hosted Install             : Complete (0:11:11)
+Metrics Install            : Complete (0:01:53)
+Service Catalog Install    : In Progress (0:11:10)
+	This phase can be restarted by running: playbooks/openshift-service-catalog/config.yml
+
+
+
+Failure summary:
+
+
+  1. Hosts:    master.example.com
+     Play:     Service Catalog
+     Task:     wait for api server to be ready
+     Message:  Status code was not [200]: HTTP Error 429: Too Many Requests
+----
+
+=== 问题原因
+
+//
+
+=== 解决方法
+
+//
+
+=== 分析步骤
+
+//
