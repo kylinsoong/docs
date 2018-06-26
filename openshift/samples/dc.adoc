@@ -1,0 +1,96 @@
+= DeploymentConfig
+
+[source, bash]
+.*1 - 创建工程*
+----
+$ oc new-project test
+----
+
+[source, bash]
+.*2 - 创建 dc.yaml，内容如下*
+----
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    app: mysql
+  template:
+    metadata:
+      name: mysql
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: registry.example.com/rhscl/mysql-57-rhel7:latest
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: redhat
+          - name: MYSQL_USER
+            value: test_user
+          - name: MYSQL_PASSWORD
+            value: test_pass
+          - name: MYSQL_DATABASE
+            value: test_db
+        ports:
+          - containerPort: 3306
+            name: mysql
+strategy:
+  type: Rolling
+----
+
+[source, bash]
+.*3 - 创建 DeploymentConfig*
+----
+$ oc create -f dc.yaml
+deploymentconfig "mysql" created
+----
+
+[source, bash]
+.*4 - 查看所有*
+----
+$ oc get all
+NAME                      REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/mysql   1          1         1         config
+
+NAME               READY     STATUS    RESTARTS   AGE
+po/mysql-1-kzpbp   1/1       Running   0          52s
+
+NAME         DESIRED   CURRENT   READY     AGE
+rc/mysql-1   1         1         1         54s
+----
+
+[source, bash]
+.*5 - 服务测试*
+----
+$ oc port-forward mysql-1-kzpbp 13306:3306
+Forwarding from 127.0.0.1:13306 -> 3306
+
+$ mysql -h127.0.0.1 -utest_user -ptest_pass -P13306 test_db
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 2
+Server version: 5.7.21 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [test_db]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| test_db            |
++--------------------+
+2 rows in set (0.04 sec)
+----
+
+[source, bash]
+.*6 - 删除工程*
+----
+$ oc new-project test
+----
+

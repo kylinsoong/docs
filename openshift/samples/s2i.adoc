@@ -1,0 +1,105 @@
+= S2I 
+
+[source, bash]
+.*1 - 创建工程*
+----
+$ oc new-project test
+----
+
+[source, bash]
+.*2 - 创建应用*
+----
+$ oc new-app php:7.0~http://git.example.com/open-source/php-helloworld.git --name=php-helloworld
+--> Found image 49a4513 (4 weeks old) in image stream "openshift/php" under tag "7.0" for "php:7.0"
+
+    Apache 2.4 with PHP 7.0 
+    ----------------------- 
+    PHP 7.0 available as container is a base platform for building and running various PHP 7.0 applications and frameworks. PHP is an HTML-embedded scripting language. PHP attempts to make it easy for developers to write dynamically generated web pages. PHP also offers built-in database integration for several commercial and non-commercial database management systems, so writing a database-enabled webpage with PHP is fairly simple. The most common use of PHP coding is probably as a replacement for CGI scripts.
+
+    Tags: builder, php, php70, rh-php70
+
+    * A source build using source code from http://git.example.com/open-source/php-helloworld.git will be created
+      * The resulting image will be pushed to image stream "php-helloworld:latest"
+      * Use 'start-build' to trigger a new build
+    * This image will be deployed in deployment config "php-helloworld"
+    * Ports 8080/tcp, 8443/tcp will be load balanced by service "php-helloworld"
+      * Other containers can access this service through the hostname "php-helloworld"
+
+--> Creating resources ...
+    imagestream "php-helloworld" created
+    buildconfig "php-helloworld" created
+    deploymentconfig "php-helloworld" created
+    service "php-helloworld" created
+--> Success
+    Build scheduled, use 'oc logs -f bc/php-helloworld' to track its progress.
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose svc/php-helloworld' 
+    Run 'oc status' to view your app.
+----
+
+[source, bash]
+.*3 - 创建路由*
+----
+$ oc expose svc/php-helloworld
+route "php-helloworld" exposed
+----
+
+[source, bash]
+.*4 - 查看所有*
+----
+$ oc get all
+NAME                               REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/php-helloworld   1          1         1         config,image(php-helloworld:latest)
+
+NAME                          TYPE      FROM      LATEST
+buildconfigs/php-helloworld   Source    Git       1
+
+NAME                      TYPE      FROM          STATUS     STARTED         DURATION
+builds/php-helloworld-1   Source    Git@e898342   Complete   7 minutes ago   6m59s
+
+NAME                          DOCKER REPO                                            TAGS      UPDATED
+imagestreams/php-helloworld   docker-registry.default.svc:5000/test/php-helloworld   latest    23 seconds ago
+
+NAME                    HOST/PORT                              PATH      SERVICES         PORT       TERMINATION   WILDCARD
+routes/php-helloworld   php-helloworld-test.apps.example.com             php-helloworld   8080-tcp                 None
+
+NAME                         READY     STATUS              RESTARTS   AGE
+po/php-helloworld-1-build    0/1       Completed           0          7m
+po/php-helloworld-1-deploy   1/1       Running             0          23s
+po/php-helloworld-1-tr2zl    0/1       ContainerCreating   0          19s
+
+NAME                  DESIRED   CURRENT   READY     AGE
+rc/php-helloworld-1   1         1         0         23s
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+svc/php-helloworld   ClusterIP   172.30.184.89   <none>        8080/TCP,8443/TCP   7m
+----
+
+[source, bash]
+.*5 - 查看构建日志*
+----
+$ oc logs po/php-helloworld-1-deploy
+--> Scaling php-helloworld-1 to 1
+[kylin@ksoong intel]$ oc logs po/php-helloworld-1-build
+---> Installing application source...
+=> sourcing 20-copy-config.sh ...
+---> 04:35:12     Processing additional arbitrary httpd configuration provided by s2i ...
+=> sourcing 00-documentroot.conf ...
+=> sourcing 50-mpm-tuning.conf ...
+=> sourcing 40-ssl-certs.sh ...
+
+Pushing image docker-registry.default.svc:5000/test/php-helloworld:latest ...
+Pushed 2/6 layers, 36% complete
+Pushed 3/6 layers, 77% complete
+Pushed 4/6 layers, 83% complete
+Pushed 5/6 layers, 83% complete
+Pushed 6/6 layers, 100% complete
+Push successful
+----
+
+[source, bash]
+.*6 - 服务测试*
+----
+$ curl http://php-helloworld-test.apps.example.com/
+Hello, World! php version is 7.0.27
+----
