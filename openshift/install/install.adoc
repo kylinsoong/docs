@@ -8,9 +8,36 @@ OpenShift Container Platform  安装。
 
 == Ansible hosts 文件编辑
 
-登录Master节点执行如下命令，编辑 `/etc/ansible/hosts`：
+登录 Master 节点执行如下命令，编辑 `/etc/ansible/hosts`。
+
+
+=== Ansible Inventory 变量
 
 [source, bash]
+.*1 - 配置认证提供者*
+----
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+----
+
+[source, bash]
+.*2 - Web Console 控制*
+----
+openshift_web_console_install=true
+openshift_web_console_prefix=registry.example.com/openshift3/ose-
+openshift_web_console_version=v3.9.30
+----
+
+[source, bash]
+.*3 - 3.9 及以后的版本安装推荐使用 firewalld，如下参数开启 firewalld*
+----
+os_firewall_use_firewalld=True
+----
+
+
+=== 示例
+
+[source, bash]
+.*示例 Inventory 文件*
 ----
 cat > /etc/ansible/hosts <<EOF
 [OSEv3:children]

@@ -206,7 +206,7 @@ mount.nfs: Protocol not supported
 ...
 ----
 
-== api server not ready
+== apiserver Pod can not resolve the etc hostname
 
 === 安装环境
 
@@ -218,6 +218,7 @@ mount.nfs: Protocol not supported
 Ansible 执行 playbooks deploy_cluster.yml 过程报错：
 
 [source, json]
+.*错误类型一*
 ----
 TASK [openshift_service_catalog : wait for api server to be ready] ***************************************************************************************************************************
 fatal: [master.example.com]: FAILED! => {"attempts": 1, "changed": false, "connection": "close", "content": "[+]ping ok\n[+]poststarthook/generic-apiserver-start-informers ok\n[+]poststarthook/start-service-catalog-apiserver-informers ok\n[-]etcd failed: reason withheld\nhealthz check failed\n", "content_length": "180", "content_type": "text/plain; charset=utf-8", "date": "Sat, 23 Jun 2018 23:29:40 GMT", "failed": true, "msg": "Status code was not [200]: HTTP Error 500: Internal Server Error", "redirected": false, "status": 500, "url": "https://apiserver.kube-service-catalog.svc/healthz", "x_content_type_options": "nosniff"}
@@ -255,106 +256,10 @@ Failure summary:
      Message:  Status code was not [200]: HTTP Error 500: Internal Server Error
 ----
 
-=== 问题原因
-
-缺少 docker 镜像导致 Service Catalog Install 安装失败。
-
-=== 解决方法
-
-下载安装缺少的包。
-
-=== 分析步骤
-
-[source, txt]
-.*1 - 查看 journalctl 日志*
-----
-# journalctl > out
-# cat out | grep err
-...
-Jun 24 13:47:31 master.example.com dockerd-current[35823]: time="2018-06-24T13:47:31.039877646+08:00" level=error msg="Handler for GET /v1.26/images/registry.example.com/openshift3/metrics-hawkular-metrics:v3.9.30/json returned error: No such image: registry.example.com/openshift3/metrics-hawkular-metrics:v3.9.30"
-...
-----
-
-[source, txt]
-.*2 - 本地 docker registry 仓库查看是否有 metrics-hawkular-metrics*
-----
-# docker images |grep metrics-hawkular-metrics
-----
-
-== Too many requests
-
-=== 安装环境
-
-* OpenShift 3.9
-* RHEL 7.5
-
-=== 问题描述
-
-Ansible 执行 playbooks deploy_cluster.yml 过程报错：
-
 [source, json]
+.*问题描述二*
 ----
 TASK [openshift_service_catalog : wait for api server to be ready] ***************************************************************************************************************************
-FAILED - RETRYING: wait for api server to be ready (60 retries left).
-FAILED - RETRYING: wait for api server to be ready (59 retries left).
-FAILED - RETRYING: wait for api server to be ready (58 retries left).
-FAILED - RETRYING: wait for api server to be ready (57 retries left).
-FAILED - RETRYING: wait for api server to be ready (56 retries left).
-FAILED - RETRYING: wait for api server to be ready (55 retries left).
-FAILED - RETRYING: wait for api server to be ready (54 retries left).
-FAILED - RETRYING: wait for api server to be ready (53 retries left).
-FAILED - RETRYING: wait for api server to be ready (52 retries left).
-FAILED - RETRYING: wait for api server to be ready (51 retries left).
-FAILED - RETRYING: wait for api server to be ready (50 retries left).
-FAILED - RETRYING: wait for api server to be ready (49 retries left).
-FAILED - RETRYING: wait for api server to be ready (48 retries left).
-FAILED - RETRYING: wait for api server to be ready (47 retries left).
-FAILED - RETRYING: wait for api server to be ready (46 retries left).
-FAILED - RETRYING: wait for api server to be ready (45 retries left).
-FAILED - RETRYING: wait for api server to be ready (44 retries left).
-FAILED - RETRYING: wait for api server to be ready (43 retries left).
-FAILED - RETRYING: wait for api server to be ready (42 retries left).
-FAILED - RETRYING: wait for api server to be ready (41 retries left).
-FAILED - RETRYING: wait for api server to be ready (40 retries left).
-FAILED - RETRYING: wait for api server to be ready (39 retries left).
-FAILED - RETRYING: wait for api server to be ready (38 retries left).
-FAILED - RETRYING: wait for api server to be ready (37 retries left).
-FAILED - RETRYING: wait for api server to be ready (36 retries left).
-FAILED - RETRYING: wait for api server to be ready (35 retries left).
-FAILED - RETRYING: wait for api server to be ready (34 retries left).
-FAILED - RETRYING: wait for api server to be ready (33 retries left).
-FAILED - RETRYING: wait for api server to be ready (32 retries left).
-FAILED - RETRYING: wait for api server to be ready (31 retries left).
-FAILED - RETRYING: wait for api server to be ready (30 retries left).
-FAILED - RETRYING: wait for api server to be ready (29 retries left).
-FAILED - RETRYING: wait for api server to be ready (28 retries left).
-FAILED - RETRYING: wait for api server to be ready (27 retries left).
-FAILED - RETRYING: wait for api server to be ready (26 retries left).
-FAILED - RETRYING: wait for api server to be ready (25 retries left).
-FAILED - RETRYING: wait for api server to be ready (24 retries left).
-FAILED - RETRYING: wait for api server to be ready (23 retries left).
-FAILED - RETRYING: wait for api server to be ready (22 retries left).
-FAILED - RETRYING: wait for api server to be ready (21 retries left).
-FAILED - RETRYING: wait for api server to be ready (20 retries left).
-FAILED - RETRYING: wait for api server to be ready (19 retries left).
-FAILED - RETRYING: wait for api server to be ready (18 retries left).
-FAILED - RETRYING: wait for api server to be ready (17 retries left).
-FAILED - RETRYING: wait for api server to be ready (16 retries left).
-FAILED - RETRYING: wait for api server to be ready (15 retries left).
-FAILED - RETRYING: wait for api server to be ready (14 retries left).
-FAILED - RETRYING: wait for api server to be ready (13 retries left).
-FAILED - RETRYING: wait for api server to be ready (12 retries left).
-FAILED - RETRYING: wait for api server to be ready (11 retries left).
-FAILED - RETRYING: wait for api server to be ready (10 retries left).
-FAILED - RETRYING: wait for api server to be ready (9 retries left).
-FAILED - RETRYING: wait for api server to be ready (8 retries left).
-FAILED - RETRYING: wait for api server to be ready (7 retries left).
-FAILED - RETRYING: wait for api server to be ready (6 retries left).
-FAILED - RETRYING: wait for api server to be ready (5 retries left).
-FAILED - RETRYING: wait for api server to be ready (4 retries left).
-FAILED - RETRYING: wait for api server to be ready (3 retries left).
-FAILED - RETRYING: wait for api server to be ready (2 retries left).
-FAILED - RETRYING: wait for api server to be ready (1 retries left).
 fatal: [master.example.com]: FAILED! => {"attempts": 60, "changed": false, "connection": "close", "content": "Too many requests, please try again later.\n", "content_length": "43", "content_type": "text/plain; charset=utf-8", "date": "Sun, 24 Jun 2018 06:28:47 GMT", "failed": true, "msg": "Status code was not [200]: HTTP Error 429: Too Many Requests", "redirected": false, "retry_after": "1", "status": 429, "url": "https://apiserver.kube-service-catalog.svc/healthz", "x_content_type_options": "nosniff"}
 	to retry, use: --limit @/usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.retry
 
@@ -392,12 +297,197 @@ Failure summary:
 
 === 问题原因
 
-//
+apiserver POD 中 DNS 无法解析导致 https://apiserver.kube-service-catalog.svc/healthz 调运失败。
 
 === 解决方法
 
-//
+* 在 apiserver POD 中添加静态域名解析，例如 `oc rsh apiserver-nkt5k && echo "192.168.122.101 master.example.com" >> /etc/hosts`
 
 === 分析步骤
 
-//
+==== 验证 apiserver 中是否可进行 DNS 解析
+
+[source, text]
+.*1 - 测试服务是否可达*
+----
+# curl -k https://apiserver.kube-service-catalog.svc/healthz
+[+]ping ok
+[+]poststarthook/generic-apiserver-start-informers ok
+[+]poststarthook/start-service-catalog-apiserver-informers ok
+[-]etcd failed: reason withheld
+healthz check failed
+----
+
+[source, text]
+.*2 - oc edit ds/apiserver 查看 etcd 服务地址*
+----
+    spec:
+      containers:
+      - args:
+        - apiserver
+        - --storage-type
+        - etcd
+        - --secure-port
+        - "6443"
+        - --etcd-servers
+        - https://master.example.com:2379
+        - --etcd-cafile
+        - /etc/origin/master/master.etcd-ca.crt
+        - --etcd-certfile
+        - /etc/origin/master/master.etcd-client.crt
+        - --etcd-keyfile
+        - /etc/origin/master/master.etcd-client.key
+----
+
+[source, text]
+.*3 - 查看服务是否可达*
+----
+# etcdctl -C https://master.example.com:2379 --ca-file /etc/origin/master/master.etcd-ca.crt --cert-file /etc/origin/master/master.etcd-client.crt  --key-file /etc/origin/master/master.etcd-client.key ls
+
+# oc rsh apiserver-56p7q
+# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key -X GET https://master.example.com:2379/version
+curl: (6) Could not resolve host: master.example.com; Unknown error
+----
+
+[source, text]
+.*4 - IP 地址替换域名后继续第三步操作*
+----
+# etcdctl -C https://192.168.56.66:2379 --ca-file /etc/origin/master/master.etcd-ca.crt --cert-file /etc/origin/master/master.etcd-client.crt  --key-file /etc/origin/master/master.etcd-client.key ls
+
+# oc rsh apiserver-56p7q
+# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key -X GET https://192.168.56.66:2379/version
+{"etcdserver":"3.2.18","etcdcluster":"3.2.0"}
+----
+
+==== 查看 DNS 相关配置
+
+[source, text]
+.*1 - 查看 ifcfg 中 DNS 配置*
+----
+# for i in master node1 node2 ; do ssh $i.example.com 'hostname ; cat /etc/sysconfig/network-scripts/ifcfg-eth0 | grep DNS; echo' ; done
+master.example.com
+DNS1=192.168.122.101
+
+node1.example.com
+DNS1=192.168.122.101
+
+node2.example.com
+DNS1=192.168.122.101
+----
+
+[source, text]
+.*2 - 查看 resolv.conf 配置文件*
+----
+# for i in master node1 node2 ; do ssh $i.example.com 'hostname ; cat /etc/resolv.conf ; echo' ; done
+master.example.com
+# nameserver updated by /etc/NetworkManager/dispatcher.d/99-origin-dns.sh
+# Generated by NetworkManager
+search cluster.local example.com
+nameserver 192.168.122.101
+
+node1.example.com
+# nameserver updated by /etc/NetworkManager/dispatcher.d/99-origin-dns.sh
+# Generated by NetworkManager
+search cluster.local example.com
+nameserver 192.168.122.105
+
+node2.example.com
+# nameserver updated by /etc/NetworkManager/dispatcher.d/99-origin-dns.sh
+# Generated by NetworkManager
+search cluster.local example.com
+nameserver 192.168.122.106
+----
+
+[source, text]
+.*3 - ping wildcard with subdomain*
+----
+# for i in master node1 node2 ; do ssh $i.example.com 'hostname ; ping xxx.apps.example.com -c1 ; echo' ; done
+master.example.com
+PING xxx.apps.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.022 ms
+
+--- xxx.apps.example.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.022/0.022/0.022/0.000 ms
+
+node1.example.com
+PING xxx.apps.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.095 ms
+
+--- xxx.apps.example.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.095/0.095/0.095/0.000 ms
+
+node2.example.com
+PING xxx.apps.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.072 ms
+
+--- xxx.apps.example.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.072/0.072/0.072/0.000 ms
+----
+
+[source, text]
+.*4 - dig 分析域名解析*
+----
+# dig master.example.com @192.168.122.101
+# dig node1.example.com @192.168.122.101
+# dig node2.example.com @192.168.122.101
+
+# for i in master node1 node2 ; do ssh $i.example.com 'dig test.apps.example.com ; echo' ; done
+
+; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7 <<>> test.apps.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 29734
+;; flags: qr aa rd ra ad; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;test.apps.example.com.		IN	A
+
+;; ANSWER SECTION:
+test.apps.example.com.	0	IN	A	192.168.122.101
+
+;; Query time: 0 msec
+;; SERVER: 192.168.122.101#53(192.168.122.101)
+;; WHEN: Mon Jul 02 22:01:47 CST 2018
+;; MSG SIZE  rcvd: 55
+
+
+
+; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7 <<>> test.apps.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27006
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;test.apps.example.com.		IN	A
+
+;; ANSWER SECTION:
+test.apps.example.com.	0	IN	A	192.168.122.101
+
+;; Query time: 0 msec
+;; SERVER: 192.168.122.105#53(192.168.122.105)
+;; WHEN: Mon Jul 02 22:01:47 CST 2018
+;; MSG SIZE  rcvd: 55
+
+
+
+; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7 <<>> test.apps.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15779
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;test.apps.example.com.		IN	A
+
+;; ANSWER SECTION:
+test.apps.example.com.	0	IN	A	192.168.122.101
+
+;; Query time: 0 msec
+;; SERVER: 192.168.122.106#53(192.168.122.106)
+;; WHEN: Mon Jul 02 22:01:47 CST 2018
+;; MSG SIZE  rcvd: 55
+----
