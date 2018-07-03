@@ -2249,8 +2249,13 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</a></li>
-<li><a href="#__">&#x5B89;&#x88C5;</a></li>
+<li><a href="#_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</a>
+<ul class="sectlevel2">
+<li><a href="#_ansible_inventory">Ansible Inventory &#x53D8;&#x91CF;</a></li>
+<li><a href="#__">&#x793A;&#x4F8B;</a></li>
+</ul>
+</li>
+<li><a href="#___2">&#x5B89;&#x88C5;</a></li>
 </ul>
 </div>
 </div>
@@ -2258,9 +2263,35 @@
 <h2 id="_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>&#x767B;&#x5F55;Master&#x8282;&#x70B9;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#xFF0C;&#x7F16;&#x8F91; <code>/etc/ansible/hosts</code>&#xFF1A;</p>
+<p>&#x767B;&#x5F55; Master &#x8282;&#x70B9;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#xFF0C;&#x7F16;&#x8F91; <code>/etc/ansible/hosts</code>&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="_ansible_inventory">Ansible Inventory &#x53D8;&#x91CF;</h3>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x914D;&#x7F6E;&#x8BA4;&#x8BC1;&#x63D0;&#x4F9B;&#x8005;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openshift_master_identity_providers=[{<span class="hljs-string">&apos;name&apos;</span>: <span class="hljs-string">&apos;htpasswd_auth&apos;</span>, <span class="hljs-string">&apos;login&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;challenge&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;kind&apos;</span>: <span class="hljs-string">&apos;HTPasswdPasswordIdentityProvider&apos;</span>, <span class="hljs-string">&apos;filename&apos;</span>: <span class="hljs-string">&apos;/etc/origin/master/htpasswd&apos;</span>}]</code></pre>
+</div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2 - Web Console &#x63A7;&#x5236;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openshift_web_console_install=<span class="hljs-literal">true</span>
+openshift_web_console_prefix=registry.example.com/openshift3/ose-
+openshift_web_console_version=v3.9.30</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - 3.9 &#x53CA;&#x4EE5;&#x540E;&#x7684;&#x7248;&#x672C;&#x5B89;&#x88C5;&#x63A8;&#x8350;&#x4F7F;&#x7528; firewalld&#xFF0C;&#x5982;&#x4E0B;&#x53C2;&#x6570;&#x5F00;&#x542F; firewalld</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">os_firewall_use_firewalld=True</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">&#x793A;&#x4F8B;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B; Inventory &#x6587;&#x4EF6;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">cat &gt; /etc/ansible/hosts &lt;&lt;EOF
 [OSEv3:children]
@@ -2442,8 +2473,9 @@ EOF</code></pre>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="__">&#x5B89;&#x88C5;</h2>
+<h2 id="___2">&#x5B89;&#x88C5;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -2494,7 +2526,7 @@ EOF</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.4","depth":3,"next":{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-06-17T09:42:30.726Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-01T14:31:59.335Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.4","depth":3,"next":{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-07-02T15:09:00.933Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-03T02:55:05.256Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

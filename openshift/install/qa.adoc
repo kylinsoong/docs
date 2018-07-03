@@ -301,7 +301,57 @@ apiserver POD 中 DNS 无法解析导致 https://apiserver.kube-service-catalog.
 
 === 解决方法
 
-* 在 apiserver POD 中添加静态域名解析，例如 `oc rsh apiserver-nkt5k && echo "192.168.122.101 master.example.com" >> /etc/hosts`
+NOTE：如下三种方法都可以解决这个问题，选择其中任意一种即可。 
+
+==== 解决方法一： 在 DNS 服务中添加静态地址映射
+
+[source, text]
+.*1 - 编辑 /etc/dnsmasq.d/openshift-cluster.conf，添加静态域名映射*
+----
+local=/example.com/
+address=/.apps.example.com/192.168.122.101
+address=/master.example.com/192.168.122.101
+address=/node1.example.com/192.168.122.105
+address=/node2.example.com/192.168.122.106
+----
+
+[source, text]
+.*2 - 重启 DNS 服务器*
+----
+# systemctl restart dnsmasq.service
+# systemctl status dnsmasq.service
+----
+
+[source, text]
+.*3 - 验证 DNS 解析*
+----
+# for i in master node1 node2 ; do ssh $i.example.com 'dig master.example.com +short' ; done
+192.168.122.101
+192.168.122.101
+192.168.122.101
+
+# oc rsh apiserver-n56cp 
+sh-4.2# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key -X GET https://master.example.com:2379/version
+{"etcdserver":"3.2.18","etcdcluster":"3.2.0"}
+----
+
+[source, text]
+.*4 - 重新安装 service catalog*
+----
+# ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-service-catalog/config.yml
+----
+
+==== 解决方法二：解决 DNS 服务器不加载静态域名映射的问题
+
+Base on DNS concepts, the DNS server like dnsmasq should parse `/etc/hosts` and add all static mapping as a DNS records accordingly, find the root reason why dnsmasq not load `/etc/hosts` and resolve it also can resolve this issue.
+
+Check from journal logs in my environment which run the DNS server, I can find the error like `failed to load names from /etc/hosts: Permission denied`.
+
+==== 解决方法三：在 POD 中添加静态域名
+
+在 apiserver POD 中添加静态域名解析，例如 `oc rsh apiserver-nkt5k && echo "192.168.122.101 master.example.com" >> /etc/hosts`
+
+NOTE：这种方式适合 POD 配置持久化 PV，将一些结果持久化到存储服务器
 
 === 分析步骤
 
@@ -359,7 +409,28 @@ curl: (6) Could not resolve host: master.example.com; Unknown error
 {"etcdserver":"3.2.18","etcdcluster":"3.2.0"}
 ----
 
-==== 查看 DNS 相关配置
+[source, text]
+.*5 - 查看 api POD 静态域名配置及域名解析配置文件*
+----
+# oc rsh apiserver-56p7q
+
+sh-4.2# cat /etc/hosts
+# Kubernetes-managed hosts file.
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+fe00::0	ip6-mcastprefix
+fe00::1	ip6-allnodes
+fe00::2	ip6-allrouters
+10.244.0.15	apiserver-56p7q
+
+sh-4.2# cat /etc/resolv.conf 
+nameserver 192.168.122.101
+search kube-service-catalog.svc.cluster.local svc.cluster.local cluster.local example.com
+options ndots:5
+----
+
+==== 查看 DNS 相关配置及检测是否可以解析
 
 [source, text]
 .*1 - 查看 ifcfg 中 DNS 配置*
@@ -399,95 +470,125 @@ nameserver 192.168.122.106
 ----
 
 [source, text]
-.*3 - ping wildcard with subdomain*
+.*3 - ping domain master.example.com*
 ----
-# for i in master node1 node2 ; do ssh $i.example.com 'hostname ; ping xxx.apps.example.com -c1 ; echo' ; done
+# for i in master node1 node2 ; do ssh $i.example.com 'hostname ; ping master.example.com -c1 ; echo' ; done
 master.example.com
-PING xxx.apps.example.com (192.168.122.101) 56(84) bytes of data.
-64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.022 ms
+PING master.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.049 ms
 
---- xxx.apps.example.com ping statistics ---
+--- master.example.com ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.022/0.022/0.022/0.000 ms
+rtt min/avg/max/mdev = 0.049/0.049/0.049/0.000 ms
 
 node1.example.com
-PING xxx.apps.example.com (192.168.122.101) 56(84) bytes of data.
-64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.095 ms
+PING master.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.238 ms
 
---- xxx.apps.example.com ping statistics ---
+--- master.example.com ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.095/0.095/0.095/0.000 ms
+rtt min/avg/max/mdev = 0.238/0.238/0.238/0.000 ms
 
 node2.example.com
-PING xxx.apps.example.com (192.168.122.101) 56(84) bytes of data.
-64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.072 ms
+PING master.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.116 ms
 
---- xxx.apps.example.com ping statistics ---
+--- master.example.com ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.072/0.072/0.072/0.000 ms
+rtt min/avg/max/mdev = 0.116/0.116/0.116/0.000 ms
 ----
+
+NOTE: *第三步 ping 是可达的*。
 
 [source, text]
 .*4 - dig 分析域名解析*
 ----
-# dig master.example.com @192.168.122.101
-# dig node1.example.com @192.168.122.101
-# dig node2.example.com @192.168.122.101
+# for i in master node1 node2 ; do ssh $i.example.com 'dig test.apps.example.com +short ; echo' ; done
+192.168.122.101
 
-# for i in master node1 node2 ; do ssh $i.example.com 'dig test.apps.example.com ; echo' ; done
+192.168.122.101
 
-; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7 <<>> test.apps.example.com
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 29734
-;; flags: qr aa rd ra ad; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+192.168.122.101
 
-;; QUESTION SECTION:
-;test.apps.example.com.		IN	A
 
-;; ANSWER SECTION:
-test.apps.example.com.	0	IN	A	192.168.122.101
-
-;; Query time: 0 msec
-;; SERVER: 192.168.122.101#53(192.168.122.101)
-;; WHEN: Mon Jul 02 22:01:47 CST 2018
-;; MSG SIZE  rcvd: 55
+# for i in master node1 node2 ; do ssh $i.example.com 'dig master.example.com +short; echo' ; done
 
 
 
-; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7 <<>> test.apps.example.com
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27006
-;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
-
-;; QUESTION SECTION:
-;test.apps.example.com.		IN	A
-
-;; ANSWER SECTION:
-test.apps.example.com.	0	IN	A	192.168.122.101
-
-;; Query time: 0 msec
-;; SERVER: 192.168.122.105#53(192.168.122.105)
-;; WHEN: Mon Jul 02 22:01:47 CST 2018
-;; MSG SIZE  rcvd: 55
-
-
-
-; <<>> DiG 9.9.4-RedHat-9.9.4-61.el7 <<>> test.apps.example.com
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15779
-;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
-
-;; QUESTION SECTION:
-;test.apps.example.com.		IN	A
-
-;; ANSWER SECTION:
-test.apps.example.com.	0	IN	A	192.168.122.101
-
-;; Query time: 0 msec
-;; SERVER: 192.168.122.106#53(192.168.122.106)
-;; WHEN: Mon Jul 02 22:01:47 CST 2018
-;; MSG SIZE  rcvd: 55
 ----
+
+NOTE: *dig 分析的结果显示 DNS 服务器不能够解析 master.example.com，但可以解析应用地址 test.apps.example.com*。
+
+[source, text]
+.*5 - nslookup 进一步分析域名解析*
+----
+# for i in master node1 node2 ; do ssh $i.example.com 'nslookup test.apps.example.com ; echo' ; done
+Server:		192.168.122.101
+Address:	192.168.122.101#53
+
+Name:	test.apps.example.com
+Address: 192.168.122.101
+
+
+Server:		192.168.122.105
+Address:	192.168.122.105#53
+
+Name:	test.apps.example.com
+Address: 192.168.122.101
+
+
+Server:		192.168.122.106
+Address:	192.168.122.106#53
+
+Name:	test.apps.example.com
+Address: 192.168.122.101
+
+
+# for i in master node1 node2 ; do ssh $i.example.com 'nslookup master.example.com ; echo' ; done
+Server:		192.168.122.101
+Address:	192.168.122.101#53
+
+** server can't find master.example.com: NXDOMAIN
+
+
+Server:		192.168.122.105
+Address:	192.168.122.105#53
+
+** server can't find master.example.com: NXDOMAIN
+
+
+Server:		192.168.122.106
+Address:	192.168.122.106#53
+
+** server can't find master.example.com: NXDOMAIN
+----
+
+NOTE: *和第四步得出的结论一样，DNS 服务器不能够解析 master.example.com，但可以解析应用地址 test.apps.example.com*。
+
+==== 查看 DNS 服务器运行状态
+
+[source, text]
+----
+# systemctl status dnsmasq.service
+● dnsmasq.service - DNS caching server.
+   Loaded: loaded (/usr/lib/systemd/system/dnsmasq.service; enabled; vendor preset: disabled)
+   Active: active (running) since Tue 2018-07-03 10:32:22 CST; 1s ago
+ Main PID: 30605 (dnsmasq)
+    Tasks: 1
+   Memory: 940.0K
+   CGroup: /system.slice/dnsmasq.service
+           └─30605 /usr/sbin/dnsmasq -k
+
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: setting upstream servers from DBus
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using local addresses only for domain example.com
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+----
+
+

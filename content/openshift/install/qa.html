@@ -2268,22 +2268,13 @@
 <li><a href="#___13">&#x5206;&#x6790;&#x6B65;&#x9AA4;</a></li>
 </ul>
 </li>
-<li><a href="#_api_server_not_ready">api server not ready</a>
+<li><a href="#_apiserver_pod_can_not_resolve_the_etc_hostname">apiserver Pod can not resolve the etc hostname</a>
 <ul class="sectlevel2">
 <li><a href="#___14">&#x5B89;&#x88C5;&#x73AF;&#x5883;</a></li>
 <li><a href="#___15">&#x95EE;&#x9898;&#x63CF;&#x8FF0;</a></li>
 <li><a href="#___16">&#x95EE;&#x9898;&#x539F;&#x56E0;</a></li>
 <li><a href="#___17">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</a></li>
 <li><a href="#___18">&#x5206;&#x6790;&#x6B65;&#x9AA4;</a></li>
-</ul>
-</li>
-<li><a href="#_too_many_requests">Too many requests</a>
-<ul class="sectlevel2">
-<li><a href="#___19">&#x5B89;&#x88C5;&#x73AF;&#x5883;</a></li>
-<li><a href="#___20">&#x95EE;&#x9898;&#x63CF;&#x8FF0;</a></li>
-<li><a href="#___21">&#x95EE;&#x9898;&#x539F;&#x56E0;</a></li>
-<li><a href="#___22">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</a></li>
-<li><a href="#___23">&#x5206;&#x6790;&#x6B65;&#x9AA4;</a></li>
 </ul>
 </li>
 </ul>
@@ -2564,7 +2555,7 @@ mount.nfs: Protocol not supported
 </div>
 </div>
 <div class="sect1">
-<h2 id="_api_server_not_ready">api server not ready</h2>
+<h2 id="_apiserver_pod_can_not_resolve_the_etc_hostname">apiserver Pod can not resolve the etc hostname</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="___14">&#x5B89;&#x88C5;&#x73AF;&#x5883;</h3>
@@ -2585,6 +2576,7 @@ mount.nfs: Protocol not supported
 <p>Ansible &#x6267;&#x884C; playbooks deploy_cluster.yml &#x8FC7;&#x7A0B;&#x62A5;&#x9519;&#xFF1A;</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>&#x9519;&#x8BEF;&#x7C7B;&#x578B;&#x4E00;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">TASK [openshift_service_catalog : wait <span class="hljs-keyword">for</span> api server to be ready] ***************************************************************************************************************************
 fatal: [master.example.com]: FAILED! =&gt; {<span class="hljs-string">&quot;attempts&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;changed&quot;</span>: <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;connection&quot;</span>: <span class="hljs-string">&quot;close&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;[+]ping ok\n[+]poststarthook/generic-apiserver-start-informers ok\n[+]poststarthook/start-service-catalog-apiserver-informers ok\n[-]etcd failed: reason withheld\nhealthz check failed\n&quot;</span>, <span class="hljs-string">&quot;content_length&quot;</span>: <span class="hljs-string">&quot;180&quot;</span>, <span class="hljs-string">&quot;content_type&quot;</span>: <span class="hljs-string">&quot;text/plain; charset=utf-8&quot;</span>, <span class="hljs-string">&quot;date&quot;</span>: <span class="hljs-string">&quot;Sat, 23 Jun 2018 23:29:40 GMT&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>: <span class="hljs-literal">true</span>, <span class="hljs-string">&quot;msg&quot;</span>: <span class="hljs-string">&quot;Status code was not [200]: HTTP Error 500: Internal Server Error&quot;</span>, <span class="hljs-string">&quot;redirected&quot;</span>: <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-number">500</span>, <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-string">&quot;https://apiserver.kube-service-catalog.svc/healthz&quot;</span>, <span class="hljs-string">&quot;x_content_type_options&quot;</span>: <span class="hljs-string">&quot;nosniff&quot;</span>}
@@ -2622,124 +2614,10 @@ Failure summary:
      Message:  Status code was not [<span class="hljs-number">200</span>]: HTTP <span class="hljs-built_in">Error</span> <span class="hljs-number">500</span>: Internal Server <span class="hljs-built_in">Error</span></code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="___16">&#x95EE;&#x9898;&#x539F;&#x56E0;</h3>
-<div class="paragraph">
-<p>&#x7F3A;&#x5C11; docker &#x955C;&#x50CF;&#x5BFC;&#x81F4; Service Catalog Install &#x5B89;&#x88C5;&#x5931;&#x8D25;&#x3002;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___17">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</h3>
-<div class="paragraph">
-<p>&#x4E0B;&#x8F7D;&#x5B89;&#x88C5;&#x7F3A;&#x5C11;&#x7684;&#x5305;&#x3002;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___18">&#x5206;&#x6790;&#x6B65;&#x9AA4;</h3>
 <div class="listingblock">
-<div class="title"><strong>1 - &#x67E5;&#x770B; journalctl &#x65E5;&#x5FD7;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-txt" data-lang="txt"># journalctl &gt; out
-# cat out | grep err
-...
-Jun 24 13:47:31 master.example.com dockerd-current[35823]: time=&quot;2018-06-24T13:47:31.039877646+08:00&quot; level=error msg=&quot;Handler for GET /v1.26/images/registry.example.com/openshift3/metrics-hawkular-metrics:v3.9.30/json returned error: No such image: registry.example.com/openshift3/metrics-hawkular-metrics:v3.9.30&quot;
-...</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2 - &#x672C;&#x5730; docker registry &#x4ED3;&#x5E93;&#x67E5;&#x770B;&#x662F;&#x5426;&#x6709; metrics-hawkular-metrics</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-txt" data-lang="txt"># docker images |grep metrics-hawkular-metrics</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_too_many_requests">Too many requests</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="___19">&#x5B89;&#x88C5;&#x73AF;&#x5883;</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>OpenShift 3.9</p>
-</li>
-<li>
-<p>RHEL 7.5</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___20">&#x95EE;&#x9898;&#x63CF;&#x8FF0;</h3>
-<div class="paragraph">
-<p>Ansible &#x6267;&#x884C; playbooks deploy_cluster.yml &#x8FC7;&#x7A0B;&#x62A5;&#x9519;&#xFF1A;</p>
-</div>
-<div class="listingblock">
+<div class="title"><strong>&#x95EE;&#x9898;&#x63CF;&#x8FF0;&#x4E8C;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">TASK [openshift_service_catalog : wait <span class="hljs-keyword">for</span> api server to be ready] ***************************************************************************************************************************
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">60</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">59</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">58</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">57</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">56</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">55</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">54</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">53</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">52</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">51</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">50</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">49</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">48</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">47</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">46</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">45</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">44</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">43</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">42</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">41</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">40</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">39</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">38</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">37</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">36</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">35</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">34</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">33</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">32</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">31</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">30</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">29</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">28</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">27</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">26</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">25</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">24</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">23</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">22</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">21</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">20</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">19</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">18</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">17</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">16</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">15</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">14</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">13</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">12</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">11</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">10</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">9</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">8</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">7</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">6</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">5</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">4</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">3</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">2</span> retries left).
-FAILED - RETRYING: wait <span class="hljs-keyword">for</span> api server to be ready (<span class="hljs-number">1</span> retries left).
 fatal: [master.example.com]: FAILED! =&gt; {<span class="hljs-string">&quot;attempts&quot;</span>: <span class="hljs-number">60</span>, <span class="hljs-string">&quot;changed&quot;</span>: <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;connection&quot;</span>: <span class="hljs-string">&quot;close&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Too many requests, please try again later.\n&quot;</span>, <span class="hljs-string">&quot;content_length&quot;</span>: <span class="hljs-string">&quot;43&quot;</span>, <span class="hljs-string">&quot;content_type&quot;</span>: <span class="hljs-string">&quot;text/plain; charset=utf-8&quot;</span>, <span class="hljs-string">&quot;date&quot;</span>: <span class="hljs-string">&quot;Sun, 24 Jun 2018 06:28:47 GMT&quot;</span>, <span class="hljs-string">&quot;failed&quot;</span>: <span class="hljs-literal">true</span>, <span class="hljs-string">&quot;msg&quot;</span>: <span class="hljs-string">&quot;Status code was not [200]: HTTP Error 429: Too Many Requests&quot;</span>, <span class="hljs-string">&quot;redirected&quot;</span>: <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;retry_after&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-number">429</span>, <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-string">&quot;https://apiserver.kube-service-catalog.svc/healthz&quot;</span>, <span class="hljs-string">&quot;x_content_type_options&quot;</span>: <span class="hljs-string">&quot;nosniff&quot;</span>}
 	to retry, use: --limit @/usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.retry
 
@@ -2777,16 +2655,342 @@ Failure summary:
 </div>
 </div>
 <div class="sect2">
-<h3 id="___21">&#x95EE;&#x9898;&#x539F;&#x56E0;</h3>
-
+<h3 id="___16">&#x95EE;&#x9898;&#x539F;&#x56E0;</h3>
+<div class="paragraph">
+<p>apiserver POD &#x4E2D; DNS &#x65E0;&#x6CD5;&#x89E3;&#x6790;&#x5BFC;&#x81F4; <a href="https://apiserver.kube-service-catalog.svc/healthz" class="bare" target="_blank">https://apiserver.kube-service-catalog.svc/healthz</a> &#x8C03;&#x8FD0;&#x5931;&#x8D25;&#x3002;</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="___22">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</h3>
+<h3 id="___17">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;</h3>
+<div class="paragraph">
+<p>NOTE&#xFF1A;&#x5982;&#x4E0B;&#x4E09;&#x79CD;&#x65B9;&#x6CD5;&#x90FD;&#x53EF;&#x4EE5;&#x89E3;&#x51B3;&#x8FD9;&#x4E2A;&#x95EE;&#x9898;&#xFF0C;&#x9009;&#x62E9;&#x5176;&#x4E2D;&#x4EFB;&#x610F;&#x4E00;&#x79CD;&#x5373;&#x53EF;&#x3002;</p>
+</div>
+<div class="sect3">
+<h4 id="__dns">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#x4E00;&#xFF1A; &#x5728; DNS &#x670D;&#x52A1;&#x4E2D;&#x6DFB;&#x52A0;&#x9759;&#x6001;&#x5730;&#x5740;&#x6620;&#x5C04;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x7F16;&#x8F91; /etc/dnsmasq.d/openshift-cluster.conf&#xFF0C;&#x6DFB;&#x52A0;&#x9759;&#x6001;&#x57DF;&#x540D;&#x6620;&#x5C04;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">local=/example.com/
+address=/.apps.example.com/192.168.122.101
+address=/master.example.com/192.168.122.101
+address=/node1.example.com/192.168.122.105
+address=/node2.example.com/192.168.122.106</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x91CD;&#x542F; DNS &#x670D;&#x52A1;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl restart dnsmasq.service
+# systemctl status dnsmasq.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x9A8C;&#x8BC1; DNS &#x89E3;&#x6790;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master node1 node2 ; do ssh $i.example.com &apos;dig master.example.com +short&apos; ; done
+192.168.122.101
+192.168.122.101
+192.168.122.101
 
+# oc rsh apiserver-n56cp
+sh-4.2# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key -X GET https://master.example.com:2379/version
+{&quot;etcdserver&quot;:&quot;3.2.18&quot;,&quot;etcdcluster&quot;:&quot;3.2.0&quot;}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x91CD;&#x65B0;&#x5B89;&#x88C5; service catalog</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-service-catalog/config.yml</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__dns_2">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#x4E8C;&#xFF1A;&#x89E3;&#x51B3; DNS &#x670D;&#x52A1;&#x5668;&#x4E0D;&#x52A0;&#x8F7D;&#x9759;&#x6001;&#x57DF;&#x540D;&#x6620;&#x5C04;&#x7684;&#x95EE;&#x9898;</h4>
+<div class="paragraph">
+<p>Base on DNS concepts, the DNS server like dnsmasq should parse <code>/etc/hosts</code> and add all static mapping as a DNS records accordingly, find the root reason why dnsmasq not load <code>/etc/hosts</code> and resolve it also can resolve this issue.</p>
+</div>
+<div class="paragraph">
+<p>Check from journal logs in my environment which run the DNS server, I can find the error like <code>failed to load names from /etc/hosts: Permission denied</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__pod">&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#x4E09;&#xFF1A;&#x5728; POD &#x4E2D;&#x6DFB;&#x52A0;&#x9759;&#x6001;&#x57DF;&#x540D;</h4>
+<div class="paragraph">
+<p>&#x5728; apiserver POD &#x4E2D;&#x6DFB;&#x52A0;&#x9759;&#x6001;&#x57DF;&#x540D;&#x89E3;&#x6790;&#xFF0C;&#x4F8B;&#x5982; <code>oc rsh apiserver-nkt5k &amp;&amp; echo &quot;192.168.122.101 master.example.com&quot; &gt;&gt; /etc/hosts</code></p>
+</div>
+<div class="paragraph">
+<p>NOTE&#xFF1A;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x9002;&#x5408; POD &#x914D;&#x7F6E;&#x6301;&#x4E45;&#x5316; PV&#xFF0C;&#x5C06;&#x4E00;&#x4E9B;&#x7ED3;&#x679C;&#x6301;&#x4E45;&#x5316;&#x5230;&#x5B58;&#x50A8;&#x670D;&#x52A1;&#x5668;</p>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="___23">&#x5206;&#x6790;&#x6B65;&#x9AA4;</h3>
+<h3 id="___18">&#x5206;&#x6790;&#x6B65;&#x9AA4;</h3>
+<div class="sect3">
+<h4 id="__apiserver_dns">&#x9A8C;&#x8BC1; apiserver &#x4E2D;&#x662F;&#x5426;&#x53EF;&#x8FDB;&#x884C; DNS &#x89E3;&#x6790;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x6D4B;&#x8BD5;&#x670D;&#x52A1;&#x662F;&#x5426;&#x53EF;&#x8FBE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl -k https://apiserver.kube-service-catalog.svc/healthz
+[+]ping ok
+[+]poststarthook/generic-apiserver-start-informers ok
+[+]poststarthook/start-service-catalog-apiserver-informers ok
+[-]etcd failed: reason withheld
+healthz check failed</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - oc edit ds/apiserver &#x67E5;&#x770B; etcd &#x670D;&#x52A1;&#x5730;&#x5740;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">    spec:
+      containers:
+      - args:
+        - apiserver
+        - --storage-type
+        - etcd
+        - --secure-port
+        - &quot;6443&quot;
+        - --etcd-servers
+        - https://master.example.com:2379
+        - --etcd-cafile
+        - /etc/origin/master/master.etcd-ca.crt
+        - --etcd-certfile
+        - /etc/origin/master/master.etcd-client.crt
+        - --etcd-keyfile
+        - /etc/origin/master/master.etcd-client.key</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x67E5;&#x770B;&#x670D;&#x52A1;&#x662F;&#x5426;&#x53EF;&#x8FBE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># etcdctl -C https://master.example.com:2379 --ca-file /etc/origin/master/master.etcd-ca.crt --cert-file /etc/origin/master/master.etcd-client.crt  --key-file /etc/origin/master/master.etcd-client.key ls
 
+# oc rsh apiserver-56p7q
+# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key -X GET https://master.example.com:2379/version
+curl: (6) Could not resolve host: master.example.com; Unknown error</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - IP &#x5730;&#x5740;&#x66FF;&#x6362;&#x57DF;&#x540D;&#x540E;&#x7EE7;&#x7EED;&#x7B2C;&#x4E09;&#x6B65;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># etcdctl -C https://192.168.56.66:2379 --ca-file /etc/origin/master/master.etcd-ca.crt --cert-file /etc/origin/master/master.etcd-client.crt  --key-file /etc/origin/master/master.etcd-client.key ls
+
+# oc rsh apiserver-56p7q
+# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key -X GET https://192.168.56.66:2379/version
+{&quot;etcdserver&quot;:&quot;3.2.18&quot;,&quot;etcdcluster&quot;:&quot;3.2.0&quot;}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x67E5;&#x770B; api POD &#x9759;&#x6001;&#x57DF;&#x540D;&#x914D;&#x7F6E;&#x53CA;&#x57DF;&#x540D;&#x89E3;&#x6790;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># oc rsh apiserver-56p7q
+
+sh-4.2# cat /etc/hosts
+# Kubernetes-managed hosts file.
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+fe00::0	ip6-mcastprefix
+fe00::1	ip6-allnodes
+fe00::2	ip6-allrouters
+10.244.0.15	apiserver-56p7q
+
+sh-4.2# cat /etc/resolv.conf
+nameserver 192.168.122.101
+search kube-service-catalog.svc.cluster.local svc.cluster.local cluster.local example.com
+options ndots:5</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__dns_3">&#x67E5;&#x770B; DNS &#x76F8;&#x5173;&#x914D;&#x7F6E;&#x53CA;&#x68C0;&#x6D4B;&#x662F;&#x5426;&#x53EF;&#x4EE5;&#x89E3;&#x6790;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x67E5;&#x770B; ifcfg &#x4E2D; DNS &#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master node1 node2 ; do ssh $i.example.com &apos;hostname ; cat /etc/sysconfig/network-scripts/ifcfg-eth0 | grep DNS; echo&apos; ; done
+master.example.com
+DNS1=192.168.122.101
+
+node1.example.com
+DNS1=192.168.122.101
+
+node2.example.com
+DNS1=192.168.122.101</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x67E5;&#x770B; resolv.conf &#x914D;&#x7F6E;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master node1 node2 ; do ssh $i.example.com &apos;hostname ; cat /etc/resolv.conf ; echo&apos; ; done
+master.example.com
+# nameserver updated by /etc/NetworkManager/dispatcher.d/99-origin-dns.sh
+# Generated by NetworkManager
+search cluster.local example.com
+nameserver 192.168.122.101
+
+node1.example.com
+# nameserver updated by /etc/NetworkManager/dispatcher.d/99-origin-dns.sh
+# Generated by NetworkManager
+search cluster.local example.com
+nameserver 192.168.122.105
+
+node2.example.com
+# nameserver updated by /etc/NetworkManager/dispatcher.d/99-origin-dns.sh
+# Generated by NetworkManager
+search cluster.local example.com
+nameserver 192.168.122.106</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - ping domain master.example.com</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master node1 node2 ; do ssh $i.example.com &apos;hostname ; ping master.example.com -c1 ; echo&apos; ; done
+master.example.com
+PING master.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.049 ms
+
+--- master.example.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.049/0.049/0.049/0.000 ms
+
+node1.example.com
+PING master.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.238 ms
+
+--- master.example.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.238/0.238/0.238/0.000 ms
+
+node2.example.com
+PING master.example.com (192.168.122.101) 56(84) bytes of data.
+64 bytes from master.example.com (192.168.122.101): icmp_seq=1 ttl=64 time=0.116 ms
+
+--- master.example.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.116/0.116/0.116/0.000 ms</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<strong>&#x7B2C;&#x4E09;&#x6B65; ping &#x662F;&#x53EF;&#x8FBE;&#x7684;</strong>&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - dig &#x5206;&#x6790;&#x57DF;&#x540D;&#x89E3;&#x6790;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master node1 node2 ; do ssh $i.example.com &apos;dig test.apps.example.com +short ; echo&apos; ; done
+192.168.122.101
+
+192.168.122.101
+
+192.168.122.101
+
+
+# for i in master node1 node2 ; do ssh $i.example.com &apos;dig master.example.com +short; echo&apos; ; done</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<strong>dig &#x5206;&#x6790;&#x7684;&#x7ED3;&#x679C;&#x663E;&#x793A; DNS &#x670D;&#x52A1;&#x5668;&#x4E0D;&#x80FD;&#x591F;&#x89E3;&#x6790; master.example.com&#xFF0C;&#x4F46;&#x53EF;&#x4EE5;&#x89E3;&#x6790;&#x5E94;&#x7528;&#x5730;&#x5740; test.apps.example.com</strong>&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - nslookup &#x8FDB;&#x4E00;&#x6B65;&#x5206;&#x6790;&#x57DF;&#x540D;&#x89E3;&#x6790;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master node1 node2 ; do ssh $i.example.com &apos;nslookup test.apps.example.com ; echo&apos; ; done
+Server:		192.168.122.101
+Address:	192.168.122.101#53
+
+Name:	test.apps.example.com
+Address: 192.168.122.101
+
+
+Server:		192.168.122.105
+Address:	192.168.122.105#53
+
+Name:	test.apps.example.com
+Address: 192.168.122.101
+
+
+Server:		192.168.122.106
+Address:	192.168.122.106#53
+
+Name:	test.apps.example.com
+Address: 192.168.122.101
+
+
+# for i in master node1 node2 ; do ssh $i.example.com &apos;nslookup master.example.com ; echo&apos; ; done
+Server:		192.168.122.101
+Address:	192.168.122.101#53
+
+** server can&apos;t find master.example.com: NXDOMAIN
+
+
+Server:		192.168.122.105
+Address:	192.168.122.105#53
+
+** server can&apos;t find master.example.com: NXDOMAIN
+
+
+Server:		192.168.122.106
+Address:	192.168.122.106#53
+
+** server can&apos;t find master.example.com: NXDOMAIN</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<strong>&#x548C;&#x7B2C;&#x56DB;&#x6B65;&#x5F97;&#x51FA;&#x7684;&#x7ED3;&#x8BBA;&#x4E00;&#x6837;&#xFF0C;DNS &#x670D;&#x52A1;&#x5668;&#x4E0D;&#x80FD;&#x591F;&#x89E3;&#x6790; master.example.com&#xFF0C;&#x4F46;&#x53EF;&#x4EE5;&#x89E3;&#x6790;&#x5E94;&#x7528;&#x5730;&#x5740; test.apps.example.com</strong>&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__dns_4">&#x67E5;&#x770B; DNS &#x670D;&#x52A1;&#x5668;&#x8FD0;&#x884C;&#x72B6;&#x6001;</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl status dnsmasq.service
+&#x25CF; dnsmasq.service - DNS caching server.
+   Loaded: loaded (/usr/lib/systemd/system/dnsmasq.service; enabled; vendor preset: disabled)
+   Active: active (running) since Tue 2018-07-03 10:32:22 CST; 1s ago
+ Main PID: 30605 (dnsmasq)
+    Tasks: 1
+   Memory: 940.0K
+   CGroup: /system.slice/dnsmasq.service
+           &#x2514;&#x2500;30605 /usr/sbin/dnsmasq -k
+
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:22 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: setting upstream servers from DBus
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using local addresses only for domain example.com
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain in-addr.arpa
+Jul 03 10:32:23 master.example.com dnsmasq[30605]: using nameserver 127.0.0.1#53 for domain cluster.local</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2832,7 +3036,7 @@ Failure summary:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"常见问题","level":"1.4.2.6","depth":3,"next":{"title":"示例","level":"1.4.3","depth":2,"path":"openshift/samples/samples.adoc","ref":"openshift/samples/samples.adoc","articles":[{"title":"RC","level":"1.4.3.1","depth":3,"path":"openshift/samples/rc.adoc","ref":"openshift/samples/rc.adoc","articles":[]},{"title":"DC","level":"1.4.3.2","depth":3,"path":"openshift/samples/dc.adoc","ref":"openshift/samples/dc.adoc","articles":[]},{"title":"S2I","level":"1.4.3.3","depth":3,"path":"openshift/samples/s2i.adoc","ref":"openshift/samples/s2i.adoc","articles":[]},{"title":"部署 mysql 数据库","level":"1.4.3.4","depth":3,"path":"openshift/samples/deploy-mysql-db.adoc","ref":"openshift/samples/deploy-mysql-db.adoc","articles":[]},{"title":"deploy image to docker registry","level":"1.4.3.5","depth":3,"path":"openshift/samples/deploy-image-to-docker-registry.adoc","ref":"openshift/samples/deploy-image-to-docker-registry.adoc","articles":[]},{"title":"elasticsearch and spark","level":"1.4.3.6","depth":3,"path":"openshift/samples/elastic-spark.adoc","ref":"openshift/samples/elastic-spark.adoc","articles":[]},{"title":"wordpress","level":"1.4.3.7","depth":3,"path":"openshift/samples/wordpress/wp.adoc","ref":"openshift/samples/wordpress/wp.adoc","articles":[]},{"title":"CICD Pipeline","level":"1.4.3.8","depth":3,"path":"openshift/samples/cicd.adoc","ref":"openshift/samples/cicd.adoc","articles":[]},{"title":"parksmap","level":"1.4.3.9","depth":3,"path":"openshift/samples/parksmap/os-parksmap.adoc","ref":"openshift/samples/parksmap/os-parksmap.adoc","articles":[{"title":"1. Installing","level":"1.4.3.9.1","depth":4,"path":"openshift/samples/parksmap/os-parksmap-1.adoc","ref":"openshift/samples/parksmap/os-parksmap-1.adoc","articles":[]},{"title":"2. Exploring","level":"1.4.3.9.2","depth":4,"path":"openshift/samples/parksmap/os-parksmap-2.adoc","ref":"openshift/samples/parksmap/os-parksmap-2.adoc","articles":[]},{"title":"3. Architecture Overview","level":"1.4.3.9.3","depth":4,"path":"openshift/samples/parksmap/os-parksmap-3.adoc","ref":"openshift/samples/parksmap/os-parksmap-3.adoc","articles":[]},{"title":"4. Deploying Docker Image","level":"1.4.3.9.4","depth":4,"path":"openshift/samples/parksmap/os-parksmap-4.adoc","ref":"openshift/samples/parksmap/os-parksmap-4.adoc","articles":[]},{"title":"5. Scaling","level":"1.4.3.9.5","depth":4,"path":"openshift/samples/parksmap/os-parksmap-5.adoc","ref":"openshift/samples/parksmap/os-parksmap-5.adoc","articles":[]},{"title":"6. Creating Routes","level":"1.4.3.9.6","depth":4,"path":"openshift/samples/parksmap/os-parksmap-6.adoc","ref":"openshift/samples/parksmap/os-parksmap-6.adoc","articles":[]},{"title":"7. Role-Based Access Control","level":"1.4.3.9.7","depth":4,"path":"openshift/samples/parksmap/os-parksmap-7.adoc","ref":"openshift/samples/parksmap/os-parksmap-7.adoc","articles":[]},{"title":"8. Deploying Python","level":"1.4.3.9.8","depth":4,"path":"openshift/samples/parksmap/os-parksmap-8.adoc","ref":"openshift/samples/parksmap/os-parksmap-8.adoc","articles":[]},{"title":"9. Adding MongoDB","level":"1.4.3.9.9","depth":4,"path":"openshift/samples/parksmap/os-parksmap-9.adoc","ref":"openshift/samples/parksmap/os-parksmap-9.adoc","articles":[]},{"title":"10. Application Health","level":"1.4.3.9.10","depth":4,"path":"openshift/samples/parksmap/os-parksmap-10.adoc","ref":"openshift/samples/parksmap/os-parksmap-10.adoc","articles":[]},{"title":"11. CI/CD","level":"1.4.3.9.11","depth":4,"path":"openshift/samples/parksmap/os-parksmap-11.adoc","ref":"openshift/samples/parksmap/os-parksmap-11.adoc","articles":[]},{"title":"12. Using Templates","level":"1.4.3.9.12","depth":4,"path":"openshift/samples/parksmap/os-parksmap-12.adoc","ref":"openshift/samples/parksmap/os-parksmap-12.adoc","articles":[]}]},{"title":"Teiid Data Service","level":"1.4.3.10","depth":3,"path":"openshift/samples/vdb-data-svc.adoc","ref":"openshift/samples/vdb-data-svc.adoc","articles":[]}]},"previous":{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/qa.adoc","mtime":"2018-06-24T09:02:07.296Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-01T14:31:59.335Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"常见问题","level":"1.4.2.6","depth":3,"next":{"title":"示例","level":"1.4.3","depth":2,"path":"openshift/samples/samples.adoc","ref":"openshift/samples/samples.adoc","articles":[{"title":"RC","level":"1.4.3.1","depth":3,"path":"openshift/samples/rc.adoc","ref":"openshift/samples/rc.adoc","articles":[]},{"title":"DC","level":"1.4.3.2","depth":3,"path":"openshift/samples/dc.adoc","ref":"openshift/samples/dc.adoc","articles":[]},{"title":"S2I","level":"1.4.3.3","depth":3,"path":"openshift/samples/s2i.adoc","ref":"openshift/samples/s2i.adoc","articles":[]},{"title":"部署 mysql 数据库","level":"1.4.3.4","depth":3,"path":"openshift/samples/deploy-mysql-db.adoc","ref":"openshift/samples/deploy-mysql-db.adoc","articles":[]},{"title":"deploy image to docker registry","level":"1.4.3.5","depth":3,"path":"openshift/samples/deploy-image-to-docker-registry.adoc","ref":"openshift/samples/deploy-image-to-docker-registry.adoc","articles":[]},{"title":"elasticsearch and spark","level":"1.4.3.6","depth":3,"path":"openshift/samples/elastic-spark.adoc","ref":"openshift/samples/elastic-spark.adoc","articles":[]},{"title":"wordpress","level":"1.4.3.7","depth":3,"path":"openshift/samples/wordpress/wp.adoc","ref":"openshift/samples/wordpress/wp.adoc","articles":[]},{"title":"CICD Pipeline","level":"1.4.3.8","depth":3,"path":"openshift/samples/cicd.adoc","ref":"openshift/samples/cicd.adoc","articles":[]},{"title":"parksmap","level":"1.4.3.9","depth":3,"path":"openshift/samples/parksmap/os-parksmap.adoc","ref":"openshift/samples/parksmap/os-parksmap.adoc","articles":[{"title":"1. Installing","level":"1.4.3.9.1","depth":4,"path":"openshift/samples/parksmap/os-parksmap-1.adoc","ref":"openshift/samples/parksmap/os-parksmap-1.adoc","articles":[]},{"title":"2. Exploring","level":"1.4.3.9.2","depth":4,"path":"openshift/samples/parksmap/os-parksmap-2.adoc","ref":"openshift/samples/parksmap/os-parksmap-2.adoc","articles":[]},{"title":"3. Architecture Overview","level":"1.4.3.9.3","depth":4,"path":"openshift/samples/parksmap/os-parksmap-3.adoc","ref":"openshift/samples/parksmap/os-parksmap-3.adoc","articles":[]},{"title":"4. Deploying Docker Image","level":"1.4.3.9.4","depth":4,"path":"openshift/samples/parksmap/os-parksmap-4.adoc","ref":"openshift/samples/parksmap/os-parksmap-4.adoc","articles":[]},{"title":"5. Scaling","level":"1.4.3.9.5","depth":4,"path":"openshift/samples/parksmap/os-parksmap-5.adoc","ref":"openshift/samples/parksmap/os-parksmap-5.adoc","articles":[]},{"title":"6. Creating Routes","level":"1.4.3.9.6","depth":4,"path":"openshift/samples/parksmap/os-parksmap-6.adoc","ref":"openshift/samples/parksmap/os-parksmap-6.adoc","articles":[]},{"title":"7. Role-Based Access Control","level":"1.4.3.9.7","depth":4,"path":"openshift/samples/parksmap/os-parksmap-7.adoc","ref":"openshift/samples/parksmap/os-parksmap-7.adoc","articles":[]},{"title":"8. Deploying Python","level":"1.4.3.9.8","depth":4,"path":"openshift/samples/parksmap/os-parksmap-8.adoc","ref":"openshift/samples/parksmap/os-parksmap-8.adoc","articles":[]},{"title":"9. Adding MongoDB","level":"1.4.3.9.9","depth":4,"path":"openshift/samples/parksmap/os-parksmap-9.adoc","ref":"openshift/samples/parksmap/os-parksmap-9.adoc","articles":[]},{"title":"10. Application Health","level":"1.4.3.9.10","depth":4,"path":"openshift/samples/parksmap/os-parksmap-10.adoc","ref":"openshift/samples/parksmap/os-parksmap-10.adoc","articles":[]},{"title":"11. CI/CD","level":"1.4.3.9.11","depth":4,"path":"openshift/samples/parksmap/os-parksmap-11.adoc","ref":"openshift/samples/parksmap/os-parksmap-11.adoc","articles":[]},{"title":"12. Using Templates","level":"1.4.3.9.12","depth":4,"path":"openshift/samples/parksmap/os-parksmap-12.adoc","ref":"openshift/samples/parksmap/os-parksmap-12.adoc","articles":[]}]},{"title":"Teiid Data Service","level":"1.4.3.10","depth":3,"path":"openshift/samples/vdb-data-svc.adoc","ref":"openshift/samples/vdb-data-svc.adoc","articles":[]}]},"previous":{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/qa.adoc","mtime":"2018-07-03T02:54:07.978Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-03T02:55:05.256Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
