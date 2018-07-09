@@ -1,5 +1,20 @@
 = Basic Linux Admin Commands
 :toc: manual
+
+== man
+
+[source, bash]
+.*man 种类，manDB*
+----
+$ man man
+$ man 1 man
+$ man 7 man
+
+$ man -k partition
+$ man -k adduser
+adduser (8)          - create a new user or update default new user information
+$ man 8 adduser
+----
  
 == date
 

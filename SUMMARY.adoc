@@ -31,7 +31,7 @@
 .. link:linux/security/README.adoc[安全]
 ... link:linux/security/file-permissions.adoc[文件权限]
 ... link:linux/security/SELinux.adoc[SELinux]
-... link:linux/security/selinux-contexts-permission-control.adoc[Using SELinux Contexts to perform permission control]
+... link:linux/security/firewall.adoc[防火墙]
 ... link:linux/security/selinux-boolean-home.adoc[Appache to access user home directories]
 .. link:linux/process/README.adoc[进程]
 ... link:linux/process/management.adoc[进程管理]

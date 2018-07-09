@@ -56,6 +56,21 @@ and check to make sure that only the key(s) you wanted were added.
 test2.example.com
 ----
 
+=== sshd 服务
+
+`/etc/ssh/sshd_config` 文件控制 sshd 服务的一般行为:
+
+|===
+|配置 |说明
+
+|AuthorizedKeysFile      .ssh/authorized_keys
+|认证文件的路径
+
+|PasswordAuthentication yes
+|是否运行 root 用户登录
+
+|===
+
 === 远程配置 docker 示例
 
 [source, text]

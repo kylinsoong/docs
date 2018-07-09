@@ -40,48 +40,160 @@
 
 |===
 
+== 用户/组配置文件
+
+|===
+|文件 |说明
+
+|/etc/passwd
+|本地用户信息，格式：`username:password:UID:GID:GECOS:/home/dir:shell`
+
+|/etc/shadow
+|本地用户密码，加密保存
+
+|/etc/group
+|本地组信息，任意一个用户都有一个主要的组，格式：`groupname:password:GID:list,of,users,in,this,group`
+
+|/etc/sudoers
+|sudo 相关的配置
+
+|/etc/login.defs
+|默认的用户密码过期时间
+|===
+
+== 获取超级管理员权限
+
+Linux 操作系统中 `root` 用户超级管理员用户，有超级管理员权限，Linux 商有两种途径获取超级管理员权限:
+
+[source, bash]
+.*su 命令切换到 root*
+----
+su -
+----
+
+[source, bash]
+.*sudo 以超级管理员权限执行命令*
+----
+sudo CMD
+----
+
 == 添加用户为 sudo 用户
 
+两种方式可添加用户为 sudo 用户
+
 [source, text]
+.*1 - 添加用户对应的组到 /etc/sudoers*
 ----
 # echo "kylin ALL=(ALL)       ALL" >> /etc/sudoers
-# exit
-$ sudo tail /var/log/secure
 ---- 
+
+[source, text]
+.*2 - 将用户添加到 wheel 组*
+----
+# usermod -aG wheel kylin
+----
 
 == 创建用户
 
+`useradd username` 会为 /etc/passwd 中的所有字段设置合理的默认值默认情况下，useradd 命令不设置任何有效的密码，用户也必须要等设定了密码后才能登录。
+
 [source, text]
+.*创建用户，并关联组*
 ----
-# useradd juliet
-# passwd juliet 
-# useradd romeo
-# passwd romeo
-# useradd hamlet
-# passwd hamlet
-# useradd reba
-# passwd reba
-# useradd dolly
-# passwd dolly
-# useradd elvis
-# passwd elvis
+# useradd -g root admin
+# id admin
+uid=1003(admin) gid=0(root) groups=0(root)
 ----
 
 [source, text]
-.*查看创建的用户*
+.*创建用户，添加附属组*
 ----
-# tail -6 /etc/passwd
-juliet:x:1003:1003::/home/juliet:/bin/bash
-romeo:x:1004:1004::/home/romeo:/bin/bash
-hamlet:x:1005:1005::/home/hamlet:/bin/bash
-reba:x:1006:1006::/home/reba:/bin/bash
-dolly:x:1007:1007::/home/dolly:/bin/bash
-elvis:x:1008:1008::/home/elvis:/bin/bash
+# groupadd httpd
+# useradd -G httpd user1
+# id user1
+uid=1002(user1) gid=1003(user1) groups=1003(user1),1002(httpd)
 ----
-
-== 创建组
 
 [source, text]
+.*批量创建用户*
+----
+# for i in juliet romeo hamlet reba dolly elvis ; do useradd $i ; passwd $i ; done
+
+# tail -n 6 /etc/passwd
+juliet:x:1004:1004::/home/juliet:/bin/bash
+romeo:x:1005:1005::/home/romeo:/bin/bash
+hamlet:x:1006:1006::/home/hamlet:/bin/bash
+reba:x:1007:1007::/home/reba:/bin/bash
+dolly:x:1008:1008::/home/dolly:/bin/bash
+elvis:x:1009:1009::/home/elvis:/bin/bash
+
+# for i in juliet romeo hamlet reba dolly elvis ; do usermod -aG wheel $i ; done
+----
+
+[source, text]
+.*创建用户，并禁止登录*
+----
+# useradd user7
+# passwd user7
+
+# usermod -s /sbin/nologin user7
+# su - user7
+This account is currently not available.
+----
+
+== 修改用户
+
+`usermod` 修改现有的用户，它可通过如下参数控制
+
+|===
+|参数 |说明
+
+|-c, --comment COMMENT
+|向 GECOS 字段添加值，如全名。
+
+|-g, --gid GROUP
+|为用户帐户指定主要组。
+
+|-G, --groups GROUPS
+|为用户帐户指定一组补充组。
+
+|-a, --append
+|与 -G 选项搭配使用，将用户附加到所给的补充组，而不将该用户从其他组删除。
+
+|-d, --home HOME_DIR
+|为用户帐户指定新的主目录。
+
+|-m, --move-home
+|将用户主目录移到新的位置。必须与 -d 选项搭配使用。
+
+|-s, --shell SHELL
+|为用户帐户指定新的登录 shell。
+
+|-L, --lock
+|锁定用户帐户。
+
+|-U, --unlock
+|解锁用户帐户。
+|===
+
+== 删除用户
+
+`userdel username` 可将用户从 /etc/passwd 中删除，但默认情况下保留主目录不变。`userdel -r username`  同时删除用户和其主目录。
+
+[source, text]
+.*删除用户示例*
+----
+# for i in juliet romeo hamlet reba dolly elvis ; do userdel -r $i ; done
+----
+
+== 管理组
+
+* `groupadd groupname` 如果不带选项，则使用 /etc/login.defs 文件中指定范围内的下一个可用 GID。
+* `groupmod` 命令用于将组名更改为 GID 映射。-n 选项用于指定新的名称。
+* `groupdel` 删除组
+
+[source, text]
+.*创建组*
 ----
 # groupadd -g 30000 shakespeare
 # groupadd artists

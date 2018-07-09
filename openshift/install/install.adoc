@@ -8,7 +8,7 @@ OpenShift Container Platform  安装。
 
 == Ansible hosts 文件编辑
 
-登录 Master 节点执行如下命令，编辑 `/etc/ansible/hosts`。
+登录 Master 节点编辑 `/etc/ansible/hosts`。
 
 
 === Ansible Inventory 变量
@@ -33,184 +33,70 @@ openshift_web_console_version=v3.9.30
 os_firewall_use_firewalld=True
 ----
 
-
-=== 示例
-
 [source, bash]
-.*示例 Inventory 文件*
+.*4 - 安装 Standalone Registry，忽略 WebConsole 等其它*
 ----
-cat > /etc/ansible/hosts <<EOF
-[OSEv3:children]
-masters
-nodes
-etcd
-nfs
-#lb
+deployment_subtype=registry
+----
 
-[OSEv3:vars]
-ansible_ssh_user=root
+=== Inventory 示例
 
-openshift_deployment_type=openshift-enterprise
-openshift_release=v3.9
+|===
+|Inventory | 说明
 
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+|link:hosts/hosts-3.9.30[hosts-3.9.30]
+|OpenShift 3.9.30
 
-openshift_disable_check=docker_image_availability,docker_storage,memory_availability,disk_availability,package_availability
+|link:hosts/hosts-3.9.25[hosts-3.9.25]
+|OpenShift 3.9.25
 
-# The use of NFS for the core OpenShift Components was never recommended
-openshift_enable_unsupported_configurations=True
+|link:hosts/hosts-3.9.14[hosts-3.9.14]
+|OpenShift 3.9.14
 
-# Enable cockpit
-osm_use_cockpit=true
-
-# Set cockpit plugins
-osm_cockpit_plugins=['cockpit-kubernetes']
-openshift_cockpit_deployer_prefix='registry.example.com/openshift3/'
-openshift_cockpit_deployer_version=v3.9.27
-
-oreg_url=registry.example.com/openshift3/ose-${component}:${version}
-system_images_registry="registry.example.com"
-openshift_examples_modify_imagestreams=true
-
-openshift_clock_enabled=true
-
-#osm_cluster_network_cidr=10.128.0.0/14
-osm_cluster_network_cidr=10.244.0.0/16
-openshift_portal_net=172.30.0.0/16
-openshift_master_api_port=8443
-openshift_master_console_port=8443
-
-openshift_web_console_prefix=registry.example.com/openshift3/ose-
-openshift_web_console_install=true
-
-openshift_master_cluster_public_hostname=master.example.com
-openshift_master_cluster_hostname=master.example.com
-openshift_master_cluster_method=native
-
-# Enable service catalog
-openshift_enable_service_catalog=true
-
-# Enable template service broker (requires service catalog to be enabled, above)
-template_service_broker_install=true
-
-# Force a specific prefix (IE: registry) to use when pulling the service catalog image
-# NOTE: The registry all the way up to the start of the image name must be provided. Two examples
-# below are provided.
-openshift_service_catalog_image_prefix=registry.example.com/openshift3/ose-
-
-# Force a specific image version to use when pulling the service catalog image
-openshift_image_tag=v3.9.27
-openshift_service_catalog_image_version=v3.9.27
-
-# Configure one of more namespaces whose templates will be served by the TSB
-openshift_template_service_broker_namespaces=['openshift','tsb']
-ansible_service_broker_image_prefix=registry.example.com/openshift3/ose-
-
-ansible_service_broker_image_tag=v3.9.27
-
-ansible_service_broker_etcd_image_prefix=registry.example.com/rhel7/
-ansible_service_broker_registry_url=https://registry.example.com
-template_service_broker_prefix=registry.example.com/openshift3/ose-
-template_service_broker_version=v3.9.27
-
-openshift_hosted_etcd_storage_kind=nfs
-openshift_hosted_etcd_storage_nfs_options="*(rw,root_squash,sync,no_wdelay)"
-openshift_hosted_etcd_storage_nfs_directory=/var/export
-openshift_hosted_etcd_storage_volume_name=asb
-openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
-openshift_hosted_etcd_storage_volume_size=1G
-openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
-
-openshift_hosted_router_replicas=1
-openshift_hosted_router_selector='router=yes'
-openshift_master_default_subdomain=apps.example.com
-
-openshift_registry_selector='region=infra'
-openshift_hosted_registry_replicas=1
-openshift_hosted_registry_cert_expire_days=3650
-openshift_hosted_manage_registry=true
-openshift_hosted_registry_storage_kind=nfs
-openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
-openshift_hosted_registry_storage_nfs_directory=/exports
-openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
-openshift_hosted_registry_storage_volume_name=registry
-openshift_hosted_registry_storage_volume_size=10Gi
-
-openshift_metrics_install_metrics=true
-openshift_metrics_hawkular_hostname=hawkular-metrics.apps.example.com
-openshift_metrics_cassandra_storage_type=emptydir
-openshift_metrics_image_prefix=registry.example.com/openshift3/
-
-#openshift_logging_install_logging=true
-#openshift_logging_image_prefix=registry.example.com/openshift3/
-
-openshift_hosted_prometheus_deploy=false
-openshift_prometheus_storage_kind=nfs
-openshift_prometheus_storage_access_modes=['ReadWriteOnce']
-openshift_prometheus_storage_nfs_directory=/exports
-openshift_prometheus_storage_nfs_options='*(rw,root_squash)'
-openshift_prometheus_storage_volume_name=prometheus
-openshift_prometheus_storage_volume_size=10Gi
-openshift_prometheus_storage_labels={'storage': 'prometheus'}
-openshift_prometheus_storage_type='pvc'
-openshift_prometheus_alertmanager_storage_kind=nfs
-openshift_prometheus_alertmanager_storage_access_modes=['ReadWriteOnce']
-openshift_prometheus_alertmanager_storage_nfs_directory=/exports
-openshift_prometheus_alertmanager_storage_nfs_options='*(rw,root_squash)'
-openshift_prometheus_alertmanager_storage_volume_name=prometheus-alertmanager
-openshift_prometheus_alertmanager_storage_volume_size=10Gi
-openshift_prometheus_alertmanager_storage_labels={'storage': 'prometheus-alertmanager'}
-openshift_prometheus_alertmanager_storage_type='pvc'
-openshift_prometheus_alertbuffer_storage_kind=nfs
-openshift_prometheus_alertbuffer_storage_access_modes=['ReadWriteOnce']
-openshift_prometheus_alertbuffer_storage_nfs_directory=/exports
-openshift_prometheus_alertbuffer_storage_nfs_options='*(rw,root_squash)'
-openshift_prometheus_alertbuffer_storage_volume_name=prometheus-alertbuffer
-openshift_prometheus_alertbuffer_storage_volume_size=10Gi
-openshift_prometheus_alertbuffer_storage_labels={'storage': 'prometheus-alertbuffer'}
-openshift_prometheus_alertbuffer_storage_type='pvc'
-openshift_prometheus_image_prefix=registry.example.com/openshift3/
-openshift_prometheus_image_version=v3.9.27
-openshift_prometheus_proxy_image_prefix=registry.example.com/openshift3/
-openshift_prometheus_proxy_image_version=v3.9.27
-openshift_prometheus_alertbuffer_image_prefix=registry.example.com/openshift3/
-openshift_prometheus_alertbuffer_image_version=v3.9.27
-openshift_prometheus_altermanager_image_prefix=registry.example.com/openshift3/
-openshift_prometheus_alertmanager_image_version=v3.9.27
-openshift_prometheus_node_exporter_image_prefix=registry.example.com/openshift3/
-openshift_prometheus_node_exporter_image_version=v3.9.27
-
-osm_default_node_selector='region=default'
-
-# host group for masters
-[masters]
-master.example.com 
-
-# host group for etcd
-[etcd]
-master.example.com
-
-# host group for nodes, includes region info
-[nodes]
-master.example.com openshift_node_labels="{'region': 'default', 'zone': 'default'}"
-node1.example.com openshift_node_labels="{'region': 'infra', 'router': 'yes', 'zone': 'outer'}" openshift_schedulable=true
-node2.example.com openshift_node_labels="{'region': 'default', 'zone': 'default'}" openshift_schedulable=true
-
-[nfs]
-nfs.example.com 
-EOF
----- 
-
-*相关 hosts 文件*
-
-* link:hosts/hosts-3.6[hosts-3.6]
-* link:hosts/hosts-3.9.14[hosts-3.9.14]
-* link:hosts/hosts-3.9.25[hosts-3.9.25]
+|link:hosts/hosts-3.6[hosts-3.6]
+|OpenShift 3.6
+|===
 
 == 安装
 
 [source, bash]
+.*1 - Master 上执行 ansible 脚本*
 ----
 ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 ----
+
+[source, text]
+.*2 - Master 上验证安装是否完成*
+----
+# oc get nodes
+NAME                 STATUS     ROLES     AGE       VERSION
+infra.example.com    Ready      <none>    25s       v1.9.1+a0ce1bc657
+master.example.com   NotReady   <none>    5s        v1.9.1+a0ce1bc657
+node1.example.com    Ready      <none>    25s       v1.9.1+a0ce1bc657
+node2.example.com    Ready      <none>    25s       v1.9.1+a0ce1bc657
+
+
+# oc get pods -o wide --all-namespaces
+NAMESPACE                           NAME                             READY     STATUS             RESTARTS   AGE       IP              NODE
+default                             docker-registry-1-gpntv          1/1       Running            0          7m        10.244.4.17     infra.example.com
+default                             registry-console-1-v2g6z         1/1       Running            0          6m        10.244.0.2      node1.example.com
+default                             router-1-cp6hc                   1/1       Running            0          7m        192.168.56.64   infra.example.com
+kube-service-catalog                apiserver-tc5ff                  1/1       Running            0          1m        10.244.6.4      master.example.com
+kube-service-catalog                controller-manager-fvzwn         1/1       Running            0          1m        10.244.6.5      master.example.com
+openshift-ansible-service-broker    asb-1-deploy                     1/1       Running            0          1m        10.244.4.21     infra.example.com
+openshift-ansible-service-broker    asb-1-n488l                      0/1       CrashLoopBackOff   3          1m        10.244.4.23     infra.example.com
+openshift-ansible-service-broker    asb-etcd-1-8kchr                 0/1       CrashLoopBackOff   3          1m        10.244.4.24     infra.example.com
+openshift-ansible-service-broker    asb-etcd-1-deploy                1/1       Running            0          1m        10.244.4.22     infra.example.com
+openshift-infra                     hawkular-cassandra-1-v4jbj       1/1       Running            0          5m        10.244.2.3      node2.example.com
+openshift-infra                     hawkular-metrics-fft5n           1/1       Running            0          5m        10.244.4.19     infra.example.com
+openshift-infra                     heapster-lv5vc                   1/1       Running            0          5m        10.244.0.3      node1.example.com
+openshift-metrics                   prometheus-0                     4/6       CrashLoopBackOff   10         4m        10.244.4.20     infra.example.com
+openshift-metrics                   prometheus-node-exporter-dx98n   1/1       Running            0          4m        192.168.56.66   master.example.com
+openshift-metrics                   prometheus-node-exporter-g5ncc   1/1       Running            0          4m        192.168.56.62   node1.example.com
+openshift-metrics                   prometheus-node-exporter-jstjz   1/1       Running            0          4m        192.168.56.63   node2.example.com
+openshift-metrics                   prometheus-node-exporter-ncnf6   1/1       Running            0          4m        192.168.56.64   infra.example.com
+openshift-template-service-broker   apiserver-pp2hx                  1/1       Running            0          1m        10.244.4.25     infra.example.com
+openshift-web-console               webconsole-64f899d7d6-fxgkc      1/1       Running            1          6m        10.244.6.2      master.example.com
+----
+
 

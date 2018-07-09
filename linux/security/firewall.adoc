@@ -1,4 +1,4 @@
-= Using SELinux Contexts to perform permission control 
+= firewalld
 :toc: manual
 
 == Issue

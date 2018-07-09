@@ -1,6 +1,44 @@
 = 文件权限
 :toc: manual
 
+== 更改文件/目录的权限
+
+*chmod WhoWhatWhich file|directory* 修改文件或目录的权限。
+
+|===
+|类型 |关键字 |描述
+
+|Who
+|u、g、o、a
+|表用户、组、其他、全部
+
+|What
+|+、-、=
+|代表添加、删除、精确设置
+
+|Which
+|r、w、x
+|代表读取、写入、执行
+|===
+
+*chmod ### file|directory* 数值法修改文件或目录的权限。
+
+* 每个数字代表一个访问级别：用户、组、其他。
+* # 是 r=4、w=2 和 x=1 的和。
+
+== 文件不可编辑
+
+[source, text]
+----
+# echo "test" > test
+
+# lsattr test 
+---------------- test
+
+# chattr +i test
+# chattr -i test
+----
+
 == 修改文件权限
 
 [source, text]
@@ -24,7 +62,7 @@
 umask 027
 ----
 
-== POSIX ACLs
+== 访问控制列表
 
 [source, text]
 .*getfacl 查看文件权限设置*

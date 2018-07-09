@@ -2,6 +2,21 @@
 = Security Enhanced Linux (SELinux)
 :toc: manual
 
+== 什么时 SELinux
+
+Security Enhanced Linux (SELinux) 是一个额外的系统安全层。SELinux 的主要目标是防止已遭泄露的系统服务访问用户数据。大多数 Linux 管理员都熟悉标准的用户/组/其他权限安全模型。这种基于用户和组的模型称为自由决定的访问控制。SELinux 提供另一层安全，它基于对象并由更加复杂的规则控制，称为强制访问控制。
+
+SELinux 是用于确定哪个进程可以访问哪些文件、目录和端口的一组安全规则。每个文件、进程和端口都具有特别的安全标签，称为 SELinux 上下文。上下文是一个名称，SELinux 策略使用它来确定某个进程能否访问文件、目录或端口。除非显式规则授予访问权限，否则，在默认情况下，策略不允许任何交互。如果没有允许规则，则不允许访问。
+
+[source, text]
+.*ls -Z 查看上下文*
+----
+# ls -Z
+drw-rw---x. root root unconfined_u:object_r:admin_home_t:s0 123
+-rwxrwxrwx. root root unconfined_u:object_r:admin_home_t:s0 1.txt
+----
+
+
 == SELinux modes
 
 * enforcing - SELinux security policy is enforced.

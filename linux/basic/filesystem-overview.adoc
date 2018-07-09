@@ -45,11 +45,15 @@
 |创建 soft link
 |===
 
-== 在文件上创建 link
+== Linux 文件系统结构
 
-.*Hard Link Vs Soft Link*
+image:img/linux_filesystem_hierarchy.png[]
+
+== 文件的 hard link 和 soft link 
+
+.*Hard Link 和 Soft Link 的区别*
 |===
-|命令 |描述
+|编号 |描述
 
 |1
 |当原始文件删除后 hard link 文件保存了原始文件的内容，而 soft link 不会。
@@ -58,9 +62,21 @@
 |soft link 可以指向一个文件夹，而 hard link 不可以。
 |===
 
+=== ulimit 控制 hard link 和 soft link 最大打开数
+
+`/etc/security/limits.conf` 文件控制 hard link，soft link 以及最大打开文件数。
 
 [source, text]
-.*创建一个文件*
+.*ulimit 查看 soft/hard link*
+----
+# ulimit
+# ulimit -a
+----
+
+=== 在文件上创建 link 示例
+
+[source, text]
+.*1 - 创建一个文件*
 ----
 # echo "Hello World" > newfile.txt
 # ls -l newfile.txt
@@ -68,7 +84,7 @@
 ----
 
 [source, text]
-.*ln 创建一个 hard link*
+.*2 - ln 创建一个 hard link*
 ----
 # ln newfile.txt /tmp/newfile-hlink.txt
 # ls -l newfile.txt /tmp/newfile-hlink.txt
@@ -77,17 +93,36 @@
 ----
 
 [source, text]
-.*ln -s 创建一个 soft link*
+.*3 - ln -s 创建一个 soft link*
 ----
-# ln -s /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
-# ls -l newfile.txt /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
--rw-r--r--. 2 root root 12 Nov 26 17:18 newfile.txt
--rw-r--r--. 2 root root 12 Nov 26 17:18 /tmp/newfile-hlink.txt
-lrwxrwxrwx. 1 root root 22 Nov 26 17:23 /tmp/newfile-slink.txt -> /tmp/newfile-hlink.txt
+# ln -s newfile.txt /tmp/newfile-slink.txt
+
+# ls -il newfile /tmp/newfile-hlink.txt /tmp/newfile-slink.txt 
+  4693201 -rw-r--r--. 2 root root 0 Jul  9 11:39 newfile
+  4693201 -rw-r--r--. 2 root root 0 Jul  9 11:39 /tmp/newfile-hlink.txt
+134686970 lrwxrwxrwx. 1 root root 7 Jul  9 11:41 /tmp/newfile-slink.txt -> newfile
+----
+
+NOTE: 文件和其对应的 hard link 文件的 inode 是相同的。inode 是在磁盘格式化时创建。
+
+[source, text]
+.*4 - 编辑文件*
+----
+# echo "modify from hard link" >> /tmp/newfile-hlink.txt 
+# echo "nodify from soft link" >> /tmp/newfile-slink.txt
+
+# cat newfile.txt && cat /tmp/newfile-hlink.txt && cat /tmp/newfile-slink.txt 
+
+# rm newfile.txt
+# ls -l /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+-rw-r--r--. 1 root root 34 Jul  9 11:17 /tmp/newfile-hlink.txt
+lrwxrwxrwx. 1 root root 11 Jul  9 11:09 /tmp/newfile-slink.txt -> newfile.txt
+
+# cat /tmp/newfile-hlink.txt && cat /tmp/newfile-slink.txt
 ----
 
 [source, text]
-.*ln -s 创建一个 soft link 指向文件夹*
+.*5 - ln -s 创建一个 soft link 指向文件夹*
 ----
 # ln -s /tmp /root/tempdir
 # ls -l /root/
