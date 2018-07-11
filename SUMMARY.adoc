@@ -14,6 +14,7 @@
 ... link:linux/basic/packages-update.adoc[软件包的安装与更新]
 ... link:linux/basic/syslog.adoc[系统日志]
 ... link:linux/basic/ntp.adoc[NTP]
+... link:linux/basic/ex.adoc[QA]
 .. link:linux/networking/README.adoc[网络]
 ... link:linux/networking/ifcfg.adoc[网络配置]
 ... link:linux/networking/ipv6cfg.adoc[IPv6 网络配置]

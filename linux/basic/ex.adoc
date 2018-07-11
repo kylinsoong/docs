@@ -1,0 +1,99 @@
+= 问题
+:toc: manual
+
+== root 用户忘记密码登录
+
+开机按 e 键进入启动配置界面
+
+image:img/boot-e.png[]
+
+找到 linux16 开头的行，跳到最后，输入 rd.break 后，按 ctrl+x 启动，
+
+[source, bash]
+.*由于半启动状态的系统，为只读，所以需要已读写方式重新挂载*
+----
+mount -o remount,rw /sysroot
+----
+
+[source, bash]
+----
+chroot /sysroot
+----
+
+[source, bash]
+.*修改 root 密码*
+----
+echo redhat | passwd root --stdin
+----
+
+[source, bash]
+.*创建 /.autorelabel 文件，让系统在启动时重新 SELinux 安全上下文*
+----
+touch /.autorelabel
+----
+
+[source, bash]
+.*连续两次 exit 等待系统重启后就可以登陆了*
+----
+exit
+exit
+----
+
+== DHCP 获取 IP 地址的网络设备切换到静态 IP 地址
+
+desktop 已经设置 eth0 网络为 DHCP，请修改 desktop 的网络，并满足以下要求：
+
+* IP：   172.25.0.100
+* 掩码： 255.255.255.0
+* 网关： 172.25.0.254
+* DNS：  172.25.0.254
+* 主机名： desktop0.example.com
+
+[source, bash]
+----
+nmcli connection add con-name eth0 ifname eth0 type ethernet autoconnect yes ip4 172.25.0.10/24 gw4 172.25.0.254
+nmcli connection modify eth0 ipv4.dns 172.25.0.254
+nmcli connection up eth0
+hostnamectl set-hostname desktop0.example.com
+----
+
+== 设置 SELinux 状态为 Enforce
+
+请设置 server 虚拟机的 SELinux 状态为 Enforce
+
+[source, bash]
+.*编辑 /etc/selinux/config，添加*
+----
+SELINUX=enforcing
+----
+
+== 配置 yum 执行本地 YUM 源
+
+请删除 server 虚拟机中的yum配置，并创建一个新的yum配置文件，实验环境中 yum 仓库的地址为 http://content.example.com/rhel7.0/x86_64/dvd。
+
+[source, bash]
+----
+yum-config-manager --add-repo=http://content.example.com/rhel7.0/x86_64/dvd
+----
+
+[source, bash]
+.*vim 创建的文件，添加*
+----
+gpgcheck=0
+----
+
+[source, bash]
+.*测试*
+----
+yum install httpd
+----
+
+== 创建用户和组
+
+
+
+[source, bash]
+----
+
+----
+

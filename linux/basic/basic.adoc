@@ -153,6 +153,12 @@ NOTE: 默认 locate 数据库会每天更新一次，`updatedb` 可以进行手�
 ----
 
 [source, text]
+.*find -user 查找某用户拥有的文件*
+----
+find / -user kylin
+----
+
+[source, text]
 .*find -iname*
 ----
 # find / -iname '*messages*'
