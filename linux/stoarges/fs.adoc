@@ -3,14 +3,13 @@
 
 == mount/unmount 文件系统
 
+mount 文件系统的一般步骤：
+
 [source, text]
-.*1 - 查看块设备*
+.*1 - 查看存在的分区及文件系统 UUID*
 ----
-# blkid
-/dev/vda1: UUID="e055ef62-8369-4822-898a-0177fabdce0b" TYPE="xfs" 
-/dev/vda2: UUID="N4VWXs-LLXz-XibL-oHGD-zyI0-ekvX-3eVWHP" TYPE="LVM2_member" 
-/dev/mapper/rhel-root: UUID="27d2eaed-e282-4cc2-815a-aefc678a7c30" TYPE="xfs" 
-/dev/mapper/rhel-swap: UUID="52801be3-b410-46ab-b690-17605386b099" TYPE="swap"
+# blkid 
+/dev/vda1: UUID="9bf6b9f7-92ad-441b-848e-0257cbb883d1" TYPE="xfs"
 ----
 
 [source, text]
@@ -21,7 +20,7 @@
 # cd /mnt/mydata
 ----
 
-NOTE: mount 也可以使用文件系统的 UUID，例如上述 mount 操作也可以通过命令`mount UUID="e055ef62-8369-4822-898a-0177fabdce0b" /mnt/mydata`
+NOTE: mount 也可以使用文件系统的 UUID，例如上述 mount 操作也可以通过命令`mount UUID="9bf6b9f7-92ad-441b-848e-0257cbb883d1" /mnt/mydata`
 
 [source, text]
 .*3 - 查看打开的文件*

@@ -3,7 +3,13 @@
 
 == 更改文件/目录的权限
 
-*chmod WhoWhatWhich file|directory* 修改文件或目录的权限。
+*chmod* 用来更改文件/目录的权限。
+
+=== 符号法
+
+----
+chmod  WhoWhatWhich  file|directory
+----
 
 |===
 |类型 |关键字 |描述
@@ -21,12 +27,43 @@
 |代表读取、写入、执行
 |===
 
-*chmod ### file|directory* 数值法修改文件或目录的权限。
+[source, bash]
+.*对 file1 中的组和其他，删除读取和写入权限*
+----
+$ chmod go-rw file1
+----
+
+[source, bash]
+.*对 file2 中的每个人添加执行权限*
+----
+$ chmod a+x file2
+----
+
+=== 数值法
+
+----
+chmod  ###  file|directory
+----
 
 * 每个数字代表一个访问级别：用户、组、其他。
 * # 是 r=4、w=2 和 x=1 的和。
 
-== 文件不可编辑
+[source, bash]
+.*对用户设置读取、写入和执行权限，对组设置读取和执行权限，而对 sampledir 中的其他则设置无权限*
+----
+$ chmod 750 sampledir
+----
+
+=== -R & X
+
+chmod 命令支持 -R 选项以递归方式对整个目录树中的文件设置权限。在使用 -R 选项时，使用 X 标志以符号形式设置权限会非常有用。这将能够对目录设置执行（搜索）权限，以便在没有更改大部分文件权限的情况下，访问这些目录的内容。但是请谨慎操作。如果某个文件设置有任何执行权限，则 X 也将会对该文件设置指定的执行权限。例如，以下命令会以递归方式为组所有者设置对 demodir 及其所有子代的读、写访问权限，但将仅向已为用户、组和/或其他人设置了执行权限的目录和文件应用组执行权限。
+
+[source, bash]
+----
+$ chmod -R g+rwX demodir
+----
+
+== chattr +i 设置文件不可编辑
 
 [source, text]
 ----
@@ -36,33 +73,312 @@
 ---------------- test
 
 # chattr +i test
+
+# lsattr test 
+----i----------- test
+
+# ls -l test 
+-rw-r--r--. 1 root root 2 Jul 14 16:22 test
+
+# echo "test" >> test 
+-bash: test: Permission denied
+
 # chattr -i test
+
+# echo "test" >> test
 ----
 
-== 修改文件权限
+== 更改文件/目录的用户或组所有权
 
-[source, text]
-.*chown 修改文件所有者*
-----
-# chown :ateam /home/ateam-text
-----
+新建的文件由创建该文件的用户所有。默认情况下，新文件的组所有权为创建该文件的主要用户组。
 
 [source, text]
-.*chmod 修改文件权限*
 ----
-# chmod g+w /home/ateam-text
-# chmod 770 /home/ateam-text
+# for i in 1 2 3 ; do echo "" >> test$i ; ls -l test$i ; done
+-rw-r--r--. 1 root root 1 Jul 14 08:37 test1
+-rw-r--r--. 1 root root 1 Jul 14 08:37 test2
+-rw-r--r--. 1 root root 1 Jul 14 08:37 test3
 ----
-
-== 设定文件初始权限
 
 [source, text]
-.*umask 设定可读权限给组，其他用户无读写权限*
+.*将文件 test1 的所有权授予给 student*
 ----
-umask 027
+# chown student test1 && ls -l test1
+-rw-r--r--. 1 student root 1 Jul 14 08:31 tes
 ----
 
-== 访问控制列表
+[source, text]
+.*将文件 test2 的所有权授予给组 student*
+----
+# chown :student test2 && ls -l test2
+-rw-r--r--. 1 root student 1 Jul 14 08:37 test2
+----
+
+[source, text]
+.*将文件 test3 的所有权授予给用户 student 和组 student*
+---- 
+# chown student:student test3 && ls -l test3
+-rw-r--r--. 1 student student 1 Jul 14 08:37 test3
+----
+
+NOTE: 除了使用 chown 外，部分用户通过 chgrp 命令更改组所有权；此命令的工作方式与通过 chown 命令更改所有权完全相同，也可使用 -R 选项来作用于整个目录树。
+
+== 从命令行管理文件安全性
+
+[source, text]
+.*0 - 创建组 ateam 和用户andy, alice*
+----
+# cat /etc/group | grep "ateam"
+ateam:x:990:alice,andy
+----
+
+[source, text]
+.*1 - 在 /home 中创建名为 ateam-text 的目录*
+----
+# mkdir /home/ateam-text && cd /home && ls -l |grep ateam
+drwxr-xr-x. 2 root    root     6 Jul 14 08:56 ateam-text
+----
+
+[source, text]
+.*2 - 将 ateam-text 目录的组所有权更改为 ateam*
+----
+# chown :ateam /home/ateam-text/ && cd /home/ && ls -l | grep ateam-text
+drwxr-xr-x. 2 root    ateam    6 Jul 14 08:56 ateam-text
+----
+
+[source, text]
+.*3 - 确保 ateam-text 的权限允许组成员创建和删除文件*
+----
+# chmod g+w /home/ateam-text/ && cd /home/ && ls -l |grep ateam-text
+drwxrwxr-x. 2 root    ateam    6 Jul 14 08:56 ateam-text
+----
+
+[source, text]
+.*4 - 确保 ateam-text 的权限禁止其他人访问其文件*
+----
+# chmod 770 /home/ateam-text/ && ls -ld /home/ateam-text/
+drwxrwx---. 2 root ateam 6 Jul 14 08:56 /home/ateam-text/
+----
+
+[source, text]
+.*5 - 切换到 andy 用户*
+----
+# su - andy
+----
+
+[source, text]
+.*6 - 导航至 /home/ateam-text 文件夹，创建名为 andyfile 的空文件*
+----
+$ cd /home/ateam-text/ && touch andyfile && ls -l andyfile
+-rw-rw-r--. 1 andy andy 0 Jul 14 09:09 andyfile
+----
+
+[source, text]
+.*7 - 将新文件的组所有权更改为 ateam，然后记录新的所有权和权限*
+----
+$ chown :ateam andyfile && ls -l andyfile 
+-rw-rw-r--. 1 andy ateam 0 Jul 14 09:09 andyfile
+----
+
+[source, text]
+.*8 - 切换到 alice 用户*
+----
+$ su - alice
+----
+
+[source, text]
+.*9 - 导航至 /home/ateam-text 文件夹，确保 alice 的权限可访问和/或修改 andyfile*
+----
+$ cd /home/ateam-text/ && ls -l andyfile && echo "text" >> andyfile && cat andyfile
+-rw-rw-r--. 1 andy ateam 0 Jul 14 09:14 andyfile
+text
+----
+
+== 管理默认权限和文件访问
+
+本部分说明系统如何设置默认权限，以及如何使用 umask 和 SGID 控制对文件的自动访问。
+
+=== 特殊权限
+
+对可执行文件的 setuid（或 setgid）权限表示将以文件的用户（或组）身份运行命令，而不是以运行命令的用户身份。以 passwd 命令为例:
+
+[source, text]
+----
+$ ls -l /usr/bin/passwd 
+-rwsr-xr-x. 1 root root 27832 Jan 30  2014 /usr/bin/passwd
+----
+
+在长列表中，您可以通过小写的 s 辨别出 setuid 权限，该处通常是 x（所有者执行权限）。如果所有者不具有执行权限，这将由大写的 S 取代。
+
+目录的粘滞位(sticky bit)可以为文件删除设置特殊限制：仅文件所有者（和 root 用户）可以删除目录中的文件。以 /tmp 为例：
+
+[source, text]
+----
+$ ls -ld /tmp
+drwxrwxrwt. 9 root root 4096 Jul 14 09:24 /tmp
+----
+
+在长列表中，您可以通过小写的 t 辨别出 sticky 权限，该处通常是 x（其他执行权限）。如果其他用户不具有执行权限，这将会由大写 T 取代。
+
+最后，对某目录的 setgid 权限表示在该目录中创建的文件将继承该目录的组所属关系，而不是继承自创建用户。这通常用于组协作目录，将文件从默认的专有组自动更改为共享组。
+
+在长列表中，您可以通过小写的 s 辨别出 setgid 权限，该处通常是 x（组执行权限）。如果组不具有执行权限，这将会由大写 S 取代。
+
+.*特殊权限对文件和目录的影响*
+|===
+|特殊权限 |对文件的影响 |对目录的影响
+
+|u+s (suid)
+|以拥有文件的用户身份，而不是以运行文件的用户身份执行文件。
+|无影响。
+
+|g+s (sgid)
+|以拥有文件的组身份执行文件。
+|在目录中最新创建的文件将其组所有者设置为与目录的组所有者相匹配。
+
+|o+t (sticky)
+|无影响。
+|对目录具有写入权限的用户仅可以删除其所拥有的文件，而无法删除或强制保存到其他用户所拥有的文件。
+|===
+
+*设置特殊权限*
+
+1. 用符号表示：setuid = u+s；setgid = g+s；sticky = o+t
+2. 用数值表示（第四位）：setuid = 4；setgid = 2；sticky = 1
+
+[source, text]
+.*在 directory 目录上添加 setgid 位*
+----
+# ls -ld directory && chmod g+s directory && ls -ld directory
+drwxr-xr-x. 2 root root 6 Jul 14 09:32 directory
+drwxr-sr-x. 2 root root 6 Jul 14 09:32 directory
+----
+
+[source, text]
+.*设置 setgid 位，并对 directory 中的用户和组设置读取/写入/执行权限*
+----
+# ls -ld directory && chmod 2770 directory && ls -ld directory
+drwxr-xr-x. 2 root root 6 Jul 14 09:37 directory
+drwxrws---. 2 root root 6 Jul 14 09:37 directory
+----
+
+=== 默认文件权限
+
+文件的默认权限由创建它们的进程设置。例如：
+
+* 文本编辑器创建的文件可由所有人读取和写入，但不可执行。shell 重定向也是如此。
+* 二进制可执行文件由创建它们的编译器设为可执行权限。
+* mkdir 命令创建新的目录，并设置有全部权限，即读取、写入和执行。
+
+这些权限通常不是在新的文件和目录创建时予以设置。这是因为其中一些权限被 shell 进程的 umask 清除。不带参数运行 umask 命令将显示 shell 的 umask 的当前值：
+
+[source, text]
+----
+$ umask 
+0002
+----
+
+系统的每个进程都具有 umask，它是一个八进制位掩码，用于清除由该进程创建的新文件和目录的权限。如果在 umask 中设置了一个位，则新文件中的对应的权限将被清除。例如，前面的 umask 0002 清除其他用户的写入位。前导零表示特殊的用户和组权限未被清除。umask 为 077 时，清除新创建文件的所有组和其他权限。
+
+通过一个数字参数使用 umask 命令，可以更改当前 shell 的 umask。该数字参数应当是与新 umask 值对应的八进制值。如果少于 3 位，则假定带有前导零。
+
+Bash shell 用户的系统默认 umask 在 /etc/profile 和 /etc/bashrc 文件中定义。用户可以在他们的 .bash_profile 和 .bashrc 文件中覆盖系统默认值。
+
+=== umask 设定默认文件权限
+
+[source, text]
+.*1 - 创建新文件和目录，查看默认 umask 对权限的影响*
+----
+$ touch newfile1 && mkdir newdir1 && ls -ld new*
+drwxrwxr-x. 2 student student 6 Jul 14 09:55 newdir1
+-rw-rw-r--. 1 student student 0 Jul 14 09:55 newfile1
+----
+
+[source, text]
+.*2 - 将 umask 值设为 0。此设置不会屏蔽新文件的任何权限。创建新文件和目录，查看这一新的 umask 对权限的影响*
+----
+$ umask 0 && touch newfile2 && mkdir newdir2 && ls -ld *2
+drwxrwxrwx. 2 student student 6 Jul 14 09:56 newdir2
+-rw-rw-rw-. 1 student student 0 Jul 14 09:56 newfile2
+----
+
+[source, text]
+.*3 - 将 umask 值设为 007。此设置将屏蔽新文件的“其他”权限*
+----
+$ umask 007 && touch newfile3 && mkdir newdir3 && ls -ld *3
+drwxrwx---. 2 student student 6 Jul 14 09:58 newdir3
+-rw-rw----. 1 student student 0 Jul 14 09:58 newfile3
+----
+
+[source, text]
+.*4 - 将 umask 值设为 027。此设置将屏蔽新文件的组成员写入权限，和所有“其他”权限*
+----
+$ umask 027 && touch newfile4 && mkdir newdir4 && ls -ld *4
+drwxr-x---. 2 student student 6 Jul 14 09:59 newdir4
+-rw-r-----. 1 student student 0 Jul 14 09:59 newfile4
+----
+
+NOTE: 修改 /etc/bashrc 和 /etc/profile，以更改 Bash shell 用户的默认 umask。
+
+== 控制新文件权限和所有权
+
+[source, text]
+.*1 - 运行 umask 命令但不使用参数，以显示 alice 的默认 umask 值*
+----
+$ umask 
+0002
+----
+
+[source, text]
+.*2 - 创建新目录 /tmp/shared 和新文件 /tmp/shared/defaults，以查看默认 umask 对权限的影响*
+----
+$ mkdir /tmp/shared && touch /tmp/shared/defaults && ls -ld /tmp/shared && ls -l /tmp/shared/defaults
+drwxrwxr-x. 2 alice alice 21 Jul 14 10:09 /tmp/shared
+-rw-rw-r--. 1 alice alice 0 Jul 14 10:09 /tmp/shared/defaults
+----
+
+[source, text]
+.*3 - 将 /tmp/shared 的组所有权更改为 ateam，再记录新的所有权和权限*
+----
+$ chown :ateam /tmp/shared/ && ls -ld /tmp/shared/
+drwxrwxr-x. 2 alice ateam 21 Jul 14 10:09 /tmp/shared/
+----
+
+[source, text]
+.*4 - 在 /tmp/shared 中创建一个新文件，再记录新的所有权和权限*
+----
+$ touch /tmp/shared/alice3 && ls -l /tmp/shared/alice3
+-rw-rw-r--. 1 alice alice 0 Jul 14 10:12 /tmp/shared/alice
+----
+
+[source, text]
+.*5 - 确保 /tmp/shared 的权限使该目录中创建的文件继承 ateam 的组所有权*
+----
+$ chmod g+s /tmp/shared/ && ls -ld /tmp/shared && touch /tmp/shared/alice4 && ls -l /tmp/shared/alice4
+drwxrwsr-x. 2 alice ateam 34 Jul 14 10:11 /tmp/shared
+-rw-rw-r--. 1 alice ateam 0 Jul 14 10:15 /tmp/shared/alice4
+----
+
+[source, text]
+.*6 - 更改 alice 的 umask，以便在创建新文件时使组拥有只读访问权限，其他用户没有访问权限*
+----
+$ umask 027 && touch /tmp/shared/alice5 && ls -l /tmp/shared/alice5
+-rw-r-----. 1 alice ateam 0 Jul 14 10:17 /tmp/shared/alice5
+----
+
+== 访问控制列表 (ACL)
+
+=== 什么是访问控制列表
+
+标准 Linux 文件权限可以满足绝大多数情况的要求，但它也有局限性。限制访问文件的权限仅限授予文件所有者、单组成员或其他任何人。进程（正在运行的程序）可能不适合成为文件所属组的成员，授予所有人权限则更不是理想的操作。
+
+ACL 允许向文件分配细化权限。除标准的文件所有者、组所有者和其他文件权限之外，还可向指定用户或指定组，以及由 UID 或 GUID 确定的用户和组授予权限。这些权限均应用相同的权限标志：r - 读取、w - 写入、x - 执行（用于文件和搜索目录）。
+
+文件所有者可以在单个文件或目录上设置 ACL。新文件和子目录可以自动从父目录默认 ACL（若已设置）中继承 ACL 设置。与常规文件的访问规则相似，父目录层次结构需要至少设置其他执行权限，以便启用指定用户和指定组的访问权限。
+
+=== 文件系统挂载选项
+
+文件系统需挂载已启用的 ACL 支持。XFS 文件系统内置有 ACL 支持。在红帽企业 Linux 7 上创建的 ext4 文件系统默认启用了 acl 选项，而安装后在红帽企业 Linux 早期版本中创建的 ext4 文件系统则可能需要通过挂载请求包含 acl 选项，或者在超级块中设置此选项。
 
 [source, text]
 .*getfacl 查看文件权限设置*
@@ -70,10 +386,15 @@ umask 027
 $ getfacl /usr/bin/passwd
 ----
 
-== 文件安全控制
+== 使用 ACL 保护文件安全
+
+使用 setfacl 添加、修改或删除文件和目录的标准 ACL。
+
+ACL 采用普通的权限文件系统表示法：“r”表示读取权限，“w”表示写入权限，“x”表示执行权限。“-”（短划线）表示缺少相关权限。在（以递归方式）设置 ACL 时，大写字母“X”可用于表示：如果文件还没有相关的执行权限，则只应设置目录（而非常规文件）的执行权限。这一行为与 chmod 相同。
+
+添加或修改 ACL. 可以使用 -m 通过命令行设置 ACL，或使用 -M（使用“-”（短划线），而不使用 stdin 的文件名）通过文件传递 ACL。这两个选项是“修改”选项；它们会为文件或目录添加新的 ACL 条目，或替换特定的现有 ACL 条目。文件或目录的任何其他现有 ACL 条目均保持不变。
 
 [source, text]
-.**
 ----
 # setfacl -Rm g:sodor:rwX /shares/steamies
 # setfacl -Rm u:james:- /shares/steamies
@@ -81,6 +402,43 @@ $ getfacl /usr/bin/passwd
 # setfacl -m d:u:james:- /shares/steamies
 ----
 
+== 场景练习
 
+=== 练习一
+
+创建一个目录，/home/managers 目录：
+
+* 这个目录的所属组应该是 manager
+* manager 组的成员对这个目录应该由读写执行权限
+* 其他用户对这个目录没有任何权限（root不算）
+* 当在这个目录下创建文件时，新建文件的所属组应该也是 manager
+
+[source, text]
+----
+# mkdir /home/managers
+# chown :manager /home/managers/
+# chmod g+rwx /home/managers
+# ls -ld /home/managers
+# chmod g+s /home/managers
+----
+
+=== 练习二
+
+1. 拷贝 /etc/exports 文件到 /tmp 目录下
+2. /tmp/exports 文件所有者是root，所属组是root
+3. 这个文件不应该有执行权限
+4. 用户 tom 可以对这个文件进行读写操作
+5. 用户 jerry 只能读不能写
+6. 其他普通用户对这个文件没有任何权限
+
+[source, text]
+----
+# cp /etc/exports /tmp/
+# chown root:root /tmp/exports
+# chmod a-x /tmp/exports
+# setfacl -m u:tom:rw- /tmp/exports
+# setfacl -m u:jerry:r-- /tmp/exports
+# chmod o= /tmp/exports
+----
 
 

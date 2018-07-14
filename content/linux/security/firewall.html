@@ -1,0 +1,2602 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>防火墙 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="selinux-boolean-home.html" />
+    
+    
+    <link rel="prev" href="SELinux.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    INTRODUCTION
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    LINUX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../rhel/readme.html">
+            
+                <a href="../rhel/readme.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../rhel/pre-install.html">
+            
+                <a href="../rhel/pre-install.html">
+            
+                    
+                    安装 DVD 制作
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../rhel/install-img-usb.html">
+            
+                <a href="../rhel/install-img-usb.html">
+            
+                    
+                    生成 USB 介质
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../rhel/install.html">
+            
+                <a href="../rhel/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../rhel/kvm.html">
+            
+                <a href="../rhel/kvm.html">
+            
+                    
+                    KVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../basic/basic.html">
+            
+                <a href="../basic/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../basic/local-remote-login.html">
+            
+                <a href="../basic/local-remote-login.html">
+            
+                    
+                    本地及远程登录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../basic/filesystem-overview.html">
+            
+                <a href="../basic/filesystem-overview.html">
+            
+                    
+                    文件系统导视
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../basic/user-group.html">
+            
+                <a href="../basic/user-group.html">
+            
+                    
+                    用户和组
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../basic/packages-update.html">
+            
+                <a href="../basic/packages-update.html">
+            
+                    
+                    软件包的安装与更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../basic/syslog.html">
+            
+                <a href="../basic/syslog.html">
+            
+                    
+                    系统日志
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../basic/ntp.html">
+            
+                <a href="../basic/ntp.html">
+            
+                    
+                    NTP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.7" data-path="../basic/ex.html">
+            
+                <a href="../basic/ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../networking/">
+            
+                <a href="../networking/">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../networking/ifcfg.html">
+            
+                <a href="../networking/ifcfg.html">
+            
+                    
+                    网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../networking/ipv6cfg.html">
+            
+                <a href="../networking/ipv6cfg.html">
+            
+                    
+                    IPv6 网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../networking/netns.html">
+            
+                <a href="../networking/netns.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../networking/teaming.html">
+            
+                <a href="../networking/teaming.html">
+            
+                    
+                    teaming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../networking/bridge.html">
+            
+                <a href="../networking/bridge.html">
+            
+                    
+                    bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.6" data-path="../networking/dns.html">
+            
+                <a href="../networking/dns.html">
+            
+                    
+                    DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.7" data-path="../networking/tcp.html">
+            
+                <a href="../networking/tcp.html">
+            
+                    
+                    TCP
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../stoarges/readme.html">
+            
+                <a href="../stoarges/readme.html">
+            
+                    
+                    存储
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.1" data-path="../stoarges/fs.html">
+            
+                <a href="../stoarges/fs.html">
+            
+                    
+                    文件系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.2" data-path="../stoarges/lvm.html">
+            
+                <a href="../stoarges/lvm.html">
+            
+                    
+                    LVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3" data-path="../stoarges/nfs.html">
+            
+                <a href="../stoarges/nfs.html">
+            
+                    
+                    NFS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.4" data-path="../stoarges/file-storage.html">
+            
+                <a href="../stoarges/file-storage.html">
+            
+                    
+                    文件存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.5" data-path="../stoarges/block-storage.html">
+            
+                <a href="../stoarges/block-storage.html">
+            
+                    
+                    块存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="file-permissions.html">
+            
+                <a href="file-permissions.html">
+            
+                    
+                    文件权限
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="SELinux.html">
+            
+                <a href="SELinux.html">
+            
+                    
+                    SELinux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.5.3" data-path="firewall.html">
+            
+                <a href="firewall.html">
+            
+                    
+                    防火墙
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="selinux-boolean-home.html">
+            
+                <a href="selinux-boolean-home.html">
+            
+                    
+                    Appache to access user home directories
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../process/">
+            
+                <a href="../process/">
+            
+                    
+                    进程
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../process/management.html">
+            
+                <a href="../process/management.html">
+            
+                    
+                    进程管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../process/service.html">
+            
+                <a href="../process/service.html">
+            
+                    
+                    服务管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../process/schedule.html">
+            
+                <a href="../process/schedule.html">
+            
+                    
+                    周期性运行进程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../process/bash.html">
+            
+                <a href="../process/bash.html">
+            
+                    
+                    bash
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../svc/">
+            
+                <a href="../svc/">
+            
+                    
+                    常用服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../svc/openssh.html">
+            
+                <a href="../svc/openssh.html">
+            
+                    
+                    OpenSSH
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../svc/postfix.html">
+            
+                <a href="../svc/postfix.html">
+            
+                    
+                    Email
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../svc/mariadb.html">
+            
+                <a href="../svc/mariadb.html">
+            
+                    
+                    MariaDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../svc/httpd.html">
+            
+                <a href="../svc/httpd.html">
+            
+                    
+                    HTTPD
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../docker/docker.html">
+            
+                <a href="../../docker/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../docker/svc/svc.html">
+            
+                <a href="../../docker/svc/svc.html">
+            
+                    
+                    容器化服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../../docker/svc/mysql.html">
+            
+                <a href="../../docker/svc/mysql.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../../docker/svc/httpd.html">
+            
+                <a href="../../docker/svc/httpd.html">
+            
+                    
+                    httpd
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../docker/container.html">
+            
+                <a href="../../docker/container.html">
+            
+                    
+                    容器管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../docker/images.html">
+            
+                <a href="../../docker/images.html">
+            
+                    
+                    容器镜像
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../openshift/openshift.html">
+            
+                <a href="../../openshift/openshift.html">
+            
+                    
+                    OPENSHIFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../openshift/concepts/">
+            
+                <a href="../../openshift/concepts/">
+            
+                    
+                    概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../openshift/install/">
+            
+                <a href="../../openshift/install/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../../openshift/install/yum.html">
+            
+                <a href="../../openshift/install/yum.html">
+            
+                    
+                    本地 yum 源配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="../../openshift/install/docker-dist.html">
+            
+                <a href="../../openshift/install/docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/pre-install.html">
+            
+                <a href="../../openshift/install/pre-install.html">
+            
+                    
+                    前续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/install.html">
+            
+                <a href="../../openshift/install/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/post-install.html">
+            
+                <a href="../../openshift/install/post-install.html">
+            
+                    
+                    后续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/qa.html">
+            
+                <a href="../../openshift/install/qa.html">
+            
+                    
+                    常见问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../openshift/samples/samples.html">
+            
+                <a href="../../openshift/samples/samples.html">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="../../openshift/samples/rc.html">
+            
+                <a href="../../openshift/samples/rc.html">
+            
+                    
+                    RC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.2" data-path="../../openshift/samples/dc.html">
+            
+                <a href="../../openshift/samples/dc.html">
+            
+                    
+                    DC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.3" data-path="../../openshift/samples/s2i.html">
+            
+                <a href="../../openshift/samples/s2i.html">
+            
+                    
+                    S2I
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.4" data-path="../../openshift/samples/deploy-mysql-db.html">
+            
+                <a href="../../openshift/samples/deploy-mysql-db.html">
+            
+                    
+                    部署 mysql 数据库
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.5" data-path="../../openshift/samples/deploy-image-to-docker-registry.html">
+            
+                <a href="../../openshift/samples/deploy-image-to-docker-registry.html">
+            
+                    
+                    deploy image to docker registry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.6" data-path="../../openshift/samples/elastic-spark.html">
+            
+                <a href="../../openshift/samples/elastic-spark.html">
+            
+                    
+                    elasticsearch and spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.7" data-path="../../openshift/samples/wordpress/wp.html">
+            
+                <a href="../../openshift/samples/wordpress/wp.html">
+            
+                    
+                    wordpress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.8" data-path="../../openshift/samples/cicd.html">
+            
+                <a href="../../openshift/samples/cicd.html">
+            
+                    
+                    CICD Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9" data-path="../../openshift/samples/parksmap/os-parksmap.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap.html">
+            
+                    
+                    parksmap
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.9.1" data-path="../../openshift/samples/parksmap/os-parksmap-1.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-1.html">
+            
+                    
+                    1. Installing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.2" data-path="../../openshift/samples/parksmap/os-parksmap-2.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-2.html">
+            
+                    
+                    2. Exploring
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.3" data-path="../../openshift/samples/parksmap/os-parksmap-3.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-3.html">
+            
+                    
+                    3. Architecture Overview
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.4" data-path="../../openshift/samples/parksmap/os-parksmap-4.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-4.html">
+            
+                    
+                    4. Deploying Docker Image
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.5" data-path="../../openshift/samples/parksmap/os-parksmap-5.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-5.html">
+            
+                    
+                    5. Scaling
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.6" data-path="../../openshift/samples/parksmap/os-parksmap-6.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-6.html">
+            
+                    
+                    6. Creating Routes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.7" data-path="../../openshift/samples/parksmap/os-parksmap-7.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-7.html">
+            
+                    
+                    7. Role-Based Access Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.8" data-path="../../openshift/samples/parksmap/os-parksmap-8.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-8.html">
+            
+                    
+                    8. Deploying Python
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.9" data-path="../../openshift/samples/parksmap/os-parksmap-9.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-9.html">
+            
+                    
+                    9. Adding MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.10" data-path="../../openshift/samples/parksmap/os-parksmap-10.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-10.html">
+            
+                    
+                    10. Application Health
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.11" data-path="../../openshift/samples/parksmap/os-parksmap-11.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-11.html">
+            
+                    
+                    11. CI/CD
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.9.12" data-path="../../openshift/samples/parksmap/os-parksmap-12.html">
+            
+                <a href="../../openshift/samples/parksmap/os-parksmap-12.html">
+            
+                    
+                    12. Using Templates
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.10" data-path="../../openshift/samples/vdb-data-svc.html">
+            
+                <a href="../../openshift/samples/vdb-data-svc.html">
+            
+                    
+                    Teiid Data Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../openshift/devops.html">
+            
+                <a href="../../openshift/devops.html">
+            
+                    
+                    DevOps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../openshift/100/">
+            
+                <a href="../../openshift/100/">
+            
+                    
+                    PlaceHolder
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.5.1" data-path="../../openshift/100/001.html">
+            
+                <a href="../../openshift/100/001.html">
+            
+                    
+                    Create an App from a Docker image
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.2" data-path="../../openshift/100/002.html">
+            
+                <a href="../../openshift/100/002.html">
+            
+                    
+                    Create an App using Docker build
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.3" data-path="../../openshift/100/003.html">
+            
+                <a href="../../openshift/100/003.html">
+            
+                    
+                    Using Web Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.4" data-path="../../openshift/100/004.html">
+            
+                <a href="../../openshift/100/004.html">
+            
+                    
+                    Create an App using JBoss EAP builder image
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.5" data-path="../../openshift/100/005.html">
+            
+                <a href="../../openshift/100/005.html">
+            
+                    
+                    Using Templates
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.6" data-path="../../openshift/100/006.html">
+            
+                <a href="../../openshift/100/006.html">
+            
+                    
+                    Scale up/down and Idle the app
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.7" data-path="../../openshift/100/007.html">
+            
+                <a href="../../openshift/100/007.html">
+            
+                    
+                    Binary Deployment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.8" data-path="../../openshift/100/008.html">
+            
+                <a href="../../openshift/100/008.html">
+            
+                    
+                    Using SSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.9" data-path="../../openshift/100/009.html">
+            
+                <a href="../../openshift/100/009.html">
+            
+                    
+                    Horizontal Auto Scaling
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.10" data-path="../../openshift/100/010.html">
+            
+                <a href="../../openshift/100/010.html">
+            
+                    
+                    Blue-Green Deployments
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.11" data-path="../../openshift/100/011.html">
+            
+                <a href="../../openshift/100/011.html">
+            
+                    
+                    SCM Web Hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.12" data-path="../../openshift/100/012.html">
+            
+                <a href="../../openshift/100/012.html">
+            
+                    
+                    Rollback Applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.13" data-path="../../openshift/100/013.html">
+            
+                <a href="../../openshift/100/013.html">
+            
+                    
+                    Code Promotion across Environments
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.14" data-path="../../openshift/100/014.html">
+            
+                <a href="../../openshift/100/014.html">
+            
+                    
+                    JBoss Developer Studio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.15" data-path="../../openshift/100/015.html">
+            
+                <a href="../../openshift/100/015.html">
+            
+                    
+                    Deploy a SpringBoot Application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.16" data-path="../../openshift/100/016.html">
+            
+                <a href="../../openshift/100/016.html">
+            
+                    
+                    DaemonSets
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.17" data-path="../../openshift/100/017.html">
+            
+                <a href="../../openshift/100/017.html">
+            
+                    
+                    StatefulSets
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.18" data-path="../../openshift/100/018.html">
+            
+                <a href="../../openshift/100/018.html">
+            
+                    
+                    Jobs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.19" data-path="../../openshift/100/019.html">
+            
+                <a href="../../openshift/100/019.html">
+            
+                    
+                    ConfigMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.20" data-path="../../openshift/100/020.html">
+            
+                <a href="../../openshift/100/020.html">
+            
+                    
+                    Secrets
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.21" data-path="../../openshift/100/021.html">
+            
+                <a href="../../openshift/100/021.html">
+            
+                    
+                    PersistentVolumes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.22" data-path="../../openshift/100/022.html">
+            
+                <a href="../../openshift/100/022.html">
+            
+                    
+                    PersistentVolumeClaims
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.23" data-path="../../openshift/100/023.html">
+            
+                <a href="../../openshift/100/023.html">
+            
+                    
+                    Migrating Applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.24" data-path="../../openshift/100/024.html">
+            
+                <a href="../../openshift/100/024.html">
+            
+                    
+                    Template Creation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.25" data-path="../../openshift/100/025.html">
+            
+                <a href="../../openshift/100/025.html">
+            
+                    
+                    Deployment Strategies
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.26" data-path="../../openshift/100/026.html">
+            
+                <a href="../../openshift/100/026.html">
+            
+                    
+                    Port Forwarding
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.27" data-path="../../openshift/100/027.html">
+            
+                <a href="../../openshift/100/027.html">
+            
+                    
+                    Exposing non HTTP Services
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.28" data-path="../../openshift/100/028.html">
+            
+                <a href="../../openshift/100/028.html">
+            
+                    
+                    Persistent Volume Access Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.29" data-path="../../openshift/100/029.html">
+            
+                <a href="../../openshift/100/029.html">
+            
+                    
+                    Pipelines Using Jenkins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.30" data-path="../../openshift/100/030.html">
+            
+                <a href="../../openshift/100/030.html">
+            
+                    
+                    Binary Input Builds
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.31" data-path="../../openshift/100/031.html">
+            
+                <a href="../../openshift/100/031.html">
+            
+                    
+                    Docker Builds
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.32" data-path="../../openshift/100/032.html">
+            
+                <a href="../../openshift/100/032.html">
+            
+                    
+                    Writing Your Own S2I builders
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.33" data-path="../../openshift/100/development.html">
+            
+                <a href="../../openshift/100/development.html">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.5.33.1" data-path="../../openshift/100/040.html">
+            
+                <a href="../../openshift/100/040.html">
+            
+                    
+                    Git 服务器配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../ansible/">
+            
+                <a href="../../ansible/">
+            
+                    
+                    ANSIBLE
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../../jboss/readme.html">
+            
+                <a href="../../jboss/readme.html">
+            
+                    
+                    APPDEV
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../../jboss/api/readme.html">
+            
+                <a href="../../jboss/api/readme.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../../jboss/faas/openwhisk.html">
+            
+                <a href="../../jboss/faas/openwhisk.html">
+            
+                    
+                    Serverless
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../../jboss/rhdm/">
+            
+                <a href="../../jboss/rhdm/">
+            
+                    
+                    RHDM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../../jboss/datavirt/datavirt.html">
+            
+                <a href="../../jboss/datavirt/datavirt.html">
+            
+                    
+                    JDV
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.4.1" data-path="../../jboss/datavirt/software-list.html">
+            
+                <a href="../../jboss/datavirt/software-list.html">
+            
+                    
+                    软件版本号对照表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4.2" data-path="../../jboss/datavirt/changelog.html">
+            
+                <a href="../../jboss/datavirt/changelog.html">
+            
+                    
+                    修订记录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4.3" data-path="../../jboss/datavirt/download.html">
+            
+                <a href="../../jboss/datavirt/download.html">
+            
+                    
+                    下载
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4.4" data-path="../../jboss/datavirt/install.html">
+            
+                <a href="../../jboss/datavirt/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4.5" data-path="../../jboss/datavirt/start.html">
+            
+                <a href="../../jboss/datavirt/start.html">
+            
+                    
+                    启动
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4.6" data-path="../../jboss/datavirt/deploy-vdbs.html">
+            
+                <a href="../../jboss/datavirt/deploy-vdbs.html">
+            
+                    
+                    部署测试 VDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4.7" data-path="../../jboss/datavirt/meta.html">
+            
+                <a href="../../jboss/datavirt/meta.html">
+            
+                    
+                    元数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../../jboss/amq/amq.html">
+            
+                <a href="../../jboss/amq/amq.html">
+            
+                    
+                    A-MQ
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.5.1" data-path="../../jboss/amq/install.html">
+            
+                <a href="../../jboss/amq/install.html">
+            
+                    
+                    AMQ 6.3 安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="../../jboss/fuse/">
+            
+                <a href="../../jboss/fuse/">
+            
+                    
+                    Fuse
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.6.1" data-path="../../jboss/fuse/fuse-install.html">
+            
+                <a href="../../jboss/fuse/fuse-install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.2" data-path="../../jboss/fuse/fuse-online.html">
+            
+                <a href="../../jboss/fuse/fuse-online.html">
+            
+                    
+                    Fuse Online
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.3" data-path="../../jboss/fuse/fuse-all-in-one.html">
+            
+                <a href="../../jboss/fuse/fuse-all-in-one.html">
+            
+                    
+                    BRMS & JDV & Mariadb & REST & FTP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.4" data-path="../../jboss/fuse/camel-maximo-sap.html">
+            
+                <a href="../../jboss/fuse/camel-maximo-sap.html">
+            
+                    
+                    IBM Maximo SAP Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.5" data-path="../../jboss/fuse/getstart.html">
+            
+                <a href="../../jboss/fuse/getstart.html">
+            
+                    
+                    FIS Get Starts
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.6.5.1" data-path="../../jboss/fuse/gs-fis-rest.html">
+            
+                <a href="../../jboss/fuse/gs-fis-rest.html">
+            
+                    
+                    REST
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.5.2" data-path="../../jboss/fuse/gs-data-transformation.html">
+            
+                <a href="../../jboss/fuse/gs-data-transformation.html">
+            
+                    
+                    Transformation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.5.3" data-path="../../jboss/fuse/gs-fis-soap2rest.html">
+            
+                <a href="../../jboss/fuse/gs-fis-soap2rest.html">
+            
+                    
+                    SOAP TO REST
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.5.4" data-path="../../jboss/fuse/sso-3scale.html">
+            
+                <a href="../../jboss/fuse/sso-3scale.html">
+            
+                    
+                    3Scale & SSO on OpenShift
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.6" data-path="../../jboss/fuse/camel-cbr.html">
+            
+                <a href="../../jboss/fuse/camel-cbr.html">
+            
+                    
+                    Camel Content-Based Router
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.7" data-path="../../jboss/fuse/camel-eips.html">
+            
+                <a href="../../jboss/fuse/camel-eips.html">
+            
+                    
+                    Camel EIPs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.8" data-path="../../jboss/fuse/camel-errorhandler.html">
+            
+                <a href="../../jboss/fuse/camel-errorhandler.html">
+            
+                    
+                    Dead Letter Channel
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../../jboss/bpm/bpm.html">
+            
+                <a href="../../jboss/bpm/bpm.html">
+            
+                    
+                    BPM
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.7.1" data-path="../../jboss/bpm/install.html">
+            
+                <a href="../../jboss/bpm/install.html">
+            
+                    
+                    安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../../solutions/">
+            
+                <a href="../../solutions/">
+            
+                    
+                    SOLUTIONS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../../solutions/jbds-jdv.html">
+            
+                <a href="../../solutions/jbds-jdv.html">
+            
+                    
+                    JBDS 创建虚拟数据库操作示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../../solutions/ep-data-solution.html">
+            
+                <a href="../../solutions/ep-data-solution.html">
+            
+                    
+                    企业数据整合案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../../solutions/spark-gs.html">
+            
+                <a href="../../solutions/spark-gs.html">
+            
+                    
+                    Spark Get Start
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >防火墙</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="firewalld">firewalld</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_issue">Issue</a></li>
+<li><a href="#_solution">Solution</a></li>
+<li><a href="#_troubleshooting">Troubleshooting</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_issue">Issue</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>How to configure Apache to use a document root in a non-standard location?</p>
+</li>
+<li>
+<p>How to change the SELinux context of a directory and its contents persistently?</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solution">Solution</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Make sure Apache web server are installed correctly</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># systemctl status  httpd</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Configure Apache to use a document root in a non-standard location.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># mkdir /custom
+# echo &apos;SUCCESS&apos; &gt; /custom/ping
+# vim /etc/httpd/conf/httpd.conf
+# grep custom /etc/httpd/conf/httpd.conf
+DocumentRoot &quot;/custom&quot;
+&lt;Directory &quot;/custom&quot;&gt;
+&lt;Directory &quot;/custom&quot;&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Restart httpd</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># systemctl restart httpd</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access web content ping</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"># curl http://10.66.192.120/ping
+<span class="hljs-meta">&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>403 Forbidden<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Forbidden<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>You don&apos;t have permission to access /ping
+on this server.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+403 Forbidden return hints that you do not have permission to access the file.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Define a SELinux file context rule that sets the context type to httpd_sys_content_t for /custom and all the files below it.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># semanage fcontext -a -t httpd_sys_content_t &apos;/custom(/.*)?&apos;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use restorecon to change their contexts.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># restorecon -Rv /custom/
+restorecon reset /custom context unconfined_u:object_r:default_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /custom/ping context unconfined_u:object_r:default_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access web content ping</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Changing SELinux Booleans</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># curl http://10.66.192.120/ping
+SUCCESS</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section for troubleshooting that see how the issue be identified and resolved.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Remove the file context rule created earlier and restore the <code>/custom</code> directory structure back to its original SELinux context</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># ls -Z /custom/
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 ping
+# ls -Zd /custom/
+drwxr-xr-x. root root unconfined_u:object_r:httpd_sys_content_t:s0 /custom/
+# semanage fcontext -d -t httpd_sys_content_t &apos;/custom(/.*)?&apos;
+# restorecon -Rv /custom/
+restorecon reset /custom context unconfined_u:object_r:httpd_sys_content_t:s0-&gt;unconfined_u:object_r:default_t:s0
+restorecon reset /custom/ping context unconfined_u:object_r:httpd_sys_content_t:s0-&gt;unconfined_u:object_r:default_t:s0
+# ls -Z /custom/
+-rw-r--r--. root root unconfined_u:object_r:default_t:s0 ping
+# ls -Zd /custom/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /custom/</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access ping</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"># curl http://10.66.192.120/ping
+<span class="hljs-meta">&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>403 Forbidden<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Forbidden<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>You don&apos;t have permission to access /ping
+on this server.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Viewing the contents of <code>/var/log/messages</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># tail /var/log/messages
+Jun 12 23:29:17 ksoong setroubleshoot: SELinux is preventing /usr/sbin/httpd from getattr access on the file /custom/ping. For complete SELinux messages. run sealert -l 4c46f31a-bb2e-475b-a4a0-1c92669f8673</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Run the suggested sealert command and see if you can identify the issue and a possible resolution.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># sealert -l 4c46f31a-bb2e-475b-a4a0-1c92669f8673
+SELinux is preventing /usr/sbin/httpd from getattr access on the file /custom/ping.
+
+*****  Plugin catchall_labels (83.8 confidence) suggests   *******************
+
+If you want to allow httpd to have getattr access on the ping file
+Then you need to change the label on /custom/ping
+Do
+# semanage fcontext -a -t FILE_TYPE &apos;/custom/ping&apos;
+where FILE_TYPE is one of the following:
+....
+Then execute:
+restorecon -v &apos;/custom/ping&apos;
+....</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using the hints of the above message to solve the issue:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell"># semanage fcontext -a -t httpd_sys_content_t &apos;/custom(/.*)?&apos;
+# restorecon -Rv /custom/
+restorecon reset /custom context unconfined_u:object_r:default_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /custom/ping context unconfined_u:object_r:default_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0
+# curl http://10.66.192.120/ping
+SUCCESS</code></pre>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="SELinux.html" class="navigation navigation-prev " aria-label="Previous page: SELinux">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="selinux-boolean-home.html" class="navigation navigation-next " aria-label="Next page: Appache to access user home directories">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"防火墙","level":"1.2.5.3","depth":3,"next":{"title":"Appache to access user home directories","level":"1.2.5.4","depth":3,"path":"linux/security/selinux-boolean-home.adoc","ref":"linux/security/selinux-boolean-home.adoc","articles":[]},"previous":{"title":"SELinux","level":"1.2.5.2","depth":3,"path":"linux/security/SELinux.adoc","ref":"linux/security/SELinux.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/firewall.adoc","mtime":"2018-07-09T07:20:38.085Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-14T14:57:35.719Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

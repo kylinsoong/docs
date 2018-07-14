@@ -283,6 +283,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.2.7" data-path="ex.html">
+            
+                <a href="ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -522,12 +535,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.5.3" data-path="../security/selinux-contexts-permission-control.html">
+        <li class="chapter " data-level="1.2.5.3" data-path="../security/firewall.html">
             
-                <a href="../security/selinux-contexts-permission-control.html">
+                <a href="../security/firewall.html">
             
                     
-                    Using SELinux Contexts to perform permission control
+                    防火墙
             
                 </a>
             
@@ -2244,7 +2257,13 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#__">&#x57FA;&#x672C;&#x547D;&#x4EE4;</a></li>
-<li><a href="#__link">&#x5728;&#x6587;&#x4EF6;&#x4E0A;&#x521B;&#x5EFA; link</a></li>
+<li><a href="#_linux">Linux &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x7ED3;&#x6784;</a></li>
+<li><a href="#__hard_link_soft_link">&#x6587;&#x4EF6;&#x7684; hard link &#x548C; soft link</a>
+<ul class="sectlevel2">
+<li><a href="#_ulimit_hard_link_soft_link">ulimit &#x63A7;&#x5236; hard link &#x548C; soft link &#x6700;&#x5927;&#x6253;&#x5F00;&#x6570;</a></li>
+<li><a href="#__link">&#x5728;&#x6587;&#x4EF6;&#x4E0A;&#x521B;&#x5EFA; link &#x793A;&#x4F8B;</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="sect1">
@@ -2334,17 +2353,25 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="__link">&#x5728;&#x6587;&#x4EF6;&#x4E0A;&#x521B;&#x5EFA; link</h2>
+<h2 id="_linux">Linux &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x7ED3;&#x6784;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="img/linux_filesystem_hierarchy.png" alt="linux filesystem hierarchy.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__hard_link_soft_link">&#x6587;&#x4EF6;&#x7684; hard link &#x548C; soft link</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. <strong>Hard Link Vs Soft Link</strong></caption>
+<caption class="title">Table 1. <strong>Hard Link &#x548C; Soft Link &#x7684;&#x533A;&#x522B;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">&#x547D;&#x4EE4;</th>
+<th class="tableblock halign-left valign-top">&#x7F16;&#x53F7;</th>
 <th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
 </tr>
 </thead>
@@ -2359,8 +2386,23 @@
 </tr>
 </tbody>
 </table>
+<div class="sect2">
+<h3 id="_ulimit_hard_link_soft_link">ulimit &#x63A7;&#x5236; hard link &#x548C; soft link &#x6700;&#x5927;&#x6253;&#x5F00;&#x6570;</h3>
+<div class="paragraph">
+<p><code>/etc/security/limits.conf</code> &#x6587;&#x4EF6;&#x63A7;&#x5236; hard link&#xFF0C;soft link &#x4EE5;&#x53CA;&#x6700;&#x5927;&#x6253;&#x5F00;&#x6587;&#x4EF6;&#x6570;&#x3002;</p>
+</div>
 <div class="listingblock">
-<div class="title"><strong>&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;</strong></div>
+<div class="title"><strong>ulimit &#x67E5;&#x770B; soft/hard link</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ulimit
+# ulimit -a</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__link">&#x5728;&#x6587;&#x4EF6;&#x4E0A;&#x521B;&#x5EFA; link &#x793A;&#x4F8B;</h3>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># echo &quot;Hello World&quot; &gt; newfile.txt
 # ls -l newfile.txt
@@ -2368,7 +2410,7 @@
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>ln &#x521B;&#x5EFA;&#x4E00;&#x4E2A; hard link</strong></div>
+<div class="title"><strong>2 - ln &#x521B;&#x5EFA;&#x4E00;&#x4E2A; hard link</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># ln newfile.txt /tmp/newfile-hlink.txt
 # ls -l newfile.txt /tmp/newfile-hlink.txt
@@ -2377,23 +2419,53 @@
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>ln -s &#x521B;&#x5EFA;&#x4E00;&#x4E2A; soft link</strong></div>
+<div class="title"><strong>3 - ln -s &#x521B;&#x5EFA;&#x4E00;&#x4E2A; soft link</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># ln -s /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
-# ls -l newfile.txt /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
--rw-r--r--. 2 root root 12 Nov 26 17:18 newfile.txt
--rw-r--r--. 2 root root 12 Nov 26 17:18 /tmp/newfile-hlink.txt
-lrwxrwxrwx. 1 root root 22 Nov 26 17:23 /tmp/newfile-slink.txt -&gt; /tmp/newfile-hlink.txt</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># ln -s newfile.txt /tmp/newfile-slink.txt
+
+# ls -il newfile /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+  4693201 -rw-r--r--. 2 root root 0 Jul  9 11:39 newfile
+  4693201 -rw-r--r--. 2 root root 0 Jul  9 11:39 /tmp/newfile-hlink.txt
+134686970 lrwxrwxrwx. 1 root root 7 Jul  9 11:41 /tmp/newfile-slink.txt -&gt; newfile</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x6587;&#x4EF6;&#x548C;&#x5176;&#x5BF9;&#x5E94;&#x7684; hard link &#x6587;&#x4EF6;&#x7684; inode &#x662F;&#x76F8;&#x540C;&#x7684;&#x3002;inode &#x662F;&#x5728;&#x78C1;&#x76D8;&#x683C;&#x5F0F;&#x5316;&#x65F6;&#x521B;&#x5EFA;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x7F16;&#x8F91;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># echo &quot;modify from hard link&quot; &gt;&gt; /tmp/newfile-hlink.txt
+# echo &quot;nodify from soft link&quot; &gt;&gt; /tmp/newfile-slink.txt
+
+# cat newfile.txt &amp;&amp; cat /tmp/newfile-hlink.txt &amp;&amp; cat /tmp/newfile-slink.txt
+
+# rm newfile.txt
+# ls -l /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+-rw-r--r--. 1 root root 34 Jul  9 11:17 /tmp/newfile-hlink.txt
+lrwxrwxrwx. 1 root root 11 Jul  9 11:09 /tmp/newfile-slink.txt -&gt; newfile.txt
+
+# cat /tmp/newfile-hlink.txt &amp;&amp; cat /tmp/newfile-slink.txt</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>ln -s &#x521B;&#x5EFA;&#x4E00;&#x4E2A; soft link &#x6307;&#x5411;&#x6587;&#x4EF6;&#x5939;</strong></div>
+<div class="title"><strong>5 - ln -s &#x521B;&#x5EFA;&#x4E00;&#x4E2A; soft link &#x6307;&#x5411;&#x6587;&#x4EF6;&#x5939;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># ln -s /tmp /root/tempdir
 # ls -l /root/
 lrwxrwxrwx.  1 root  root          4 Feb 15 16:38 tempdir -&gt; /tmp
 # cd /root/tempdir/
 # ls</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -2440,7 +2512,7 @@ lrwxrwxrwx.  1 root  root          4 Feb 15 16:38 tempdir -&gt; /tmp
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"文件系统导视","level":"1.2.2.2","depth":3,"next":{"title":"用户和组","level":"1.2.2.3","depth":3,"path":"linux/basic/user-group.adoc","ref":"linux/basic/user-group.adoc","articles":[]},"previous":{"title":"本地及远程登录","level":"1.2.2.1","depth":3,"path":"linux/basic/local-remote-login.adoc","ref":"linux/basic/local-remote-login.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/basic/filesystem-overview.adoc","mtime":"2018-06-01T01:29:15.014Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-03T02:55:05.256Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"文件系统导视","level":"1.2.2.2","depth":3,"next":{"title":"用户和组","level":"1.2.2.3","depth":3,"path":"linux/basic/user-group.adoc","ref":"linux/basic/user-group.adoc","articles":[]},"previous":{"title":"本地及远程登录","level":"1.2.2.1","depth":3,"path":"linux/basic/local-remote-login.adoc","ref":"linux/basic/local-remote-login.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/basic/filesystem-overview.adoc","mtime":"2018-07-09T03:53:55.010Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-14T14:57:35.719Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

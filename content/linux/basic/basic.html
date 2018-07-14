@@ -283,6 +283,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.2.7" data-path="ex.html">
+            
+                <a href="ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -522,12 +535,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.5.3" data-path="../security/selinux-contexts-permission-control.html">
+        <li class="chapter " data-level="1.2.5.3" data-path="../security/firewall.html">
             
-                <a href="../security/selinux-contexts-permission-control.html">
+                <a href="../security/firewall.html">
             
                     
-                    Using SELinux Contexts to perform permission control
+                    防火墙
             
                 </a>
             
@@ -2243,6 +2256,7 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#_man">man</a></li>
 <li><a href="#_date">date</a></li>
 <li><a href="#_file">file</a></li>
 <li><a href="#_head">head</a></li>
@@ -2252,6 +2266,24 @@
 <li><a href="#_find">find</a></li>
 <li><a href="#_env">env</a></li>
 </ul>
+</div>
+<div class="sect1">
+<h2 id="_man">man</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>man &#x79CD;&#x7C7B;&#xFF0C;manDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ man man
+$ man 1 man
+$ man 7 man
+
+$ man -k partition
+$ man -k adduser
+adduser (8)          - create a new user or update default new user information
+$ man 8 adduser</code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect1">
 <h2 id="_date">date</h2>
@@ -2421,6 +2453,12 @@ $ wc -c /etc/passwd
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>find -user &#x67E5;&#x627E;&#x67D0;&#x7528;&#x6237;&#x62E5;&#x6709;&#x7684;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">find / -user kylin</code></pre>
+</div>
+</div>
+<div class="listingblock">
 <div class="title"><strong>find -iname</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># find / -iname &apos;*messages*&apos;</code></pre>
@@ -2519,7 +2557,7 @@ $ wc -c /etc/passwd
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2.2","depth":2,"next":{"title":"本地及远程登录","level":"1.2.2.1","depth":3,"path":"linux/basic/local-remote-login.adoc","ref":"linux/basic/local-remote-login.adoc","articles":[]},"previous":{"title":"KVM","level":"1.2.1.4","depth":3,"path":"linux/rhel/kvm.adoc","ref":"linux/rhel/kvm.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/basic/basic.adoc","mtime":"2018-06-01T01:29:15.015Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-03T02:55:05.256Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2.2","depth":2,"next":{"title":"本地及远程登录","level":"1.2.2.1","depth":3,"path":"linux/basic/local-remote-login.adoc","ref":"linux/basic/local-remote-login.adoc","articles":[]},"previous":{"title":"KVM","level":"1.2.1.4","depth":3,"path":"linux/rhel/kvm.adoc","ref":"linux/rhel/kvm.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/basic/basic.adoc","mtime":"2018-07-10T02:57:45.064Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-14T14:57:35.719Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
