@@ -868,3 +868,104 @@ exit
 ----
 
 |===
+
+=== 批量创建 Linux 用户
+
+在 server0 上创建一个脚本，名为 /root/mkusers , 同时满足下列要求：
+
+* 此脚本能实现为系统 server0 创建本地用户, 这些用户的用户名来自一个包含用户名列表的文件
+* 此脚本要求提供一个参数，此参数就是包含用户名列表的文件
+* 如果没有提供参数，此脚本应该给出下面的提示信息 Usage: /root/mkusers <userfile> 然后退出并返回相应的值
+* 如果提供一个不存在的文件名，此脚本应该给出下面的提示信息 Input file not found 然后退出并返回相应的值
+* 创建的用户登录 shell 为 /bin/false
+* 此脚本不需要为用户设置密码
+
+[source, text]
+.*创建一个 sample.users 文件*
+----
+# for i in tom jerry alias natasha mario harry ; do echo $i >> sample.users ; done
+# cat sample.users 
+tom
+jerry
+alias
+natasha
+mario
+harry
+----
+
+[source, text]
+.*创建 makeusers，批量添加用户*
+----
+#!/bin/bash
+if [ $# -ne 1 ]; then
+   echo 'Usage: /root/makeusers <userfile>' 
+   exit 1
+fi
+if [ ! -f "$1" ]; then
+   echo "Input file not found" 
+   exit 2
+fi
+   while read line 
+   do useradd -s /bin/false $line
+   done < $1
+----
+
+[source, text]
+.*执行测试脚本*
+----
+# chmod +x makeusers
+
+# ./makeusers 
+Usage: /root/makeusers <userfile>
+
+# ./makeusers no.exsit
+Input file not found
+
+# ./makeusers sample.users && tail -n 6 /etc/passwd
+tom:x:1001:1001::/home/tom:/bin/false
+jerry:x:1002:1002::/home/jerry:/bin/false
+alias:x:1003:1003::/home/alias:/bin/false
+natasha:x:1004:1004::/home/natasha:/bin/false
+mario:x:1005:1005::/home/mario:/bin/false
+harry:x:1006:1006::/home/harry:/bin/false
+----
+
+=== case/switch 示例
+
+在 server0 上创建一个名为 /root/script.sh 的脚本， 让其提供下列特性：
+
+* 当运行 /root/script.sh all，输出为 none
+* 当运行 /root/script.sh none，输出为 all
+* 当没有任何参数或者参数不是 all 或者 none时， 其错误输出产生以下的信息：all|none
+
+[source, bash]
+.*创建 script.sh 脚本，内容如下*
+----
+#!/bin/bash
+case $1 in
+     all)
+       echo "none" ;;
+     none)
+       echo "all" ;;
+     *)
+      echo "all|none" ;;
+esac
+----
+
+[source, text]
+.*运行测试*
+----
+# chmod +x script.sh
+
+# /root/script.sh all
+none
+
+# /root/script.sh none
+all
+
+# /root/script.sh
+all|none
+
+# /root/script.sh xxx
+all|none
+----

@@ -1,81 +1,460 @@
 = 文件存储
 :toc: manual
 
-== NFS 文件共享
+== 导出 NFS 文件系统
+
+NFS 服务器安装要求安装 nfs-utils 软件包。此软件包提供了使用 NFS 将目录导出到客户端而必需的所有实用程序。用于 NFS 服务器导出的配置文件为 `/etc/exports` 文件。`/etc/exports` 文件列出了要通过网络而与客户端主机共享的目录，并且指示哪些主机或网络对导出具有访问权限。
+
+NOTE: 可以不必将导出目录所需要的信息添加到 `/etc/exports` 文件，而将新创建的名为 `*.exports` 的文件添加到保存导出配置的 `/etc/exports.d/` 目录。
+
+.*编辑 /etc/exports 或 /etc/exports.d/X.exports，导出一个或多个客户端，以空格分隔*
+[cols="5a,2"]
+|===
+|格式 |说明
+
+|
+----
+/myshare server0.example.com
+----
+|DNS 可解析的主机名，例如 server0.example.com，其中导出 /myshare 目录并且由 server0.example.com 挂载。
+
+|
+----
+/myshare *.example.com
+----
+|DNS 可解析的主机名，包含通配符 *（表示多个字符）和/或 ?（表示单个字符），允许 example.com 域中的所有子域访问 NFS 导出。
+
+|
+----
+/myshare server[0-20].example.com
+----
+|DNS 可解析的主机名，包含括在方括号中的字符类列表。即主机 server0.example.com、server1.example.com 直至 server20.example.com 均可访问 NFS 导出。
+
+|
+----
+/myshare 172.25.11.10
+----
+|IPv4 地址。允许从 172.25.11.10 IP 地址访问 /myshare NFS 共享。
+
+|
+----
+/myshare 172.25.0.0/16
+----
+|IPv4 网络。/etc/exports 配置次条目，允许从 172.25.0.0/16 网络中访问 NFS 导出的目录 /myshare。
+
+|
+----
+/myshare 2000:472:18:b51:c32:a21
+----
+|不含方括号的 IPv6 地址，允许带有 IPv6 地址 2000:472:18:b51:c32:a21 的客户端访问 NFS 导出的目录 /myshare。
+
+|
+----
+/myshare 2000:472:18:b51::/64
+----
+|不含方括号的 IPv6 网络，允许 IPv6 网络 2000:472:18:b51::/64 访问 NFS 导出。
+
+|
+----
+/myshare *.example.com 172.25.0.0/16
+----
+|指定多个目标及其选项（用空格分隔），后跟要导出的目录，便可同时将某个目录导出到多个目标。
+
+|===
+
+.*客户端域名或 IP 后圆括号中可能将一个或多个导出选项指定为逗号分隔列表*
+[cols="2,5a,2"]
+|===
+|选项 |示例 |说明
+
+|ro
+|
+----
+/myshare desktop0.example.com(ro)
+----
+|只读：未指定任何设置时的默认设置。允许使用某个条目来显式指定此设置。限制 NFS 客户端读取 NFS 共享中的文件。禁止任何写操作。
+
+|rw
+|
+----
+/myshare desktop0.example.com(ro) server[0-20].example.com(rw)
+----
+|读写：允许对 NFS 客户端进行读写访问。在此示例中，desktop0.example.com 能够以只读方式访问 NFS 导出，而 server[0-20].example.com 对 NFS 共享具有读写访问权限。
+
+|no_root_squash
+|
+----
+/myshare diskless.example.com(rw,no_root_squash)
+----
+|默认情况下，NFS 服务器将 NFS 客户端上的 root 视作用户 nfsnobody。即，如果 root 尝试通过挂载的导出访问文件，服务器会将其视作用户 nfsnobody 访问。在 NFS 导出被无磁盘客户端用做 / 和 root 需要被当作 root 的情况下，这种安全措施存在隐患。若要禁用此保护，服务器需要将 no_root_squash 添加到在 /etc/exports 中为导出设置的选项列表。
+|===
+
+=== 配置 NFS 导出一般步骤
+
+配置 NFS 导出一般在 NFS 服务器端需要 5 个步骤，客户端需要 2 个步骤。
+
+[source, bash]
+.*服务端 1 - NFS 配置与服务*
+----
+systemctl start nfs-server && systemctl enable nfs-server
+----
+
+[source, bash]
+.*服务端 2 - 在 NFS 服务器上创建共享目录，创建目录 /myshare 以通过 NFS 将其在 NFS 服务器系统上共享*
+----
+mkdir /myshare
+----
+
+[source, bash]
+.*服务端 3 - 将 NFS 服务器上的 /myshare 目录作为支持读写的共享来导出到客户端。为此，请向 NFS 服务器上的 /etc/exports 文件中添加以下行*
+----
+/myshare CLIENTS(rw)
+----
+
+[source, bash]
+.*服务端 4 - 执行 exportfs -r 来应用更改，使共享目录生效*
+----
+exportfs -r
+----
+
+[source, bash]
+.*服务端 5 - 在服务器上打开用于 nfsd 的 NFS 端口 2049/TCP。firewalld 配置为支持即时访问 NFS 导出*
+----
+firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload
+----
+
+[source, bash]
+.*客户端 1 - 创建的挂载点，例如 /mnt/nfsexport 来挂载 NFS 导出的目录*
+----
+mkdir /mnt/nfsexport
+----
 
 [source, text]
-.*NFS 服务器上 exporing 一个共享文件存储*
+.*客户端 2 - 使用 mount 命令将共享挂载在新创建的挂载点 /mnt/nfsexport 上*
 ----
-# systemctl start nfs-server
-# systemctl enable nfs-server
-# mkdir /nfsshare
-# chown nfsnobody /nfsshare
-# echo '/nfsshare *(rw)' >>/etc/exports
-# exportfs -r
-# firewall-cmd --permanent --add-service=nfs
-# firewall-cmd --reload
+mount nfs.example.com:/myshare /mnt/nfsexport
+----
+
+=== NFS 提供共享存储
+
+NFS 服务器提供新创建的共享目录 /nfsshare，/nfsshare NFS 导出提供对 nfsnobody 的读写访问权限，客户端的 /mnt/nfsshare 挂载点上永久挂载共享。
+
+==== 服务器端配置
+
+[source, bash]
+.*1 - NFS 服务配置*
+----
+systemctl start nfs-server.service && systemctl enable nfs-server.servic
 ----
 
 [source, text]
-.*客户端服务器 Mounting 文件存储*
+.*2 - 创建要通过 NFS 共享的目录 /nfsshare，并将 /nfsshare 的所有权更改为用户 nfsnobody，以便 nfsnobody 能够对目录进行写操作*
 ----
-# mkdir /mnt/nfsshare
-# vim /etc/fstab
-nfs.example.com:/nfsshare  /mnt/nfsshare  nfs  defaults  0 0
-# mount -a
-# touch /mnt/nfsshare/test.txt
+# mkdir /nfsshare && chown nfsnobody /nfsshare && ls -ld /nfsshare
+drwxr-xr-x. 2 nfsnobody root 6 Jul 15 03:13 /nfsshare
 ----
 
-[source, text]
-.*Umounting 文件存储*
+[source, bash]
+.*3 - 编辑 /etc/exports 配置文件，以允许客户端西哦童嗯访问服务器上新创建的 /nfsshare 目录，且包含读写访问权限*
 ----
-# umount /mnt/nfsshare/
+echo '/nfsshare desktop0(rw)' >>/etc/exports
 ----
 
-== Kerberos 加固 NFS Exports
-
-[source, text]
-.*NFS 服务器端配置*
+[source, bash]
+.*4 - 使用 exportfs -r 命令在服务器上重新加载 /etc/exports 配置文件*
 ----
-# mv serverSample.keytab /etc/krb5.keytab
-# vim /etc/sysconfig/nfs
+exportfs -r
+----
+
+[source, bash]
+.*5 - 配置 firewalld 以允许访问服务器上的 NFS 服务*
+----
+firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload
+----
+
+==== 客户端配置
+
+[source, bash]
+.*1 - 创建挂载点 /mnt/nfsshare*
+----
+mkdir /mnt/nfsshare
+----
+
+[source, bash]
+.*2 - 在 /etc/fstab 中创建一个必需条目，以在客户端系统上新创建的目录 /mnt/nfsshare 中挂载导出的 NFS 共享*
+----
+server0:/nfsshare /mnt/nfsshare nfs defaults 0 0
+----
+
+[source, bash]
+.*3 - 执行挂载*
+----
+mount -a
+----
+
+[source, bash]
+.*4 - 验证挂载到 /mnt/nfsshare 的 NFS 共享*
+----
+# touch /mnt/nfsshare/test.txt && ls -l /mnt/nfsshare/
+total 0
+-rw-r--r--. 1 nfsnobody nfsnobody 0 Jul 15 03:27 test.txt
+----
+
+== 安全加固 NFS 共享
+
+默认情况下，NFS 不要身份验证，仅根据客户端的 IP 地址或主机名来强制实施访问权限限制。为补救这一点，NFS 服务器使用多种方法提供了一些选项来保护对文件的访问：none、sys、krb5、krb5i 和 krb5p。NFS 服务器可以选择为每个导出的共享提供一种方法或多种方法。NFS 客户端必须使用为已导出共享规定的方法之一连接到该共享，该方法以挂载选项 sec=method 的形式指定。
+
+.*NFS 服务器端安全性方法*
+|===
+|方法 |描述
+
+|none
+|可对文件进行匿名访问，对服务器的写入将分配为使用 UID 和 GID nfsnobody。这需要 SELinux 的布尔值 nfsd_anon_write 处于活动状态。
+
+|sys
+|文件访问权限基于 UID 和 GID 值的标准 Linux 文件权限。如果未指定，则此方法是默认值。NFS 服务器信任客户端发送的任何 UID。
+
+|krb5
+|客户端必须使用 Kerberos 证明身份，然后适用标准 Linux 文件权限。UID/GID 根据访问用户的 Kerberos 主体来确定。
+
+|krb5i
+|添加加密性强的保证，确保每个请求中的数据未被篡改。UID/GID 根据访问用户的 Kerberos 主体来确定。
+
+|krb5p
+|为客户端与服务器之间的所有请求添加加密，防止网络中的数据泄露。这将影响性能，但会提供最好的安全性。UID/GID 根据访问用户的 Kerberos 主体来确定。
+|===
+
+=== Kerberos 加固 NFS Exports
+
+任何使用 Kerberos 服务器的安全性选项，除了导出 NFS 共享的系统上的 nfs-server 服务之外，还需要运行 nfs-secure-server。客户端要求运行 nfs-secure 服务以帮助协商 Kerberos 身份验证。
+
+Kerberos 选项将至少需要 /etc/krb5.keytab 和本节中未论述的其他身份验证配置（加入 Kerberos 域）。/etc/krb5.keytab 通常将由身份验证或安全性管理员提供。请求包含主机主体和/或 nfs 主体的 keytab。
+
+=== Kerberos 加固 NFS Exports 一般步骤
+
+[source, bash]
+.*服务器 1 - 在将要充当 NFS 服务器的系统上配置 Kerberos keytab*
+----
+wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/server0.keytab
+----
+
+[source, bash]
+.*服务器 2 - 运行启动 nfs-secure-server 服务*
+----
+ systemctl start nfs-secure-server && systemctl enable nfs-secure-server
+----
+
+[source, bash]
+.*服务器 3 - 在 NFS 服务器上创建目录 /securedexport。此目录将用作 NFS 导出*
+----
+mkdir /securedexport
+----
+
+[source, bash]
+.*服务器 4 - 向 /etc/exports 文件中添加目录 /securedexport 以通过 NFS 将其导出。启用 krb5p 安全性以保护对 NFS 共享的访问。允许从 example.com 域的所有子域对导出的目录进行读写访问*
+----
+echo '/securedexport *.example.com(sec=krb5p,rw)' >>/etc/exports
+----
+
+[source, bash]
+.*服务器 5 - 执行 exportfs -r 来应用更改*
+----
+exportfs -r
+----
+
+[source, bash]
+.*服务器 6 - 在服务器上打开用于 nfsd 的 NFS 端口 2049/TCP。firewalld 配置为支持即时访问 NFS 导出*
+----
+firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload
+----
+
+[source, bash]
+.*客户端 1 - 在将要充当 NFS 客户端的系统上安装所提供的 keytab。在客户端系统上挂载 krb5p 保护的共享*
+----
+wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/desktop0.keytab
+----
+
+[source, bash]
+.*客户端 2 - 连接到 Kerberos 保护的共享时，NFS 使用客户端上的 nfs-secure 服务来帮助协商和管理与服务器之间的通信。此服务必须正在运行，才能使用受保护的 NFS 共享*
+----
+systemctl enable nfs-secure && systemctl start nfs-secure
+----
+
+[source, bash]
+.*客户端 3 - 创建挂载点 /mnt/securedexport*
+----
+mkdir /mnt/securedexport
+----
+
+[source, bash]
+.*客户端 4 - 导出的目录现在可以挂载在客户端系统上，同时启用 krb5p 安全性*
+----
+mount -o sec=krb5p server0:/securedexport /mnt/securedexport
+----
+
+=== SELinux 和 NFS 标记
+
+SELinux 通过锁定 RHEL 中提供的服务的功能，从而提供了额外的安全性。默认情况下，NFS 挂载具有 SELinux 上下文 nfs_t，与其在提供导出的服务器上的 SELinux 上下文无关。可以使用挂载选项 context="selinux_context" 在客户端上更改此行为。例如将挂载 NFS 导出并强制实施 SELinux 上下文：system_u:object_r:public_content_rw_t:s0：
+
+[source, bash]
+----
+mount -o context="system_u:object_r:public_content_rw_t:s0" serverX:/myshare /mnt/nfsexport
+----
+
+通过切换到 NFS 版本 4.2，可以强制 NFS 服务器正确导出共享的 SELinux 上下文。此规范目前仅作为 Internet 草稿而存在。这在 RHEL 7 附带的 NFS 服务器中已经实施，但是需要显式开启。要在 NFS 服务器系统上启用 NFS 版本 4.2 以导出 SELinux 标签，请将 /etc/sysconfig/nfs 文件中的 RPCNFSDARGS="" 行更改为：
+
+[source, bash]
+----
 RPCNFSDARGS="-V 4.2"
-# systemctl start nfs-secure-server
-# systemctl enable nfs-secure-server
-# mkdir /securenfs
-# echo '/securenfs desktopX(sec=krb5p,rw)' >> /etc/exports
-# exportfs -r
-# firewall-cmd --permanent --add-service=nfs
-# firewall-cmd --reload
+----
+
+nfs-server 或 nfs-secure-server 分别需要重新启动：
+
+[source, bash]
+----
+systemctl restart nfs-server
+systemctl restart nfs-secure-server
+----
+
+在客户端，必须将 mount -o v4.2 指定为挂载选项：
+
+[source, bash]
+----
+mount -o sec=krb5p,v4.2 server0:/securedexport /mnt/securedexport
+----
+
+=== Kerberos 和 SELinux 保护的 NFS 共享存储
+
+本部分通过 Kerberos 和 SELinux 保护 NFS 共享存储：
+
+* 在具有 krb5p 安全性的 server0 上共享新创建的 /securenfs 目录
+* 允许从 desktop0 系统中对共享进行读写访问
+* SELinux 标签已导出
+* NFS 挂载到具有 krb5p 安全性和导出的 SELinux 标签的 /mnt/secureshare desktop0 上
+
+==== NFS 服务器端配置
+
+[source, bash]
+.*1 - Kerberos krb5p 配置*
+----
+wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/server0.keytab
+----
+
+[source, bash]
+.*2 - 启用 NFS 版本 4.2 以导出 SELinux 标签。为此，请将 /etc/sysconfig/nfs 中的 RPCNFSDARGS="" 行更改为*
+----
+RPCNFSDARGS="-V 4.2"
+----
+
+[source, bash]
+.*3 - 启动 nfs-secure-server 服务*
+----
+systemctl start nfs-secure-server && systemctl enable nfs-secure-server
+----
+
+[source, bash]
+.*4 - 创建目录 /securenfs*
+----
+mkdir /securenfs
+----
+
+[source, bash]
+.*5 - 向 /etc/exports 文件中添加目录 /securenfs 以通过 NFS 将其导出。启用 krb5p 安全性以保护对 NFS 共享的访问。允许从 desktop0 系统中对导出的目录进行读写访问*
+----
+echo '/securenfs desktop0(sec=krb5p,rw)' >>/etc/exports
+----
+
+[source, bash]
+.*6 - 加载 /etc/exports 文件使共享生效*
+----
+exportfs -r
+----
+
+[source, bash]
+.*7 - 配置 firewalld 以允许访问 server0 上的 NFS 服务*
+----
+firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload
+----
+
+==== 客户端配置
+
+[source, bash]
+.*1 - Kerberos keytab 配置*
+----
+wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/desktop0.keytab
+----
+
+[source, bash]
+.*2 - 启动 nfs-secure 服务以帮助协商使用 Kerberos 形式的 NFS 共享进行身份验证*
+----
+systemctl start nfs-secure && systemctl enable nfs-secure
+----
+
+[source, bash]
+.*3 - 创建挂载点 /mnt/secureshare*
+----
+mkdir /mnt/secureshare
+----
+
+[source, bash]
+.*4 - 在 /etc/fstab 文件中创建条目，以将 server0 系统导出的 /securenfs 共享挂载到 desktopX 上的 /mnt/secureshare 挂载点，以便共享中的 SELinux 标签显示在挂载点上*
+----
+server0:/securenfs /mnt/secureshare nfs defaults,v4.2,sec=krb5p 0 0
+----
+
+[source, bash]
+.*5 - 将导出的 NFS 共享挂载到 desktop0 系统上新创建的 /mnt/secureshare 目录中，并验证 /etc/fstab 条目是否按预期工作*
+----
+mount -a
+----
+
+==== 测试验证
+
+[source, text]
+.*1 - 服务器端创建一个包含内容“Hello World”的新文件 /securenfs/testfile.txt*
+----
+# echo "Hello World" > /securenfs/testfile.txt && ls -lZ /securenfs/
+-rw-r--r--. root root unconfined_u:object_r:default_t:s0 testfile.txt
 ----
 
 [source, text]
-.*NFS 客户端配置*
+.*2 - 在服务器 /securenfs/testfile.txt 文件上，将 SELinux 上下文设置为 public_content_t*
 ----
-# mv clientSample.keytab /etc/krb5.keytab
-# systemctl start nfs-secure
-# systemctl enable nfs-secure
-# mkdir /mnt/secureshare
-# echo 'nfs.example.com:/securenfs /mnt/secureshare nfs defaults,v4.2,sec=krb5p 0 0' >> /etc/fstab
-# mount -a
+# chcon -t public_content_t /securenfs/testfile.txt && ls -lZ /securenfs/
+-rw-r--r--. root root unconfined_u:object_r:public_content_t:s0 testfile.txt
 ----
 
 [source, text]
-.*测试 - NFS 服务器端创建文件*
+.*3 - 在服务器上将 /securenfs/testfile.txt 文件的所有权更改为 ldapuser0:ldapuser0*
 ----
-# echo "Hello World" > /securenfs/testfile.txt
-# chcon -t public_content_t /securenfs/testfile.txt
-# chown ldapuser:ldapuser /securenfs/testfile.txt
-# chmod 644 /securenfs/testfile.txt
-# ls -Z /mnt/secureshare
+# chown ldapuser0:ldapuser0 /securenfs/testfile.txt && ls -lZ /securenfs/
+-rw-r--r--. ldapuser0 ldapuser0 unconfined_u:object_r:public_content_t:s0 testfile.txt
 ----
 
 [source, text]
-.*测试 - 客户端读写文件*
+.*4 - 在服务器系统上，将 /securenfs/testfile.txt 文件的权限更改为 644*
 ----
-# su - ldapuser
-$ echo "I can write" >>/mnt/secureshare/testfile.tx
+# chmod 644 /securenfs/testfile.txt && ls -lZ /securenfs/
+-rw-r--r--. ldapuser0 ldapuser0 unconfined_u:object_r:public_content_t:s0 testfile.txt
+----
+
+[source, bash]
+.*5 - 以用户 ldapuser0 的身份（密码 kerberos），通过 ssh 登录到 desktop0 系统*
+----
+ssh ldapuser0@desktop0
+----
+
+[source, bash]
+.*6 - 验证文件 /mnt/secureshare/testfile.txt 是否可以由经过 Kerberos 验证的用户 ldapuser0 进行写入*
+----
+$ echo "I can write" >>/mnt/secureshare/testfile.txt
 $ cat /mnt/secureshare/testfile.txt
+Hello World
+I can write
 ----
 
 == SMB 文件共享
@@ -161,3 +540,71 @@ Password for rob@//smb.example.com/smbshare:  ******
 ----
 
 NOTE: 本部分主要做的是持久化 Mount SMB 文件存储，并使用单独的文件保存 samba 安全认证。
+
+== 场景练习
+
+=== 练习一
+
+在 server0 配置 NFS 服务，要求如下:
+
+* 以只读的方式共享目录 /public 同时只能被 example.com 域中的系统访问
+* 以读写的方式共享目录 /protected 能被 example.com 域中的系统访问
+* 访问 /protected 需要通过 Kerberos 安全加密， 您可以使用下面 URL 提供的密钥 http://classroom.example.com/pub/keytabs/server0.keytab
+* 目录 /protected 应该包含名为 confidential 拥有人为ldapuser0 的子目录
+* 用户 ldapuser0 能以读写方式访问 /protected/confidential
+
+在 desktop0 上挂载一个来自 server0.example.com 的NFS共享， 并符合下列要求：
+
+* /public 挂载在下面的目录上 /mnt/nfsmount
+* /protected 挂载在下面的目录上 /mnt/nfssecure 并使用安全的方式，密钥下载URL如下： http://classroom.example.com/pub/keytabs/desktop0.keytab
+* 用户 ldapuser0 能够在 /mnt/nfssecure/confidential 上创建文件
+* 这些文件系统在系统启动时自动挂载
+
+[source, text]
+.*服务器端配置*
+----
+# mkdir -p /public /protected /protected/confidential && ls -lZd /public/  /protected /protected/confidential
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /protected
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /protected/confidential
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /public/
+
+# chown ldapuser0 /protected/confidential && ls -ld /protected/confidential
+drwxr-xr-x. 2 ldapuser0 root 6 Jul 15 05:30 /protected/confidential
+
+# wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/server0.keytab
+
+# restorecon -vRF /etc/krb5.keyta
+
+# echo '/public 172.25.0.0/24(ro,sync,no_root_squash)' >> /etc/exports
+# echo '/protected 172.25.0.0/24(rw,sync,no_root_squash,sec=krb5p)' >> /etc/exports
+# cat /etc/exports
+/public 172.25.0.0/24(ro,sync,no_root_squash)
+/protected 172.25.0.0/24(rw,sync,no_root_squash,sec=krb5p)
+
+# systemctl restart nfs-server && systemctl enable nfs-server && systemctl status nfs-server
+# systemctl restart nfs-secure-server && systemctl enable nfs-secure-server && systemctl status nfs-secure-server
+
+# firewall-cmd --permanent --add-service=nfs
+# firewall-cmd --reload 
+----
+
+[source, text]
+.*客户端配置*
+----
+# mkdir /mnt/nfsmount /mnt/nfssecure
+
+# wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/desktop0.keytab
+# restorecon -vRF /etc/krb5.keytab
+
+# systemctl restart nfs-secure && systemctl enable nfs-secure && systemctl status nfs-secure
+# systemctl restart nfs
+
+# echo 'server0.example.com:/public /mnt/nfsmount nfs defaults,vers=4,sec=sys   0 0' >> /etc/fstab 
+# echo 'server0.example.com:/protected  /mnt/nfssecure  nfs defaults,vers=4,sec=krb5p 0 0' >> /etc/fstab 
+# cat /etc/fstab | grep server0
+server0.example.com:/public     /mnt/nfsmount   nfs  defaults,vers=4,sec=sys   0 0
+server0.example.com:/protected  /mnt/nfssecure  nfs  defaults,vers=4,sec=krb5p 0 0
+
+# mount -a
+----
+

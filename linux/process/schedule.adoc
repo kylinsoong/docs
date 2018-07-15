@@ -5,6 +5,22 @@
 
 系统 cron 作业不是使用 crontab 命令定义的，而是在一组配置文件中配置的。系统 cron 作业是在两个位置定义的：/etc/crontab 和 /etc/cron.d/*。安装 cron 作业的软件包应当通过在 /etc/cron.d/ 中放置文件才能执行安装操作，但是，管理员还可以使用此位置来更轻松地将相关作业分到单个文件中，或者使用配置管理系统推送作业。
 
+[source, bash]
+.*/etc/crontab 的随附注释中包含实用的语法图*
+----
+ # For details see man 4 crontabs
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+----
+
+
 还有预定义作业每小时、每天、每周和每月运行一次。这些作业将分别执行位于 /etc/cron.hourly/、/etc/cron.daily/、/etc/cron.weekly/ 和 /etc/cron.monthly/ 中的所有脚本。请注意，这些目录包含可执行脚本，而不包含 cron 配置文件。
 
 确保使置于这些目录中的所有脚本可执行。如果某个脚本不可执行（例如使用 chmod +x），则它不会运行。

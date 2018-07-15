@@ -1,10 +1,20 @@
 = 块存储
 :toc: manual
 
-== iSCSI Target 配置
+== iSCSI Target
+
+=== 什么是 iSCSI Target(目标)
+
+在原始的 SCSI 协议术语中，目标是指在 SCSI 总线上唯一标识的单个可连接的存储或输出设备。在 iSCSI 中，SCSI 总线是在 IP 网络中仿真，目标可以是网络附加存储机柜中的专用物理设备，也可以是网络存储服务器上 iSCSI 软件配置的逻辑设备。目标（如 HBA 和启动器）是 SCSI 总线通信中的端点，可将命令描述符块 (CDB) 传递到请求或者提供存储事务。
+
+要提供对存储或输出设备的访问权限，需使用一个或多个逻辑单元号 (LUN) 来配置目标。在 iSCSI 中，LUN 显示为目标的连续编号磁盘驱动器，但是目标通常仅有一个 LUN。启动器执行 SCSI 与目标的协商，以建立与 LUN 的连接。LUN 作为仿真 SCSI 磁盘块设备来响应，后者能以原始形式使用，也可以通过客户端支持的文件系统进行格式化。
+
+iSCSI 通过使用 ACL 限制对特定启动器的 LUN 访问性，从而提供 LUN 屏蔽。除了在计划使用共享访问权限时，ACL 可以确保仅指定的客户端节点能够登录到特定目标。在目标服务器上，可以在 TPG 级别设置 ACL 以保护 LUN 组，也可以为 LUN 单独设置。
+
+=== iSCSI Target 配置
 
 [source, text]
-.*安装 targetcli*
+.*1 - 安装 targetcli*
 ----
 # yum -y install targetcli
 # systemctl enable target;
@@ -14,7 +24,7 @@
 ----
 
 [source, text]
-.*创建一个 1 GB LV* 
+.*2 - 创建一个 1 GB LV* 
 ----
 # fdisk /dev/sda 
 Welcome to fdisk (util-linux 2.23.2).
@@ -62,7 +72,7 @@ Syncing disks.
 ----
 
 [source, text]
-.*进入 targetcli 交互命令行* 
+.*3 - 进入 targetcli 交互命令行* 
 ----
 # targetcli 
 Warning: Could not load preferences file /root/.targetcli/prefs.bin.
@@ -82,14 +92,14 @@ o- / ...........................................................................
 ----
 
 [source, text]
-.*基于 /dev/iSCSI_vg/disk1_lv 创建块存储*
+.*4 - 基于 /dev/iSCSI_vg/disk1_lv 创建块存储*
 ----
 /> /backstores/block create iscsi.example.com.disk1 /dev/iSCSI_vg/disk1_lv 
 Created block storage object iscsi.example.com.disk1 using /dev/iSCSI_vg/disk1_lv.
 ----
 
 [source, text]
-.*创建 IQN*
+.*5 - 创建 IQN*
 ----
 /> /iscsi create iqn.2018-04.org.ksoong:iscsi.example.com
 Created target iqn.2018-04.org.ksoong:iscsi.example.com.
@@ -101,14 +111,14 @@ Created default portal listening on all IPs (0.0.0.0), port 3260.
 NOTE: 创建 IQN 默认也会创建一个 tpg1。
 
 [source, text]
-.*创建客户端连接 ACL*
+.*6 - 创建客户端连接 ACL*
 ----
 /> /iscsi/iqn.2018-04.org.ksoong:iscsi.example.com/tpg1/acls create iqn.2018-04.org.ksoong:*
 Created Node ACL for iqn.2018-04.org.ksoong:
 ----
 
 [source, text]
-.*创建 LUN*
+.*7 - 创建 LUN*
 ----
 /> /iscsi/iqn.2018-04.org.ksoong:iscsi.example.com/tpg1/luns create /backstores/block/iscsi.example.com.disk1 
 Created LUN 0.
@@ -116,7 +126,7 @@ Created LUN 0->0 mapping in node ACL iqn.2018-04.org.ksoong:
 ----
 
 [source, text]
-.*查看最终配置*
+.*8 - 查看最终配置*
 ----
 /> ls
 o- / ......................................................................................................................... [...]
@@ -142,7 +152,7 @@ o- / ...........................................................................
 ----
 
 [source, text]
-.*退出*
+.*9 - 退出*
 ---- 
 /> exit
 Global pref auto_save_on_exit=true
@@ -150,32 +160,312 @@ Last 10 configs saved in /etc/target/backup.
 Configuration saved to /etc/target/saveconfig.json
 ----
 
+=== 安全身份认证
+
+除了 ACL 节点验证之外，还可以实施基于密码的身份验证。在 iSCSI 发现阶段中可能需要身份验证。身份验证可以是单向，也可以是双向。
+
+CHAP 身份验证不使用强加密来传递凭据。尽管 CHAP 除了具有正确配置的启动器名称（在 ACL 中配置）之外确实还提供身份验证的其他因素，但它不应被视为是安全的。如果担心 iSCSI 数据的安全性，则控制协议的网络端是保证安全性的更好方法。提供专用的隔离网络或 VLAN 来传递 iSCSI 流量将能够更安全地实施该协议。
+
+=== 提供 iSCSI 目标
+
+本部分包括将 RHEL 服务器配置为 iSCSI 目标服务器，包括打开防火墙访问权限、创建后备存储并设置目标和 LUN 访问参数。
+
+[source, text]
+.*1 - 安装目标配置实用程序，启动 target 服务并打开 iSCSI 服务器的防火墙端口*
+----
+# yum install targetcli -y
+# systemctl start target && systemctl enable target && systemctl status target
+# firewall-cmd --permanent --add-port=3260/tcp && firewall-cmd --reload 
+----
+
+[source, text]
+.*2 - 对磁盘进行分区，使用 fdisk 创建一个大小为 1 GB 的新主分区。使用适合用作 Linux LVM 分区 ("8e") 的分区标记*
+----
+# fdisk /dev/vdb
+# partprobe
+----
+
+[source, text]
+.*3 - 构建卷组并创建逻辑卷*
+----
+# pvcreate /dev/vdb1 && vgcreate iSCSI_vg /dev/vdb1 && lvcreate -n disk1_lv -L 300m iSCSI_vg
+# pvdisplay /dev/vdb1 && vgdisplay iSCSI_vg && lvdisplay /dev/iSCSI_vg/disk1_lv
+----
+
+[source, text]
+.*4 - 进入 targetcli 的交互模式以配置 iSCSI 目标*
+----
+# targetcli
+----
+
+[source, text]
+.*5 - 将现有的 /dev/iSCSI_vg/disk1_lv 逻辑卷配置为块类型后备存储。对后备存储使用名称 server0.disk1*
+----
+/> /backstores/block create server0.disk1 /dev/iSCSI_vg/disk1_lv 
+Created block storage object server0.disk1 using /dev/iSCSI_vg/disk1_lv.
+----
+
+[source, text]
+.*6 - 为目标创建唯一 iSCSI 限定名称 (IQN)*
+----
+/> /iscsi create iqn.2018-08.com.example:server0
+Created target iqn.2018-08.com.example:server0.
+Created TPG 1.
+----
+
+[source, text]
+.*7 - 为客户端节点（启动器）创建 ACL。启动器将在其启动器名称设置为 iqn.2018-08.com.example:desktop0*
+----
+/> /iscsi/iqn.2018-08.com.example:server0/tpg1/acls create iqn.2018-08.com.example:desktop0
+Created Node ACL for iqn.2018-08.com.example:desktop0
+----
+
+[source, text]
+.*8 - 在目标下面创建一个 LUN，此 LUN 应使用先前定义的名为 server0.disk1 的后备存储设备*
+----
+/> /iscsi/iqn.2018-08.com.example:server0/tpg1/luns create /backstores/block/server0.disk1 
+Created LUN 0.
+Created LUN 0->0 mapping in node ACL iqn.2018-08.com.example:desktop0
+----
+
+[source, text]
+.*9 - 配置门户以使目标侦听 172.25.0.11 端口 3260*
+----
+/> /iscsi/iqn.2018-08.com.example:server0/tpg1/portals create 172.25.0.11
+Using default IP port 3260
+Created network portal 172.25.0.11:3260.
+----
+
+[source, text]
+.*10 - 查看、验证并保存目标服务器配置*
+----
+/> ls
+o- / ..................................................................................................... [...]
+  o- backstores .......................................................................................... [...]
+  | o- block .............................................................................. [Storage Objects: 1]
+  | | o- server0.disk1 ................................ [/dev/iSCSI_vg/disk1_lv (300.0MiB) write-thru activated]
+  | o- fileio ............................................................................. [Storage Objects: 0]
+  | o- pscsi .............................................................................. [Storage Objects: 0]
+  | o- ramdisk ............................................................................ [Storage Objects: 0]
+  o- iscsi ........................................................................................ [Targets: 1]
+  | o- iqn.2018-08.com.example:server0 ............................................................... [TPGs: 1]
+  |   o- tpg1 ........................................................................... [no-gen-acls, no-auth]
+  |     o- acls ...................................................................................... [ACLs: 1]
+  |     | o- iqn.2018-08.com.example:desktop0 ................................................. [Mapped LUNs: 1]
+  |     |   o- mapped_lun0 ..................................................... [lun0 block/server0.disk1 (rw)]
+  |     o- luns ...................................................................................... [LUNs: 1]
+  |     | o- lun0 ............................................... [block/server0.disk1 (/dev/iSCSI_vg/disk1_lv)]
+  |     o- portals ................................................................................ [Portals: 1]
+  |       o- 172.25.0.11:3260 ............................................................................. [OK]
+  o- loopback ..................................................................................... [Targets: 0]
+----
+
+[source, text]
+.*11 - 推出*
+----
+/> exit 
+Global pref auto_save_on_exit=true
+Last 10 configs saved in /etc/target/backup.
+Configuration saved to /etc/target/saveconfig.json
+----
+
+== 访问 iSCSI 存储
+
+=== iSCSI 启动器
+
+在 RHEL 中，iSCSI 启动器通常在软件中实施，并且功能类似于硬件 iSCSI HBA 以从远程存储服务器访问目标。使用基于软件的 iSCSI 启动器需要连接到足够带宽的现有以太网网络以承载期望的存储流量。
+
+还可以使用硬件启动器（在专用主机总线适配器中包含必需协议）来实施 iSCSI。iSCSI HBA 和 TCP 卸载引擎 (TOE)（其中包括以太网 NIC 上的 TCP 网络堆栈）将 iSCSI/TCP 开销和以太网中断的处理转移给硬件，从而减轻系统 CPU 的负载。
+
+配置 iSCSI 客户端启动器需要安装 iscsi-initiator-utils 软件包，其中包含 iscsi 和 iscsid 服务以及 /etc/iscsi/iscsid.conf 和 /etc/iscsi/initiatorname.iscsi 配置文件。
+
+作为 iSCSI 节点，客户端需要一个唯一 IQN。默认的 /etc/iscsi/initiatorname.iscsi 文件包含一个使用红帽的域生成的 IQN。管理员通常会将 IQN 重置为其自己的域以及相应的客户端系统字符串。
+
+/etc/iscsi/iscsid.conf 文件包含了在新目标发现期间创建的节点记录的默认设置。设置包括 iSCSI 超时、重试参数和身份验证用户名及密码。
+
+要能够发现目标，请安装 iscsi-initiator-utils 软件包，然后启用并启动 iscsi 服务。在进行设备连接和使用之前，必须先发现目标。发现过程将目标节点信息和设置存储在 /var/lib/iscsi/nodes 目录中，并且使用 /etc/iscsi/iscsid.conf 中的默认值。由于同一目标可以存在于多个门户上，将为每个门户存储节点记录。使用以下命令执行发现：
+
+[source, bash]
+----
+iscsiadm -m discovery -t sendtargets -p target_server[:port]
+----
+
+在发现模式中，sendtargets 请求仅返回带有为此启动器配置的访问权限的目标。如果目标服务器是在默认端口 3260 上配置的，则可以省略端口号。在发现后，节点记录将写入到 /var/lib/iscsi/nodes 并用于后续登录。
+
+指定端口是可选操作。如果目标存在于多个门户上（例如，在多路径、冗余服务器配置中），在不指定门户的情况下进行登录将会连接到接受此目标名称的每个端口节点。
+
+现后，使用 iscsiadm 命令获取有关目标的信息。使用选项 -P N 来设置命令详细级别，用 0 指定详细级别最低的输出。
+
+* iscsiadm -m discovery [-P 0|1]：显示有关已发现目标的信息。
+* iscsiadm -m node [-P 0|1]：显示有关已知目标的信息。
+* iscsiadm -m session [-P 0|1|2|3]：显示有关活动会话的信息。
+
 == 连接 iSCSI 存储
 
+本部分将在 iSCSI 目标门户上发现目标，然后练习手动和自动登录及注销 iSCSI 目标。
+
 [source, text]
-.*iscsi 安装配置* 
+.*1 - 安装启动器实用程序，设置 iSCSI 客户端唯一名称并启动 iSCSI 客户端服务*
 ----
-# yum -y install iscsi-initiator-utils
-# echo 'InitiatorName=iqn.2018-04.org.ksoong:test' < /etc/iscsi/initiatorname.iscsi
-# systemctl enable iscsi;
-# systemctl start iscsi;
+# yum install -y iscsi-initiator-utils
+# echo 'InitiatorName=iqn.2018-08.com.example:desktop0' > /etc/iscsi/initiatorname.iscsi && cat /etc/iscsi/initiatorname.iscsi 
+InitiatorName=iqn.2018-08.com.example:desktop0
+
+# systemctl enable iscsi && systemctl start iscsi && systemctl status iscsi
 ----
 
 [source, text]
-.*iSCSI target 发现* 
+.*2 - 从 iSCSI 目标服务器发现并登录到已配置的目标*
 ----
-# iscsiadm -m discovery -t st -p iscsi.example.com
-10.66.192.89:3260,1 iqn.2018-04.org.ksoong:iscsi.example.com
-# iscsiadm -m node -T iqn.2018-04.org.ksoong:iscsi.example.com -p 10.66.192.89 -l
-# lsblk
+# iscsiadm -m discovery -t st -p 172.25.0.11
+172.25.0.11:3260,1 iqn.2018-08.com.example:server0
+
+# iscsiadm -m node -T iqn.2018-08.com.example:server0 -p 172.25.0.11:3260 -l
+Logging in to [iface: default, target: iqn.2018-08.com.example:server0, portal: 172.25.0.11,3260] (multiple)
+Login to [iface: default, target: iqn.2018-08.com.example:server0, portal: 172.25.0.11,3260] successful.
+
+# lsblk 
 # tail /var/log/messages
 ----
 
 [source, text]
-.*查看 iscsi 服务* 
+.*3 - 浏览有关目标门户的连接信息、连接以及已连接设备所使用的参数。查找节点记录*
 ----
 # iscsiadm -m session -P 3
-# cd /var/lib/iscsi/nodes
-# ls -lR
+iSCSI Transport Class version 2.0-870
+version 6.2.0.873-21
+Target: iqn.2018-08.com.example:server0 (non-flash)
+	Current Portal: 172.25.0.11:3260,1
+	Persistent Portal: 172.25.0.11:3260,1
+		**********
+		Interface:
+		**********
+		Iface Name: default
+		Iface Transport: tcp
+		Iface Initiatorname: iqn.2018-08.com.example:desktop0
+		Iface IPaddress: 172.25.0.10
+		Iface HWaddress: <empty>
+		Iface Netdev: <empty>
+		SID: 1
+		iSCSI Connection State: LOGGED IN
+		iSCSI Session State: LOGGED_IN
+		Internal iscsid Session State: NO CHANGE
+		*********
+		Timeouts:
+		*********
+		Recovery Timeout: 120
+		Target Reset Timeout: 30
+		LUN Reset Timeout: 30
+		Abort Timeout: 15
+		*****
+		CHAP:
+		*****
+		username: <empty>
+		password: ********
+		username_in: <empty>
+		password_in: ********
+		************************
+		Negotiated iSCSI params:
+		************************
+		HeaderDigest: None
+		DataDigest: None
+		MaxRecvDataSegmentLength: 262144
+		MaxXmitDataSegmentLength: 262144
+		FirstBurstLength: 65536
+		MaxBurstLength: 262144
+		ImmediateData: Yes
+		InitialR2T: Yes
+		MaxOutstandingR2T: 1
+		************************
+		Attached SCSI devices:
+		************************
+		Host Number: 2	State: running
+		scsi2 Channel 00 Id 0 Lun: 0
+			Attached scsi disk sda		State: running
+
+# cd /var/lib/iscsi/nodes/ && ls -lR
 ----
 
+== 场景练习
+
+=== 练习一
+
+配置 server0 使其能够对外提供 iSCSI 服务，磁盘名为 iqn.2018-08.com.example:server0 并符合下列要求：
+
+* 服务端口为 3260
+* 使用 iscsi_data 作其后端卷，其大小为 3G，此服务只能被 desktop0.example.com 使用
+
+[source, text]
+----
+# yum -y install targetcli
+
+# systemctl enable target && systemctl start target && systemctl status target
+
+# firewall-cmd --permanent --add-port=3260/tcp
+# firewall-cmd --reload
+
+# fdisk /dev/vdb
+# partprobe
+
+# pvcreate /dev/vdb1
+  Physical volume "/dev/vdb1" successfully created
+
+# vgcreate -s 1M iscsi_data /dev/vdb1
+  Volume group "iscsi_data" successfully created
+
+# lvcreate -l 3071 -n iscsi_data iscsi_data
+  Logical volume "iscsi_data" created
+
+# targetcli 
+Warning: Could not load preferences file /root/.targetcli/prefs.bin.
+targetcli shell version 2.1.fb34
+Copyright 2011-2013 by Datera, Inc and others.
+For help on commands, type 'help'.
+
+/> /backstores/block create iscsi_data /dev/iscsi_data/iscsi_data 
+Created block storage object iscsi_data using /dev/iscsi_data/iscsi_data.
+/> /iscsi create iqn.2018-08.com.example:server0
+Created target iqn.2018-08.com.example:server0.
+Created TPG 1.
+/> /iscsi/iqn.2018-08.com.example:server0/tpg1/acls create iqn.2018-08.com.example:server0
+Created Node ACL for iqn.2018-08.com.example:server0
+/> /iscsi/iqn.2018-08.com.example:server0/tpg1/luns create /backstores/block/iscsi_data 
+Created LUN 0.
+Created LUN 0->0 mapping in node ACL iqn.2018-08.com.example:server0
+/> /iscsi/iqn.2018-08.com.example:server0/tpg1/portals create 172.25.0.11
+Using default IP port 3260
+Created network portal 172.25.0.11:3260.
+----
+
+配置 desktop0 使其能连接在 server0 上提供的 iqn.2018-08.com.example:server0 并符合以下要求：
+
+* iSCSI 设备在系统启动的期间自动加载
+* 块设备 iSCSI  上包含一个大小为 1900 MiB  的分区，并格式化为 xfs
+* 此分区挂载在 /mnt/data 上，同时在系统启动的期间自动挂载
+
+[source, text]
+----
+# vim /etc/iscsi/initiatorname.iscsi
+InitiatorName=iqn.2018-08.com.example:server0
+
+# iscsiadm --mode discovery --type sendtargets --portal 172.25.0.11 --discover
+172.25.0.11:3260,1 iqn.2018-08.com.example:server0
+
+# iscsiadm  --mode  node  --targetname  iqn.2018-08.com.example:server0  --portal 172.25.0.11:3260 --login
+Logging in to [iface: default, target: iqn.2018-08.com.example:server0, portal: 172.25.0.11,3260] (multiple)
+Login to [iface: default, target: iqn.2018-08.com.example:server0, portal: 172.25.0.11,3260] successful.
+
+# systemctl enable iscsi && systemctl start iscsi
+
+# fdisk /dev/sda
+# partprobe
+
+# mkfs.xfs /dev/sda1
+
+# blkid | grep sda
+/dev/sda1: UUID="7e5f7836-0f9f-400c-98e0-1e0524fc2235" TYPE="xfs" 
+
+# echo 'UUID=7e5f7836-0f9f-400c-98e0-1e0524fc2235 /mnt/data  xfs  defaults,_netdev  0  0' >> /etc/fstab
+
+# mount -a
+----

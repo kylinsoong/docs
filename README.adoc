@@ -6,7 +6,7 @@
 
 [source, bash]
 ----
-git clone git@github.com:<YOUR_ID>/openshift-cookbooks.git
+git clone git@github.com:<YOUR_ID>/docs.git
 ----
 
 *Step.2* Do some edit
