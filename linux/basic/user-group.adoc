@@ -93,9 +93,46 @@ sudo CMD
 # usermod -aG wheel kylin
 ----
 
-== 创建用户
+== 管理本地用户帐户
 
-`useradd username` 会为 /etc/passwd 中的所有字段设置合理的默认值默认情况下，useradd 命令不设置任何有效的密码，用户也必须要等设定了密码后才能登录。
+=== 创建或修改用户
+
+* `useradd username` 会为 `/etc/passwd` 中的所有字段设置合理的默认值默认情况下，`useradd` 命令不设置任何有效的密码，用户也必须要等设定了密码后才能登录。
+* `useradd --help` 将显示可用于覆盖默认值的基本选项。在大多数情形中，可以将相同的选项用于 `usermod` 命令，以修改现有的用户。
+* 一些默认值从 `/etc/login.defs` 文件中读取，如有效 UID 编号的范围和默认密码过期规则。此文件中的值仅在创建新用户时使用。更改此文件对任何现有用户毫无影响。
+* `usermod` 修改现有的用户
+
+.*创建/修改用户的基本选项*
+|===
+|选项 |说明
+
+|-c, --comment COMMENT
+|向 GECOS 字段添加值，如全名。
+
+|-g, --gid GROUP
+|为用户帐户指定主要组。
+
+|-G, --groups GROUPS
+|为用户帐户指定一组补充组。
+
+|-a, --append
+|与 -G 选项搭配使用，将用户附加到所给的补充组，而不将该用户从其他组删除。
+
+|-d, --home HOME_DIR
+|为用户帐户指定新的主目录。
+
+|-m, --move-home
+|将用户主目录移到新的位置。必须与 -d 选项搭配使用。
+
+|-s, --shell SHELL
+|为用户帐户指定新的登录 shell。
+
+|-L, --lock
+|锁定用户帐户。
+
+|-U, --unlock
+|解锁用户帐户。
+|===
 
 [source, text]
 .*创建用户，并关联组*
@@ -141,42 +178,7 @@ elvis:x:1009:1009::/home/elvis:/bin/bash
 This account is currently not available.
 ----
 
-== 修改用户
-
-`usermod` 修改现有的用户，它可通过如下参数控制
-
-|===
-|参数 |说明
-
-|-c, --comment COMMENT
-|向 GECOS 字段添加值，如全名。
-
-|-g, --gid GROUP
-|为用户帐户指定主要组。
-
-|-G, --groups GROUPS
-|为用户帐户指定一组补充组。
-
-|-a, --append
-|与 -G 选项搭配使用，将用户附加到所给的补充组，而不将该用户从其他组删除。
-
-|-d, --home HOME_DIR
-|为用户帐户指定新的主目录。
-
-|-m, --move-home
-|将用户主目录移到新的位置。必须与 -d 选项搭配使用。
-
-|-s, --shell SHELL
-|为用户帐户指定新的登录 shell。
-
-|-L, --lock
-|锁定用户帐户。
-
-|-U, --unlock
-|解锁用户帐户。
-|===
-
-== 删除用户
+=== 删除用户
 
 `userdel username` 可将用户从 /etc/passwd 中删除，但默认情况下保留主目录不变。`userdel -r username`  同时删除用户和其主目录。
 
@@ -186,18 +188,70 @@ This account is currently not available.
 # for i in juliet romeo hamlet reba dolly elvis ; do userdel -r $i ; done
 ----
 
+=== id 显示用户信息
+
+* `id` 将显示用户信息，包括用户的 UID 编号和组成员资格。
+* `id username` 将显示 username 的用户信息，包括用户的 UID 编号和组成员资格。
+
+=== passwd 设置密码
+
+* `passwd username` 可用于设置用户的初始密码或更改该用户的密码。
+* root 用户可以将密码设为任何值。如果密码不符合最低建议标准，系统将显示消息；不过，之后会显示提示要求重新键入该新密码，所有令牌也会成功更新。
+* 普通用户必须选择长度至少为 8 个字符，并且不以字典词语、用户名或上一密码为基础的密码。
+
+=== UID 范围
+
+特定的 UID 编号和编号范围供红帽企业 Linux 用于特殊的目的:
+
+* UID 0 始终分配至超级用户帐户 root。
+* UID 1-200 是一系列“系统用户”，静态分配给红帽的系统进程。
+* UID 201-999 是一系列“系统用户”，供文件系统中没有自己的文件的系统进程使用。通常在安装需要它们的软件时，从可用池中动态分配它们。程序以这些“无特权”系统用户身份运行，以便限制它们仅访问正常运行所需的资源。
+* UID 1000+ 是可供分配给普通用户的范围。
+
 == 管理组
 
-* `groupadd groupname` 如果不带选项，则使用 /etc/login.defs 文件中指定范围内的下一个可用 GID。
-* `groupmod` 命令用于将组名更改为 GID 映射。-n 选项用于指定新的名称。
-* `groupdel` 删除组
+=== 创建组
+
+* `groupadd groupname` 如果不带选项，则使用 `/etc/login.defs` 文件中指定范围内的下一个可用 GID。
+* `-g GID` 选项用于指定具体的 GID。
+* -r 选项将使用 /etc/login.defs 文件中所列有效系统 GID 编号范围内的 GID 创建系统组。
 
 [source, text]
 .*创建组*
 ----
 # groupadd -g 30000 shakespeare
 # groupadd artists
+# groupadd -g 5000 ateam
+# groupadd -r appusers
 ----
+
+=== 修改现有的组
+
+* `groupmod` 命令用于将组名更改为 GID 映射。-n 选项用于指定新的名称。
+* -g 选项用于指定新的 GID。
+
+[source, text]
+.*修改组*
+----
+# groupmod -n javaapp appusers
+# groupmod -g 6000 ateam
+----
+
+=== 删除组
+
+* `groupdel` 删除组
+* 如果组是任何现有用户的主要组，则它不能被删除。与 userdel 一样，请检查所有文件系统，确保不遗留由该组拥有的任何文件。
+
+[source, text]
+.*删除组*
+----
+groupdel javaapp
+----
+
+=== 变更组成员资格
+
+* 组成员资格通过用户管理进行控制。通过 `usermod -g groupname` 更改用户的主要组。
+* 通过 `usermod -aG groupname username` 将用户添加到补充组
 
 [source, text]
 .*usermod -G 添加用户到组*
@@ -215,6 +269,13 @@ This account is currently not available.
 # tail -2 /etc/group
 shakespeare:x:30000:juliet,romeo
 artists:x:30001:reba,dolly,elvis
+----
+
+[source, text]
+.*更组成员资格*
+----
+usermod -g student student
+usermod -aG wheel elvis
 ----
 
 == 登录密码管理
@@ -274,4 +335,38 @@ $ sudo chage -E 2018-08-02 romeo
 .*system-config-authentication 进行安全配置*
 ----
 # system-config-authentication
+----
+
+== 场景练习
+
+=== 练习一
+
+在 desktop 中创建一个名为 boss 的组，创建用户 tom，并且 tom 应该包含附属组 boss，创建用户 jerry，jerry 也应该具有附属组 boss， 创建用户 abc， abc 这个用户应该无法登陆操作系统，这三个用户的密码都是 redhat。
+
+[source, bash]
+----
+groupadd boss
+
+useradd -G boss tom
+useradd -G boss jerry
+useradd -s /sbin/nologin abc
+
+for i in tom jerry abc
+    do echo redhat | passwd $i --stdin
+done
+----
+
+=== 练习二
+
+在 desktop 虚拟机中创建一个名为 leon 的用户，这个用户的 uid 应该是 8000，密码为 redhat。
+
+[source, text]
+----
+# useradd -u 8000 leon
+# echo "redhat" | passwd leon --stdin
+Changing password for user leon.
+passwd: all authentication tokens updated successfully.
+
+# id leon
+uid=8000(leon) gid=8000(leon) groups=8000(leon)
 ----
