@@ -2272,6 +2272,8 @@
 <li><a href="#___8">&#x6BD4;&#x8F83;&#x8FD0;&#x7B97;&#x7B26;</a></li>
 <li><a href="#__httpd">&#x521B;&#x5EFA; httpd &#x865A;&#x62DF;&#x4E3B;&#x673A;</a></li>
 <li><a href="#_export">export &#x5BF9;&#x6BD4;&#x5B9E;&#x9A8C;</a></li>
+<li><a href="#__linux">&#x6279;&#x91CF;&#x521B;&#x5EFA; Linux &#x7528;&#x6237;</a></li>
+<li><a href="#_case_switch">case/switch &#x793A;&#x4F8B;</a></li>
 </ul>
 </li>
 </ul>
@@ -3312,6 +3314,135 @@ $ <span class="hljs-built_in">exit</span>
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="__linux">&#x6279;&#x91CF;&#x521B;&#x5EFA; Linux &#x7528;&#x6237;</h3>
+<div class="paragraph">
+<p>&#x5728; server0 &#x4E0A;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x811A;&#x672C;&#xFF0C;&#x540D;&#x4E3A; /root/mkusers , &#x540C;&#x65F6;&#x6EE1;&#x8DB3;&#x4E0B;&#x5217;&#x8981;&#x6C42;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6B64;&#x811A;&#x672C;&#x80FD;&#x5B9E;&#x73B0;&#x4E3A;&#x7CFB;&#x7EDF; server0 &#x521B;&#x5EFA;&#x672C;&#x5730;&#x7528;&#x6237;, &#x8FD9;&#x4E9B;&#x7528;&#x6237;&#x7684;&#x7528;&#x6237;&#x540D;&#x6765;&#x81EA;&#x4E00;&#x4E2A;&#x5305;&#x542B;&#x7528;&#x6237;&#x540D;&#x5217;&#x8868;&#x7684;&#x6587;&#x4EF6;</p>
+</li>
+<li>
+<p>&#x6B64;&#x811A;&#x672C;&#x8981;&#x6C42;&#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x6B64;&#x53C2;&#x6570;&#x5C31;&#x662F;&#x5305;&#x542B;&#x7528;&#x6237;&#x540D;&#x5217;&#x8868;&#x7684;&#x6587;&#x4EF6;</p>
+</li>
+<li>
+<p>&#x5982;&#x679C;&#x6CA1;&#x6709;&#x63D0;&#x4F9B;&#x53C2;&#x6570;&#xFF0C;&#x6B64;&#x811A;&#x672C;&#x5E94;&#x8BE5;&#x7ED9;&#x51FA;&#x4E0B;&#x9762;&#x7684;&#x63D0;&#x793A;&#x4FE1;&#x606F; Usage: /root/mkusers &lt;userfile&gt; &#x7136;&#x540E;&#x9000;&#x51FA;&#x5E76;&#x8FD4;&#x56DE;&#x76F8;&#x5E94;&#x7684;&#x503C;</p>
+</li>
+<li>
+<p>&#x5982;&#x679C;&#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x4E0D;&#x5B58;&#x5728;&#x7684;&#x6587;&#x4EF6;&#x540D;&#xFF0C;&#x6B64;&#x811A;&#x672C;&#x5E94;&#x8BE5;&#x7ED9;&#x51FA;&#x4E0B;&#x9762;&#x7684;&#x63D0;&#x793A;&#x4FE1;&#x606F; Input file not found &#x7136;&#x540E;&#x9000;&#x51FA;&#x5E76;&#x8FD4;&#x56DE;&#x76F8;&#x5E94;&#x7684;&#x503C;</p>
+</li>
+<li>
+<p>&#x521B;&#x5EFA;&#x7684;&#x7528;&#x6237;&#x767B;&#x5F55; shell &#x4E3A; /bin/false</p>
+</li>
+<li>
+<p>&#x6B64;&#x811A;&#x672C;&#x4E0D;&#x9700;&#x8981;&#x4E3A;&#x7528;&#x6237;&#x8BBE;&#x7F6E;&#x5BC6;&#x7801;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x521B;&#x5EFA;&#x4E00;&#x4E2A; sample.users &#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in tom jerry alias natasha mario harry ; do echo $i &gt;&gt; sample.users ; done
+# cat sample.users
+tom
+jerry
+alias
+natasha
+mario
+harry</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x521B;&#x5EFA; makeusers&#xFF0C;&#x6279;&#x91CF;&#x6DFB;&#x52A0;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">#!/bin/bash
+if [ $# -ne 1 ]; then
+   echo &apos;Usage: /root/makeusers &lt;userfile&gt;&apos;
+   exit 1
+fi
+if [ ! -f &quot;$1&quot; ]; then
+   echo &quot;Input file not found&quot;
+   exit 2
+fi
+   while read line
+   do useradd -s /bin/false $line
+   done &lt; $1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x6D4B;&#x8BD5;&#x811A;&#x672C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># chmod +x makeusers
+
+# ./makeusers
+Usage: /root/makeusers &lt;userfile&gt;
+
+# ./makeusers no.exsit
+Input file not found
+
+# ./makeusers sample.users &amp;&amp; tail -n 6 /etc/passwd
+tom:x:1001:1001::/home/tom:/bin/false
+jerry:x:1002:1002::/home/jerry:/bin/false
+alias:x:1003:1003::/home/alias:/bin/false
+natasha:x:1004:1004::/home/natasha:/bin/false
+mario:x:1005:1005::/home/mario:/bin/false
+harry:x:1006:1006::/home/harry:/bin/false</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_case_switch">case/switch &#x793A;&#x4F8B;</h3>
+<div class="paragraph">
+<p>&#x5728; server0 &#x4E0A;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x540D;&#x4E3A; /root/script.sh &#x7684;&#x811A;&#x672C;&#xFF0C; &#x8BA9;&#x5176;&#x63D0;&#x4F9B;&#x4E0B;&#x5217;&#x7279;&#x6027;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5F53;&#x8FD0;&#x884C; /root/script.sh all&#xFF0C;&#x8F93;&#x51FA;&#x4E3A; none</p>
+</li>
+<li>
+<p>&#x5F53;&#x8FD0;&#x884C; /root/script.sh none&#xFF0C;&#x8F93;&#x51FA;&#x4E3A; all</p>
+</li>
+<li>
+<p>&#x5F53;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x53C2;&#x6570;&#x6216;&#x8005;&#x53C2;&#x6570;&#x4E0D;&#x662F; all &#x6216;&#x8005; none&#x65F6;&#xFF0C; &#x5176;&#x9519;&#x8BEF;&#x8F93;&#x51FA;&#x4EA7;&#x751F;&#x4EE5;&#x4E0B;&#x7684;&#x4FE1;&#x606F;&#xFF1A;all|none</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x521B;&#x5EFA; script.sh &#x811A;&#x672C;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-keyword">case</span> <span class="hljs-variable">$1</span> <span class="hljs-keyword">in</span>
+     all)
+       <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;none&quot;</span> ;;
+     none)
+       <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;all&quot;</span> ;;
+     *)
+      <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;all|none&quot;</span> ;;
+<span class="hljs-keyword">esac</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8FD0;&#x884C;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># chmod +x script.sh
+
+# /root/script.sh all
+none
+
+# /root/script.sh none
+all
+
+# /root/script.sh
+all|none
+
+# /root/script.sh xxx
+all|none</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
                                 
@@ -3356,7 +3487,7 @@ $ <span class="hljs-built_in">exit</span>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"bash","level":"1.2.6.4","depth":3,"next":{"title":"常用服务","level":"1.2.7","depth":2,"path":"linux/svc/README.adoc","ref":"linux/svc/README.adoc","articles":[{"title":"OpenSSH","level":"1.2.7.1","depth":3,"path":"linux/svc/openssh.adoc","ref":"linux/svc/openssh.adoc","articles":[]},{"title":"Email","level":"1.2.7.2","depth":3,"path":"linux/svc/postfix.adoc","ref":"linux/svc/postfix.adoc","articles":[]},{"title":"MariaDB","level":"1.2.7.3","depth":3,"path":"linux/svc/mariadb.adoc","ref":"linux/svc/mariadb.adoc","articles":[]},{"title":"HTTPD","level":"1.2.7.4","depth":3,"path":"linux/svc/httpd.adoc","ref":"linux/svc/httpd.adoc","articles":[]}]},"previous":{"title":"周期性运行进程","level":"1.2.6.3","depth":3,"path":"linux/process/schedule.adoc","ref":"linux/process/schedule.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/process/bash.adoc","mtime":"2018-06-01T01:29:15.011Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-14T14:57:35.719Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"bash","level":"1.2.6.4","depth":3,"next":{"title":"常用服务","level":"1.2.7","depth":2,"path":"linux/svc/README.adoc","ref":"linux/svc/README.adoc","articles":[{"title":"OpenSSH","level":"1.2.7.1","depth":3,"path":"linux/svc/openssh.adoc","ref":"linux/svc/openssh.adoc","articles":[]},{"title":"Email","level":"1.2.7.2","depth":3,"path":"linux/svc/postfix.adoc","ref":"linux/svc/postfix.adoc","articles":[]},{"title":"MariaDB","level":"1.2.7.3","depth":3,"path":"linux/svc/mariadb.adoc","ref":"linux/svc/mariadb.adoc","articles":[]},{"title":"HTTPD","level":"1.2.7.4","depth":3,"path":"linux/svc/httpd.adoc","ref":"linux/svc/httpd.adoc","articles":[]}]},"previous":{"title":"周期性运行进程","level":"1.2.6.3","depth":3,"path":"linux/process/schedule.adoc","ref":"linux/process/schedule.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/process/bash.adoc","mtime":"2018-07-15T07:50:00.974Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-23T08:46:33.089Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

@@ -223,3 +223,36 @@ Kickstart 配置文件编写规则：
 # system-config-kickstart
 # ksvalidator anaconda-ks.cfg
 ----
+
+== Setup RH299 VM
+
+[source, bash]
+.*1 - Edit RH299*
+----
+virsh edit RH299
+----
+
+[source, xml]
+.*2 - Modify CPU part, make sure it looks*
+----
+  <cpu mode='host-model' check='full'>
+    <model fallback='allow'/>
+    <feature policy='require' name='vmx'/>
+  </cpu>
+----
+
+NOTE: check='partial' also works.
+
+[source, bash]
+.*3 - execute modprob*
+----
+modprobe -r kvm_intel
+modprobe kvm_intel nested=1
+----
+
+[source, text]
+.*4 - Confirm nested virtualization is enabled*
+----
+# cat /sys/module/kvm_intel/parameters/nested 
+Y
+----

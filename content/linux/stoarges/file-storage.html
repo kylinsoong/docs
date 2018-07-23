@@ -2256,91 +2256,586 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_nfs">NFS &#x6587;&#x4EF6;&#x5171;&#x4EAB;</a></li>
+<li><a href="#__nfs">&#x5BFC;&#x51FA; NFS &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;</a>
+<ul class="sectlevel2">
+<li><a href="#__nfs_2">&#x914D;&#x7F6E; NFS &#x5BFC;&#x51FA;&#x4E00;&#x822C;&#x6B65;&#x9AA4;</a></li>
+<li><a href="#_nfs">NFS &#x63D0;&#x4F9B;&#x5171;&#x4EAB;&#x5B58;&#x50A8;</a></li>
+</ul>
+</li>
+<li><a href="#__nfs_3">&#x5B89;&#x5168;&#x52A0;&#x56FA; NFS &#x5171;&#x4EAB;</a>
+<ul class="sectlevel2">
 <li><a href="#_kerberos_nfs_exports">Kerberos &#x52A0;&#x56FA; NFS Exports</a></li>
+<li><a href="#_kerberos_nfs_exports_2">Kerberos &#x52A0;&#x56FA; NFS Exports &#x4E00;&#x822C;&#x6B65;&#x9AA4;</a></li>
+<li><a href="#_selinux_nfs">SELinux &#x548C; NFS &#x6807;&#x8BB0;</a></li>
+<li><a href="#_kerberos_selinux_nfs">Kerberos &#x548C; SELinux &#x4FDD;&#x62A4;&#x7684; NFS &#x5171;&#x4EAB;&#x5B58;&#x50A8;</a></li>
+</ul>
+</li>
 <li><a href="#_smb">SMB &#x6587;&#x4EF6;&#x5171;&#x4EAB;</a></li>
 <li><a href="#_multiuser_smb_mount">Multiuser SMB Mount</a></li>
+<li><a href="#___5">&#x573A;&#x666F;&#x7EC3;&#x4E60;</a>
+<ul class="sectlevel2">
+<li><a href="#___6">&#x7EC3;&#x4E60;&#x4E00;</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="sect1">
-<h2 id="_nfs">NFS &#x6587;&#x4EF6;&#x5171;&#x4EAB;</h2>
+<h2 id="__nfs">&#x5BFC;&#x51FA; NFS &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;</h2>
 <div class="sectionbody">
-<div class="listingblock">
-<div class="title"><strong>NFS &#x670D;&#x52A1;&#x5668;&#x4E0A; exporing &#x4E00;&#x4E2A;&#x5171;&#x4EAB;&#x6587;&#x4EF6;&#x5B58;&#x50A8;</strong></div>
+<div class="paragraph">
+<p>NFS &#x670D;&#x52A1;&#x5668;&#x5B89;&#x88C5;&#x8981;&#x6C42;&#x5B89;&#x88C5; nfs-utils &#x8F6F;&#x4EF6;&#x5305;&#x3002;&#x6B64;&#x8F6F;&#x4EF6;&#x5305;&#x63D0;&#x4F9B;&#x4E86;&#x4F7F;&#x7528; NFS &#x5C06;&#x76EE;&#x5F55;&#x5BFC;&#x51FA;&#x5230;&#x5BA2;&#x6237;&#x7AEF;&#x800C;&#x5FC5;&#x9700;&#x7684;&#x6240;&#x6709;&#x5B9E;&#x7528;&#x7A0B;&#x5E8F;&#x3002;&#x7528;&#x4E8E; NFS &#x670D;&#x52A1;&#x5668;&#x5BFC;&#x51FA;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E3A; <code>/etc/exports</code> &#x6587;&#x4EF6;&#x3002;<code>/etc/exports</code> &#x6587;&#x4EF6;&#x5217;&#x51FA;&#x4E86;&#x8981;&#x901A;&#x8FC7;&#x7F51;&#x7EDC;&#x800C;&#x4E0E;&#x5BA2;&#x6237;&#x7AEF;&#x4E3B;&#x673A;&#x5171;&#x4EAB;&#x7684;&#x76EE;&#x5F55;&#xFF0C;&#x5E76;&#x4E14;&#x6307;&#x793A;&#x54EA;&#x4E9B;&#x4E3B;&#x673A;&#x6216;&#x7F51;&#x7EDC;&#x5BF9;&#x5BFC;&#x51FA;&#x5177;&#x6709;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#x3002;</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x4E0D;&#x5FC5;&#x5C06;&#x5BFC;&#x51FA;&#x76EE;&#x5F55;&#x6240;&#x9700;&#x8981;&#x7684;&#x4FE1;&#x606F;&#x6DFB;&#x52A0;&#x5230; <code>/etc/exports</code> &#x6587;&#x4EF6;&#xFF0C;&#x800C;&#x5C06;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x540D;&#x4E3A; <code>*.exports</code> &#x7684;&#x6587;&#x4EF6;&#x6DFB;&#x52A0;&#x5230;&#x4FDD;&#x5B58;&#x5BFC;&#x51FA;&#x914D;&#x7F6E;&#x7684; <code>/etc/exports.d/</code> &#x76EE;&#x5F55;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. <strong>&#x7F16;&#x8F91; /etc/exports &#x6216; /etc/exports.d/X.exports&#xFF0C;&#x5BFC;&#x51FA;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x4EE5;&#x7A7A;&#x683C;&#x5206;&#x9694;</strong></caption>
+<colgroup>
+<col style="width: 71.4285%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x683C;&#x5F0F;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># systemctl start nfs-server
-# systemctl enable nfs-server
-# mkdir /nfsshare
-# chown nfsnobody /nfsshare
-# echo &apos;/nfsshare *(rw)&apos; &gt;&gt;/etc/exports
-# exportfs -r
-# firewall-cmd --permanent --add-service=nfs
-# firewall-cmd --reload</code></pre>
+<pre>/myshare server0.example.com</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DNS &#x53EF;&#x89E3;&#x6790;&#x7684;&#x4E3B;&#x673A;&#x540D;&#xFF0C;&#x4F8B;&#x5982; server0.example.com&#xFF0C;&#x5176;&#x4E2D;&#x5BFC;&#x51FA; /myshare &#x76EE;&#x5F55;&#x5E76;&#x4E14;&#x7531; server0.example.com &#x6302;&#x8F7D;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare *.example.com</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DNS &#x53EF;&#x89E3;&#x6790;&#x7684;&#x4E3B;&#x673A;&#x540D;&#xFF0C;&#x5305;&#x542B;&#x901A;&#x914D;&#x7B26; *&#xFF08;&#x8868;&#x793A;&#x591A;&#x4E2A;&#x5B57;&#x7B26;&#xFF09;&#x548C;/&#x6216; ?&#xFF08;&#x8868;&#x793A;&#x5355;&#x4E2A;&#x5B57;&#x7B26;&#xFF09;&#xFF0C;&#x5141;&#x8BB8; example.com &#x57DF;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x5B50;&#x57DF;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare server[0-20].example.com</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DNS &#x53EF;&#x89E3;&#x6790;&#x7684;&#x4E3B;&#x673A;&#x540D;&#xFF0C;&#x5305;&#x542B;&#x62EC;&#x5728;&#x65B9;&#x62EC;&#x53F7;&#x4E2D;&#x7684;&#x5B57;&#x7B26;&#x7C7B;&#x5217;&#x8868;&#x3002;&#x5373;&#x4E3B;&#x673A; server0.example.com&#x3001;server1.example.com &#x76F4;&#x81F3; server20.example.com &#x5747;&#x53EF;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare 172.25.11.10</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPv4 &#x5730;&#x5740;&#x3002;&#x5141;&#x8BB8;&#x4ECE; 172.25.11.10 IP &#x5730;&#x5740;&#x8BBF;&#x95EE; /myshare NFS &#x5171;&#x4EAB;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare 172.25.0.0/16</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPv4 &#x7F51;&#x7EDC;&#x3002;/etc/exports &#x914D;&#x7F6E;&#x6B21;&#x6761;&#x76EE;&#xFF0C;&#x5141;&#x8BB8;&#x4ECE; 172.25.0.0/16 &#x7F51;&#x7EDC;&#x4E2D;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55; /myshare&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare 2000:472:18:b51:c32:a21</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E0D;&#x542B;&#x65B9;&#x62EC;&#x53F7;&#x7684; IPv6 &#x5730;&#x5740;&#xFF0C;&#x5141;&#x8BB8;&#x5E26;&#x6709; IPv6 &#x5730;&#x5740; 2000:472:18:b51:c32:a21 &#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55; /myshare&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare 2000:472:18:b51::/64</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E0D;&#x542B;&#x65B9;&#x62EC;&#x53F7;&#x7684; IPv6 &#x7F51;&#x7EDC;&#xFF0C;&#x5141;&#x8BB8; IPv6 &#x7F51;&#x7EDC; 2000:472:18:b51::/64 &#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare *.example.com 172.25.0.0/16</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6307;&#x5B9A;&#x591A;&#x4E2A;&#x76EE;&#x6807;&#x53CA;&#x5176;&#x9009;&#x9879;&#xFF08;&#x7528;&#x7A7A;&#x683C;&#x5206;&#x9694;&#xFF09;&#xFF0C;&#x540E;&#x8DDF;&#x8981;&#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55;&#xFF0C;&#x4FBF;&#x53EF;&#x540C;&#x65F6;&#x5C06;&#x67D0;&#x4E2A;&#x76EE;&#x5F55;&#x5BFC;&#x51FA;&#x5230;&#x591A;&#x4E2A;&#x76EE;&#x6807;&#x3002;</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. <strong>&#x5BA2;&#x6237;&#x7AEF;&#x57DF;&#x540D;&#x6216; IP &#x540E;&#x5706;&#x62EC;&#x53F7;&#x4E2D;&#x53EF;&#x80FD;&#x5C06;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x5BFC;&#x51FA;&#x9009;&#x9879;&#x6307;&#x5B9A;&#x4E3A;&#x9017;&#x53F7;&#x5206;&#x9694;&#x5217;&#x8868;</strong></caption>
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 55.5555%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x9009;&#x9879;</th>
+<th class="tableblock halign-left valign-top">&#x793A;&#x4F8B;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ro</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare desktop0.example.com(ro)</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x53EA;&#x8BFB;&#xFF1A;&#x672A;&#x6307;&#x5B9A;&#x4EFB;&#x4F55;&#x8BBE;&#x7F6E;&#x65F6;&#x7684;&#x9ED8;&#x8BA4;&#x8BBE;&#x7F6E;&#x3002;&#x5141;&#x8BB8;&#x4F7F;&#x7528;&#x67D0;&#x4E2A;&#x6761;&#x76EE;&#x6765;&#x663E;&#x5F0F;&#x6307;&#x5B9A;&#x6B64;&#x8BBE;&#x7F6E;&#x3002;&#x9650;&#x5236; NFS &#x5BA2;&#x6237;&#x7AEF;&#x8BFB;&#x53D6; NFS &#x5171;&#x4EAB;&#x4E2D;&#x7684;&#x6587;&#x4EF6;&#x3002;&#x7981;&#x6B62;&#x4EFB;&#x4F55;&#x5199;&#x64CD;&#x4F5C;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rw</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare desktop0.example.com(ro) server[0-20].example.com(rw)</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8BFB;&#x5199;&#xFF1A;&#x5141;&#x8BB8;&#x5BF9; NFS &#x5BA2;&#x6237;&#x7AEF;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;&#x3002;&#x5728;&#x6B64;&#x793A;&#x4F8B;&#x4E2D;&#xFF0C;desktop0.example.com &#x80FD;&#x591F;&#x4EE5;&#x53EA;&#x8BFB;&#x65B9;&#x5F0F;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;&#xFF0C;&#x800C; server[0-20].example.com &#x5BF9; NFS &#x5171;&#x4EAB;&#x5177;&#x6709;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no_root_squash</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>/myshare diskless.example.com(rw,no_root_squash)</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;NFS &#x670D;&#x52A1;&#x5668;&#x5C06; NFS &#x5BA2;&#x6237;&#x7AEF;&#x4E0A;&#x7684; root &#x89C6;&#x4F5C;&#x7528;&#x6237; nfsnobody&#x3002;&#x5373;&#xFF0C;&#x5982;&#x679C; root &#x5C1D;&#x8BD5;&#x901A;&#x8FC7;&#x6302;&#x8F7D;&#x7684;&#x5BFC;&#x51FA;&#x8BBF;&#x95EE;&#x6587;&#x4EF6;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x4F1A;&#x5C06;&#x5176;&#x89C6;&#x4F5C;&#x7528;&#x6237; nfsnobody &#x8BBF;&#x95EE;&#x3002;&#x5728; NFS &#x5BFC;&#x51FA;&#x88AB;&#x65E0;&#x78C1;&#x76D8;&#x5BA2;&#x6237;&#x7AEF;&#x7528;&#x505A; / &#x548C; root &#x9700;&#x8981;&#x88AB;&#x5F53;&#x4F5C; root &#x7684;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x8FD9;&#x79CD;&#x5B89;&#x5168;&#x63AA;&#x65BD;&#x5B58;&#x5728;&#x9690;&#x60A3;&#x3002;&#x82E5;&#x8981;&#x7981;&#x7528;&#x6B64;&#x4FDD;&#x62A4;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x9700;&#x8981;&#x5C06; no_root_squash &#x6DFB;&#x52A0;&#x5230;&#x5728; /etc/exports &#x4E2D;&#x4E3A;&#x5BFC;&#x51FA;&#x8BBE;&#x7F6E;&#x7684;&#x9009;&#x9879;&#x5217;&#x8868;&#x3002;</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="__nfs_2">&#x914D;&#x7F6E; NFS &#x5BFC;&#x51FA;&#x4E00;&#x822C;&#x6B65;&#x9AA4;</h3>
+<div class="paragraph">
+<p>&#x914D;&#x7F6E; NFS &#x5BFC;&#x51FA;&#x4E00;&#x822C;&#x5728; NFS &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x9700;&#x8981; 5 &#x4E2A;&#x6B65;&#x9AA4;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x9700;&#x8981; 2 &#x4E2A;&#x6B65;&#x9AA4;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x670D;&#x52A1;&#x7AEF; 1 - NFS &#x914D;&#x7F6E;&#x4E0E;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl start nfs-server &amp;&amp; systemctl <span class="hljs-built_in">enable</span> nfs-server</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF;&#x670D;&#x52A1;&#x5668; Mounting &#x6587;&#x4EF6;&#x5B58;&#x50A8;</strong></div>
+<div class="title"><strong>&#x670D;&#x52A1;&#x7AEF; 2 - &#x5728; NFS &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x521B;&#x5EFA;&#x5171;&#x4EAB;&#x76EE;&#x5F55;&#xFF0C;&#x521B;&#x5EFA;&#x76EE;&#x5F55; /myshare &#x4EE5;&#x901A;&#x8FC7; NFS &#x5C06;&#x5176;&#x5728; NFS &#x670D;&#x52A1;&#x5668;&#x7CFB;&#x7EDF;&#x4E0A;&#x5171;&#x4EAB;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># mkdir /mnt/nfsshare
-# vim /etc/fstab
-nfs.example.com:/nfsshare  /mnt/nfsshare  nfs  defaults  0 0
-# mount -a
-# touch /mnt/nfsshare/test.txt</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /myshare</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>Umounting &#x6587;&#x4EF6;&#x5B58;&#x50A8;</strong></div>
+<div class="title"><strong>&#x670D;&#x52A1;&#x7AEF; 3 - &#x5C06; NFS &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x7684; /myshare &#x76EE;&#x5F55;&#x4F5C;&#x4E3A;&#x652F;&#x6301;&#x8BFB;&#x5199;&#x7684;&#x5171;&#x4EAB;&#x6765;&#x5BFC;&#x51FA;&#x5230;&#x5BA2;&#x6237;&#x7AEF;&#x3002;&#x4E3A;&#x6B64;&#xFF0C;&#x8BF7;&#x5411; NFS &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x7684; /etc/exports &#x6587;&#x4EF6;&#x4E2D;&#x6DFB;&#x52A0;&#x4EE5;&#x4E0B;&#x884C;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># umount /mnt/nfsshare/</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">/myshare CLIENTS(rw)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x670D;&#x52A1;&#x7AEF; 4 - &#x6267;&#x884C; exportfs -r &#x6765;&#x5E94;&#x7528;&#x66F4;&#x6539;&#xFF0C;&#x4F7F;&#x5171;&#x4EAB;&#x76EE;&#x5F55;&#x751F;&#x6548;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">exportfs -r</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x670D;&#x52A1;&#x7AEF; 5 - &#x5728;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x6253;&#x5F00;&#x7528;&#x4E8E; nfsd &#x7684; NFS &#x7AEF;&#x53E3; 2049/TCP&#x3002;firewalld &#x914D;&#x7F6E;&#x4E3A;&#x652F;&#x6301;&#x5373;&#x65F6;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF; 1 - &#x521B;&#x5EFA;&#x7684;&#x6302;&#x8F7D;&#x70B9;&#xFF0C;&#x4F8B;&#x5982; /mnt/nfsexport &#x6765;&#x6302;&#x8F7D; NFS &#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /mnt/nfsexport</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF; 2 - &#x4F7F;&#x7528; mount &#x547D;&#x4EE4;&#x5C06;&#x5171;&#x4EAB;&#x6302;&#x8F7D;&#x5728;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x6302;&#x8F7D;&#x70B9; /mnt/nfsexport &#x4E0A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">mount nfs.example.com:/myshare /mnt/nfsexport</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nfs">NFS &#x63D0;&#x4F9B;&#x5171;&#x4EAB;&#x5B58;&#x50A8;</h3>
+<div class="paragraph">
+<p>NFS &#x670D;&#x52A1;&#x5668;&#x63D0;&#x4F9B;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x5171;&#x4EAB;&#x76EE;&#x5F55; /nfsshare&#xFF0C;/nfsshare NFS &#x5BFC;&#x51FA;&#x63D0;&#x4F9B;&#x5BF9; nfsnobody &#x7684;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x7684; /mnt/nfsshare &#x6302;&#x8F7D;&#x70B9;&#x4E0A;&#x6C38;&#x4E45;&#x6302;&#x8F7D;&#x5171;&#x4EAB;&#x3002;</p>
+</div>
+<div class="sect3">
+<h4 id="__">&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x914D;&#x7F6E;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - NFS &#x670D;&#x52A1;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl start nfs-server.service &amp;&amp; systemctl <span class="hljs-built_in">enable</span> nfs-server.servic</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x521B;&#x5EFA;&#x8981;&#x901A;&#x8FC7; NFS &#x5171;&#x4EAB;&#x7684;&#x76EE;&#x5F55; /nfsshare&#xFF0C;&#x5E76;&#x5C06; /nfsshare &#x7684;&#x6240;&#x6709;&#x6743;&#x66F4;&#x6539;&#x4E3A;&#x7528;&#x6237; nfsnobody&#xFF0C;&#x4EE5;&#x4FBF; nfsnobody &#x80FD;&#x591F;&#x5BF9;&#x76EE;&#x5F55;&#x8FDB;&#x884C;&#x5199;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># mkdir /nfsshare &amp;&amp; chown nfsnobody /nfsshare &amp;&amp; ls -ld /nfsshare
+drwxr-xr-x. 2 nfsnobody root 6 Jul 15 03:13 /nfsshare</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x7F16;&#x8F91; /etc/exports &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x4EE5;&#x5141;&#x8BB8;&#x5BA2;&#x6237;&#x7AEF;&#x897F;&#x54E6;&#x7AE5;&#x55EF;&#x8BBF;&#x95EE;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x65B0;&#x521B;&#x5EFA;&#x7684; /nfsshare &#x76EE;&#x5F55;&#xFF0C;&#x4E14;&#x5305;&#x542B;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;&#x6743;&#x9650;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&apos;/nfsshare desktop0(rw)&apos;</span> &gt;&gt;/etc/exports</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x4F7F;&#x7528; exportfs -r &#x547D;&#x4EE4;&#x5728;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x91CD;&#x65B0;&#x52A0;&#x8F7D; /etc/exports &#x914D;&#x7F6E;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">exportfs -r</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x914D;&#x7F6E; firewalld &#x4EE5;&#x5141;&#x8BB8;&#x8BBF;&#x95EE;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x7684; NFS &#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___2">&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x521B;&#x5EFA;&#x6302;&#x8F7D;&#x70B9; /mnt/nfsshare</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /mnt/nfsshare</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x5728; /etc/fstab &#x4E2D;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5FC5;&#x9700;&#x6761;&#x76EE;&#xFF0C;&#x4EE5;&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x7CFB;&#x7EDF;&#x4E0A;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x76EE;&#x5F55; /mnt/nfsshare &#x4E2D;&#x6302;&#x8F7D;&#x5BFC;&#x51FA;&#x7684; NFS &#x5171;&#x4EAB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">server0:/nfsshare /mnt/nfsshare nfs defaults 0 0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x6267;&#x884C;&#x6302;&#x8F7D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mount <span class="hljs-_">-a</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x9A8C;&#x8BC1;&#x6302;&#x8F7D;&#x5230; /mnt/nfsshare &#x7684; NFS &#x5171;&#x4EAB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># touch /mnt/nfsshare/test.txt &amp;&amp; ls -l /mnt/nfsshare/</span>
+total 0
+-rw-r--r--. 1 nfsnobody nfsnobody 0 Jul 15 03:27 test.txt</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_kerberos_nfs_exports">Kerberos &#x52A0;&#x56FA; NFS Exports</h2>
+<h2 id="__nfs_3">&#x5B89;&#x5168;&#x52A0;&#x56FA; NFS &#x5171;&#x4EAB;</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;NFS &#x4E0D;&#x8981;&#x8EAB;&#x4EFD;&#x9A8C;&#x8BC1;&#xFF0C;&#x4EC5;&#x6839;&#x636E;&#x5BA2;&#x6237;&#x7AEF;&#x7684; IP &#x5730;&#x5740;&#x6216;&#x4E3B;&#x673A;&#x540D;&#x6765;&#x5F3A;&#x5236;&#x5B9E;&#x65BD;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#x9650;&#x5236;&#x3002;&#x4E3A;&#x8865;&#x6551;&#x8FD9;&#x4E00;&#x70B9;&#xFF0C;NFS &#x670D;&#x52A1;&#x5668;&#x4F7F;&#x7528;&#x591A;&#x79CD;&#x65B9;&#x6CD5;&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E9B;&#x9009;&#x9879;&#x6765;&#x4FDD;&#x62A4;&#x5BF9;&#x6587;&#x4EF6;&#x7684;&#x8BBF;&#x95EE;&#xFF1A;none&#x3001;sys&#x3001;krb5&#x3001;krb5i &#x548C; krb5p&#x3002;NFS &#x670D;&#x52A1;&#x5668;&#x53EF;&#x4EE5;&#x9009;&#x62E9;&#x4E3A;&#x6BCF;&#x4E2A;&#x5BFC;&#x51FA;&#x7684;&#x5171;&#x4EAB;&#x63D0;&#x4F9B;&#x4E00;&#x79CD;&#x65B9;&#x6CD5;&#x6216;&#x591A;&#x79CD;&#x65B9;&#x6CD5;&#x3002;NFS &#x5BA2;&#x6237;&#x7AEF;&#x5FC5;&#x987B;&#x4F7F;&#x7528;&#x4E3A;&#x5DF2;&#x5BFC;&#x51FA;&#x5171;&#x4EAB;&#x89C4;&#x5B9A;&#x7684;&#x65B9;&#x6CD5;&#x4E4B;&#x4E00;&#x8FDE;&#x63A5;&#x5230;&#x8BE5;&#x5171;&#x4EAB;&#xFF0C;&#x8BE5;&#x65B9;&#x6CD5;&#x4EE5;&#x6302;&#x8F7D;&#x9009;&#x9879; sec=method &#x7684;&#x5F62;&#x5F0F;&#x6307;&#x5B9A;&#x3002;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. <strong>NFS &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x5B89;&#x5168;&#x6027;&#x65B9;&#x6CD5;</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x65B9;&#x6CD5;</th>
+<th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x53EF;&#x5BF9;&#x6587;&#x4EF6;&#x8FDB;&#x884C;&#x533F;&#x540D;&#x8BBF;&#x95EE;&#xFF0C;&#x5BF9;&#x670D;&#x52A1;&#x5668;&#x7684;&#x5199;&#x5165;&#x5C06;&#x5206;&#x914D;&#x4E3A;&#x4F7F;&#x7528; UID &#x548C; GID nfsnobody&#x3002;&#x8FD9;&#x9700;&#x8981; SELinux &#x7684;&#x5E03;&#x5C14;&#x503C; nfsd_anon_write &#x5904;&#x4E8E;&#x6D3B;&#x52A8;&#x72B6;&#x6001;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sys</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6587;&#x4EF6;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#x57FA;&#x4E8E; UID &#x548C; GID &#x503C;&#x7684;&#x6807;&#x51C6; Linux &#x6587;&#x4EF6;&#x6743;&#x9650;&#x3002;&#x5982;&#x679C;&#x672A;&#x6307;&#x5B9A;&#xFF0C;&#x5219;&#x6B64;&#x65B9;&#x6CD5;&#x662F;&#x9ED8;&#x8BA4;&#x503C;&#x3002;NFS &#x670D;&#x52A1;&#x5668;&#x4FE1;&#x4EFB;&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x9001;&#x7684;&#x4EFB;&#x4F55; UID&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">krb5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5BA2;&#x6237;&#x7AEF;&#x5FC5;&#x987B;&#x4F7F;&#x7528; Kerberos &#x8BC1;&#x660E;&#x8EAB;&#x4EFD;&#xFF0C;&#x7136;&#x540E;&#x9002;&#x7528;&#x6807;&#x51C6; Linux &#x6587;&#x4EF6;&#x6743;&#x9650;&#x3002;UID/GID &#x6839;&#x636E;&#x8BBF;&#x95EE;&#x7528;&#x6237;&#x7684; Kerberos &#x4E3B;&#x4F53;&#x6765;&#x786E;&#x5B9A;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">krb5i</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6DFB;&#x52A0;&#x52A0;&#x5BC6;&#x6027;&#x5F3A;&#x7684;&#x4FDD;&#x8BC1;&#xFF0C;&#x786E;&#x4FDD;&#x6BCF;&#x4E2A;&#x8BF7;&#x6C42;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x672A;&#x88AB;&#x7BE1;&#x6539;&#x3002;UID/GID &#x6839;&#x636E;&#x8BBF;&#x95EE;&#x7528;&#x6237;&#x7684; Kerberos &#x4E3B;&#x4F53;&#x6765;&#x786E;&#x5B9A;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">krb5p</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E3A;&#x5BA2;&#x6237;&#x7AEF;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x4E4B;&#x95F4;&#x7684;&#x6240;&#x6709;&#x8BF7;&#x6C42;&#x6DFB;&#x52A0;&#x52A0;&#x5BC6;&#xFF0C;&#x9632;&#x6B62;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x6CC4;&#x9732;&#x3002;&#x8FD9;&#x5C06;&#x5F71;&#x54CD;&#x6027;&#x80FD;&#xFF0C;&#x4F46;&#x4F1A;&#x63D0;&#x4F9B;&#x6700;&#x597D;&#x7684;&#x5B89;&#x5168;&#x6027;&#x3002;UID/GID &#x6839;&#x636E;&#x8BBF;&#x95EE;&#x7528;&#x6237;&#x7684; Kerberos &#x4E3B;&#x4F53;&#x6765;&#x786E;&#x5B9A;&#x3002;</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_kerberos_nfs_exports">Kerberos &#x52A0;&#x56FA; NFS Exports</h3>
+<div class="paragraph">
+<p>&#x4EFB;&#x4F55;&#x4F7F;&#x7528; Kerberos &#x670D;&#x52A1;&#x5668;&#x7684;&#x5B89;&#x5168;&#x6027;&#x9009;&#x9879;&#xFF0C;&#x9664;&#x4E86;&#x5BFC;&#x51FA; NFS &#x5171;&#x4EAB;&#x7684;&#x7CFB;&#x7EDF;&#x4E0A;&#x7684; nfs-server &#x670D;&#x52A1;&#x4E4B;&#x5916;&#xFF0C;&#x8FD8;&#x9700;&#x8981;&#x8FD0;&#x884C; nfs-secure-server&#x3002;&#x5BA2;&#x6237;&#x7AEF;&#x8981;&#x6C42;&#x8FD0;&#x884C; nfs-secure &#x670D;&#x52A1;&#x4EE5;&#x5E2E;&#x52A9;&#x534F;&#x5546; Kerberos &#x8EAB;&#x4EFD;&#x9A8C;&#x8BC1;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>Kerberos &#x9009;&#x9879;&#x5C06;&#x81F3;&#x5C11;&#x9700;&#x8981; /etc/krb5.keytab &#x548C;&#x672C;&#x8282;&#x4E2D;&#x672A;&#x8BBA;&#x8FF0;&#x7684;&#x5176;&#x4ED6;&#x8EAB;&#x4EFD;&#x9A8C;&#x8BC1;&#x914D;&#x7F6E;&#xFF08;&#x52A0;&#x5165; Kerberos &#x57DF;&#xFF09;&#x3002;/etc/krb5.keytab &#x901A;&#x5E38;&#x5C06;&#x7531;&#x8EAB;&#x4EFD;&#x9A8C;&#x8BC1;&#x6216;&#x5B89;&#x5168;&#x6027;&#x7BA1;&#x7406;&#x5458;&#x63D0;&#x4F9B;&#x3002;&#x8BF7;&#x6C42;&#x5305;&#x542B;&#x4E3B;&#x673A;&#x4E3B;&#x4F53;&#x548C;/&#x6216; nfs &#x4E3B;&#x4F53;&#x7684; keytab&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kerberos_nfs_exports_2">Kerberos &#x52A0;&#x56FA; NFS Exports &#x4E00;&#x822C;&#x6B65;&#x9AA4;</h3>
 <div class="listingblock">
-<div class="title"><strong>NFS &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x914D;&#x7F6E;</strong></div>
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668; 1 - &#x5728;&#x5C06;&#x8981;&#x5145;&#x5F53; NFS &#x670D;&#x52A1;&#x5668;&#x7684;&#x7CFB;&#x7EDF;&#x4E0A;&#x914D;&#x7F6E; Kerberos keytab</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># mv serverSample.keytab /etc/krb5.keytab
-# vim /etc/sysconfig/nfs
-RPCNFSDARGS=&quot;-V 4.2&quot;
-# systemctl start nfs-secure-server
-# systemctl enable nfs-secure-server
-# mkdir /securenfs
-# echo &apos;/securenfs desktopX(sec=krb5p,rw)&apos; &gt;&gt; /etc/exports
-# exportfs -r
-# firewall-cmd --permanent --add-service=nfs
-# firewall-cmd --reload</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/server0.keytab</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>NFS &#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</strong></div>
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668; 2 - &#x8FD0;&#x884C;&#x542F;&#x52A8; nfs-secure-server &#x670D;&#x52A1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># mv clientSample.keytab /etc/krb5.keytab
-# systemctl start nfs-secure
-# systemctl enable nfs-secure
-# mkdir /mnt/secureshare
-# echo &apos;nfs.example.com:/securenfs /mnt/secureshare nfs defaults,v4.2,sec=krb5p 0 0&apos; &gt;&gt; /etc/fstab
-# mount -a</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"> systemctl start nfs-secure-server &amp;&amp; systemctl <span class="hljs-built_in">enable</span> nfs-secure-server</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x6D4B;&#x8BD5; - NFS &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x521B;&#x5EFA;&#x6587;&#x4EF6;</strong></div>
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668; 3 - &#x5728; NFS &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x521B;&#x5EFA;&#x76EE;&#x5F55; /securedexport&#x3002;&#x6B64;&#x76EE;&#x5F55;&#x5C06;&#x7528;&#x4F5C; NFS &#x5BFC;&#x51FA;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># echo &quot;Hello World&quot; &gt; /securenfs/testfile.txt
-# chcon -t public_content_t /securenfs/testfile.txt
-# chown ldapuser:ldapuser /securenfs/testfile.txt
-# chmod 644 /securenfs/testfile.txt
-# ls -Z /mnt/secureshare</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /securedexport</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x6D4B;&#x8BD5; - &#x5BA2;&#x6237;&#x7AEF;&#x8BFB;&#x5199;&#x6587;&#x4EF6;</strong></div>
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668; 4 - &#x5411; /etc/exports &#x6587;&#x4EF6;&#x4E2D;&#x6DFB;&#x52A0;&#x76EE;&#x5F55; /securedexport &#x4EE5;&#x901A;&#x8FC7; NFS &#x5C06;&#x5176;&#x5BFC;&#x51FA;&#x3002;&#x542F;&#x7528; krb5p &#x5B89;&#x5168;&#x6027;&#x4EE5;&#x4FDD;&#x62A4;&#x5BF9; NFS &#x5171;&#x4EAB;&#x7684;&#x8BBF;&#x95EE;&#x3002;&#x5141;&#x8BB8;&#x4ECE; example.com &#x57DF;&#x7684;&#x6240;&#x6709;&#x5B50;&#x57DF;&#x5BF9;&#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># su - ldapuser
-$ echo &quot;I can write&quot; &gt;&gt;/mnt/secureshare/testfile.tx
-$ cat /mnt/secureshare/testfile.txt</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&apos;/securedexport *.example.com(sec=krb5p,rw)&apos;</span> &gt;&gt;/etc/exports</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668; 5 - &#x6267;&#x884C; exportfs -r &#x6765;&#x5E94;&#x7528;&#x66F4;&#x6539;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">exportfs -r</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668; 6 - &#x5728;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x6253;&#x5F00;&#x7528;&#x4E8E; nfsd &#x7684; NFS &#x7AEF;&#x53E3; 2049/TCP&#x3002;firewalld &#x914D;&#x7F6E;&#x4E3A;&#x652F;&#x6301;&#x5373;&#x65F6;&#x8BBF;&#x95EE; NFS &#x5BFC;&#x51FA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF; 1 - &#x5728;&#x5C06;&#x8981;&#x5145;&#x5F53; NFS &#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x7CFB;&#x7EDF;&#x4E0A;&#x5B89;&#x88C5;&#x6240;&#x63D0;&#x4F9B;&#x7684; keytab&#x3002;&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x7CFB;&#x7EDF;&#x4E0A;&#x6302;&#x8F7D; krb5p &#x4FDD;&#x62A4;&#x7684;&#x5171;&#x4EAB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/desktop0.keytab</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF; 2 - &#x8FDE;&#x63A5;&#x5230; Kerberos &#x4FDD;&#x62A4;&#x7684;&#x5171;&#x4EAB;&#x65F6;&#xFF0C;NFS &#x4F7F;&#x7528;&#x5BA2;&#x6237;&#x7AEF;&#x4E0A;&#x7684; nfs-secure &#x670D;&#x52A1;&#x6765;&#x5E2E;&#x52A9;&#x534F;&#x5546;&#x548C;&#x7BA1;&#x7406;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x4E4B;&#x95F4;&#x7684;&#x901A;&#x4FE1;&#x3002;&#x6B64;&#x670D;&#x52A1;&#x5FC5;&#x987B;&#x6B63;&#x5728;&#x8FD0;&#x884C;&#xFF0C;&#x624D;&#x80FD;&#x4F7F;&#x7528;&#x53D7;&#x4FDD;&#x62A4;&#x7684; NFS &#x5171;&#x4EAB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl <span class="hljs-built_in">enable</span> nfs-secure &amp;&amp; systemctl start nfs-secure</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF; 3 - &#x521B;&#x5EFA;&#x6302;&#x8F7D;&#x70B9; /mnt/securedexport</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /mnt/securedexport</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF; 4 - &#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55;&#x73B0;&#x5728;&#x53EF;&#x4EE5;&#x6302;&#x8F7D;&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x7CFB;&#x7EDF;&#x4E0A;&#xFF0C;&#x540C;&#x65F6;&#x542F;&#x7528; krb5p &#x5B89;&#x5168;&#x6027;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mount -o sec=krb5p server0:/securedexport /mnt/securedexport</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selinux_nfs">SELinux &#x548C; NFS &#x6807;&#x8BB0;</h3>
+<div class="paragraph">
+<p>SELinux &#x901A;&#x8FC7;&#x9501;&#x5B9A; RHEL &#x4E2D;&#x63D0;&#x4F9B;&#x7684;&#x670D;&#x52A1;&#x7684;&#x529F;&#x80FD;&#xFF0C;&#x4ECE;&#x800C;&#x63D0;&#x4F9B;&#x4E86;&#x989D;&#x5916;&#x7684;&#x5B89;&#x5168;&#x6027;&#x3002;&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;NFS &#x6302;&#x8F7D;&#x5177;&#x6709; SELinux &#x4E0A;&#x4E0B;&#x6587; nfs_t&#xFF0C;&#x4E0E;&#x5176;&#x5728;&#x63D0;&#x4F9B;&#x5BFC;&#x51FA;&#x7684;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x65E0;&#x5173;&#x3002;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x6302;&#x8F7D;&#x9009;&#x9879; context=&quot;selinux_context&quot; &#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x4E0A;&#x66F4;&#x6539;&#x6B64;&#x884C;&#x4E3A;&#x3002;&#x4F8B;&#x5982;&#x5C06;&#x6302;&#x8F7D; NFS &#x5BFC;&#x51FA;&#x5E76;&#x5F3A;&#x5236;&#x5B9E;&#x65BD; SELinux &#x4E0A;&#x4E0B;&#x6587;&#xFF1A;system_u:object_r:public_content_rw_t:s0&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mount -o context=<span class="hljs-string">&quot;system_u:object_r:public_content_rw_t:s0&quot;</span> serverX:/myshare /mnt/nfsexport</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x901A;&#x8FC7;&#x5207;&#x6362;&#x5230; NFS &#x7248;&#x672C; 4.2&#xFF0C;&#x53EF;&#x4EE5;&#x5F3A;&#x5236; NFS &#x670D;&#x52A1;&#x5668;&#x6B63;&#x786E;&#x5BFC;&#x51FA;&#x5171;&#x4EAB;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x3002;&#x6B64;&#x89C4;&#x8303;&#x76EE;&#x524D;&#x4EC5;&#x4F5C;&#x4E3A; Internet &#x8349;&#x7A3F;&#x800C;&#x5B58;&#x5728;&#x3002;&#x8FD9;&#x5728; RHEL 7 &#x9644;&#x5E26;&#x7684; NFS &#x670D;&#x52A1;&#x5668;&#x4E2D;&#x5DF2;&#x7ECF;&#x5B9E;&#x65BD;&#xFF0C;&#x4F46;&#x662F;&#x9700;&#x8981;&#x663E;&#x5F0F;&#x5F00;&#x542F;&#x3002;&#x8981;&#x5728; NFS &#x670D;&#x52A1;&#x5668;&#x7CFB;&#x7EDF;&#x4E0A;&#x542F;&#x7528; NFS &#x7248;&#x672C; 4.2 &#x4EE5;&#x5BFC;&#x51FA; SELinux &#x6807;&#x7B7E;&#xFF0C;&#x8BF7;&#x5C06; /etc/sysconfig/nfs &#x6587;&#x4EF6;&#x4E2D;&#x7684; RPCNFSDARGS=&quot;&quot; &#x884C;&#x66F4;&#x6539;&#x4E3A;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">RPCNFSDARGS=<span class="hljs-string">&quot;-V 4.2&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>nfs-server &#x6216; nfs-secure-server &#x5206;&#x522B;&#x9700;&#x8981;&#x91CD;&#x65B0;&#x542F;&#x52A8;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl restart nfs-server
+systemctl restart nfs-secure-server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x5FC5;&#x987B;&#x5C06; mount -o v4.2 &#x6307;&#x5B9A;&#x4E3A;&#x6302;&#x8F7D;&#x9009;&#x9879;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mount -o sec=krb5p,v4.2 server0:/securedexport /mnt/securedexport</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kerberos_selinux_nfs">Kerberos &#x548C; SELinux &#x4FDD;&#x62A4;&#x7684; NFS &#x5171;&#x4EAB;&#x5B58;&#x50A8;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x901A;&#x8FC7; Kerberos &#x548C; SELinux &#x4FDD;&#x62A4; NFS &#x5171;&#x4EAB;&#x5B58;&#x50A8;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5728;&#x5177;&#x6709; krb5p &#x5B89;&#x5168;&#x6027;&#x7684; server0 &#x4E0A;&#x5171;&#x4EAB;&#x65B0;&#x521B;&#x5EFA;&#x7684; /securenfs &#x76EE;&#x5F55;</p>
+</li>
+<li>
+<p>&#x5141;&#x8BB8;&#x4ECE; desktop0 &#x7CFB;&#x7EDF;&#x4E2D;&#x5BF9;&#x5171;&#x4EAB;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;</p>
+</li>
+<li>
+<p>SELinux &#x6807;&#x7B7E;&#x5DF2;&#x5BFC;&#x51FA;</p>
+</li>
+<li>
+<p>NFS &#x6302;&#x8F7D;&#x5230;&#x5177;&#x6709; krb5p &#x5B89;&#x5168;&#x6027;&#x548C;&#x5BFC;&#x51FA;&#x7684; SELinux &#x6807;&#x7B7E;&#x7684; /mnt/secureshare desktop0 &#x4E0A;</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_nfs_2">NFS &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x914D;&#x7F6E;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - Kerberos krb5p &#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/server0.keytab</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x542F;&#x7528; NFS &#x7248;&#x672C; 4.2 &#x4EE5;&#x5BFC;&#x51FA; SELinux &#x6807;&#x7B7E;&#x3002;&#x4E3A;&#x6B64;&#xFF0C;&#x8BF7;&#x5C06; /etc/sysconfig/nfs &#x4E2D;&#x7684; RPCNFSDARGS=&quot;&quot; &#x884C;&#x66F4;&#x6539;&#x4E3A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">RPCNFSDARGS=<span class="hljs-string">&quot;-V 4.2&quot;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x542F;&#x52A8; nfs-secure-server &#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl start nfs-secure-server &amp;&amp; systemctl <span class="hljs-built_in">enable</span> nfs-secure-server</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x521B;&#x5EFA;&#x76EE;&#x5F55; /securenfs</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /securenfs</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x5411; /etc/exports &#x6587;&#x4EF6;&#x4E2D;&#x6DFB;&#x52A0;&#x76EE;&#x5F55; /securenfs &#x4EE5;&#x901A;&#x8FC7; NFS &#x5C06;&#x5176;&#x5BFC;&#x51FA;&#x3002;&#x542F;&#x7528; krb5p &#x5B89;&#x5168;&#x6027;&#x4EE5;&#x4FDD;&#x62A4;&#x5BF9; NFS &#x5171;&#x4EAB;&#x7684;&#x8BBF;&#x95EE;&#x3002;&#x5141;&#x8BB8;&#x4ECE; desktop0 &#x7CFB;&#x7EDF;&#x4E2D;&#x5BF9;&#x5BFC;&#x51FA;&#x7684;&#x76EE;&#x5F55;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x8BBF;&#x95EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&apos;/securenfs desktop0(sec=krb5p,rw)&apos;</span> &gt;&gt;/etc/exports</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6 - &#x52A0;&#x8F7D; /etc/exports &#x6587;&#x4EF6;&#x4F7F;&#x5171;&#x4EAB;&#x751F;&#x6548;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">exportfs -r</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7 - &#x914D;&#x7F6E; firewalld &#x4EE5;&#x5141;&#x8BB8;&#x8BBF;&#x95EE; server0 &#x4E0A;&#x7684; NFS &#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">firewall-cmd --permanent --add-service=nfs
+firewall-cmd --reload</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___3">&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - Kerberos keytab &#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/desktop0.keytab</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x542F;&#x52A8; nfs-secure &#x670D;&#x52A1;&#x4EE5;&#x5E2E;&#x52A9;&#x534F;&#x5546;&#x4F7F;&#x7528; Kerberos &#x5F62;&#x5F0F;&#x7684; NFS &#x5171;&#x4EAB;&#x8FDB;&#x884C;&#x8EAB;&#x4EFD;&#x9A8C;&#x8BC1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl start nfs-secure &amp;&amp; systemctl <span class="hljs-built_in">enable</span> nfs-secure</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x521B;&#x5EFA;&#x6302;&#x8F7D;&#x70B9; /mnt/secureshare</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir /mnt/secureshare</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x5728; /etc/fstab &#x6587;&#x4EF6;&#x4E2D;&#x521B;&#x5EFA;&#x6761;&#x76EE;&#xFF0C;&#x4EE5;&#x5C06; server0 &#x7CFB;&#x7EDF;&#x5BFC;&#x51FA;&#x7684; /securenfs &#x5171;&#x4EAB;&#x6302;&#x8F7D;&#x5230; desktopX &#x4E0A;&#x7684; /mnt/secureshare &#x6302;&#x8F7D;&#x70B9;&#xFF0C;&#x4EE5;&#x4FBF;&#x5171;&#x4EAB;&#x4E2D;&#x7684; SELinux &#x6807;&#x7B7E;&#x663E;&#x793A;&#x5728;&#x6302;&#x8F7D;&#x70B9;&#x4E0A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">server0:/securenfs /mnt/secureshare nfs defaults,v4.2,sec=krb5p 0 0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x5C06;&#x5BFC;&#x51FA;&#x7684; NFS &#x5171;&#x4EAB;&#x6302;&#x8F7D;&#x5230; desktop0 &#x7CFB;&#x7EDF;&#x4E0A;&#x65B0;&#x521B;&#x5EFA;&#x7684; /mnt/secureshare &#x76EE;&#x5F55;&#x4E2D;&#xFF0C;&#x5E76;&#x9A8C;&#x8BC1; /etc/fstab &#x6761;&#x76EE;&#x662F;&#x5426;&#x6309;&#x9884;&#x671F;&#x5DE5;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mount <span class="hljs-_">-a</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___4">&#x6D4B;&#x8BD5;&#x9A8C;&#x8BC1;</h4>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5305;&#x542B;&#x5185;&#x5BB9;&#x201C;Hello World&#x201D;&#x7684;&#x65B0;&#x6587;&#x4EF6; /securenfs/testfile.txt</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># echo &quot;Hello World&quot; &gt; /securenfs/testfile.txt &amp;&amp; ls -lZ /securenfs/
+-rw-r--r--. root root unconfined_u:object_r:default_t:s0 testfile.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x5728;&#x670D;&#x52A1;&#x5668; /securenfs/testfile.txt &#x6587;&#x4EF6;&#x4E0A;&#xFF0C;&#x5C06; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x8BBE;&#x7F6E;&#x4E3A; public_content_t</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># chcon -t public_content_t /securenfs/testfile.txt &amp;&amp; ls -lZ /securenfs/
+-rw-r--r--. root root unconfined_u:object_r:public_content_t:s0 testfile.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x5728;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x5C06; /securenfs/testfile.txt &#x6587;&#x4EF6;&#x7684;&#x6240;&#x6709;&#x6743;&#x66F4;&#x6539;&#x4E3A; ldapuser0:ldapuser0</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># chown ldapuser0:ldapuser0 /securenfs/testfile.txt &amp;&amp; ls -lZ /securenfs/
+-rw-r--r--. ldapuser0 ldapuser0 unconfined_u:object_r:public_content_t:s0 testfile.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x5728;&#x670D;&#x52A1;&#x5668;&#x7CFB;&#x7EDF;&#x4E0A;&#xFF0C;&#x5C06; /securenfs/testfile.txt &#x6587;&#x4EF6;&#x7684;&#x6743;&#x9650;&#x66F4;&#x6539;&#x4E3A; 644</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># chmod 644 /securenfs/testfile.txt &amp;&amp; ls -lZ /securenfs/
+-rw-r--r--. ldapuser0 ldapuser0 unconfined_u:object_r:public_content_t:s0 testfile.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x4EE5;&#x7528;&#x6237; ldapuser0 &#x7684;&#x8EAB;&#x4EFD;&#xFF08;&#x5BC6;&#x7801; kerberos&#xFF09;&#xFF0C;&#x901A;&#x8FC7; ssh &#x767B;&#x5F55;&#x5230; desktop0 &#x7CFB;&#x7EDF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">ssh ldapuser0@desktop0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6 - &#x9A8C;&#x8BC1;&#x6587;&#x4EF6; /mnt/secureshare/testfile.txt &#x662F;&#x5426;&#x53EF;&#x4EE5;&#x7531;&#x7ECF;&#x8FC7; Kerberos &#x9A8C;&#x8BC1;&#x7684;&#x7528;&#x6237; ldapuser0 &#x8FDB;&#x884C;&#x5199;&#x5165;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;I can write&quot;</span> &gt;&gt;/mnt/secureshare/testfile.txt
+$ cat /mnt/secureshare/testfile.txt
+Hello World
+I can write</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2445,6 +2940,103 @@ Password for rob@//smb.example.com/smbshare:  ******
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="___5">&#x573A;&#x666F;&#x7EC3;&#x4E60;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___6">&#x7EC3;&#x4E60;&#x4E00;</h3>
+<div class="paragraph">
+<p>&#x5728; server0 &#x914D;&#x7F6E; NFS &#x670D;&#x52A1;&#xFF0C;&#x8981;&#x6C42;&#x5982;&#x4E0B;:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x4EE5;&#x53EA;&#x8BFB;&#x7684;&#x65B9;&#x5F0F;&#x5171;&#x4EAB;&#x76EE;&#x5F55; /public &#x540C;&#x65F6;&#x53EA;&#x80FD;&#x88AB; example.com &#x57DF;&#x4E2D;&#x7684;&#x7CFB;&#x7EDF;&#x8BBF;&#x95EE;</p>
+</li>
+<li>
+<p>&#x4EE5;&#x8BFB;&#x5199;&#x7684;&#x65B9;&#x5F0F;&#x5171;&#x4EAB;&#x76EE;&#x5F55; /protected &#x80FD;&#x88AB; example.com &#x57DF;&#x4E2D;&#x7684;&#x7CFB;&#x7EDF;&#x8BBF;&#x95EE;</p>
+</li>
+<li>
+<p>&#x8BBF;&#x95EE; /protected &#x9700;&#x8981;&#x901A;&#x8FC7; Kerberos &#x5B89;&#x5168;&#x52A0;&#x5BC6;&#xFF0C; &#x60A8;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x4E0B;&#x9762; URL &#x63D0;&#x4F9B;&#x7684;&#x5BC6;&#x94A5; <a href="http://classroom.example.com/pub/keytabs/server0.keytab" class="bare" target="_blank">http://classroom.example.com/pub/keytabs/server0.keytab</a></p>
+</li>
+<li>
+<p>&#x76EE;&#x5F55; /protected &#x5E94;&#x8BE5;&#x5305;&#x542B;&#x540D;&#x4E3A; confidential &#x62E5;&#x6709;&#x4EBA;&#x4E3A;ldapuser0 &#x7684;&#x5B50;&#x76EE;&#x5F55;</p>
+</li>
+<li>
+<p>&#x7528;&#x6237; ldapuser0 &#x80FD;&#x4EE5;&#x8BFB;&#x5199;&#x65B9;&#x5F0F;&#x8BBF;&#x95EE; /protected/confidential</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x5728; desktop0 &#x4E0A;&#x6302;&#x8F7D;&#x4E00;&#x4E2A;&#x6765;&#x81EA; server0.example.com &#x7684;NFS&#x5171;&#x4EAB;&#xFF0C; &#x5E76;&#x7B26;&#x5408;&#x4E0B;&#x5217;&#x8981;&#x6C42;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>/public &#x6302;&#x8F7D;&#x5728;&#x4E0B;&#x9762;&#x7684;&#x76EE;&#x5F55;&#x4E0A; /mnt/nfsmount</p>
+</li>
+<li>
+<p>/protected &#x6302;&#x8F7D;&#x5728;&#x4E0B;&#x9762;&#x7684;&#x76EE;&#x5F55;&#x4E0A; /mnt/nfssecure &#x5E76;&#x4F7F;&#x7528;&#x5B89;&#x5168;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x5BC6;&#x94A5;&#x4E0B;&#x8F7D;URL&#x5982;&#x4E0B;&#xFF1A; <a href="http://classroom.example.com/pub/keytabs/desktop0.keytab" class="bare" target="_blank">http://classroom.example.com/pub/keytabs/desktop0.keytab</a></p>
+</li>
+<li>
+<p>&#x7528;&#x6237; ldapuser0 &#x80FD;&#x591F;&#x5728; /mnt/nfssecure/confidential &#x4E0A;&#x521B;&#x5EFA;&#x6587;&#x4EF6;</p>
+</li>
+<li>
+<p>&#x8FD9;&#x4E9B;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x5728;&#x7CFB;&#x7EDF;&#x542F;&#x52A8;&#x65F6;&#x81EA;&#x52A8;&#x6302;&#x8F7D;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># mkdir -p /public /protected /protected/confidential &amp;&amp; ls -lZd /public/  /protected /protected/confidential
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /protected
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /protected/confidential
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /public/
+
+# chown ldapuser0 /protected/confidential &amp;&amp; ls -ld /protected/confidential
+drwxr-xr-x. 2 ldapuser0 root 6 Jul 15 05:30 /protected/confidential
+
+# wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/server0.keytab
+
+# restorecon -vRF /etc/krb5.keyta
+
+# echo &apos;/public 172.25.0.0/24(ro,sync,no_root_squash)&apos; &gt;&gt; /etc/exports
+# echo &apos;/protected 172.25.0.0/24(rw,sync,no_root_squash,sec=krb5p)&apos; &gt;&gt; /etc/exports
+# cat /etc/exports
+/public 172.25.0.0/24(ro,sync,no_root_squash)
+/protected 172.25.0.0/24(rw,sync,no_root_squash,sec=krb5p)
+
+# systemctl restart nfs-server &amp;&amp; systemctl enable nfs-server &amp;&amp; systemctl status nfs-server
+# systemctl restart nfs-secure-server &amp;&amp; systemctl enable nfs-secure-server &amp;&amp; systemctl status nfs-secure-server
+
+# firewall-cmd --permanent --add-service=nfs
+# firewall-cmd --reload</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># mkdir /mnt/nfsmount /mnt/nfssecure
+
+# wget -O /etc/krb5.keytab http://classroom.example.com/pub/keytabs/desktop0.keytab
+# restorecon -vRF /etc/krb5.keytab
+
+# systemctl restart nfs-secure &amp;&amp; systemctl enable nfs-secure &amp;&amp; systemctl status nfs-secure
+# systemctl restart nfs
+
+# echo &apos;server0.example.com:/public /mnt/nfsmount nfs defaults,vers=4,sec=sys   0 0&apos; &gt;&gt; /etc/fstab
+# echo &apos;server0.example.com:/protected  /mnt/nfssecure  nfs defaults,vers=4,sec=krb5p 0 0&apos; &gt;&gt; /etc/fstab
+# cat /etc/fstab | grep server0
+server0.example.com:/public     /mnt/nfsmount   nfs  defaults,vers=4,sec=sys   0 0
+server0.example.com:/protected  /mnt/nfssecure  nfs  defaults,vers=4,sec=krb5p 0 0
+
+# mount -a</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -2487,7 +3079,7 @@ Password for rob@//smb.example.com/smbshare:  ******
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"文件存储","level":"1.2.4.4","depth":3,"next":{"title":"块存储","level":"1.2.4.5","depth":3,"path":"linux/stoarges/block-storage.adoc","ref":"linux/stoarges/block-storage.adoc","articles":[]},"previous":{"title":"NFS","level":"1.2.4.3","depth":3,"path":"linux/stoarges/nfs.adoc","ref":"linux/stoarges/nfs.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/stoarges/file-storage.adoc","mtime":"2018-06-01T01:29:15.040Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-14T14:57:35.719Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"文件存储","level":"1.2.4.4","depth":3,"next":{"title":"块存储","level":"1.2.4.5","depth":3,"path":"linux/stoarges/block-storage.adoc","ref":"linux/stoarges/block-storage.adoc","articles":[]},"previous":{"title":"NFS","level":"1.2.4.3","depth":3,"path":"linux/stoarges/nfs.adoc","ref":"linux/stoarges/nfs.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/stoarges/file-storage.adoc","mtime":"2018-07-15T05:55:23.353Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-23T08:46:33.089Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
