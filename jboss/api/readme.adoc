@@ -1,4 +1,86 @@
 = API 管理
 :toc: manual
 
-== API 经济
+== API 经济 - 从封闭走向开放
+
+透过 API 的开放，提升服务平台价值，进一步形成生态系，带来「API经济」正快速崛起。Intel、IBM、Red Hat 等大厂皆展开布局与併购行动，新创业者也相继成立抢食市场大饼。
+
+image:img/api-economy.png[]
+
+随着云运算、社交网路、移动应用等新兴科技的发展，一些创新的商业模式陆续出现下，API(Application Programming Interface 应用程序接口)已从系统应用开发中的信息交互/相互调运，转变为成为可获利的商品。透过 API 的开放，可提升服务平台价值，进一步形成生态系，带来「API经济」。新世纪以来，一些创新型公司，如互联网电子商务行业，网络科技的相关从业者，即以开放 API 的方式，快速扩张业务规模，创造庞大经济效益。
+
+* 拍卖网站 eBay 在 2000 年开放 API，目前已累积约 2,000 个应用服务，透过 API 而来的交易约占总交易的 6 成。
+* Amazon 于 2002 年开放 API，让小型零售商在其电子商务平台开店，Amazon 因此也增加商品种类与提高交易金额，之后在 Amazon Web Services 云端服务也开放服务接口，协助新创企业以较低成本构建所需资讯应用环境，造就 Amazon 在云端服务市场的领先地位。
+* 阿里也是 API 经济的实践者，天猫、淘宝、物流、支付等核心系统都是基于 API 去构建。
+
+目前 API 经济已从网络服务拓展到电信、金融、政府，在中国可以说是拓展到了各行各业，包括一些中小科技企业、民营企业，一个有力的例子即 BATJ(阿里巴巴、腾讯、百度、京东)积极开放自家 API、广泛的参与到金融、政府等各领域 IT 建设，并将这些领域与自家的生态挂钩。
+
+== 3Scale 安装
+
+=== 1 - 安装准备
+
+* 确保 OpenShift 安装并正常运行。
+* 下载 link:3scale-amp-2.2.yml[3scale-amp-2.2.yml]
+
+[source, bash]
+.*设置系统参数*
+----
+OCP_WILDCARD_DOMAIN=apps.acme.192.168.42.78.nip.io
+ADMIN_PASSWORD=admin
+OCP_PROJECT_PREFIX=acme
+MASTER_PASSWORD=admin
+
+$ echo $OCP_WILDCARD_DOMAIN $ADMIN_PASSWORD $MASTER_PASSWORD $OCP_PROJECT_PREFIX
+apps.acme.192.168.42.78.nip.io admin admin acme
+----
+
+=== 安装
+
+[source, bash]
+.*1 - 创建一个工程*
+----
+oc new-project $OCP_PROJECT_PREFIX-3scale-amp --display-name="3scale-amp" --description="3scale AMP component"
+----
+
+[source, bash]
+.*2 - 根据模版创建 16 个容器部署对象*
+----
+oc new-app -f 3scale-amp-2.2.yml \
+      --param ADMIN_PASSWORD=$ADMIN_PASSWORD \
+      --param TENANT_NAME=$OCP_PROJECT_PREFIX-3scale \
+      --param MASTER_NAME=$OCP_PROJECT_PREFIX-master \
+      --param MASTER_PASSWORD=$MASTER_PASSWORD \
+      --param WILDCARD_DOMAIN=$OCP_WILDCARD_DOMAIN > /tmp/3scale_amp_provision_details.txt
+----
+
+[source, bash]
+.*3 - 数据持久层容器部署*
+----
+$ for x in backend-redis system-memcache system-mysql system-redis zync-database; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
+Resuming dc: backend-redis
+deploymentconfig "backend-redis" resumed
+Resuming dc: system-memcache
+deploymentconfig "system-memcache" resumed
+Resuming dc: system-mysql
+deploymentconfig "system-mysql" resumed
+Resuming dc: system-redis
+deploymentconfig "system-redis" resumed
+Resuming dc: zync-database
+deploymentconfig "zync-database" resumed
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+
+

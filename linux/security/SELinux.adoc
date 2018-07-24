@@ -26,7 +26,7 @@ SELinux 标签具有多种上下文：用户、角色、类型和敏感度。目
 
 存在某个策略规则，其允许 Apache（作为 httpd_t 运行的 Web 服务器进程）访问上下文通常位于 /var/www/html 及其他 Web 服务器目录 (httpd_sys_content_t) 中的文件和目录。对于通常位于 /tmp 和 /var/tmp 中的文件，策略中没有允许规则，因此不允许进行访问。有了 SELinux，恶意用户就无法访问 /tmp 目录。SELinux 还有适用于 NFS 和 CIFS 等远程文件系统的规则，尽管这些文件系统上的所有文件都使用相同的上下文标签。
 
-=== -Z 或设置 SELinux 上下文
+=== -Z 设置 SELinux 上下文
 
 许多处理文件的命令具有一个用于显示或设置 SELinux 上下文的选项（通常是-Z）。例如， ps、ls、cp 和 mkdir 全都使用 -Z 选项来显示或设置 SELinux 上下文。
 
