@@ -1,5 +1,7 @@
 {
     "variables" : {
+        "GUID": "na39",
+        "OCP_USER_ID": "ksoong-redhat.com",
         "copyrightYear" :  "2018",
         "copyrightHolder" :  "Kylin Soong"
     },

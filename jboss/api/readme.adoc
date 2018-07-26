@@ -22,17 +22,12 @@ image:img/api-economy.png[]
 * 确保 OpenShift 安装并正常运行。
 * 下载 link:3scale-amp-2.2.yml[3scale-amp-2.2.yml]
 
-[source, bash]
-.*设置系统参数*
-----
-OCP_WILDCARD_DOMAIN=apps.acme.192.168.42.78.nip.io
-ADMIN_PASSWORD=admin
-OCP_PROJECT_PREFIX=acme
-MASTER_PASSWORD=admin
+.*设定环境变量*
 
-$ echo $OCP_WILDCARD_DOMAIN $ADMIN_PASSWORD $MASTER_PASSWORD $OCP_PROJECT_PREFIX
-apps.acme.192.168.42.78.nip.io admin admin acme
-----
+1. GUID: {{book.GUID}}
+2. OCP_WILDCARD_DOMAIN: apps.{{book.GUID}}.openshift.opentlc.com
+3. OCP_USER_ID: {{book.OCP_USER_ID}}
+4. OCP_PROJECT_PREFIX: {{book.OCP_USER_ID}}
 
 === 安装
 
@@ -45,6 +40,9 @@ oc new-project $OCP_PROJECT_PREFIX-3scale-amp --display-name="3scale-amp" --desc
 [source, bash]
 .*2 - 根据模版创建 16 个容器部署对象*
 ----
+$ export ADMIN_PASSWORD=admin
+$ export MASTER_PASSWORD=master
+
 oc new-app -f 3scale-amp-2.2.yml \
       --param ADMIN_PASSWORD=$ADMIN_PASSWORD \
       --param TENANT_NAME=$OCP_PROJECT_PREFIX-3scale \
@@ -57,30 +55,61 @@ oc new-app -f 3scale-amp-2.2.yml \
 .*3 - 数据持久层容器部署*
 ----
 $ for x in backend-redis system-memcache system-mysql system-redis zync-database; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
-Resuming dc: backend-redis
-deploymentconfig "backend-redis" resumed
-Resuming dc: system-memcache
-deploymentconfig "system-memcache" resumed
-Resuming dc: system-mysql
-deploymentconfig "system-mysql" resumed
-Resuming dc: system-redis
-deploymentconfig "system-redis" resumed
-Resuming dc: zync-database
-deploymentconfig "zync-database" resumed
 ----
 
 [source, bash]
-.**
+.*4 - 后台 listener 和 worker 部署*
 ----
-
+$ for x in backend-listener backend-worker; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
 ----
 
 [source, bash]
-.**
+.*5 - system-app 部署*
+----
+$ oc rollout resume dc/system-app
 ----
 
+[source, bash]
+.*6 - 系统和后台工具集部署*
+----
+$ for x in system-resque system-sidekiq backend-cron system-sphinx; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
 ----
 
+[source, bash]
+.*7 - apicast 网关部署*
+----
+$ for x in apicast-staging apicast-production; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
+----
 
+[source, bash]
+.*8 - 其它部署*
+----
+$ for x in apicast-wildcard-router zync; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
+----
 
+=== 安装验证
+
+[source, bash]
+.*1 - 查看运行的容器*
+----
+$ oc get pods
+----
+
+.*2 - 查看容器的镜像*
+
+使用 https://registry-console-default.apps.acme.192.168.42.78.nip.io/registry 可以查看内部镜像仓库。
+
+[source, bash]
+.*3 - 查看 Mysql 数据库*
+----
+$ oc rsh $(oc get pod | grep mysql | awk '{print $1}')
+$ mysql -uroot system
+mysql> show tables;
+----
+
+[source, bash]
+.*4 - 登录 3Scale 管理界面，执行如下命令获取登录 URL*
+----
+$ cat /tmp/3scale_amp_provision_details.txt | grep Login
+----
 
