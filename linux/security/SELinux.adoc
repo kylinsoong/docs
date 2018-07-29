@@ -149,18 +149,47 @@ SELINUXTYPE=targeted
 
 传递 *selinux=* 和/或 *enforcing=* 内核参数会覆盖在`/etc/selinux/config` 中指定的任何默认值。
 
-[source,text]
-.*To display SELinux Booleans and their current value*
+=== 修改 SELinux 模式一般步骤
+
+[source, text]
+.*1 - 查看默认 SELinux 的模式*
 ----
-# getsebool -a
-# getsebool httpd_enable_homedirs
+# getenforce 
+Enforcing
 ----
 
-[source,text]
-.*Changing the current SELinux mode*
+[source, text]
+.*2 - 修改默认 SELinux 的模式为 Permissive，并重起使生效*
 ----
-# setenforce 0
-# setenforce Enforcing
+# vim /etc/sysconfig/selinux
+# grep '^SELINUX' /etc/selinux/config
+SELINUX=permissive
+SELINUXTYPE=targeted
+# reboot
+----
+
+[source, text]
+.*3 - 查看 SELinux Permissive 模式是否生效*
+----
+# getenforce 
+Permissive
+----
+
+[source, text]
+.*4 - 修改默认 SELinux 模式为 Enforcing*
+----
+# vim /etc/sysconfig/selinux
+# grep '^SELINUX' /etc/selinux/config
+SELINUX=enforcing
+SELINUXTYPE=targeted
+----
+
+[source, text]
+.*5 - 修改当前 SELinux 模式为 Enforcing*
+----
+# setenforce 1
+# getenforce 
+Enforcing
 ----
 
 == SELinux Context
