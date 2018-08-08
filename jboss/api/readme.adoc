@@ -22,14 +22,16 @@ image:img/api-economy.png[]
 * 确保 OpenShift 安装并正常运行。
 * 下载 link:3scale-amp-2.2.yml[3scale-amp-2.2.yml]
 
+[source, bash]
 .*设定环境变量*
+----
+$ export OCP_WILDCARD_DOMAIN=apps.na39.openshift.opentlc.com
+$ export OCP_PROJECT_PREFIX=ksoong
+$ export ADMIN_PASSWORD=admin
+$ export MASTER_PASSWORD=master
+----
 
-1. GUID: {{book.GUID}}
-2. OCP_WILDCARD_DOMAIN: apps.{{book.GUID}}.openshift.opentlc.com
-3. OCP_USER_ID: {{book.OCP_USER_ID}}
-4. OCP_PROJECT_PREFIX: {{book.OCP_USER_ID}}
-
-=== 安装
+=== 2 - 安装
 
 [source, bash]
 .*1 - 创建一个工程*
@@ -40,9 +42,6 @@ oc new-project $OCP_PROJECT_PREFIX-3scale-amp --display-name="3scale-amp" --desc
 [source, bash]
 .*2 - 根据模版创建 16 个容器部署对象*
 ----
-$ export ADMIN_PASSWORD=admin
-$ export MASTER_PASSWORD=master
-
 oc new-app -f 3scale-amp-2.2.yml \
       --param ADMIN_PASSWORD=$ADMIN_PASSWORD \
       --param TENANT_NAME=$OCP_PROJECT_PREFIX-3scale \
@@ -87,7 +86,7 @@ $ for x in apicast-staging apicast-production; do echo Resuming dc:  $x; sleep 2
 $ for x in apicast-wildcard-router zync; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
 ----
 
-=== 安装验证
+=== 3 - 安装验证
 
 [source, bash]
 .*1 - 查看运行的容器*
@@ -112,4 +111,58 @@ mysql> show tables;
 ----
 $ cat /tmp/3scale_amp_provision_details.txt | grep Login
 ----
+
+== CoolStore 服务
+
+本部分部署 https://github.com/jbossdemocentral/coolstore-microservice 中提供的部分服务。link:coolstore-template.yml[coolstore-template.yml] 为服务部署所需的模版。
+
+=== 服务部署
+
+[source, bash]
+.*1 - 创建一个 Project*
+----
+$ oc new-project ksoong-coolstore --display-name="CoolStore API" --description="CoolStore API Business Services"
+----
+
+[source, bash]
+.*2 - 创建一个模版*
+----
+$ oc create -f coolstore-template.yml
+----
+
+[source, bash]
+.*3 - 创建应用*
+----
+$ oc new-app --template=coolstore
+----
+
+[source, bash]
+.*4 - 创建  Inventory 和 Catalog 服务路径*
+----
+$ oc create route edge inventory-route --service=inventory
+$ oc create route edge catalog-route --service=catalog
+----
+
+[source, bash]
+.*5 - 查看服务运行情况*
+----
+$ oc get pods
+NAME                           READY     STATUS      RESTARTS   AGE
+cart-1-gnhkp                   1/1       Running     0          17m
+catalog-mongodb-1-l877h        1/1       Running     0          19m
+inventory-1-fdd9f              1/1       Running     0          18m
+inventory-postgresql-1-j9gzz   1/1       Running     0          15m
+----
+
+[source, bash]
+.*6 - 查看服务路径*
+----
+$ oc get routes
+NAME              HOST/PORT                                                          PATH      SERVICES    PORT      TERMINATION   WILDCARD
+catalog-route     catalog-route-ksoong-coolstore.apps.na39.openshift.opentlc.com               catalog     <all>     edge          None
+inventory-route   inventory-route-ksoong-coolstore.apps.na39.openshift.opentlc.com             inventory   <all>     edge          None
+----
+
+=== 服务测试
+
 

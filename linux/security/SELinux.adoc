@@ -192,151 +192,250 @@ SELINUXTYPE=targeted
 Enforcing
 ----
 
-== SELinux Context
+== 修改 SELinux 上下文
 
-[source,text]
-.*Changing the SELinux context*
+=== 初始 SELinux 上下文
+
+通常，文件父目录的 SELinux 上下文决定该文件的初始 SELinux 上下文。父目录的上下文会分配给新建文件。这适用于 `vim`、`cp` 和 `touch` 等命令。但是，如果文件是在其他位置创建并且权限得以保留（如使用 `mv` 或 `cp -a`），那么原始 SELinux 上下文将不会发生更改。
+
+[source, text]
+----
+# ls -Zd /var/www/html/
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 /var/www/html/
+# touch /var/www/html/index.html
+# ls -Z /var/www/html/index.html 
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/index.html
+----
+
+=== 修改文件的 SELinux 上下文
+
+可使用两个命令来更改文件的 SELinux 上下文：`chcon` 和 `restorecon`。
+
+* `chcon` 命令将文件的上下文更改成已指定为该命令参数的上下文。-t 选项经常只用于指定上下文的类型。
+* `restorecon` 命令是更改文件或目录的 SELinux 上下文的首选方法。不同于 `chcon`，在使用此命令时，不会明确指定上下文。它使用 SELinux 策略中的规则来确定应该是哪种文件上下文。
+
+[source, text]
 ----
 # mkdir /virtual
 # ls -Zd /virtual/
-unconfined_u:object_r:default_t:s0 /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /virtual/
+
 # chcon -t httpd_sys_content_t /virtual
 # ls -Zd /virtual/
-unconfined_u:object_r:httpd_sys_content_t:s0 /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:httpd_sys_content_t:s0 /virtual/
+
 # restorecon -v /virtual
 restorecon reset /virtual context unconfined_u:object_r:httpd_sys_content_t:s0->unconfined_u:object_r:default_t:s0
 # ls -Zd /virtual/
-unconfined_u:object_r:default_t:s0 /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /virtual/
 ----
 
-[source,text]
-.*Defining SELinux default file context rules*
+=== 定义 SELinux 默认文件上下文规则
+
+`semanage fcontext` 命令可用于显示或修改 SELinux 默认文件上下文规则，`restorecon` 命令用来设置默认文件上下文的规则。它使用扩展正则表达式来指定路径和文件名。fcontext 规则中最常用的扩展正则表达式是 (/.*)?，这意味着：“（可选）匹配 / 后跟任意数量的字符”。它将会匹配在表达式前面列出的目录并递归地匹配该目录中的所有内容。
+
+`restorecon` 命令是 `policycoreutil` 软件包的一部分；`semanage` 是 `policycoreutil-python` 软件包的一部分。
+
+[source, text]
+.*semanage 设定规则*
 ----
 # touch /tmp/file1 /tmp/file2
 # ls -Z /tmp/file*
-unconfined_u:object_r:user_tmp_t:s0 /tmp/file1  unconfined_u:object_r:user_tmp_t:s0 /tmp/file2
+-rw-r--r--. root root unconfined_u:object_r:user_tmp_t:s0 /tmp/file1
+-rw-r--r--. root root unconfined_u:object_r:user_tmp_t:s0 /tmp/file2
+
 # mv /tmp/file1 /var/www/html/
-# mv /tmp/file2 /var/www/html/
+# cp /tmp/file2 /var/www/html/
+# ls -Z /var/www/html/file*
+-rw-r--r--. root root unconfined_u:object_r:user_tmp_t:s0 /var/www/html/file1
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file2
+
+# semanage fcontext -l
 # restorecon -Rv /var/www/
 restorecon reset /var/www/html/file1 context unconfined_u:object_r:user_tmp_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
-restorecon reset /var/www/html/file2 context unconfined_u:object_r:user_tmp_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
 # ls -Z /var/www/html/file*
-unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file1  unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file2
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file1
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file2
+----
 
+[source, text]
+.*semanage 设定规则*
+----
+# mkdir /virtual
 # touch /virtual/index.html
 # ls -Zd /virtual/
-unconfined_u:object_r:default_t:s0 /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /virtual/
 # ls -Z /virtual/
-unconfined_u:object_r:default_t:s0 index.html
+-rw-r--r--. root root unconfined_u:object_r:default_t:s0 index.html
+
 # semanage fcontext -a -t httpd_sys_content_t '/virtual(/.*)?'
 # restorecon -RFvv /virtual
 restorecon reset /virtual context unconfined_u:object_r:default_t:s0->system_u:object_r:httpd_sys_content_t:s0
 restorecon reset /virtual/index.html context unconfined_u:object_r:default_t:s0->system_u:object_r:httpd_sys_content_t:s0
 # ls -Zd /virtual/
-system_u:object_r:httpd_sys_content_t:s0 /virtual/
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 /virtual/
 # ls -Z /virtual/
-system_u:object_r:httpd_sys_content_t:s0 index.html
+-rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 index.html
 ----
 
-== SELinux Booleans
+=== 自定义 httpd web 目录
 
-[source,shell]
-.*Changing SELinux Booleans*
+[source, text]
+.*1 - 配置 Apache 的站点目录，不使用默认的根目录*
 ----
-# getsebool httpd_enable_homedirs
-httpd_enable_homedirs --> off
-# setsebool httpd_enable_homedirs on
-# semanage boolean -l | grep httpd_enable_homedirs
-httpd_enable_homedirs          (on   ,  off)  Allow httpd to enable homedirs
-# getsebool httpd_enable_homedirs 
-httpd_enable_homedirs --> on
-# setsebool -P httpd_enable_homedirs on
-# semanage boolean -l | grep httpd_enable_homedirs
-httpd_enable_homedirs          (on   ,   on)  Allow httpd to enable homedirs
+# mkdir /custom
+# echo 'This is server0.' > /custom/index.html
+
+# vim /etc/httpd/conf/httpd.conf
+# grep custom /etc/httpd/conf/httpd.conf
+DocumentRoot "/custom"
+<Directory "/custom">
 ----
 
-== Troubleshooting SELinux
-
-Basic Troubleshooting Steps:
-
-1. Before thinking of making any adjustments, consider that SELinux may be doing its job correctly by prohibiting the attempted access. If a web server tries to access files in `/home`, this could signal a compromise of the service if web content isn't published by users. If access should have been granted, then additional steps need to be taken to solve the problem.
-2. The most common SELinux issue is an incorrect file context. This can occur when a file is created in a location with one file context and moved into a place where a different context is expected. In most cases, running **restorecon** will correct the issue. Correcting issues in this way has a very narrow impact on the security of the rest of the system.
-3. Another remedy for a too-restrictive access could be the adjustment of a Boolean. For example, the **ftpd_anon_write** Boolean controls whether anonymous FTP users can upload files. This Boolean would have to be turned on if it is desirable to allow anonymous FTP users to upload files to a server. Adjusting Booleans requires more care because they can have a broad impact on system security.
-4. It is possible that the SELinux policy has a bug that prevents a legitimate access. Since SELinux has matured, this is a rare occurrence.
-
-[source,shell]
-.*Monitoring SELinux violations*
+[source, text]
+.*2 - 启动 httpd*
 ----
-# touch /root/file3
-# mv /root/file3 /var/www/html/
 # systemctl restart httpd
-# curl http://10.66.192.120/file3
+----
+
+[source, text]
+.*3 - 访问 http://localhost/index.html*
+----
+# curl http://localhost/index.html
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>403 Forbidden</title>
 </head><body>
 <h1>Forbidden</h1>
-<p>You don't have permission to access /file3
+<p>You don't have permission to access /index.html
 on this server.</p>
 </body></html>
-# ls -Z /var/www/html/
--rw-r--r--. root root unconfined_u:object_r:admin_home_t:s0 file3
--rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 index.html
-
-# tail /var/log/audit/audit.log
-...
-type=AVC msg=audit(1497323187.810:1280): avc:  denied  { getattr } for  pid=3511 comm="httpd" path="/var/www/html/file3" dev="dm-0" ino=101765410 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:admin_home_t:s0 tclass=file
-...
-
-# tail /var/log/messages
-Jun 12 23:06:54 ksoong setroubleshoot: SELinux is preventing httpd from getattr access on the file /var/www/html/file3. For complete SELinux messages. run sealert -l 9841b5dd-cb32-4506-84b7-888a1564e1d9
-
-# sealert -l 9841b5dd-cb32-4506-84b7-888a1564e1d9
-SELinux is preventing httpd from getattr access on the file /var/www/html/file3.
-
-*****  Plugin restorecon (99.5 confidence) suggests   ************************
-
-If you want to fix the label. 
-/var/www/html/file3 default label should be httpd_sys_content_t.
-Then you can run restorecon.
-Do
-# /sbin/restorecon -v /var/www/html/file3
-
-*****  Plugin catchall (1.49 confidence) suggests   **************************
-
-If you believe that httpd should be allowed getattr access on the file3 file by default.
-Then you should report this as a bug.
-You can generate a local policy module to allow this access.
-Do
-allow this access for now by executing:
-# ausearch -c 'httpd' --raw | audit2allow -M my-httpd
-# semodule -i my-httpd.pp
-
-
-Additional Information:
-Source Context                system_u:system_r:httpd_t:s0
-Target Context                unconfined_u:object_r:admin_home_t:s0
-Target Objects                /var/www/html/file3 [ file ]
-Source                        httpd
-Source Path                   httpd
-Port                          <Unknown>
-Host                          ksoong.com
-Source RPM Packages           
-Target RPM Packages           
-Policy RPM                    selinux-policy-3.13.1-102.el7_3.16.noarch
-Selinux Enabled               True
-Policy Type                   targeted
-Enforcing Mode                Enforcing
-Host Name                     ksoong.com
-Platform                      Linux ksoong.com 3.10.0-514.16.1.el7.x86_64 #1 SMP
-                              Fri Mar 10 13:12:32 EST 2017 x86_64 x86_64
-Alert Count                   2
-First Seen                    2017-06-12 23:06:27 EDT
-Last Seen                     2017-06-12 23:06:53 EDT
-Local ID                      9841b5dd-cb32-4506-84b7-888a1564e1d9
-
-Raw Audit Messages
-type=AVC msg=audit(1497323213.860:1282): avc:  denied  { getattr } for  pid=3512 comm="httpd" path="/var/www/html/file3" dev="dm-0" ino=101765410 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:admin_home_t:s0 tclass=file
-
-Hash: httpd,httpd_t,admin_home_t,file,getattr
 ----
+
+[source, text]
+.*4 - 定义一个 SELinux 文件上下文规则，以便将 /custom 及其目录中所有文件的上下文类型设置为 httpd_sys_content_t*
+----
+# semanage fcontext -a -t httpd_sys_content_t '/custom(/.*)?'
+----
+
+[source, text]
+.*5 - 使用 restorecon 更改它们的上下文*
+----
+# restorecon -Rv /custom
+restorecon reset /custom context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /custom/index.html context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
+----
+
+[source, text]
+.*6 - 访问 http://localhost/index.html*
+----
+# curl http://localhost/index.html
+This is server0.
+----
+
+== 修改 SELinux 布尔值
+
+SELinux 布尔值是更改 SELinux 策略行为的开关。SELinux 布尔值是可以启用或禁用的规则。安全管理员可以使用 SELinux 布尔值来有选择地调整策略。
+
+selinux-policy-devel 软件包提供多个手册页（即 *_selinux(8)），可用于解释不用服务的布尔值的含义。如果已安装此软件包，则 man -k '_selinux' 命令会列出这些文档。
+
+* `getsebool` 命令用于显示 SELinux 布尔值
+* `setsebool` 用于修改 SELinux 布尔值。
+* `setsebool -P` 修改 SELinux 策略，并使修改永久保留。
+* `semanage boolean -l` 将显示布尔值是否为永久值，并提供该布尔值的简短描述。
+
+[source, text]
+----
+# getsebool -a
+
+# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --> off
+# setsebool httpd_enable_homedirs on
+# semanage boolean -l | grep httpd_enable_homedirs
+httpd_enable_homedirs          (on   ,  off)  Allow httpd to enable homedirs
+# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --> on
+
+# setsebool -P httpd_enable_homedirs on
+# semanage boolean -l | grep httpd_enable_homedirs
+httpd_enable_homedirs          (on   ,   on)  Allow httpd to enable homedirs
+----
+
+要仅列出经过本地修改的的SELinux布尔值状态（与策略中默认值不同的任何设置），可使用命令 `semanage boolean -l -C`。
+
+[source, text]
+----
+# semanage boolean -l -C
+SELinux boolean                State  Default Description
+
+httpd_enable_homedirs          (on   ,   on)  Allow httpd to enable homedirs
+----
+
+===  Apache 访问用户主目录
+
+Apache 可以发布在用户主目录中托管的 Web 内容，但是 SELinux 默认阻止此操作。本部分万平米将对允许 Apache 访问用户主目录，通过修改 SELinux 布尔值来进行调整或修改。
+
+[source, text]
+.*1 - 启用允许用户从其主目录发布 Web 内容的 Apache 功能。编辑 /etc/httpd/conf.d/userdir.conf 配置文件并使用 UserDir 指令更改行，内容如下*
+----
+# vim /etc/httpd/conf.d/userdir.conf
+# grep '^ *UserDir' /etc/httpd/conf.d/userdir.conf
+    UserDir public_html
+----
+
+[source, text]
+.*2 - 重启 Apache Web 服务器，以使更改生效*
+----
+# systemctl restart httpd.service && systemctl status httpd.service
+----
+
+[source, text]
+.*3 - 在 student 用户下，创建一些会从用户主目录发布的 Web 内容*
+----
+$ mkdir ~/public_html
+$ echo 'This is student content on server0.' > ~/public_html/index.html
+$ chmod 711 ~
+----
+
+[source, text]
+.*4 - 测试访问*
+----
+$ curl http://localhost/~student/index.html
+----
+
+NOTE: 您将会得到一个错误消息，提示您不具有访问该文件的权限。
+
+[source, text]
+.*5 - 使用 getsebool 命令查看是否存在任何限制访问主目录的布尔值*
+----
+$ getsebool -a | grep home
+httpd_enable_homedirs --> off
+----
+
+[source, text]
+.*6 - 使用 setsebool 永久启用对主目录的访问权限*
+----
+# setsebool -P httpd_enable_homedirs on
+----
+
+[source, text]
+.*7 - 测试访问*
+----
+# curl http://localhost/~student/index.html
+This is student content on server0.
+----
+
+== SELinux 进行故障排除
+
+=== SELinux 问题进行故障排除基本步骤
+
+当 SELinux 阻止访问服务器上的文件时，应执行什么操作？如果发生此情况，应该采取一系列的步骤：
+
+1. 在考虑做任何调整之前，应了解到 SELinux 禁止意图访问的这一做法也许非常正确。当 Web 服务器尝试访问 /home 中的文件时，如果用户并未发布 Web 内容，则可能表明服务遭入侵。如果已授予访问权限，则需要采取其他步骤来解决此问题。
+2. 最常见的 SELinux 问题是使用不正确的文件上下文。此问题会在以下情况中发生：即，使用一个文件上下文在某个位置创建了文件，而该文件又被移至预期会使用其他上下文的地方。在大多数情况下，运行 *restorecon* 将会更正此问题。以这种方式更正问题对系统剩余部分的安全性具有非常小的影响。
+3. 对于严苛限制性访问的另一个补救措施可以是调整布尔值。例如，ftpd_anon_write 布尔值控制匿名 FTP 用户能否上传文件。如果希望允许匿名 FTP 用户上传文件至服务器，则必须启用此布尔值。调整布尔值时需格外谨慎，因为布尔值会对系统的安全性造成广泛影响。
+4. SELinux 策略可能存在阻止合法访问的漏洞。由于 SELinux 技术已经成熟，这种情况极少发生。一旦明确了某个策略漏洞，请提交 BUG 汇报此漏洞，以便问题得到解决。
+
+=== 查看 SELinux 冲突日志
+
+安装 `setroubleshoot-server` 包，以便将 SELinux 消息发送到 /var/log/messages。`setroubleshoot-server` 侦听 /var/log/audit/audit.log 中的审核消息，并发送简短摘要到 /var/log/messages。 该摘要包括 SELinux 冲突的唯一标识符 (UUID)，可用于收集更多信息。sealert -l UUID 可用于生成特定事件的报告。 sealert -a /var/log/audit/audit.log 用于生成该文件中的所有事件的报告。
