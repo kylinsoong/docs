@@ -1,155 +1,234 @@
-= firewalld
+= 防火墙
 :toc: manual
 
-== Issue
+== 基本概念
 
-* How to configure Apache to use a document root in a non-standard location?
-* How to change the SELinux context of a directory and its contents persistently?
+=== netfilter
 
-== Solution
+Linux 内核包含一个强大的网络过滤子系统 netfilter。netfilter 子系统允许内核模块对遍历系统的每个网络数据包进行检查。这表示在任何传入、传出或转发的网络数据包到达用户空间中的组件之前，都可以通过编程方式检查、修改、丢弃或拒绝。netfilter 是 RHEL 7 计算机上构建防火墙的主要构建块。
 
-* Make sure Apache web server are installed correctly
+尽管系统管理员理论上可以编写自己的内核模块以与 netfilter 交互，但通常不会这样做。取而代之，会使用其他程序来与 netfilter 交互。这些程序中，最常见和最知名的是 iptables。在先前的 RHEL 版本中，iptables 是与内核 netfilter 子系统交互的主要方法，在 RHEL 7 以后引入了一种与 netfilter 交互的新方法，即 firewalld。
 
-[source,shell]
+.*iptables Vs firewalld*
+|===
+|iptables |firewalld
+
+|iptables 是一个更底层的工具，使用该工具正确管理防火墙更具有挑战性。此外，它仅能调整 IPv4 防火墙规则。为保证更完整的防火墙覆盖率，需要使用其他实用程序，例如用于 IPv6 的 ip6tables 和用于软件桥的 ebtables。
+|firewalld 构建在 iptables 之上，是对 iptables 的封装，是 RHEL 7 引入的与 netfilter 交互的新工具。firewalld 是一个可以配置和监控系统防火墙规则的系统守护进程。应用可以通过 DBus 消息系统与 firewalld 通信以请求打开端口，此功能可以禁用或锁定。该守护进程不仅涵盖 IPv4、IPv6，还可能涵盖 ebtables 设置。firewalld 守护进程从 firewalld 软件包安装。此软件包属于 base 安装的一部分，但不属于 minimal 安装的一部分。
+
+|===
+
+=== firewalld
+
+相比较 iptables 控制网络防火墙的配置，firewalld 对常见安全操作基于服务进行了预先定制，这样极大的降低了防火墙配置的复杂度。firewalld 可以配置所有网络的安全过滤策略，包括 IPv4、IPv6、网络桥接等。
+
+firewalld 将所有网络流量分为多个区域，从而进一步简化防火墙管理。根据网络数据包源 IP 地址或传入网络接口等条件，流量将转入相应区域的防火墙规则。每个区域都可以具有自己的要打开或关闭的端口和服务列表。为检查哪个区域用于传入连接，firewalld 使用以下逻辑，第一个匹配的规则胜出：
+
+1. 如果传入包的源地址与区域的某个源规则设置相匹配，该包将通过该区域进行路由。
+2. 如果包的传入接口与区域的过滤器设置匹配，则将使用该区域。
+3. 否则将使用默认区域。默认区域不是单独的区域，而是指向系统上定义的某个其他区域。
+
+对于传入系统的每个网络数据包，将首先检查其源地址。如果该源地址关联到特定区域，则将以该区域的规则分析数据包。如果该源地址未关联到某个区域，则将使用默认传入网络接口的区域。如果出于某种原因，网络接口未与某个区域关联，则将使用默认区域。默认区域本身不是一个单独的区域；它是其他区域中的一个。默认情况下会使用 public 区域，但系统管理员可以更改此默认值。
+
+大多数区域会允许与特定端口和协议（“631/udp”）或预定义服务（“ssh”）的列表匹配的流量通过防火墙。如果流量不与允许的端口/协议或服务匹配，则通常会被拒绝。（trusted 区域默认情况下允许所有流量，它是此规则的一个例外。）
+
+=== 预定义区域(zone)
+
+firewalld 随附一些预定义区域，它们适合于多种用途。默认区域设置为 public，如果不进行任何更改，将为接口分配 public。lo 接口被视为在 trusted 区域中。下表详细说明了安装时这些区域的配置，但系统管理员可以对这些区域进行自定义，使其具有不同的设置。默认情况下，如果传入流量属于系统启动的通信的一部分，则所有区域都允许这些传入流量和所有传出流量。
+
+|===
+|名称 |配置
+
+|trusted
+|允许所有传入流量。
+
+|home
+|除非与传出流量相关，或与 ssh、mdns、ipp-client、samba-client 或 dhcpv6-client 预定义服务匹配，否则拒绝传入流量。
+
+|internal
+|除非与传出流量相关，或与 ssh、mdns、ipp-client、samba-client 或 dhcpv6-client 预定义服务匹配，否则拒绝传入流量（一开始与 home 区域相同）。
+
+|work
+|除非与传出流量相关，或与 ssh、ipp-client 或 dhcpv6-client 预定义服务匹配，否则拒绝传入流量。
+
+|public
+|除非与传出流量相关，或与 ssh 或 dhcpv6-client 预定义服务匹配，否则拒绝传入流量。*新添加的网络接口的默认区域*。
+
+|external
+|除非与传出流量相关，或与 ssh 预定义服务匹配，否则拒绝传入流量。通过此区域转发的 IPv4 传出流量将进行伪装，以使其看起来像是来自传出网络接口的 IPv4 地址。
+
+|dmz
+|除非与传出流量相关，或与 ssh 预定义服务匹配，否则拒绝传入流量。
+
+|block
+|除非与传出流量相关，否则拒绝所有传入流量。
+
+|drop
+|除非与传出流量相关，否则丢弃所有传入流量（甚至不产生包含 ICMP 错误的响应）。
+
+|===
+
+[source, text]
+.*man 手册查看有关所有可用预定义区域及其预期用途的列表*
 ----
-# systemctl status  httpd
-----
-
-* Configure Apache to use a document root in a non-standard location.
- 
-[source,shell]
-----
-# mkdir /custom
-# echo 'SUCCESS' > /custom/ping
-# vim /etc/httpd/conf/httpd.conf
-# grep custom /etc/httpd/conf/httpd.conf
-DocumentRoot "/custom"
-<Directory "/custom">
-<Directory "/custom">
-----
-
-* Restart httpd
-
-[source,shell]
-----
-# systemctl restart httpd
-----
-
-* Access web content ping
-
-[source,xml]
-----
-# curl http://10.66.192.120/ping
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>403 Forbidden</title>
-</head><body>
-<h1>Forbidden</h1>
-<p>You don't have permission to access /ping
-on this server.</p>
-</body></html>
-----
-
-NOTE: 403 Forbidden return hints that you do not have permission to access the file.
-
-* Define a SELinux file context rule that sets the context type to httpd_sys_content_t for /custom and all the files below it.
-
-[source,shell]
-----
-# semanage fcontext -a -t httpd_sys_content_t '/custom(/.*)?'
-----
-
-* Use restorecon to change their contexts.
-
-[source,shell]
-----
-# restorecon -Rv /custom/
-restorecon reset /custom context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
-restorecon reset /custom/ping context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
-----
-
-* Access web content ping
-
-[source,shell]
-.*Changing SELinux Booleans*
-----
-# curl http://10.66.192.120/ping
-SUCCESS
+# man 5 firewalld.zones
 ----
 
-== Troubleshooting
+=== 预定义服务
 
-This section for troubleshooting that see how the issue be identified and resolved.    
+firewalld 还随附一些预定义服务。这些服务定义可用于方便地允许特定网络服务的流量通过防火墙。下表详细说明了防火墙区域默认配置中使用的预定义服务的配置。
 
-* Remove the file context rule created earlier and restore the `/custom` directory structure back to its original SELinux context
+|===
+|名称 |配置
 
-[source,shell]
+|ssh
+|本地 SSH 服务器。到 22/tcp 的流量
+
+|dhcpv6-client
+|本地 DHCPv6 客户端。到 fe80::/64 IPv6 网络中 546/udp 的流量
+
+|ipp-client
+|本地 IPP 打印。到 631/udp 的流量。
+
+|samba-client
+|本地 Windows 文件和打印共享客户端。到 137/udp 和 138/udp 的流量。
+
+|mdns
+|多播 DNS (mDNS) 本地链路名称解析。到 5353/udp 指向 224.0.0.251 (IPv4) 或 ff02::fb (IPv6) 多播地址的流量。
+
+|===
+
+[source, text]
+.*firewall-cmd --get-services 命令可以列出所有定义的服务（没有允许）*
 ----
-# ls -Z /custom/
--rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 ping
-# ls -Zd /custom/
-drwxr-xr-x. root root unconfined_u:object_r:httpd_sys_content_t:s0 /custom/
-# semanage fcontext -d -t httpd_sys_content_t '/custom(/.*)?'
-# restorecon -Rv /custom/
-restorecon reset /custom context unconfined_u:object_r:httpd_sys_content_t:s0->unconfined_u:object_r:default_t:s0
-restorecon reset /custom/ping context unconfined_u:object_r:httpd_sys_content_t:s0->unconfined_u:object_r:default_t:s0
-# ls -Z /custom/
--rw-r--r--. root root unconfined_u:object_r:default_t:s0 ping
-# ls -Zd /custom/
-drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /custom/
-----
-
-* Access ping
-
-[source,xml]
-----
-# curl http://10.66.192.120/ping
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>403 Forbidden</title>
-</head><body>
-<h1>Forbidden</h1>
-<p>You don't have permission to access /ping
-on this server.</p>
-</body></html>
+# firewall-cmd --get-services
+amanda-client bacula bacula-client dhcp dhcpv6 dhcpv6-client dns ftp high-availability http https imaps ipp ipp-client ipsec kerberos kpasswd ldap ldaps libvirt libvirt-tls mdns mountd ms-wbt mysql nfs ntp openvpn pmcd pmproxy pmwebapi pmwebapis pop3s postgresql proxy-dhcp radius rpc-bind samba samba-client smtp ssh telnet tftp tftp-client transmission-client vnc-server wbem-https
 ----
 
-* Viewing the contents of `/var/log/messages`
+== 防火墙配置
 
-[source,shell]
+三种方式可以用来配置防火墙：
+
+* 直接编辑 `/etc/firewalld/` 中的配置文件
+* 使用 `firewall-config` 图形工具
+* 使用 `firewall-cmd` 命令行工具
+
+=== firewall-config
+
+firewall-config 是一个图形工具，可用于更改和检查 firewalld 正在运行的内存中配置和持久的磁盘上配置。firewall-config 工具可从 firewall-config 软件包安装。安装后，firewall-config 可从命令行作为 firewall-config 启动，也可以从 `Applications` -> `Sundry` -> `Firewall` 菜单启动。如果非特权用户启动 firewall-config，则将提示输入 root 用户密码才能继续。
+
+image:img/firewall-config.png[]
+
+在 firewall-config 的主屏幕上，系统管理员可以选择修改当前的内存中配置，也可以选择修改将在重新启动/重新加载 firewalld 后使用的持久的磁盘上配置。通过配置下拉菜单可实现此选择。在大多数情况下，系统管理员希望调整持久（永久）配置，然后使用 `Options` -> `Reload Firewalld` 菜单条目来激活更改。
+
+要修改区域，请在左侧的区域菜单中选择该区域。可以分别在右侧的接口和源选项卡中分配网络接口和源 IP 地址/范围。
+
+可通过两种方式打开端口：
+
+* 在服务选项卡中放置复选标记到端口前面
+* 在该区域的端口选项卡中添加新端口
+
+如果需要在多个区域中打开一组特定的端口，系统管理员也可以为这些端口定义服务。可在窗口顶部的服务选项卡中完成此操作。
+
+其他未指定的连接的 default 区域可在 `Options` -> `Change Default Zone` 下更改。
+
+NOTE: 只有在下次重新启动或重新加载 firewalld 服务单元后，永久配置中所做的所有更改才会生效。与此类似，重新加载或重新启动 firewalld 服务后，运行时配置中所做的所有更改都不会被保留。
+
+=== firewall-cmd
+
+对于更喜欢在命令行中操作或是出于某种原因无法使用图形环境的系统管理员，还有一个命令行客户端可以与 firewalld 交互，即 firewall-cmd。firewall-cmd 作为主 firewalld 软件包的一部分安装。firewall-cmd 可以执行 firewall-config 能够执行的相同操作。
+
+下表列出一些常用 firewall-cmd 命令及其说明。请注意，除非另有指定，否则几乎所有命令都作用于运行时配置，当指定 --permanent 选项时除外。列出的许多命令都采用 --zone=<ZONE> 选项来确定所影响的区域。
+
+|===
+|命令 |说明
+
+|--get-default-zone
+|查询当前默认区域。
+
+|--set-default-zone=<ZONE>
+|设置默认区域。此命令会同时更改运行时配置和永久配置。
+
+|--get-zones
+|列出所有可用区域。
+
+|--get-active-zones
+|列出当前正在使用的所有区域（具有关联的接口或源）及其接口和源信息。
+
+|--add-source=<CIDR> [--zone=<ZONE>]
+|将来自 IP 地址或网络/子网掩码 <CIDR> 的所有流量路由到指定区域。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--remove-source=<CIDR> [--zone=<ZONE>]
+|从指定区域中删除用于路由来自 IP 地址或网络/子网掩码 <CIDR> 的所有流量的规则。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--add-interface=<INTERFACE> [--zone=<ZONE>]
+|将来自 <INTERFACE> 的所有流量路由到指定区域。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--change-interface=<INTERFACE> [--zone=<ZONE>]
+|将接口与 <ZONE> 而非其当前区域关联。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--list-all [--zone=<ZONE>]
+|列出 <ZONE> 的所有已配置接口、源、服务和端口。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--list-all-zones
+|检索所有区域的所有信息。（接口、源、端口、服务等）
+
+|--add-service=<SERVICE> [--zone=<ZONE>]
+|允许到 <SERVICE> 的流量。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--add-port=<PORT/PROTOCOL> [--zone=<ZONE>]
+|允许到 <PORT/PROTOCOL> 端口的流量。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--remove-service=<SERVICE> [--zone=<ZONE>]
+|从区域的允许列表中删除 <SERVICE>。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--remove-port=<PORT/PROTOCOL> [--zone=<ZONE>]
+|从区域的允许列表中删除 <PORT/PROTOCOL> 端口。如果未提供 --zone= 选项，则将使用默认区域。
+
+|--reload
+|丢弃运行时配置并应用持久配置
+
+|===
+
+[source, text]
+.*示例 - 设置默认区域设置为 dmz，对来自 192.168.0.0/24 网络的所有流量都被分配给 internal 区域，而 internal 区域上打开了用于 mysql 的网络端口*
 ----
-# tail /var/log/messages
-Jun 12 23:29:17 ksoong setroubleshoot: SELinux is preventing /usr/sbin/httpd from getattr access on the file /custom/ping. For complete SELinux messages. run sealert -l 4c46f31a-bb2e-475b-a4a0-1c92669f8673
+# firewall-cmd --set-default-zone=dmz
+# firewall-cmd --permanent --zone=internal --add-source=192.168.0.0/24
+# firewall-cmd --permanent --zone=internal --add-service=mysql
+# firewall-cmd --reload
 ----
 
-* Run the suggested sealert command and see if you can identify the issue and a possible resolution.
+== RHEL 7 配置防火墙允许 https
 
-[source,shell]
+[source, text]
+.*1 - 安装 httpd 和 mod_ssl，配置启动 Web 服务*
 ----
-# sealert -l 4c46f31a-bb2e-475b-a4a0-1c92669f8673
-SELinux is preventing /usr/sbin/httpd from getattr access on the file /custom/ping.
-
-*****  Plugin catchall_labels (83.8 confidence) suggests   *******************
-
-If you want to allow httpd to have getattr access on the ping file
-Then you need to change the label on /custom/ping
-Do
-# semanage fcontext -a -t FILE_TYPE '/custom/ping'
-where FILE_TYPE is one of the following: 
-....
-Then execute:
-restorecon -v '/custom/ping'
-....
+# yum -y install httpd mod_ssl
+# echo 'I am alive' > /var/www/html/index.html
+# systemctl enable httpd.service && systemctl start httpd.service
 ----
 
-* Using the hints of the above message to solve the issue:
+[source, text]
+.*2 - 隐藏 iptables 服务并启动 firewalld*
+----
+# systemctl mask iptables
+# systemctl mask ip6tables
+----
 
-[source,shell]
+[source, text]
+.*3 - 配置防火墙规则*
 ----
-# semanage fcontext -a -t httpd_sys_content_t '/custom(/.*)?'
-# restorecon -Rv /custom/
-restorecon reset /custom context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
-restorecon reset /custom/ping context unconfined_u:object_r:default_t:s0->unconfined_u:object_r:httpd_sys_content_t:s0
-# curl http://10.66.192.120/ping
-SUCCESS
+# firewall-cmd --permanent --zone=public --add-service=https
+# firewall-cmd --reload
 ----
+
+[source, text]
+.*4 - 测试*
+----
+$ curl -k http://server0.example.com
+curl: (7) Failed connect to server0.example.com:80; No route to host
+$ curl -k https://server0.example.com
+I am alive
+----
+

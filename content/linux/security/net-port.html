@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Appache to access user home directories · GitBook</title>
+        <title>网络端口安全 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -548,12 +548,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.5.4" data-path="selinux-boolean-home.html">
+        <li class="chapter active" data-level="1.2.5.4" data-path="net-port.html">
             
-                <a href="selinux-boolean-home.html">
+                <a href="net-port.html">
             
                     
-                    Appache to access user home directories
+                    网络端口安全
             
                 </a>
             
@@ -2144,6 +2144,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.6.8" data-path="../../jboss/secure/">
+            
+                <a href="../../jboss/secure/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -2237,7 +2250,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Appache to access user home directories</a>
+        <a href="../.." >网络端口安全</a>
     </h1>
 </div>
 
@@ -2252,143 +2265,8 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="appache-to-access-user-home-directories">Appache to access user home directories</h1>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_issue">Issue</a></li>
-<li><a href="#_solution">Solution</a></li>
-</ul>
-</div>
-<div class="sect1">
-<h2 id="_issue">Issue</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>How to enable appache to access user home directories?</p>
-</li>
-<li>
-<p>How to use SELinux Booleans to control appache to access user home directories?</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_solution">Solution</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Make sure Apache web server are installed correctly</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell"># systemctl status  httpd</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Enable the Apache feature that permits users to publish web content from their home directories</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell"># vim /etc/httpd/conf.d/userdir.conf
-# grep &apos;^ *UserDir&apos; /etc/httpd/conf.d/userdir.conf
-    UserDir public_html</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Restart httpd</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell"># systemctl restart httpd</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Create some web content that is published from a user&#x2019;s home directory.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ mkdir ~/public_html
-$ echo &apos;SUCCESS&apos; &gt; ./public_html/ping
-$ chmod 711 ~</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Access web content ping</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml"># curl http://10.66.192.120/~kylin/ping
-<span class="hljs-meta">&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>403 Forbidden<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Forbidden<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>You don&apos;t have permission to access /~kylin/ping
-on this server.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>use the getsebool command to see if there are any Booleans that restrict access to home directories</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell"># getsebool -a | grep home</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Use setsebool to enable home directory access persistently.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell"># setsebool -P httpd_enable_homedirs on</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Access web content ping</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell"># curl http://10.66.192.120/~kylin/ping
-SUCCESS</code></pre>
-</div>
-</div>
-</div>
-</div>
+                                <h1 id="&#x7F51;&#x7EDC;&#x7AEF;&#x53E3;&#x5B89;&#x5168;">&#x7F51;&#x7EDC;&#x7AEF;&#x53E3;&#x5B89;&#x5168;</h1>
+
                                 
                                 </section>
                             
@@ -2431,7 +2309,7 @@ SUCCESS</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Appache to access user home directories","level":"1.2.5.4","depth":3,"next":{"title":"进程","level":"1.2.6","depth":2,"path":"linux/process/README.adoc","ref":"linux/process/README.adoc","articles":[{"title":"进程管理","level":"1.2.6.1","depth":3,"path":"linux/process/management.adoc","ref":"linux/process/management.adoc","articles":[]},{"title":"服务管理","level":"1.2.6.2","depth":3,"path":"linux/process/service.adoc","ref":"linux/process/service.adoc","articles":[]},{"title":"周期性运行进程","level":"1.2.6.3","depth":3,"path":"linux/process/schedule.adoc","ref":"linux/process/schedule.adoc","articles":[]},{"title":"bash","level":"1.2.6.4","depth":3,"path":"linux/process/bash.adoc","ref":"linux/process/bash.adoc","articles":[]}]},"previous":{"title":"防火墙","level":"1.2.5.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/selinux-boolean-home.adoc","mtime":"2018-06-01T01:29:15.024Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-07-23T08:46:33.089Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络端口安全","level":"1.2.5.4","depth":3,"next":{"title":"进程","level":"1.2.6","depth":2,"path":"linux/process/README.adoc","ref":"linux/process/README.adoc","articles":[{"title":"进程管理","level":"1.2.6.1","depth":3,"path":"linux/process/management.adoc","ref":"linux/process/management.adoc","articles":[]},{"title":"服务管理","level":"1.2.6.2","depth":3,"path":"linux/process/service.adoc","ref":"linux/process/service.adoc","articles":[]},{"title":"周期性运行进程","level":"1.2.6.3","depth":3,"path":"linux/process/schedule.adoc","ref":"linux/process/schedule.adoc","articles":[]},{"title":"bash","level":"1.2.6.4","depth":3,"path":"linux/process/bash.adoc","ref":"linux/process/bash.adoc","articles":[]}]},"previous":{"title":"防火墙","level":"1.2.5.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/net-port.adoc","mtime":"2018-08-09T14:50:32.821Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-09T15:00:12.811Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
