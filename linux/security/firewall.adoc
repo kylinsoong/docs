@@ -199,7 +199,7 @@ NOTE: 只有在下次重新启动或重新加载 firewalld 服务单元后，永
 # firewall-cmd --reload
 ----
 
-== RHEL 7 配置防火墙允许 https
+== 配置防火墙允许 https
 
 [source, text]
 .*1 - 安装 httpd 和 mod_ssl，配置启动 Web 服务*
@@ -214,6 +214,7 @@ NOTE: 只有在下次重新启动或重新加载 firewalld 服务单元后，永
 ----
 # systemctl mask iptables
 # systemctl mask ip6tables
+# systemctl status firewalld.service
 ----
 
 [source, text]
@@ -230,5 +231,369 @@ $ curl -k http://server0.example.com
 curl: (7) Failed connect to server0.example.com:80; No route to host
 $ curl -k https://server0.example.com
 I am alive
+----
+
+== 服务器 DMZ 保护
+
+本部分应用场景需求如下：
+
+* 服务器上安装 httpd 和 mod_ssl 软件包。
+* 服务器上启用和启动 httpd.service。
+* 在您的内部 Web 开发者完成实际应用程序之前，Web 服务器应使用文本 KYLINSOONG! 来提供占位符页面。
+* 服务器上启用和启动 firewalld。
+* 服务器上的 firewalld 配置必须对所有未指定连接使用 dmz 区域。
+* 来自 172.25.X.0/24 子网的流量必须路由到 work 区域。
+* work 区域应打开 https 需要的所有端口，并且应过滤未加密的 http 流量。
+
+[source, text]
+.*1 - 服务器上配置 Web 服务*
+----
+# yum -y install httpd httpd-manual mod_ssl
+# echo 'KYLINSOONG!' > /var/www/html/index.html
+# systemctl enable httpd.service && systemctl start httpd.service && systemctl status httpd.service
+----
+
+[source, text]
+.*2 - 服务器上验证 firewalld 已启用并且正在运行*
+----
+# systemctl status firewalld.service 
+firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled)
+   Active: active (running) since Fri 2018-08-10 01:55:54 CST; 12min ago
+ Main PID: 466 (firewalld)
+   CGroup: /system.slice/firewalld.service
+           └─466 /usr/bin/python -Es /usr/sbin/firewalld --nofork --nopid
+
+Aug 10 01:55:54 localhost systemd[1]: Started firewalld - dynamic firewall daemon.
+----
+
+[source, text]
+.*3 - 服务器上配置 firewalld 守护进程以在默认情况下通过 dmz 区域来路由所有流量*
+----
+# firewall-cmd --set-default-zone=dmz
+----
+
+[source, text]
+.*4 - 服务器上配置 firewalld 守护进程以通过 work 区域来路由来自 172.25.X.0/24 的所有流量*
+----
+# firewall-cmd --permanent --zone=work --add-source=172.25.0.0/24
+----
+
+[source, text]
+.*5 - 服务器配置为 work 区域打开传入 https 流量*
+----
+# firewall-cmd --permanent --zone=work --add-service=https
+----
+
+[source, text]
+.*6 - 服务器上激活防火墙配置*
+----
+# firewall-cmd --reload
+----
+
+[source, text]
+.*7 - 服务器上验证防火墙配置*
+----
+# firewall-cmd --get-default-zone 
+dmz
+
+# firewall-cmd --get-active-zones 
+dmz
+  interfaces: eth0
+work
+  sources: 172.25.0.0/24
+
+# firewall-cmd --zone=work --list-all 
+work
+  interfaces: 
+  sources: 172.25.0.0/24
+  services: dhcpv6-client https ipp-client ssh
+  ports: 
+  masquerade: no
+  forward-ports: 
+  icmp-blocks: 
+  rich rules: 
+----
+
+[source, text]
+.*8 - 客户端访问 Web 服务*
+----
+# curl -k https://server0.example.com
+KYLINSOONG!
+----
+
+== Rich Rules
+
+=== 基本概念
+
+除了 firewalld 提供的常规区域和服务语法之外，管理员还有另外两种选项来添加防火墙规则：direct rules 和 rich rules。
+
+==== Direct rule
+
+Direct rules 允许管理员将手动编码的 {ip,ip6,eb}tables 规则插入到 firewalld 管理的区域中。尽管这些规则很强大，并且暴露的内核 netfilter 子系统功能不会通过其他方式暴露，但可能难以管理。Direct rules 所提供的灵活性也低于标准规则和 Rich rules。
+
+[source, text]
+.*Direct rules 帮助手册*
+----
+# man 1 firewall-cmd
+# man 5 firewalld.direct
+----
+
+除非将直接规则显式插入到由 firewalld 管理的区域，否则将首先解析直接规则，然后才会解析任何 firewalld 规则。
+
+[source, text]
+.*添加一些直接规则以将某个 IP 范围列入黑名单的简短示例*
+----
+# firewall-cmd --direct --permanent --add-chain ipv4 raw blacklist
+# firewall-cmd --direct --permanent --add-rule ipv4 raw PREROUTING 0 -s 192.168.0.0/24 -j blacklist
+# firewall-cmd --direct --permanent --add-rule ipv4 raw blacklist 0 -m limit --limit 1/min -j LOG --log-prefix "blacklisted"
+# firewall-cmd --direct --permanent --add-rule ipv4 raw blacklist 1 -j DROP
+----
+
+==== Rich rules
+
+Rich rules 为管理员提供了一种表达性语言，通过这种语言可表达 firewalld 的基本语法中未涵盖的自定义防火墙规则；例如，仅允许从单个 IP 地址（而非通过某个区域路由的所有 IP 地址）连接到服务。Rich rules 可用于表达基本的允许/拒绝规则，但是也可以用于配置记录（面向 syslog 和 auditd）以及 port forwards，masquerading，流量限制等。
+
+[source, text]
+.*Rich rules 基本语法*
+----
+rule
+  [source]
+  [destination]
+  service|port|protocol|icmp-block|masquerade|forward-port
+  [log]
+  [audit]
+  [accept|reject|drop]
+----
+
+规则的几乎每个单一元素都能够以 option=value 形式来采用附加参数。
+
+[source, text]
+.*Rich rules 帮助手册*
+----
+# man 1 firewall-cmd
+# man 5 firewalld.richlanguage
+----
+
+==== 规则排序
+
+一旦向某个区域（一般是指防火墙）中添加了多个规则，规则的排序便会在很大程度上影响防火墙的行为。
+
+对于所有区域，区域内规则的基本排序是相同的:
+
+1. 为该区域设置的任何 port forwarding 和 masquerading
+2. 为该区域设置的任何记录规则。
+3. 为该区域设置的任何拒绝规则。
+4. 为该区域设置的任何拒绝规则。
+
+在所有情况下，第一个匹配项都将胜出。如果区域中的任何规则与数据包均不匹配，那么通常会拒绝该数据包，但是区域可能具有不同默认值；例如，`trusted` 区域将接受任何不匹配的数据包。此外，在匹配某个记录规则后，将继续正常处理数据包。
+
+直接规则是个例外。对于大部分直接规则，将首先进行解析，然后再由 firewalld 进行任何其他处理，但是直接规则语法允许管理员在任何区域中的任何位置插入任何规则。
+
+==== 测试和调试
+
+为了便于测试和调试，几乎所有规则都可以与超时一起添加到运行时配置。当包含超时的规则添加到防火墙时，计时器便针对该规则开始倒计时。一旦规则的计时器达到零秒，便从运行时配置中删除该规则。
+
+在使用远程防火墙时，使用超时会是一种极其有用的工具，特别是在测试更复杂的规则集时。如果规则有效，则管理员可以再次添加该规则，但使用 --permanent 选项（或者至少不包含超时）。如果规则没有按预期运行，甚至可能将管理员锁定而使其无法进入系统，那么规则将被自动删除，以允许管理员继续其工作。
+
+通过在启用规则的 firewall-cmd 的结尾添加选项 --timeout=<TIMEINSECONDS>，即可向运行时规则中添加超时。
+
+=== 使用 Rich rules
+
+`firewall-cmd` 有四个选项可用于处理富规则。所有这些选项都可以与常规的 `--permanent` 或 `--zone=<ZONE>` 选项组合使用。
+
+|===
+|选项 |说明
+
+|--add-rich-rule='<RULE>'
+|向指定区域中添加 <RULE>，如果未指定区域，则向默认区域中添加。
+
+|--remove-rich-rule='<RULE>'
+|从指定区域中删除 <RULE>，如果未指定区域，则从默认区域中删除。
+
+|--query-rich-rule='<RULE>'
+|查询 <RULE> 是否已添加到指定区域，如果未指定区域，则为默认区域。如果规则存在，则返回 0，否则返回 1。
+
+|--list-rich-rules
+|输出指定区域的所有富规则，如果未指定区域，则为默认区域。
+|===
+
+任何已配置的 Rich rules 还将显示在 `firewall-cmd --list-all` 和 `firewall-cmd --list-all-zones` 的输出中。
+
+[source, text]
+.*示例：拒绝来自 classroom 区域中 IP 地址 192.168.0.11 的所有流量*
+----
+# firewall-cmd --permanent --zone=classroom --add-rich-rule='rule family=ipv4 source address=192.168.0.11/32 reject'
+----
+
+[source, text]
+.*示例：在默认区域中，允许每分钟对 ftp 有两次新连接*
+----
+# firewall-cmd --add-rich-rule='rule service name=ftp limit value=2/m accept'
+----
+
+[source, text]
+.*示例：丢弃来自默认区域中任何位置的所有传入 IPsec esp 协议包*
+----
+# firewall-cmd --permanent --add-rich-rule='rule protocol value=esp drop'
+----
+
+[source, text]
+.*示例：在 192.168.1.0/24 子网的 vnc 区域中，接受端口 7900 直到 7905（含）上的所有 TCP 包*
+----
+# firewall-cmd --permanent --zone=vnc --add-rich-rule='rule family=ipv4 source address=192.168.1.0/24 port port=7900-7905 protocol=tcp accept'
+----
+
+=== 日志记录
+
+调试或监控防火墙时，记录已接受或已拒绝的连接很有用。firewalld 可以通过两种方法来实现此目的：记录到 syslog，或者将消息发送到由 auditd 管理的内核 audit 子系统。在这两种情况下，记录可以配置速率限制。速率限制确保系统日志文件填充消息的速率不会使系统无法跟上或者填充其所有磁盘空间。
+
+Rich Rules 记录到 syslog 的基本语法为：
+
+[source, text]
+----
+log [prefix="<PREFIX TEXT>" [level=<LOGLEVEL>] [limit value="<RATE/DURATION>"]
+----
+
+* <LOGLEVEL> - 是 emerg、alert、crit、error、warning、notice、info 或 debug 之一
+* <DURATION> - 是 s（表示秒）、m（表示分钟）、h（表示小时）或 d（表示天）之一。例如，limit value=3/m 会将日志消息限制为每分钟最多三条。
+
+用于记录到审计子系统的基本语法为：
+
+[source, text]
+----
+audit [limit value="<RATE/DURATION>"]
+----
+
+速率限制的配置方式与 syslog 记录相同。
+
+[source, text]
+.*示例：接受从 work 区域到 SSH 的新连接，以 notice 级别且每分钟最多三条消息的方式将新连接记录到 syslog*
+----
+# firewall-cmd --permanent --zone=work --add-rich-rule='rule service name="ssh" log prefix="ssh " level="notice" limit value="3/m" accept
+----
+
+[source, text]
+.*示例：在接下来五分钟内，将拒绝从默认区域中子网 2001:db8::/64 到 DNS 的新 IPv6 连接，并且拒绝的连接将记录到 audit 系统，且每小时最多一条消息*
+----
+# firewall-cmd --add-rich-rule='rule family=ipv6 source address="2001:db8::/64" service name="dns" audit limit value="1/h" reject' --timeout=300
+----
+
+== 配置防火墙允许单一客户端连接
+
+本部分的业务场景如下：
+
+* 服务器上启动 Web 服务器在试运行阶段
+* 只允许某特定的测试机器连接服务器进行测试
+* 需要记录网络限制转发信息到日志
+* 由于这可能会生成大量日志条目，应将这种记录限制为每秒最多三条消息
+* 所有日志消息都应以“NEW HTTP ”消息作为前缀。
+
+[source, text]
+.*1 - 服务器端配置 Web 服务*
+----
+# yum install -y httpd httpd-manual
+# echo 'KYLINSOONG!' > /var/www/html/index.html
+# systemctl enable httpd.service && systemctl start httpd.service && systemctl status httpd.service
+----
+
+[source, text]
+.*2 - 服务器端防火墙规则配置*
+----
+# firewall-cmd --permanent --add-rich-rule='rule family=ipv4 source address=172.25.0.10/32 service name="http" log level=notice prefix="NEW HTTP " limit value="3/s" accept'
+# firewall-cmd --reload
+----
+
+[source, text]
+.*3 - 客户端访问测试*
+----
+# for i in {1..5} ; do curl http://server0.example.com ; done
+KYLINSOONG!
+KYLINSOONG!
+KYLINSOONG!
+KYLINSOONG!
+KYLINSOONG!
+----
+
+[source, text]
+.*4 - 服务器端查看日志输出*
+----
+# tail -n 3 /var/log/messages
+Aug  9 16:06:10 localhost kernel: NEW HTTP IN=eth0 OUT= MAC=52:54:00:00:00:0b:52:54:00:00:00:0a:08:00 SRC=172.25.0.10 DST=172.25.0.11 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=13282 DF PROTO=TCP SPT=44152 DPT=80 WINDOW=14600 RES=0x00 SYN URGP=0 
+Aug  9 16:06:11 localhost kernel: NEW HTTP IN=eth0 OUT= MAC=52:54:00:00:00:0b:52:54:00:00:00:0a:08:00 SRC=172.25.0.10 DST=172.25.0.11 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=2384 DF PROTO=TCP SPT=44153 DPT=80 WINDOW=14600 RES=0x00 SYN URGP=0 
+Aug  9 16:06:11 localhost kernel: NEW HTTP IN=eth0 OUT= MAC=52:54:00:00:00:0b:52:54:00:00:00:0a:08:00 SRC=172.25.0.10 DST=172.25.0.11 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=27062 DF PROTO=TCP SPT=44154 DPT=80 WINDOW=14600 RES=0x00 SYN URGP=0 
+----
+
+== 网络地址转换 (NAT)
+
+网络地址转换即Network Address Translation(NAT)。
+
+firewalld 支持两种类型的网络地址转换 (NAT)：伪装(Masquerading)和端口转发(Port forwarding)。可以在基本级别使用常规 firewall-cmd 规则来同时配置这两者，更高级的转发配置可以使用 Rich Rules 来完成。这两种形式的 NAT 会在发送包之前修改包的某些方面，如源或目标。
+
+=== 伪装(Masquerading)
+
+通过伪装，系统会将并非直接寻址到自身的包转发到指定接收方，同时将通过的包的源地址更改为其自己的公共 IP 地址。防火墙对这些传入的包应答时，会将目标地址修改为原始主机的地址并发送包。这通常在网络边缘上使用，以便为内部网络提供 Internet 访问。伪装是一种形式的网络地址转换 (NAT)。
+
+下图为伪装(Masquerading)的一个场景示例：
+
+image:img/NAT.png[]
+
+1. 位于防火墙后面的其中一个计算机将包发送到本地网络之外的地址。包的源地址为 10.0.0.100（计算机的地址），目标地址为 2.17.39.214。
+2. 由于目标地址不在本地子网中，包将路由到源计算机上配置的默认网关；在此情况下为 10.0.0.1，即防火墙的 IP 地址。
+3. 防火墙接受包，将源地址更改为 1.2.3.4（防火墙的外部 IP），将对此连接的引用存储在其连接状态表中，然后根据其路由表将包传递到 Internet 上的路由器。
+4. 对包的应答从 Internet 返回。路由器在其连接状态表中查找连接，然后将目标地址更改为 10.0.0.100（原始发送方）并传递包。
+5. 原始发送方接收对其请求的应答
+
+[source, text]
+.*使用 firewall-cmd 给一个区域配置伪装*
+----
+# firewall-cmd --permanent --zone=<ZONE> --add-masquerade
+----
+
+[source, text]
+.*Rich rules 更细粒度的配置伪装*
+----
+# firewall-cmd --permanent --zone=<ZONE> --add-rich-rule='rule family=ipv4 source address=192.168.0.0/24 masquerade'
+----
+
+=== 转发(Port forwarding)
+
+另一种形式的 NAT 是端口转发。通过端口转发，指向单个端口的流量将转发到相同计算机上的不同端口，或者转发到不同计算机上的端口。此机制通常用于将某个服务器“隐藏”在另一个计算机后面，或者用于在备用端口上提供对服务的访问权限。
+
+同样基于伪装部分示例的网络布局，假定位于防火墙后面且 IP 地址为 10.0.0.100 的计算机在端口 8080/TCP 上运行 Web 服务器，并且防火墙配置为将其外部接口上传入端口 80/TCP 的流量转发到该计算机上的端口 8080/TCP：
+
+1. 来自 Internet 的客户端将包发送到防火墙的外部接口上的端口 80/TCP。
+2. 防火墙将此包的目标地址和端口分别更改为 10.0.0.100 和 8080/TCP，然后转发此包。源地址和端口保持不变。
+3. 防火墙后面的计算机将响应发送到此包。由于此计算机进行了伪装（并且防火墙配置为默认网关），此包会发送到原始客户端，就如同是来自防火墙上的外部接口。
+
+[source, text]
+.*使用 firewall-cmd 命令配置端口转发语法*
+----
+# firewall-cmd --permanent --zone=<ZONE> --add-forward-port=port=<PORTNUMBER>:proto=<PROTOCOL>[:toport=<PORTNUMBER>][:toaddr=<IPADDR>]
+----
+
+*toport=* 和 *toaddr=* 部分均可选，但需要至少指定这两者之一。
+
+[source, text]
+.*要在更大程度上控制端口转发规则，可以将以下语法与 Rich Rules 配合使用*
+----
+# forward-port port=<PORTNUM> protocol=tcp|udp [to-port=<PORTNUM>] [to-addr=<ADDRESS>]
+----
+
+== 配置 SSH 连接端口转发
+
+通常 sshd 服务监听端口为 22，客户端通过此端口与服务器建立连接，本部分通过端口转发实现，客户端通过 443 端口和服务器之间建立 ssh 连接。并且只有客户端通过 443 端口建立 ssh 连接。
+
+[source, text]
+.*1 - 服务器上永久性添加端口转发防火墙规则*
+----
+# firewall-cmd --permanent --add-rich-rule='rule family=ipv4 source address=172.25.0.10/32 forward-port port=443 protocol=tcp to-port=22'
+# firewall-cmd --reload 
+----
+
+[source, text]
+.*2 - 客户端连接测试*
+----
+# ssh -p 443 server0.example.com
 ----
 

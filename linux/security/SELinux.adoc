@@ -439,3 +439,193 @@ This is student content on server0.
 === 查看 SELinux 冲突日志
 
 安装 `setroubleshoot-server` 包，以便将 SELinux 消息发送到 /var/log/messages。`setroubleshoot-server` 侦听 /var/log/audit/audit.log 中的审核消息，并发送简短摘要到 /var/log/messages。 该摘要包括 SELinux 冲突的唯一标识符 (UUID)，可用于收集更多信息。sealert -l UUID 可用于生成特定事件的报告。 sealert -a /var/log/audit/audit.log 用于生成该文件中的所有事件的报告。
+
+== SELinux 端口标记
+
+SELinux 不仅仅是进行文件和进程标记。SELinux 策略还严格实施网络流量。SELinux 用来控制网络流量的其中一种方法是标记网络端口；例如，在 targeted 策略中，端口 *22/TCP* 具有标签 *ssh_port_t* 与其相关联。
+
+当某个进程希望侦听端口时，SELinux 将检查是否允许与该进程（域）相关联的标签绑定该端口标签。这可以阻止恶意服务控制本应由其他（合法）网络服务使用的端口。
+
+=== 管理 SELinux 端口标记
+
+每当管理员决定在非标准端口上运行服务时，SELinux 端口标签都很有可能需要进行更新。在某些情况下，targeted 策略已经通过可以使用的类型标记了端口；例如，由于端口 8008/TCP 通常用于 Web 应用程序，此端口已使用 http_port_t（Web 服务器的默认端口类型）进行标记。
+
+==== 侦听端口标签
+
+要获取所有当前端口标签分配的概述，管理员可以使用 semanage 命令的 port 子命令。-l 选项将以下列形式列出所有当前分配:
+
+[source, text]
+----
+port_label_t     tcp|udp    comma,separated,list,of,ports
+----
+
+要仅查看对默认策略的本地更改，管理员可以在此命令中添加 -l 选项。
+
+[source, text]
+.*查看所有侦听端口标签*
+----
+# semanage port -l
+SELinux Port Type              Proto    Port Number
+
+afs3_callback_port_t           tcp      7001
+afs3_callback_port_t           udp      7001
+afs_bos_port_t                 udp      7007
+afs_fs_port_t                  tcp      2040
+afs_fs_port_t                  udp      7000, 7005
+afs_ka_port_t                  udp      7004
+....
+----
+
+NOTE: 个端口标签可能会在输出中出现两次，一次是针对 TCP，一次是针对 UDP。
+
+==== 管理端口标签
+
+可以使用 semanage 来分配新端口标签，删除端口标签或修改现有端口标签。
+
+NOTE: 只能删除或修改本地修改内容。要允许某个服务绑定到通常与另一个服务相关联的端口标签，必须编写一个小型策略模块。
+
+要向现有端口标签（类型）中添加端口，请使用以下语法：
+
+[source, text]
+----
+semanage port -a -t port_label -p tcp|udp PORTNUMBER
+----
+
+==== 删除端口标签
+
+删除自定义端口标签的语法与添加端口标签的语法相同，但不是使用 -a 选项（表示添加），而是使用 -d 选项（表示删除）。
+
+[source, text]
+.*示例：删除端口 71/TCP 与 gopher_port_t 的绑定*
+----
+# semanage port -d -t gopher_port_t -p tcp 71
+----
+
+==== 修改端口绑定
+
+如果管理员意外为端口分配了错误类型，或者要求已更改，则可以修改与端口相关联的标签。这种流程比删除旧绑定并添加新绑定更高效。修改操作需要 -m 选项。
+
+[source, text]
+.*示例：将端口 71/TCP 从 gopher_port_t 修改为 http_port_t，管理员可以使用以下命令*
+----
+# semanage port -m -t http_port_t -p tcp 71
+----
+
+== 配置 Web 服务监听 82 端口
+
+本部分需求配置  Web 服务监听 82 端口，并且，客户端可以访问此服务。
+
+[source, text]
+.*1 - 安装包并初始配置*
+----
+# yum -y install httpd httpd-manual
+# sed -i '/^Listen/s/^.*$/Listen 82/' /etc/httpd/conf/httpd.conf
+#cat > /var/www/html/index.html << EOF
+Hello
+EOF
+----
+
+[source, text]
+.*2 - 确保 SELinux, Firewall 启动*
+----
+# getenforce 
+Enforcing
+
+# semanage port -l | grep http_port
+http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+
+# systemctl is-active firewalld.service 
+active
+----
+
+[source, text]
+.*3 - 启动 httpd.service*
+----
+# systemctl start httpd.service
+Job for httpd.service failed. See 'systemctl status httpd.service' and 'journalctl -xn' for details.
+
+# systemctl status httpd.service
+----
+
+[source, text]
+.*4 - 检查 SELinux 是否在阻止 httpd 绑定到端口 82/TCP*
+----
+# sealert -a /var/log/audit/audit.log
+100% done'list' object has no attribute 'split'
+100% done
+found 1 alerts in /var/log/audit/audit.log
+--------------------------------------------------------------------------------
+
+SELinux is preventing /usr/sbin/httpd from name_bind access on the tcp_socket .
+
+*****  Plugin bind_ports (99.5 confidence) suggests   ************************
+
+If you want to allow /usr/sbin/httpd to bind to network port 82
+Then you need to modify the port type.
+Do
+# semanage port -a -t PORT_TYPE -p tcp 82
+    where PORT_TYPE is one of the following: http_cache_port_t, http_port_t, jboss_management_port_t, jboss_messaging_port_t, ntop_port_t, puppet_port_t.
+
+*****  Plugin catchall (1.49 confidence) suggests   **************************
+
+If you believe that httpd should be allowed name_bind access on the  tcp_socket by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# grep httpd /var/log/audit/audit.log | audit2allow -M mypol
+# semodule -i mypol.pp
+
+
+Additional Information:
+Source Context                system_u:system_r:httpd_t:s0
+Target Context                system_u:object_r:reserved_port_t:s0
+Target Objects                 [ tcp_socket ]
+Source                        httpd
+Source Path                   /usr/sbin/httpd
+Port                          82
+Host                          <Unknown>
+Source RPM Packages           httpd-2.4.6-17.el7.x86_64
+Target RPM Packages           
+Policy RPM                    selinux-policy-3.12.1-153.el7.noarch
+Selinux Enabled               True
+Policy Type                   targeted
+Enforcing Mode                Enforcing
+Host Name                     server0.example.com
+Platform                      Linux server0.example.com 3.10.0-123.el7.x86_64 #1
+                              SMP Mon May 5 11:16:57 EDT 2014 x86_64 x86_64
+Alert Count                   1
+First Seen                    2018-08-10 09:08:23 CST
+Last Seen                     2018-08-10 09:08:23 CST
+Local ID                      0f10500c-a1c3-4526-ac7c-0405d4f54463
+
+Raw Audit Messages
+type=AVC msg=audit(1533863303.252:394): avc:  denied  { name_bind } for  pid=1745 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket
+
+
+type=SYSCALL msg=audit(1533863303.252:394): arch=x86_64 syscall=bind success=no exit=EACCES a0=3 a1=7ff87b233cf8 a2=10 a3=7fff9094894c items=0 ppid=1 pid=1745 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm=httpd exe=/usr/sbin/httpd subj=system_u:system_r:httpd_t:s0 key=(null)
+
+Hash: httpd,httpd_t,reserved_port_t,tcp_socket,name_bind
+----
+
+[source, text]
+.*5 - 将 SELinux 配置为允许 httpd 绑定到端口 82/TCP，然后重新启动 httpd.service 服务*
+----
+# semanage port -a -t http_port_t -p tcp 82
+# systemctl restart httpd.service
+----
+
+[source, text]
+.*6 - 在防火墙上打开端口 82/TCP*
+----
+# firewall-cmd --permanent --add-port=82/tcp
+# firewall-cmd --reload
+----
+
+[source, text]
+.*7 - 在客户端进行测试*
+----
+# curl http://server0.example.com:82
+Hello
+----
+
