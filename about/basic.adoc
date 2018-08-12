@@ -1,0 +1,7 @@
+= 基础知识
+:toc: manual
+
+== 十进制和二进制转换
+
+image:img/Count-Binary.png[]
+

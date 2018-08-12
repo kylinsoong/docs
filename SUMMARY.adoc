@@ -152,3 +152,5 @@
 .. link:solutions/jbds-jdv.adoc[JBDS 创建虚拟数据库操作示例]
 .. link:solutions/ep-data-solution.adoc[企业数据整合案例]
 .. link:solutions/spark-gs.adoc[Spark Get Start]
+. link:about/README.adoc[ABOUT]
+.. link:about/basic.adoc[基础]
