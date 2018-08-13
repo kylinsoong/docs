@@ -17,7 +17,7 @@ image:img/api-economy.png[]
 
 == 3Scale 安装
 
-=== 1 - 安装准备
+=== 安装准备
 
 * 确保 OpenShift 安装并正常运行。
 * 下载 link:3scale-amp-2.2.yml[3scale-amp-2.2.yml]
@@ -31,7 +31,7 @@ $ export ADMIN_PASSWORD=admin
 $ export MASTER_PASSWORD=master
 ----
 
-=== 2 - 安装
+=== 安装
 
 [source, bash]
 .*1 - 创建一个工程*
@@ -86,7 +86,7 @@ $ for x in apicast-staging apicast-production; do echo Resuming dc:  $x; sleep 2
 $ for x in apicast-wildcard-router zync; do echo Resuming dc:  $x; sleep 2; oc rollout resume dc/$x; done
 ----
 
-=== 3 - 安装验证
+=== 安装验证
 
 [source, bash]
 .*1 - 查看运行的容器*
