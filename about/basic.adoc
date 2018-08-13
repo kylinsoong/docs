@@ -5,3 +5,36 @@
 
 image:img/Count-Binary.png[]
 
+== 硬件基础
+
+|===
+|名称 |说明
+
+|EDB(External Data Bus)
+|interconnect the parts of computer, 8 bits, 16 bits, 32 bits and 64 bits. CPU recieve voltage singals throw EDB.
+
+|Register
+|Inside the CPU, store the Data that CPU work with
+
+|MCC(Memory Controller Chip)
+|The bridge between CPU and RAM
+
+|Address Bus
+|Connect the CPU and MCC
+
+|Overclocking
+|Increases the rate of CPU clock cycles in order to perform more tasks.
+
+|CPU
+|2 major types of CPU sockets: Land grid array(LGA), Pin grid array(PGA). 32-bit and 64-bit CPU architecture.
+
+|RAM
+|Computer short-term memory. 
+
+|Motherboards
+|The foundation that holds computer together.
+
+|===
+
+image:img/computer-virtually.png[]
+
