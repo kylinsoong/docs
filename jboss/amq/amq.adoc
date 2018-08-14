@@ -284,7 +284,7 @@ Consumer ActiveMQTopic[testQueue], thread=0 Consumed: 10 messages
 Consumer ActiveMQTopic[testQueue], thread=0 Consumer thread finished
 ----
 
-=== Broker 集群
+=== Broker 高可用
 
 [source, bash]
 .*1 - 创建两个 Broker 实例*
@@ -313,7 +313,7 @@ $ ./bin/artemis run
 2018-08-13 16:00:07,598 INFO  [org.apache.activemq.artemis.core.server] AMQ221027: Bridge ClusterConnectionBridge@157c611c [name=$.artemis.internal.sf.my-cluster.e421018b-9ece-11e8-86b6-a0afbd08b916, queue=QueueImpl[name=$.artemis.internal.sf.my-cluster.e421018b-9ece-11e8-86b6-a0afbd08b916, postOffice=PostOfficeImpl [server=ActiveMQServerImpl::serverUUID=bdda1e9b-9ece-11e8-94bd-a0afbd08b916], temp=false]@226001f8 targetConnector=ServerLocatorImpl (identity=(Cluster-connection-bridge::ClusterConnectionBridge@157c611c [name=$.artemis.internal.sf.my-cluster.e421018b-9ece-11e8-86b6-a0afbd08b916, queue=QueueImpl[name=$.artemis.internal.sf.my-cluster.e421018b-9ece-11e8-86b6-a0afbd08b916, postOffice=PostOfficeImpl [server=ActiveMQServerImpl::serverUUID=bdda1e9b-9ece-11e8-94bd-a0afbd08b916], temp=false]@226001f8 targetConnector=ServerLocatorImpl [initialConnectors=[TransportConfiguration(name=artemis, factory=org-apache-activemq-artemis-core-remoting-impl-netty-NettyConnectorFactory) ?port=61716&host=127-0-0-1], discoveryGroupConfiguration=null]]::ClusterConnectionImpl@300983713[nodeUUID=bdda1e9b-9ece-11e8-94bd-a0afbd08b916, connector=TransportConfiguration(name=artemis, factory=org-apache-activemq-artemis-core-remoting-impl-netty-NettyConnectorFactory) ?port=61616&host=127-0-0-1, address=, server=ActiveMQServerImpl::serverUUID=bdda1e9b-9ece-11e8-94bd-a0afbd08b916])) [initialConnectors=[TransportConfiguration(name=artemis, factory=org-apache-activemq-artemis-core-remoting-impl-netty-NettyConnectorFactory) ?port=61716&host=127-0-0-1], discoveryGroupConfiguration=null]] is connected
 ----
 
-=== Queue 集群
+=== Queue 高可用
 
 [source, bash]
 .*1 - 在 broker1 和 broker2 总添加 clusteredQueue 配置*
@@ -461,7 +461,7 @@ $ cd instances/backupBroker/ && ./bin/artemis run
 2018-08-13 16:44:22,763 INFO  [org.apache.activemq.artemis.core.server] AMQ221010: Backup Server is now live
 ----
 
-=== Broker 集群状态复制
+=== Broker 集群主备状态复制
 
 [source, bash]
 .*1 - 创建 live broker*
@@ -560,3 +560,28 @@ $ ./bin/artemis run
 2018-08-13 17:25:37,113 INFO  [org.apache.activemq.artemis.core.server] AMQ221031: backup announced
 ----
 
+== AMQP 集成
+
+AMQP 主要用于跨系统集成，允许业务模块跨多种平台，并降低力业务应用开发的复杂性。常见的 AMQP 使用拓扑图如下：
+
+image:img/amqp-topologies.png[]
+
+* AMQP 网络提供分布式、大消息量的处理能力
+* 消息发送方可以是 Java、Python、.NET、PHP、JavaScript 等
+* 消息接收方也可以是 Java、Python、.NET、PHP、JavaScript 等
+
+本部分为了便利性，AMQP 网络只有一个 Broker，消息发送方使用 Nodejs，消息接收方使用 Java。
+
+=== Broker 配置
+
+[source, bash]
+.*1 - 创建新 Broker*
+----
+$ ./bin/artemis create  --user admin --password admin --role admin --allow-anonymous y ./instances/broker1
+---- 
+
+[source, bash]
+.*2 - 编辑 etc/broker.xml, 添加 Queue*
+----
+
+----
