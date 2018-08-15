@@ -38,3 +38,43 @@ image:img/Count-Binary.png[]
 
 image:img/computer-virtually.png[]
 
+== Window 装机基础软件
+
+* Mozilla Firefox - https://www.mozilla.org/en-US/firefox/new/
+* VLC Media Player - https://www.videolan.org/vlc/download-windows.html
+* GIMP
+
+== ubuntu 基本命令
+
+[source, bash]
+.*查看某包是否存在*
+----
+$ dpkg -s firefox
+$ dpkg -s vlc
+$ dpkg -s gimp
+----
+
+[source, bash]
+.*系统更新*
+----
+$ sudo apt-get update && sudo apt-get install -f
+----
+
+[source, bash]
+.*安装包*
+----
+$ sudo apt-get install firefox
+----
+
+[source, bash]
+.*移除包*
+----
+$ sudo apt-get remove gimp
+----
+
+== Soft Skills for persuading copartner
+
+* *Exhibiting empathy* - 站在别人的角度考虑问题(should able to see something from someone else's perspective and understanding their feelings). THE ACTION YOU TAKE BY LOOKING AT IT FROM THEIR PERSPECTIVE IS WHAT EMPATHY IS ALL ABOUT.
+* *Being conscious of your tone*
+* *Acknowledging the person*
+* *Developing trust*
