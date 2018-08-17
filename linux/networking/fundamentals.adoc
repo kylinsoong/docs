@@ -51,7 +51,30 @@ Routers share data with each other via a protocol known as BGP, or Border Gatewa
 
 == 物理层
 
-//
+=== Moving bits across the wire
+
+* The physical layer is focus on moving ones and zeros from one end of the link to the next.
+* The physical layer consists of devices and  means of transmitting bits across computer networks.
+* A bit is the smallest representation of data that a computer can understand. It's a one or a zero. These ones and zeros sends across networks at the lowest level are what make up the frames and packets of data that we'll learn about when we cover the other layers.
+* Ones and zeros are sent across those network cables through a process called modulation. Modulation is a way of varying the voltage of this charge moving across the cable. When used for computer networks, this kind of modulation is more specifically known as line coding. It allows devices on either end of a link to understand that an electrical charge in a certain state is a zero, and in another state is a one.
+
+image:img/line-coding.png[]
+
+=== Twisted Pair Cabling and Duplexing
+
+* A standard cat six cable has eight wires consisting of four twisted pairs inside a single jacket.
+* Duplex communication is the concept that information can flow in both directions across the cable. 
+
+image:img/cat5e-cat6.jpg[] 
+
+https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[Ethernet over twisted pair]
+
+=== Network Ports and Patch Panels
+
+* A network cable with an RJ-45 plug can connect to an RJ-45 network port. Network ports are generally directly attached to the devices that make up a computer network.
+* Patch panel is a device containing many net ports but it does no other work. It's just a container for the endpoints of many runs of cable.
+  
+image:img/rj45.jpg[]
 
 == 数据链路层
 
