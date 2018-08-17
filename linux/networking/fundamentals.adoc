@@ -11,7 +11,7 @@ image:img/layer_terminology.JPG[]
 * *Transport* -  While the network layer delivers data between two individual nodes, the transport layer sorts out which client and server programs are supposed to get that data. TCP is the most commonly used protocol in the fourth layer. IP is responsible for getting data from one node to another; TCP and UDP is responsible for ensuring that data gets to the right applications running on those nodes.
 * *Application* -  There are lots of different application-specific protocols at this layer, which used to allow you to browse the web or send receive email are some common ones.
 
-.*TCP/IP 5 layer Vs Package being delivered*
+.*TCP/IP 5 层模型与包裹投递对应示例*
 image:img/TCPIP-5-layer-models.png[]
 
 1. The physical layer is the delivery truck and the roads.
@@ -19,6 +19,9 @@ image:img/TCPIP-5-layer-models.png[]
 3. The network layer identifies which roads need to be taken to get from address A to address B.
 4. The transport layer ensures that delivery driver knows how to knock on your door to tell you your package has arrived.
 5. The application layer is the contents of the package itself.
+
+.*TCP/IP 5 层模型与硬件组建对应关系*
+image:img/5layermoles-hardwareComponent.png[]
 
 == OSI 七层模型
 
@@ -78,11 +81,80 @@ image:img/rj45.jpg[]
 
 == 数据链路层
 
-//
+=== Ethernet 和 MAC 地址
+
+* Ethernet is most widely used protocol to send data across individual links.
+* The data link layer is to essentially abstract away the need for any other layers to care about the physical layer and what hardware is in use. 
+
+*CSMA/CD(carrier sense multiple access with collision detection)* - CSMA/CD is used to determine when the communications channels are clear and when the device is free to transmit data, this is for avoiding collision domain.
+
+*MAC address* - A MAC address is a globally unique identifier attached to an individual network interface. It's a 48-bit number normally represented by six groupings of two hexadecimal numbers. 
+
+=== Unicast, Multicast, Broadcast
+
+|===
+|TYPES |MODES |DESC
+
+|Unicast
+| One-to-One
+|A unicast transmission is always meant for just one receiving address
+
+|Multicast
+|One-to-Many
+|A multicast frame is similarly set to all devices on the local network signal. 	
+
+|Broadcast
+|One-to-All
+|An Ethernet broadcast is sent to every single device on a LAN.
+|===
+
+[source, text]
+.*示例 - Unicast MAC Address*
+----
+16:91:99:24:68:c9
+b6:fe:ee:92:78:42
+fa:4e:1b:7f:27:7f
+----
+
+[source, text]
+.*示例 - Multicast MAC Address*
+----
+6b:b7:22:a4:a4:cb
+97:20:82:57:fa:e5
+a7:50:c1:30:ca:c1
+----
+
+[source, text]
+.*示例 - Broadcast MAC Address*
+----
+ff:ff:ff:ff:ff:ff
+----
+
+=== Ethernet Frame
+
+An Ethernet frame is a highly structured collection of information presented in a specific order. This way network interfaces at the physical layer can convert a string of bits, travelling across a link into meaningful data or vice versa.
+
+image:img/EthernetPacket.png[]
+
+1. The first part of an Ethernet frame is known as the preamble. A preamble is 8 bytes or 64 bits long and can itself be split into two sections. The first seven bytes are a series of alternating ones and zeros. These act partially as a buffer between frames and can also be used by the network interfaces to synchronize internal clocks they use, to regulate the speed at which they send data. This last byte in the preamble is known as the SFD or start frame delimiter. This signals to a receiving device that the preamble is over and that the actual frame contents will now follow. 
+2. Destination MAC address, which is the hardware address of the intended recipient. 
+3. Source MAC address, where the frame originated from.  
+4. EtherType field, which is 16 bits long and used to describe the protocol of the contents of the frame. 
+5. Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long. 
+6. CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.
+
 
 == 网络层
 
-//
+=== IP 地址
+
+IP addresses are 32-bit long numbers made up of 4 octets, and each octet is normally described in decimal numbers. 
+
+image:img/ip-address.png[]
+
+=== IP Datagrams and Encapsulation
+
+
 
 == 传输层
 
