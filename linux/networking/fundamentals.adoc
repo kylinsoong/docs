@@ -154,9 +154,180 @@ image:img/ip-address.png[]
 
 === IP Datagrams and Encapsulation
 
+IP datagram is a highly structured series of fields that are strictly defined. The two primary sections of an IP datagram are the header and the payload.
 
+image:img/ip-datagrams.png[]
+
+* *Version* - The very first field is four bits, and indicates what version of Internet protocol is being used. The most common version of IP is version four or IPv4.
+* *Header Length* - Header Length field  is also a four bit field that declares how long the entire header is. This is almost always 20 bytes in length when dealing with IPv4. In fact, 20 bytes is the minimum length of an IP header. You couldn't fit all the data you need for a properly formatted IP header in any less space.
+* *Service Type* - Service Type field is eight bits can be used to specify details about quality of service or QoS technologies. The important takeaway about QoS is that there are services that allow routers to make decisions about which IP datagram may be more important than others.
+* *Total Length* - Total Length field is a 16 bits filed, It's used for exactly what it sounds like to indicate the total length of the IP datagram it's attached to. The maximum size of a single datagram is the largest number you can represent with 16 bits, which is 65,535.
+* *Identification* - Identification field, is a 16-bit number that's used to group messages together.  If the total amount of data that needs to be sent is larger than what can fit in a single datagram, the IP layer needs to split this data up into many individual packets. When this happens, the identification field is used so that the receiving end understands that every packet with the same value in that field is part of the same transmission.
+* *Flag* - The flag field is used to indicate if a datagram is allowed to be fragmented, or to indicate that the datagram has already been fragmented.
+* *Fragmentation* - which is the process of taking a single IP datagram and splitting it up into several smaller datagrams.
+* *TTL* - TTL field is an 8-bit field that indicates how many router hops a datagram can traverse before it's thrown away.
+* *Protocol* - Protocol field is another 8-bit field that contains data about what transport layer protocol is being used. The most common transport layer protocols are TCP and UDP.
+* *Header Checksum* - Header checksum field is a checksum of the contents of the entire IP datagram header. It functions very much like the Ethernet checksum field we discussed in the last module. Since the TTL field has to be recomputed at every router that a datagram touches, the checksum field necessarily changes, too. 
+* *Source IP address* 
+* *Destination IP address*
+* *IP options* - IP options field  is an optional field and is used to set special characteristics for datagrams primarily used for testing purposes.
+* *Padding* - The IP options field is usually followed by a padding field. Since the IP options field is both optional and variable in length, the padding field is just a series of zeros used to ensure the header is the correct total size.
+
+*IP datagram is the data payload section in Ethernet frame.*
+
+image:img/ip-datagrams-encapsulation.png[]
+
+=== IP Address Classes
+
+IP addresses can be split into two sections, the network ID, and the host ID.
+
+[source, text]
+.*示例：IBM IP 地址，9 是 network ID，100.100.100 是 host ID*
+----
+9.100.100.100
+----
+
+The address class system is a way of defining how the global IP address space is split up. There are three primary types of address classes：
+
+|===
+|Type |描述 |范围 |Max Hosts
+
+|Class A
+|the first octet is used for the network ID, and the last three are used for the host ID
+|0 - 126
+|16 M
+
+|Class B
+|the first two octets are used for the network ID, and the second two, are used for the host ID
+|128 - 191
+|64000
+
+|Class C
+|the first three octets are used for the network ID, and only the final octet is used for the host ID
+|192 - 223
+|254
+
+|Class D
+|always begin with the bits 1110, and are used for multicasting, which is how a single IP datagram can be sent to an entire network at once.
+|224 - 239
+|
+
+|Class E
+|
+|240 - 255
+|
+|===
+
+image:img/ip-address-classes.png[]
+
+NOTE: If the very first bit of an IP address is a zero, it belongs to a class A network, if the first bits are one, zero, it belongs to a class B network. Finally, if the first bits are 110, it belongs to a class C network. 
+
+=== ARP(Address Resolution Protocol)
+
+* ARP is a protocol used to discover the hardware address of a node with a certain IP address.
+* ARP table is just a list of IP addresses and the MAC addresses associated with them.  ARP table entries generally expire after a short amount of time to ensure changes in the network are accounted for.
+
+=== Subnet Masks
+
+Subnet masks are 32-bit numbers that are normally written now as four octets in decimal.
+
+image:img/ip-subnetmask.png[]
+
+=== Basic Binary Math
+
+image:img/bits2decimal.png[]
+
+image:img/ipaddressand.png[]
+
+=== CIDR(classless inter-domain routing)
+
+CIDR is an even more flexible approach to describing blocks of IP addresses. It expands on the concept of subnetting by using subnet masks to demarcate networks. To demarcate something means to set something off.
+
+=== 路由
+
+* A router is a network device that forwards traffic depending on the destination address of that traffic.
+* A router is a device that has at least two network interfaces, since it has to be connected to two networks to do its job.
+
+.*路由的基本过程：*
+image:img/routing-procedures.png[]
+ 
+1. A router receives a packet of data on one of its interfaces.
+2. The router examines the destination IP of this packet.
+3. The router then looks up the destination network of this IP in its routing table.
+4. The router forwards that out though the interface that's closest to the remote network.
+
+=== 路由表
+
+The most basic routing table will have four columns：
+
+1. Destination network - this column would contain a row for each network that the router knows about, this is just the definition of the remote network, a network ID, and the net mask.
+2. Next hop - this is the IP address of the next router that should receive data intended for the destination networking question or this could just state the network is directly connected and that there aren't any additional hops needed.
+3. Total hops - this is the crucial part to understand routing and how routing tables work, on any complex network like the Internet, there will be lots of different paths to get from point A to point B.
+4. Interface - the router also has to know which of its interfaces it should for traffic matching the destination network out of. 
+
+=== 路由协议
+
+Routing protocols fall into two main categories: interior gateway protocols and exterior gateway protocols.
+
+Interior gateway protocols are further split into two categories: Link state routing protocols and distance-vector protocols.
+
+Interior gateway protocols are used by routers to share information within a single autonomous system. In networking terms, an autonomous system is a collection of networks that all fall under the control of a single network operator.
+ 
+.*Link state routing protocols Vs distance-vector protocols* 
+
+* Distance vector protocols are an older standard. A router using a distance vector protocol basically just takes its routing table which is a list of every network known to it and how far away these networks are in terms of hops. Then the router sends this list to every neighboring router, which is basically every router directly connected to it. In computer science, a list is known as a vector. This is why a protocol that just sends a list of distances to networks, is known as a distance vector protocol. With a distance vector protocol, routers don't really know that much about the total state of an autonomous system. They just have some information about their immediate neighbors.
+* Link-state protocol, Routers using a link-state protocol take a more sophisticated approach to determining the best path to a network. Linked state protocols got their name because each router advertises the state of the link of each of its interfaces. These interfaces can be connected to other routers or they could be direct connections to networks. The information about each router is propagated to every other router on the autonomous system. This means that every router on the system knows every detail about every other router in the system. 
+
+.*Distance-vector protocol*
+image:img/routing-instance-vector-protocol.png[]
+
+.*Link-state protocol*
+image:img/routing-link-state-protocol.png[]
+
+Exterior gateway protocols are used to communicate data between routers representing the edges of an autonomous system.
+
+The IANA or the Internet Assigned Numbers Authority, is a non-profit organization that helps manage things like IP address allocation. Along with managing IP address allocation, the IANA is also responsible for ASN, or Autonomous System Number allocation. ASNs are numbers assigned to individual autonomous systems. Just like IP addresses, ASNs are 32-bit numbers. But, unlike IP addresses, they're normally referred to as just a single decimal number, instead of being split out into readable bits.
+ 
+.*Wikipedia Links*
+
+* https://en.wikipedia.org/wiki/Routing_Information_Protocol[EIP(Routing Information Protocol)]
+* https://en.wikipedia.org/wiki/Enhanced_Interior_Gateway_Routing_Protocol[EIGRP(Enhanced Interior Gateway Routing Protocol)]
+* https://en.wikipedia.org/wiki/Open_Shortest_Path_First[OSPF(Open Shortest Path First)]
+* https://en.wikipedia.org/wiki/Border_Gateway_Protocol[BGP(Border Gateway Protocol)]
+
+=== Non-Routable Address Space
+
+Non-routable address space is basically exactly what it sounds like. They are ranges of IPs set aside for use by anyone that cannot be routed to. Not every computer connected to the internet needs to be able to communicate with every other computer connected to the internet. Non-routable address space allows for nodes on such a network to communicate with each other but no gateway router will attempt to forward traffic to this type of network.
+  
+The primary three ranges of non-routable address space are:
+
+* 10.0.0.0/8
+* 172.16.0.0/12
+* 192.168.0.0/16
+
+http://www.ietf.org/
 
 == 传输层
+
+The transport layer is responsible for lots of important functions of reliable computer networking. These including:
+
+* Multiplexing traffic
+* Demultiplexing traffic
+* Etablishing long running connections
+* Ensuring data integrity through error checking and data verification.
+
+=== Multiplexing & Demultiplexing
+
+* Multiplexing in the transport layer means that nodes on the network have the ability to direct traffic toward many different receiving services.
+* Demultiplexing is the same concept, just at the receiving end, it's taking traffic that's all aimed at the same node and delivering it to the proper receiving service.
+ 
+image:img/multiplexerDemultiplexer.png[]
+
+NOTE: The transport layer handles multiplexing and demultiplexing through ports.
+
+A *Port* is a 16-bit number that's used to direct traffic to specific services running on a networked computer.
+ 
+=== Dissection of a TCP Segment
 
 //
 
