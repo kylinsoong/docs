@@ -315,7 +315,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.3.1" data-path="../networking/ifcfg.html">
+        <li class="chapter " data-level="1.2.3.1" data-path="../networking/fundamentals.html">
+            
+                <a href="../networking/fundamentals.html">
+            
+                    
+                    网络基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../networking/ifcfg.html">
             
                 <a href="../networking/ifcfg.html">
             
@@ -328,7 +341,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.2" data-path="../networking/ipv6cfg.html">
+        <li class="chapter " data-level="1.2.3.3" data-path="../networking/ipv6cfg.html">
             
                 <a href="../networking/ipv6cfg.html">
             
@@ -341,7 +354,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.3" data-path="../networking/netns.html">
+        <li class="chapter " data-level="1.2.3.4" data-path="../networking/netns.html">
             
                 <a href="../networking/netns.html">
             
@@ -354,7 +367,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.4" data-path="../networking/teaming.html">
+        <li class="chapter " data-level="1.2.3.5" data-path="../networking/teaming.html">
             
                 <a href="../networking/teaming.html">
             
@@ -367,7 +380,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.5" data-path="../networking/bridge.html">
+        <li class="chapter " data-level="1.2.3.6" data-path="../networking/bridge.html">
             
                 <a href="../networking/bridge.html">
             
@@ -380,7 +393,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.6" data-path="../networking/dns.html">
+        <li class="chapter " data-level="1.2.3.7" data-path="../networking/dns.html">
             
                 <a href="../networking/dns.html">
             
@@ -393,7 +406,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.7" data-path="../networking/tcp.html">
+        <li class="chapter " data-level="1.2.3.8" data-path="../networking/tcp.html">
             
                 <a href="../networking/tcp.html">
             
@@ -541,19 +554,6 @@
             
                     
                     防火墙
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2.5.4" data-path="net-port.html">
-            
-                <a href="net-port.html">
-            
-                    
-                    网络端口安全
             
                 </a>
             
@@ -2220,6 +2220,38 @@
             
         </li>
     
+        <li class="chapter " data-level="1.8" data-path="../../about/">
+            
+                <a href="../../about/">
+            
+                    
+                    ABOUT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../../about/basic.html">
+            
+                <a href="../../about/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
 
     
 
@@ -2305,6 +2337,12 @@
 <li><a href="#__selinux_11">&#x67E5;&#x770B; SELinux &#x51B2;&#x7A81;&#x65E5;&#x5FD7;</a></li>
 </ul>
 </li>
+<li><a href="#_selinux_6">SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</a>
+<ul class="sectlevel2">
+<li><a href="#__selinux_12">&#x7BA1;&#x7406; SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</a></li>
+</ul>
+</li>
+<li><a href="#__web_82">&#x914D;&#x7F6E; Web &#x670D;&#x52A1;&#x76D1;&#x542C; 82 &#x7AEF;&#x53E3;</a></li>
 </ul>
 </div>
 <div class="sect1">
@@ -2867,6 +2905,236 @@ This is student content on server0.</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_selinux_6">SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>SELinux &#x4E0D;&#x4EC5;&#x4EC5;&#x662F;&#x8FDB;&#x884C;&#x6587;&#x4EF6;&#x548C;&#x8FDB;&#x7A0B;&#x6807;&#x8BB0;&#x3002;SELinux &#x7B56;&#x7565;&#x8FD8;&#x4E25;&#x683C;&#x5B9E;&#x65BD;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x3002;SELinux &#x7528;&#x6765;&#x63A7;&#x5236;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x7684;&#x5176;&#x4E2D;&#x4E00;&#x79CD;&#x65B9;&#x6CD5;&#x662F;&#x6807;&#x8BB0;&#x7F51;&#x7EDC;&#x7AEF;&#x53E3;&#xFF1B;&#x4F8B;&#x5982;&#xFF0C;&#x5728; targeted &#x7B56;&#x7565;&#x4E2D;&#xFF0C;&#x7AEF;&#x53E3; <strong>22/TCP</strong> &#x5177;&#x6709;&#x6807;&#x7B7E; <strong>ssh_port_t</strong> &#x4E0E;&#x5176;&#x76F8;&#x5173;&#x8054;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5F53;&#x67D0;&#x4E2A;&#x8FDB;&#x7A0B;&#x5E0C;&#x671B;&#x4FA6;&#x542C;&#x7AEF;&#x53E3;&#x65F6;&#xFF0C;SELinux &#x5C06;&#x68C0;&#x67E5;&#x662F;&#x5426;&#x5141;&#x8BB8;&#x4E0E;&#x8BE5;&#x8FDB;&#x7A0B;&#xFF08;&#x57DF;&#xFF09;&#x76F8;&#x5173;&#x8054;&#x7684;&#x6807;&#x7B7E;&#x7ED1;&#x5B9A;&#x8BE5;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x3002;&#x8FD9;&#x53EF;&#x4EE5;&#x963B;&#x6B62;&#x6076;&#x610F;&#x670D;&#x52A1;&#x63A7;&#x5236;&#x672C;&#x5E94;&#x7531;&#x5176;&#x4ED6;&#xFF08;&#x5408;&#x6CD5;&#xFF09;&#x7F51;&#x7EDC;&#x670D;&#x52A1;&#x4F7F;&#x7528;&#x7684;&#x7AEF;&#x53E3;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="__selinux_12">&#x7BA1;&#x7406; SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</h3>
+<div class="paragraph">
+<p>&#x6BCF;&#x5F53;&#x7BA1;&#x7406;&#x5458;&#x51B3;&#x5B9A;&#x5728;&#x975E;&#x6807;&#x51C6;&#x7AEF;&#x53E3;&#x4E0A;&#x8FD0;&#x884C;&#x670D;&#x52A1;&#x65F6;&#xFF0C;SELinux &#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x90FD;&#x5F88;&#x6709;&#x53EF;&#x80FD;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#x3002;&#x5728;&#x67D0;&#x4E9B;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;targeted &#x7B56;&#x7565;&#x5DF2;&#x7ECF;&#x901A;&#x8FC7;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x7684;&#x7C7B;&#x578B;&#x6807;&#x8BB0;&#x4E86;&#x7AEF;&#x53E3;&#xFF1B;&#x4F8B;&#x5982;&#xFF0C;&#x7531;&#x4E8E;&#x7AEF;&#x53E3; 8008/TCP &#x901A;&#x5E38;&#x7528;&#x4E8E; Web &#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#xFF0C;&#x6B64;&#x7AEF;&#x53E3;&#x5DF2;&#x4F7F;&#x7528; http_port_t&#xFF08;Web &#x670D;&#x52A1;&#x5668;&#x7684;&#x9ED8;&#x8BA4;&#x7AEF;&#x53E3;&#x7C7B;&#x578B;&#xFF09;&#x8FDB;&#x884C;&#x6807;&#x8BB0;&#x3002;</p>
+</div>
+<div class="sect3">
+<h4 id="___2">&#x4FA6;&#x542C;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</h4>
+<div class="paragraph">
+<p>&#x8981;&#x83B7;&#x53D6;&#x6240;&#x6709;&#x5F53;&#x524D;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x5206;&#x914D;&#x7684;&#x6982;&#x8FF0;&#xFF0C;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; semanage &#x547D;&#x4EE4;&#x7684; port &#x5B50;&#x547D;&#x4EE4;&#x3002;-l &#x9009;&#x9879;&#x5C06;&#x4EE5;&#x4E0B;&#x5217;&#x5F62;&#x5F0F;&#x5217;&#x51FA;&#x6240;&#x6709;&#x5F53;&#x524D;&#x5206;&#x914D;:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">port_label_t     tcp|udp    comma,separated,list,of,ports</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8981;&#x4EC5;&#x67E5;&#x770B;&#x5BF9;&#x9ED8;&#x8BA4;&#x7B56;&#x7565;&#x7684;&#x672C;&#x5730;&#x66F4;&#x6539;&#xFF0C;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x5728;&#x6B64;&#x547D;&#x4EE4;&#x4E2D;&#x6DFB;&#x52A0; -l &#x9009;&#x9879;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x6240;&#x6709;&#x4FA6;&#x542C;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -l
+SELinux Port Type              Proto    Port Number
+
+afs3_callback_port_t           tcp      7001
+afs3_callback_port_t           udp      7001
+afs_bos_port_t                 udp      7007
+afs_fs_port_t                  tcp      2040
+afs_fs_port_t                  udp      7000, 7005
+afs_ka_port_t                  udp      7004
+....</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x4E2A;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x53EF;&#x80FD;&#x4F1A;&#x5728;&#x8F93;&#x51FA;&#x4E2D;&#x51FA;&#x73B0;&#x4E24;&#x6B21;&#xFF0C;&#x4E00;&#x6B21;&#x662F;&#x9488;&#x5BF9; TCP&#xFF0C;&#x4E00;&#x6B21;&#x662F;&#x9488;&#x5BF9; UDP&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___3">&#x7BA1;&#x7406;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</h4>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x4F7F;&#x7528; semanage &#x6765;&#x5206;&#x914D;&#x65B0;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#xFF0C;&#x5220;&#x9664;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x6216;&#x4FEE;&#x6539;&#x73B0;&#x6709;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x3002;</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EA;&#x80FD;&#x5220;&#x9664;&#x6216;&#x4FEE;&#x6539;&#x672C;&#x5730;&#x4FEE;&#x6539;&#x5185;&#x5BB9;&#x3002;&#x8981;&#x5141;&#x8BB8;&#x67D0;&#x4E2A;&#x670D;&#x52A1;&#x7ED1;&#x5B9A;&#x5230;&#x901A;&#x5E38;&#x4E0E;&#x53E6;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x76F8;&#x5173;&#x8054;&#x7684;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#xFF0C;&#x5FC5;&#x987B;&#x7F16;&#x5199;&#x4E00;&#x4E2A;&#x5C0F;&#x578B;&#x7B56;&#x7565;&#x6A21;&#x5757;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&#x8981;&#x5411;&#x73B0;&#x6709;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#xFF08;&#x7C7B;&#x578B;&#xFF09;&#x4E2D;&#x6DFB;&#x52A0;&#x7AEF;&#x53E3;&#xFF0C;&#x8BF7;&#x4F7F;&#x7528;&#x4EE5;&#x4E0B;&#x8BED;&#x6CD5;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">semanage port -a -t port_label -p tcp|udp PORTNUMBER</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___4">&#x5220;&#x9664;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</h4>
+<div class="paragraph">
+<p>&#x5220;&#x9664;&#x81EA;&#x5B9A;&#x4E49;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x7684;&#x8BED;&#x6CD5;&#x4E0E;&#x6DFB;&#x52A0;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x7684;&#x8BED;&#x6CD5;&#x76F8;&#x540C;&#xFF0C;&#x4F46;&#x4E0D;&#x662F;&#x4F7F;&#x7528; -a &#x9009;&#x9879;&#xFF08;&#x8868;&#x793A;&#x6DFB;&#x52A0;&#xFF09;&#xFF0C;&#x800C;&#x662F;&#x4F7F;&#x7528; -d &#x9009;&#x9879;&#xFF08;&#x8868;&#x793A;&#x5220;&#x9664;&#xFF09;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;&#x5220;&#x9664;&#x7AEF;&#x53E3; 71/TCP &#x4E0E; gopher_port_t &#x7684;&#x7ED1;&#x5B9A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -d -t gopher_port_t -p tcp 71</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___5">&#x4FEE;&#x6539;&#x7AEF;&#x53E3;&#x7ED1;&#x5B9A;</h4>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x7BA1;&#x7406;&#x5458;&#x610F;&#x5916;&#x4E3A;&#x7AEF;&#x53E3;&#x5206;&#x914D;&#x4E86;&#x9519;&#x8BEF;&#x7C7B;&#x578B;&#xFF0C;&#x6216;&#x8005;&#x8981;&#x6C42;&#x5DF2;&#x66F4;&#x6539;&#xFF0C;&#x5219;&#x53EF;&#x4EE5;&#x4FEE;&#x6539;&#x4E0E;&#x7AEF;&#x53E3;&#x76F8;&#x5173;&#x8054;&#x7684;&#x6807;&#x7B7E;&#x3002;&#x8FD9;&#x79CD;&#x6D41;&#x7A0B;&#x6BD4;&#x5220;&#x9664;&#x65E7;&#x7ED1;&#x5B9A;&#x5E76;&#x6DFB;&#x52A0;&#x65B0;&#x7ED1;&#x5B9A;&#x66F4;&#x9AD8;&#x6548;&#x3002;&#x4FEE;&#x6539;&#x64CD;&#x4F5C;&#x9700;&#x8981; -m &#x9009;&#x9879;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;&#x5C06;&#x7AEF;&#x53E3; 71/TCP &#x4ECE; gopher_port_t &#x4FEE;&#x6539;&#x4E3A; http_port_t&#xFF0C;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x4EE5;&#x4E0B;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -m -t http_port_t -p tcp 71</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__web_82">&#x914D;&#x7F6E; Web &#x670D;&#x52A1;&#x76D1;&#x542C; 82 &#x7AEF;&#x53E3;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x9700;&#x6C42;&#x914D;&#x7F6E;  Web &#x670D;&#x52A1;&#x76D1;&#x542C; 82 &#x7AEF;&#x53E3;&#xFF0C;&#x5E76;&#x4E14;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x53EF;&#x4EE5;&#x8BBF;&#x95EE;&#x6B64;&#x670D;&#x52A1;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x5B89;&#x88C5;&#x5305;&#x5E76;&#x521D;&#x59CB;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># yum -y install httpd httpd-manual
+# sed -i &apos;/^Listen/s/^.*$/Listen 82/&apos; /etc/httpd/conf/httpd.conf
+#cat &gt; /var/www/html/index.html &lt;&lt; EOF
+Hello
+EOF</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x786E;&#x4FDD; SELinux, Firewall &#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getenforce
+Enforcing
+
+# semanage port -l | grep http_port
+http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+
+# systemctl is-active firewalld.service
+active</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x542F;&#x52A8; httpd.service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl start httpd.service
+Job for httpd.service failed. See &apos;systemctl status httpd.service&apos; and &apos;journalctl -xn&apos; for details.
+
+# systemctl status httpd.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x68C0;&#x67E5; SELinux &#x662F;&#x5426;&#x5728;&#x963B;&#x6B62; httpd &#x7ED1;&#x5B9A;&#x5230;&#x7AEF;&#x53E3; 82/TCP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># sealert -a /var/log/audit/audit.log
+100% done&apos;list&apos; object has no attribute &apos;split&apos;
+100% done
+found 1 alerts in /var/log/audit/audit.log
+--------------------------------------------------------------------------------
+
+SELinux is preventing /usr/sbin/httpd from name_bind access on the tcp_socket .
+
+*****  Plugin bind_ports (99.5 confidence) suggests   ************************
+
+If you want to allow /usr/sbin/httpd to bind to network port 82
+Then you need to modify the port type.
+Do
+# semanage port -a -t PORT_TYPE -p tcp 82
+    where PORT_TYPE is one of the following: http_cache_port_t, http_port_t, jboss_management_port_t, jboss_messaging_port_t, ntop_port_t, puppet_port_t.
+
+*****  Plugin catchall (1.49 confidence) suggests   **************************
+
+If you believe that httpd should be allowed name_bind access on the  tcp_socket by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# grep httpd /var/log/audit/audit.log | audit2allow -M mypol
+# semodule -i mypol.pp
+
+
+Additional Information:
+Source Context                system_u:system_r:httpd_t:s0
+Target Context                system_u:object_r:reserved_port_t:s0
+Target Objects                 [ tcp_socket ]
+Source                        httpd
+Source Path                   /usr/sbin/httpd
+Port                          82
+Host                          &lt;Unknown&gt;
+Source RPM Packages           httpd-2.4.6-17.el7.x86_64
+Target RPM Packages
+Policy RPM                    selinux-policy-3.12.1-153.el7.noarch
+Selinux Enabled               True
+Policy Type                   targeted
+Enforcing Mode                Enforcing
+Host Name                     server0.example.com
+Platform                      Linux server0.example.com 3.10.0-123.el7.x86_64 #1
+                              SMP Mon May 5 11:16:57 EDT 2014 x86_64 x86_64
+Alert Count                   1
+First Seen                    2018-08-10 09:08:23 CST
+Last Seen                     2018-08-10 09:08:23 CST
+Local ID                      0f10500c-a1c3-4526-ac7c-0405d4f54463
+
+Raw Audit Messages
+type=AVC msg=audit(1533863303.252:394): avc:  denied  { name_bind } for  pid=1745 comm=&quot;httpd&quot; src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket
+
+
+type=SYSCALL msg=audit(1533863303.252:394): arch=x86_64 syscall=bind success=no exit=EACCES a0=3 a1=7ff87b233cf8 a2=10 a3=7fff9094894c items=0 ppid=1 pid=1745 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm=httpd exe=/usr/sbin/httpd subj=system_u:system_r:httpd_t:s0 key=(null)
+
+Hash: httpd,httpd_t,reserved_port_t,tcp_socket,name_bind</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x5C06; SELinux &#x914D;&#x7F6E;&#x4E3A;&#x5141;&#x8BB8; httpd &#x7ED1;&#x5B9A;&#x5230;&#x7AEF;&#x53E3; 82/TCP&#xFF0C;&#x7136;&#x540E;&#x91CD;&#x65B0;&#x542F;&#x52A8; httpd.service &#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -a -t http_port_t -p tcp 82
+# systemctl restart httpd.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6 - &#x5728;&#x9632;&#x706B;&#x5899;&#x4E0A;&#x6253;&#x5F00;&#x7AEF;&#x53E3; 82/TCP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># firewall-cmd --permanent --add-port=82/tcp
+# firewall-cmd --reload</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7 - &#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x8FDB;&#x884C;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl http://server0.example.com:82
+Hello</code></pre>
+</div>
+</div>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -2909,7 +3177,7 @@ This is student content on server0.</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"SELinux","level":"1.2.5.2","depth":3,"next":{"title":"防火墙","level":"1.2.5.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"previous":{"title":"文件权限","level":"1.2.5.1","depth":3,"path":"linux/security/file-permissions.adoc","ref":"linux/security/file-permissions.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/SELinux.adoc","mtime":"2018-08-08T09:32:46.714Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-09T15:00:12.811Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"SELinux","level":"1.2.5.2","depth":3,"next":{"title":"防火墙","level":"1.2.5.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"previous":{"title":"文件权限","level":"1.2.5.1","depth":3,"path":"linux/security/file-permissions.adoc","ref":"linux/security/file-permissions.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/SELinux.adoc","mtime":"2018-08-10T09:23:30.681Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

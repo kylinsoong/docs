@@ -1,11 +1,12 @@
-
 = DNS
 :toc: manual
-:toc-placement: preamble
-
-Linux 域名解析系统。
 
 == 基本概念
+
+=== Why do we need DNS?
+
+* DNS is a global and highly distributed network service that resolves strings of letters into IP address for you.
+* A domain name is just the term we use for something that can be resolved by DNS.
 
 === 什么是 DNS
 
@@ -32,6 +33,39 @@ TLD(top-level domain，顶级域名)是只有一个组件的域名；gTLDs(gTLDs
 |区(zone)
 |一个区是特定名称服务器直接负责或认证的域名的一个部分。 这可能是一个完整的域名，也可能只是部分或全部域名的一部分子域名委托给其他域名服务器。
 |===
+
+NOTE: DNS can technically support up to 127 levels of domain in total for a single fully qualified domain name. Each individual section can only be 63 characters long and
+ a complete FQDN is limited to a total of 255 characters 
+
+=== DNS Zones
+
+* The purpose of DNS zones is to allow for easier control over multiple levels of a domain.
+* Zone files are simple configuration files that declare all resource records for a particular zone.
+
+=== DNS 服务器种类
+
+.*Five primary types of DNS servers*
+|===
+|名称 |说明
+
+|Caching name servers
+|Provided by an ISP or local network. Store domain name lookups for a certain amount of time. Most caching name servers are also recursive name servers.
+
+|Recursive name servers
+|Provided by an ISP or local network. Perform full DNS resolution requests.
+
+|Root name servers
+|13 total root name servers, what are responsible for directing queries toward the appropriate TLD name server.
+
+|TLD name servers
+|The TLD name servers will respond again with a redirect, this time informing the computer performing the name lookup with what authoritative name server to contact.
+
+|Authoritative name servers
+|Authoritative name servers are responsible for the last two parts of any domain name which is the resolution at which a single organization may be responsible for DNS lookups.
+|===
+
+.*Steps of Name Resolution*
+image:img/5typesdnsserverlookup.png[]
 
 === 域名查询解析
 
@@ -73,6 +107,10 @@ image:img/anatomy-of-dns-lookup.png[DNS 查询解析]
 9. dnsA 域名服务器根据返回的地址信息，发送类似 `example.com 的 IP 地址是多少` 的请求到 dns.example.com
 10. dns.example.com 服务iq会找到 example.com 对应的 IP 地址，例如 192.168.1.1，返回给 dnsA
 11. dnsA 域名服务器将返回的信息在缓存中保存，并返回给Client
+
+=== DNS and UDP
+
+DNS 实现基于 UDP。
 
 === DNS RRs
 
@@ -128,7 +166,7 @@ google.com.		145	IN	AAAA	2404:6800:4003:c03::71
 ----
 
 |CNAME
-|定义了一个别名指向另一个 A 或 AAAA 类型的资源记录
+|定义了一个别名，将一个域名重定向到另外一个域名
 [source, bash]
 .*DNS 区中 CNAME 示例*
 ----

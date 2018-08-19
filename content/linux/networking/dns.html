@@ -315,7 +315,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.2.3.1" data-path="ifcfg.html">
+        <li class="chapter " data-level="1.2.3.1" data-path="fundamentals.html">
+            
+                <a href="fundamentals.html">
+            
+                    
+                    网络基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="ifcfg.html">
             
                 <a href="ifcfg.html">
             
@@ -328,7 +341,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.2" data-path="ipv6cfg.html">
+        <li class="chapter " data-level="1.2.3.3" data-path="ipv6cfg.html">
             
                 <a href="ipv6cfg.html">
             
@@ -341,7 +354,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.3" data-path="netns.html">
+        <li class="chapter " data-level="1.2.3.4" data-path="netns.html">
             
                 <a href="netns.html">
             
@@ -354,7 +367,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.4" data-path="teaming.html">
+        <li class="chapter " data-level="1.2.3.5" data-path="teaming.html">
             
                 <a href="teaming.html">
             
@@ -367,7 +380,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.5" data-path="bridge.html">
+        <li class="chapter " data-level="1.2.3.6" data-path="bridge.html">
             
                 <a href="bridge.html">
             
@@ -380,7 +393,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.3.6" data-path="dns.html">
+        <li class="chapter active" data-level="1.2.3.7" data-path="dns.html">
             
                 <a href="dns.html">
             
@@ -393,7 +406,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.3.7" data-path="tcp.html">
+        <li class="chapter " data-level="1.2.3.8" data-path="tcp.html">
             
                 <a href="tcp.html">
             
@@ -541,19 +554,6 @@
             
                     
                     防火墙
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2.5.4" data-path="../security/net-port.html">
-            
-                <a href="../security/net-port.html">
-            
-                    
-                    网络端口安全
             
                 </a>
             
@@ -2220,6 +2220,38 @@
             
         </li>
     
+        <li class="chapter " data-level="1.8" data-path="../../about/">
+            
+                <a href="../../about/">
+            
+                    
+                    ABOUT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../../about/basic.html">
+            
+                <a href="../../about/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
 
     
 
@@ -2266,30 +2298,40 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="dns">DNS</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>Linux &#x57DF;&#x540D;&#x89E3;&#x6790;&#x7CFB;&#x7EDF;&#x3002;</p>
-</div>
-</div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</a>
 <ul class="sectlevel2">
+<li><a href="#_why_do_we_need_dns">Why do we need DNS?</a></li>
 <li><a href="#__dns">&#x4EC0;&#x4E48;&#x662F; DNS</a></li>
+<li><a href="#_dns_zones">DNS Zones</a></li>
+<li><a href="#_dns">DNS &#x670D;&#x52A1;&#x5668;&#x79CD;&#x7C7B;</a></li>
 <li><a href="#___2">&#x57DF;&#x540D;&#x67E5;&#x8BE2;&#x89E3;&#x6790;</a></li>
+<li><a href="#_dns_and_udp">DNS and UDP</a></li>
 <li><a href="#_dns_rrs">DNS RRs</a></li>
 </ul>
 </li>
 <li><a href="#__unbound">&#x914D;&#x7F6E;&#x7BA1;&#x7406; unbound</a></li>
-<li><a href="#_dns">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
+<li><a href="#_dns_2">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
 </ul>
-</div>
 </div>
 <div class="sect1">
 <h2 id="__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_why_do_we_need_dns">Why do we need DNS?</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>DNS is a global and highly distributed network service that resolves strings of letters into IP address for you.</p>
+</li>
+<li>
+<p>A domain name is just the term we use for something that can be resolved by DNS.</p>
+</li>
+</ul>
+</div>
+</div>
 <div class="sect2">
 <h3 id="__dns">&#x4EC0;&#x4E48;&#x662F; DNS</h3>
 <div class="paragraph">
@@ -2339,6 +2381,74 @@
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+DNS can technically support up to 127 levels of domain in total for a single fully qualified domain name. Each individual section can only be 63 characters long and
+ a complete FQDN is limited to a total of 255 characters
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dns_zones">DNS Zones</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The purpose of DNS zones is to allow for easier control over multiple levels of a domain.</p>
+</li>
+<li>
+<p>Zone files are simple configuration files that declare all resource records for a particular zone.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dns">DNS &#x670D;&#x52A1;&#x5668;&#x79CD;&#x7C7B;</h3>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. <strong>Five primary types of DNS servers</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x540D;&#x79F0;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Caching name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provided by an ISP or local network. Store domain name lookups for a certain amount of time. Most caching name servers are also recursive name servers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Recursive name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provided by an ISP or local network. Perform full DNS resolution requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13 total root name servers, what are responsible for directing queries toward the appropriate TLD name server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLD name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The TLD name servers will respond again with a redirect, this time informing the computer performing the name lookup with what authoritative name server to contact.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authoritative name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authoritative name servers are responsible for the last two parts of any domain name which is the resolution at which a single organization may be responsible for DNS lookups.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<div class="title"><strong>Steps of Name Resolution</strong></div>
+<p><span class="image"><img src="img/5typesdnsserverlookup.png" alt="5typesdnsserverlookup.png"></span></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="___2">&#x57DF;&#x540D;&#x67E5;&#x8BE2;&#x89E3;&#x6790;</h3>
@@ -2407,6 +2517,12 @@ https://test.apps.example.com. 0 IN	A	192.168.122.105
 <p>dnsA &#x57DF;&#x540D;&#x670D;&#x52A1;&#x5668;&#x5C06;&#x8FD4;&#x56DE;&#x7684;&#x4FE1;&#x606F;&#x5728;&#x7F13;&#x5B58;&#x4E2D;&#x4FDD;&#x5B58;&#xFF0C;&#x5E76;&#x8FD4;&#x56DE;&#x7ED9;Client</p>
 </li>
 </ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dns_and_udp">DNS and UDP</h3>
+<div class="paragraph">
+<p>DNS &#x5B9E;&#x73B0;&#x57FA;&#x4E8E; UDP&#x3002;</p>
 </div>
 </div>
 <div class="sect2">
@@ -2496,7 +2612,7 @@ google.com.		145	IN	AAAA	2404:6800:4003:c03::71</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CNAME</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>&#x5B9A;&#x4E49;&#x4E86;&#x4E00;&#x4E2A;&#x522B;&#x540D;&#x6307;&#x5411;&#x53E6;&#x4E00;&#x4E2A; A &#x6216; AAAA &#x7C7B;&#x578B;&#x7684;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;</p>
+<p>&#x5B9A;&#x4E49;&#x4E86;&#x4E00;&#x4E2A;&#x522B;&#x540D;&#xFF0C;&#x5C06;&#x4E00;&#x4E2A;&#x57DF;&#x540D;&#x91CD;&#x5B9A;&#x5411;&#x5230;&#x53E6;&#x5916;&#x4E00;&#x4E2A;&#x57DF;&#x540D;</p>
 </div>
 <div class="listingblock">
 <div class="title"><strong>DNS &#x533A;&#x4E2D; CNAME &#x793A;&#x4F8B;</strong></div>
@@ -2758,7 +2874,7 @@ google.com.		3600	IN	TXT	<span class="hljs-string">&quot;v=spf1 include:_spf.goo
 </div>
 </div>
 <div class="sect1">
-<h2 id="_dns">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</h2>
+<h2 id="_dns_2">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title"><strong>DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;&#x5206;&#x6790;</strong></div>
@@ -2816,7 +2932,7 @@ $ dig A example.com</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.6","depth":3,"next":{"title":"TCP","level":"1.2.3.7","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.5","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2018-06-01T01:29:15.023Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-09T15:00:12.811Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2018-08-19T15:48:59.234Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
