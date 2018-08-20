@@ -149,7 +149,7 @@ google.com.		220	IN	A	74.125.24.139
 google.com.		220	IN	A	74.125.24.113
 ----
 
-|AAAA
+|AAAA(Quad A)
 |主机名和 IPv6 地址的映射
 [source, bash]
 ----
@@ -312,6 +312,33 @@ google.com.		3600	IN	TXT	"v=spf1 include:_spf.google.com ~all"
 . http://tools.ietf.org/html/rfc1034[RFC 1034: Domain names - concepts and facilities]
 . http://tools.ietf.org/html/rfc1035[RFC 1035: Domain names - implementation and specification]
 . http://tools.ietf.org/html/rfc2181[RFC 2181: Clarifications to the DNS Specification]
+
+== DNS 工具
+
+=== nslookup
+
+Nslookup is way more powerful than just that. It includes an interactive mode that lets you set additional options and run lots of queries in a row. To start an interactive nslookup session, you just enter nslookup, without any hostname following it. You should see an angle bracket acting as your prompt. From interactive mode, you can make lots of requests in a row. You can also perform some extra configuration to help with more in-depth trouble shooting.
+
+[source, bash]
+----
+$ nslookup google.com
+Server:		10.72.17.5
+Address:	10.72.17.5#53
+
+Non-authoritative answer:
+Name:	google.com
+Address: 74.125.24.102
+Name:	google.com
+Address: 74.125.24.113
+Name:	google.com
+Address: 74.125.24.138
+Name:	google.com
+Address: 74.125.24.139
+Name:	google.com
+Address: 74.125.24.100
+Name:	google.com
+Address: 74.125.24.101
+----
 
 == 配置管理 unbound
 

@@ -479,10 +479,248 @@ image:img/osi-model-application.png[]
 
 === DHCP
 
-DHCP stands for Dynamic Host Configuration Protocol, which is an application layer protocol that automates the configuration process of hosts on a network. With DHCP, a machine can query a DHCP server when the computer connects to the network and receive all the network configuration in one go. 
-
-DHCP is an application layer protocol, which means it relies on the transport, network, data link and physical layers to operate.
+* DHCP stands for Dynamic Host Configuration Protocol, which is an application layer protocol that automates the configuration process of hosts on a network. With DHCP, a machine can query a DHCP server when the computer connects to the network and receive all the network configuration in one go. 
+* DHCP is an application layer protocol, which means it relies on the transport, network, data link and physical layers to operate.
+* The process by which a client configured to use DHCP attempts to get network configuration information is known as DHCP discovery. 
 
 *DHCP discovery process - 4 steps:*
 
-* 
+image:img/DHCP-process.jpg[]
+
+1. *DHCP Discovery* - DHCP clients sends a `DHCP discover message(DHCPDISCOVER)` out onto the network, the DHCPDISCOVER message is encapsulated in a UDP datagram with a destination port of 67 and a source port of 68, this is then encapsulated inside of an IP datagram with a destination IP of 255.255.255.255, and a source IP of 0.0.0.0.
+2. *DHCP Offer* - DHCP server examine its own configuration and make a decision on what, if any, IP address to offer to the client, the response would be sent as a DHCPOFFER message with a destination port of 68, a source port of 67, a destination broadcast IP of 255.255.255.255, and its actual IP as the source.
+3. *DHCP Request* - DHCP client respond to the DHCPOFFER message with a DHCPREQUEST message, which essentially says, yes, I would like to have an IP that you offer to me. Since the IP hasn't been assigned yet, this is again sent from an IP of 0.0.0.0 and to the broadcast IP of 255.255.255.255. 
+4. *DHCP ACK* - DHCP server receives the DHCPREQUEST message and responds with a DHCPACK or DHCP acknowledgement message, which is again sent to a broadcast IP of 255.255.255.255, and with a source IP corresponding to the actual IP of the DHCP server.
+
+=== NAT(Network Address Translation)
+
+字面上理解，NAT(Network Address Translation) 就是将一个 IP 地址翻译/转换成另一个 IP 地址。
+
+NAT is a technology that allows a gateway usually a router or a firewall to rewrite the source IP of an outgoing IP datagram, while retaining the original IP in order to rewrite it into the response.
+
+image:img/ip-address-masquerading-nat.png[]
+
+NOTE: IP masquerading is an important security concept. The most basic concept at play here, is that no one can establish a connection to your computer if they don't know what IP address it has. By using NAT in the way we've just described, we could actually have hundreds of computers on network A, all of their IPs being translated by the router to its own. To the outside world, the entire address space of network A is protected and invisible. This is known as one to many NAT, and you'll see it in use on lots of LANs today.
+
+==== NAT and the Transport Layer
+
+* Port preservation is a technique where the source port chosen by a client, is the same port used by the router. 
+* Port forwarding is a technique where a specific destination ports can be configured to always be delivered to specific nodes.
+
+==== RIR(regional internet registries)
+
+.*The IANA assigned address blocks to the five regional internet registries or RIRs*
+|===
+|名称 |描述
+
+|AFRINIC
+|serves the continent of Africa.
+
+|ARIN
+|serves the United States, Canada and parts of the Caribbean.
+
+|APNIC
+|responses ost of Asia, Australia and New Zealand and Pacific Island nations.
+
+|LACNIC
+|covers Central and South America and any parts of the Caribbean not covered by ARIN.
+
+|RIPE
+|serves Europe, Russia and the Middle East and portions of Central Asia.
+|===
+
+https://en.wikipedia.org/wiki/IPv4_address_exhaustion[IPv4 address exhaustion]
+
+==== NAT and non-routable address space
+
+* Non-routable address space was defined in RFC1918 and consists of several different IP ranges that anyone can use. 
+* And unlimited number of networks can use non-routable address space internally because internet routers won't forward traffic to it. This means there's never any global collision of IP addresses when people use those address spaces. 
+* Non-routable address space is largely usable today because of technologies like NAT. 
+
+=== VPN(Virtual Private Networks)
+
+* Virtual Private Networks or VPNs, are a technology that allows for the extension of a private or local network, to a host that might not work on that same local network.
+* VPNs are a tunneling protocol. Which means, they provision access to something not locally available.
+
+.*VPN Tunnel Example:*
+image:img/vpn-tunel-example.png[]
+
+* VPNs, usually requires strict authentication procedures in order to ensure that they can only be connected to by computers and users authorized to do so. In fact, VPNs were one of the first technologies where two-factor authentication became common. 
+* Two-factor authentication is a technique where more than just a username and password are required to authenticate. Usually, a short-lived numerical token is generated by the user through a specialized piece of hardware or software.
+
+==== VPN 构建点对点连接
+
+VPNs can also be used to establish site-to-site connectivity. It's just that the router, or sometimes a specialized VPN device on one network, establishes the VPN tunnel to the router or VPN device on another network. This way, two physically separated offices might be able to act as one network and access network resources across the tunnel. 
+
+image:img/vpn-p2p-connectivity.png[]
+
+=== Proxy Services
+
+* A proxy service is a server that actson behalf of a client in order to access another service. Proxies sit between clients and other servers, providing some additional benefit, anonymity, security, content filtering, increased performance, a couple other things. 
+* Proxies doesn't refer to any specific implementation. Proxies exist at almost every layer of our networking model.
+
+==== Reverse proxy
+
+A reverse proxy is a service that might appear to be a single server to external clients, but actually represents many servers living behind it. 
+
+.*现代 Web 应用架构使用 Reverse proxy：*
+image:img/proxy-reverse.png[]
+
+NOTE: Reverse proxy can also used in encrypting and decrypting web data.
+
+== 网络接入
+
+=== 拨号接入
+
+* PSTN(Public Switched Telephone Network) is also referred to as the POTS(Plain Old Telephone Service).
+* A dial-up connection uses POTS for data transfer, and gets its name because the connection is established by actually dialing a phone number.
+* Modem stands for modulator/demodulator, and they take data that computers can understand and turn them into audible wavelengths that can be transmitted over POTS.
+* A baud rate is a measurement of how many bits could be passed across a phone line in a second.
+
+image:img/dial-up-moderms.png[]
+
+=== 宽带接入
+
+==== What is broadband?
+
+In terms of internet connectivity, it's used to refer to any connectivity technology that isn't dial-up Internet. Broadband Internet is almost always much faster than even the fastest dial-up connections and refers to connections that are always on. This means that they're long lasting connections that don't need to be established with each use. They're essentially links that are always present. 
+
+==== T-Carrier Technologies
+
+* T-Carrier Technologies were originally invented by AT&T in order to transmit multiple phone calls over a single link. 
+* T1 stands for Transmission System 1.
+* A T1 communicates at speeds of 1.544 Kb/sec.
+* A T3 is just 28 multiplexed T1 lines.
+
+==== Digital Subscriber Lines
+
+* DSL(digital subscriber line) was able to send much more data across the wire than traditional dial-up technologies.  
+* DSL technologies use DSLAMs or Digital Subscriber Line Access Multiplexers to establish data connections across phone lines.
+
+两种常见的 DSL 类型：
+
+1. *ADSL* - ADSL stands for Asymmetric Digital Subscriber Line. ADSL connections featured different speeds for outbound and incoming data. Generally, this means faster download speeds and slower upload speeds.
+2. *SDSL* - SDSL stands for Symmetric Digital Subscriber Line. SDSL technology is basically the same as ADSL, except the upload and download speeds are the same. 
+
+==== Cable Broadband
+
+Cable Internet connections are usually managed by what's known as a cable modem. This is a device that sits at the edge of a consumer's network and connects it to the cable modem termination system, or CMTS. The CMTS is what connects lots of different cable connections to an ISP's core network.
+
+image:img/cable-broadband.png[]
+
+==== Fiber Connections
+
+* FTTN means fiber to the neighborhood that fiber technologies are used to deliver data to a single physical cabinet that serves a certain amount of the population.
+* FTTB stands for fiber to the building, fiber to the business or even a fiber to the basement, since this is generally where cables to buildings physically enter.
+* FTTH stands for fiber to the home, that is used in instances where fiber is actually run to each individual residents in a neighborhood or apartment building.
+* FTTP fiber to the premises, FTTH and FTTB may both also be referred to as FTTP.
+
+Instead of a modem, the demarcation point for fiber technologies is known as Optical Network Terminator, or ONT. An ONT converts data from protocols the fiber network can understand to those that are more traditional twisted pair copper networks can understand.
+
+=== WANs(Wide Area Network)
+
+WAN stands for wide area network. A wide area network acts like a single network but spans across multiple physical locations.
+
+NOTE: WAN technologies usually require that you contract a link across the Internet with your ISP. This ISP handles sending your data from one side to the other. So, it could be like all of your computers are in the same physical location.
+
+WAN 协议：
+
+* https://en.wikipedia.org/wiki/Frame_Relay[Frame Relay]
+* https://en.wikipedia.org/wiki/High-Level_Data_Link_Control[High-Level Data Link Control]
+* https://en.wikipedia.org/wiki/Asynchronous_transfer_mode[Asynchronous transfer mode]
+
+=== 无线网络(WIFI)
+
+* The most common specifications for how wireless networking devices should communicate, are defined by the IEEE 802.11 standards. This set of specifications, also called the 802.11 family, make up the set of technologies we call WiFi.
+* A frequency band is a certain section of the radio spectrum that's been agreed upon to be used for certain communications.
+* WiFi networks operate on a few different frequency bands. Most commonly, the 2.4 gigahertz and 5 gigahertz bands. There are lots of 802.11 specifications including some that exist just experimentally or for testing. The most common specifications you might run into are 802.11b, 802.11a, 802.11g, 802.11n, and 802.11ac. 
+
+*802.11 frame*
+
+image:img/802.11-frame.png[]
+
+* *Frame Control* - Frame control field is 16 bits long, and contains a number of sub-fields that are used to describe how the frame itself should be processed.
+* *Duration ID* - It specifies how long the total frame is. So, the receiver knows how long it should expect to have to listen to the transmission.
+* *Address* - There are four address fields, because there needs to be room to indicate which wireless access point should be processing the frame. So, we'd have our normal source address field, which would represent the MAC address of the sending device.
+* *Sequence Control* - Sequence control field is 16 bits long and mainly contains a sequence number used to keep track of ordering the frames.
+* *Data payload* - Data payload section which has all of the data of the protocols further up the stack.
+* *FCS* - Frame check sequence field which contains a checksum used for a cyclical redundancy check.
+
+==== Wireless Channels
+
+Channels are individual, smaller sections of the overall frequency band used by a wireless network.
+
+==== Wireless Security
+
+* WEP stands for Wired Equivalent Privacy, it's an encryption technology that provides a very low level of privacy. 
+* WPA stabds for Wi-Fi Protected Access, by default, uses a 128-bit key, making it a whole lot more difficult to crack than WEP. 
+* WPA2,  an update to the original WPA. WPA2 uses a 256-bit key make it even harder to crack.
+
+==== Cellular Networking
+
+Cellular networks are built around the concept of cells. Each cell is assigned a specific frequency band for use.
+ 
+== 常见问题解决
+
+=== 连通性验证
+
+ICMP(internet control message protocol) is mainly used by router or remote hosts to communicate while transmission has failed back to the origin of the transmission.
+
+.*ICMP packet Struct:*
+image:img/icmp-struct.png[]
+
+* *Type* - Type field is eight bits long which specifies what type of message is being delivered.
+* *Code* - Code field indicates a more specific reason for the message than just the type. 
+* *Checksum* - Checksum is 16 bit length, that works like every other checksum field in other frame, like Ethernet frame, IP datagram and TCP segment.
+* *Rest of header* - A 32 bit field with an uninspired name, this field is optionally used by some of the specific types and codes to send more data.
+* *Data payload* - Data payload for an ICMP packet exists entirely so that the recipient of the message knows which of their transmissions caused the error being reported.
+
+==== Ping
+
+Ping is a super simple program and the basics are the same no matter which operating system you're using. 
+
+[source, bash]
+----
+$ ping 10.4.204.55 -c3
+PING 10.4.204.55 (10.4.204.55) 56(84) bytes of data.
+64 bytes from 10.4.204.55: icmp_seq=1 ttl=249 time=239 ms
+64 bytes from 10.4.204.55: icmp_seq=2 ttl=249 time=239 ms
+64 bytes from 10.4.204.55: icmp_seq=3 ttl=249 time=240 ms
+
+--- 10.4.204.55 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 239.552/239.787/240.212/0.500 ms
+----
+
+==== Traceroute
+
+Traceroute is an awesome utility that lets you discover the paths between two nodes, and gives you information about each hop along the way.
+
+[source, bash]
+----
+$ traceroute redhat.com
+traceroute to redhat.com (10.4.204.55), 30 hops max, 60 byte packets
+ 1  10.66.193.253 (10.66.193.253)  1.009 ms  1.133 ms  1.524 ms
+ 2  10.66.254.13 (10.66.254.13)  0.464 ms  0.455 ms  0.438 ms
+ 3  10.4.57.254 (10.4.57.254)  239.447 ms  239.446 ms  239.425 ms
+ 4  10.4.56.12 (10.4.56.12)  250.716 ms  250.678 ms  261.759 ms
+ 5  unused (10.4.60.2)  253.584 ms  253.562 ms unused (10.4.60.6)  253.529 ms
+ 6  unused (10.4.253.2)  274.428 ms network (10.4.253.0)  247.439 ms unused (10.4.253.6)  274.089 ms
+ 7  10.4.255.154 (10.4.255.154)  241.891 ms 10.4.255.156 (10.4.255.156)  241.231 ms  240.579 ms
+ 8  10.4.192.5 (10.4.192.5)  239.829 ms  239.946 ms  240.473 ms
+ 9  redirect-redhat-com.vserver.prod.ext.phx2.redhat.com (10.4.204.55)  239.598 ms  240.883 ms  239.943 ms
+----
+
+==== nc
+
+The Netcat tool can be run through the command nc, and has two mandatory arguments, a host and a port. 
+
+[source, bash]
+----
+$ nc -z -v redhat.com 80
+Ncat: Version 7.50 ( https://nmap.org/ncat )
+Ncat: Connected to 10.4.204.55:80.
+Ncat: 0 bytes sent, 0 bytes received in 0.25 seconds.
+----
+
+https://docs.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=win10-ps[Microsoft’s Documentation: Test-NetConnection]
