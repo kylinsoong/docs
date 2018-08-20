@@ -475,6 +475,44 @@ Firewalls can actually operate at lots of different layers of the network:
 
 image:img/osi-model-application.png[]
 
+== The Five-Layer Network Model Scenario
+
+=== Scenario Description
+
+image:img/five-models-scenario.png[]
+
+As depicted in above figure:
+
+1. Network A contains address space 10.1.1.0/24, and computer A is part of Network A and has been assigned an IP address of 10.1.1.100
+2. Network B contains address space 192.168.1.0/24, and computer B is part of Network B and has been assigned an *IP address* of 192.168.1.100, web server on computer B is running and listening on port 80
+3. Router sits between network A and network B, with an interface configured with an IP of 10.1.1.1 on network A, and an interface at 192.168.1.1 on network B
+4. An end user sitting at computer A opens up a web browser and enters 192.168.1.100 into the address bar to access the content in computer B's web server
+
+=== Operation Steps
+
+1. The web browser communicates with the local networking stack(part of OS), and know that it's going to establish a TCP connection to 192.168.1.100, port 80 on another network.
+2. Computer A looks at its ARP table to determine what MAC address of it's gateway 10.1.1.1 is, but it doesn't find any corresponding entry.
+3. Router receives ARP message, check that currently it assigned the IP address of 10.1.1.1. So it responds to computer A to let it know about its own *MAC address* of 00:11:22:33:44:55.
+4. Computer A receives this response and now knows the hardware address of its gateway, and ready to start constructing the outbound packet.
+5. *Application layer*'s web browser trigger to open a socket, and get a ephemeral port 50000 from computer A OS
+6. In the *Transport layer*, the networking stack starts to build a `TCP segment`, with appropriate fields in the header, including a source port of 50000, destination port of 80, sequence number field filled with a appropriate sequence number, the `SYN` flag is set, checksum for the segment is calculated and written to the checksum field.
+7. The `TCP segment` passed along to the *Network layer* and start to encapsulate a `IP Datagram`, fill IP header with the source IP, the destination IP, a *TTL* of 64, fill the `TCP segment` as the data payload of the `IP datagram`, a checksum is calculated and put in checksum field.
+8. The `IP datagram` passed alone to the *Data link layer* and start to construct a `Ethernet frame`, fill `00:11:22:33:44:55` as destination MAC addresses and computer A's MAC addresses as source MAC addresses, insert `IP datagram` as he data payload of the Ethernet frame, enter a calculated checksum to reference field.
+9. The `Ethernet frame` is ready to be sent across the *physical layer*, the `network interface` connected to computer A sends this binary data as modulations of the voltage of an electrical current running across a `CAT6 cable` that's connected between it and a network switch.
+10. This switch receives the frame and inspects the destination MAC address. The switch knows which of its interfaces this MAC address is attached to, and forwards the frame across only the cable connected to this interface.
+11. Router receives the frame and recognizes its own hardware address as the destination. Router knows that this frame is intended for itself. So it now takes the entirety of the frame and performa *checksum check* against it. Router compares this checksum with the one in the Ethernet frame header and sees that they match.
+12. Router strips away the `Ethernet frame`, leaving it with just the `IP datagram`. Again, it performs a checksum calculation against the entire datagram. And again, it finds that it matches. It then inspects the destination IP address and performs a lookup of this destination in its *routing table*, the look up results is that the router sees that the destination address 192.168.1.100 is on a locally connected network.
+13. Continue in Router, the TTL be decrement, a new checksum be re-calculated, and creates a new `IP datagram`. Similar with Step 8, this new IP datagram is again encapsulated by a new `Ethernet frame`, which the source and destination MAC address of router and and computer B
+14. The new Ethernet frame` is ready to be sent, and computer B receives the frame.
+15. Computer B identifies its own MAC address as the destination, and knows that it's intended for itself. computer B then strips away the Ethernet frame, leaving it with the IP datagram. It performs a `checksum check` and recognizes that the data has been delivered intact. It then examines the destination IP address and recognizes that as its own.
+16. Computer B strips away the IP datagram, leaving it with just the `TCP segment`. Again, the checksum for this layer is examined, and everything checks out.
+17. Computer B examines the destination port, which is *TCP port* 80. The networking stack on computer B checks to ensure that there's an open socket on port 80, which there is. It's in the listen state, and held open by a running Apache web server.
+18. Computer B then sees that this packet has the `SYN` flag and knows that this is a TCP connection request.
+19. Repeat the steps from 6 - 16, and form a `TCP segment` with flag `SYN-ACK`, and other field be filled correctly.
+20. Computer A receives frame and awared the `SYN-ACK` flag and knows that the Computer B are ready to establish connection.
+21. Repeat the steps from 6 - 16, and form a `TCP segment` with flag `ACK`, and other field be filled correctly.
+22. Computer B receives frame and awared the `ACK` flag from computer A, knows that the Computer A are acknowledged. And finally finish the socket instantiation, and set the state to `ESTABLISHED`.
+
 == 网络服务
 
 === DHCP
