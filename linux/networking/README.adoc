@@ -35,6 +35,9 @@ image:img/ipv6-addr.png[ipv6-addr.png]
 * *IPv6 地址有两部组成:* `网络前缀`和`接口 ID`。与 IPv4 不同的是，IPv6 具有一个标准的子网掩码*/64*，用于几乎所有的普通地址。在此情况下，地址的一半是`网络前缀`，另一半是`接口 ID`。这意味着单个子网可以根据需要容纳任意数量的主机。
 * *子网分配:* 通常，网络提供商将为组织分配一个较短的前缀，如*/48*。这会保留其余网络部分以用于通过这一分配的前缀来指定子网。处理已分配的48位，将保留16位以用于子网（最多 65536 个子网）。同一子网上的任何两个子网接口都不能具有相同`接口 ID`，`接口 ID` 可标识子网上的特定接口。
 
+.*IPv6 地址示例：*
+image:img/ipv6-shortern-excercise.png[]
+
 .*IPv6 通用地址表*
 |===
 |地址/网络 |用途 |描述
@@ -61,12 +64,37 @@ image:img/ipv6-addr.png[ipv6-addr.png]
 
 |fe80::/64
 |本地链接地址
-|每个 IPv6 接口自动配置一个本地链接地址，该地址仅在该网络中的本地链接中有效
+|每个 IPv6 接口自动配置一个本地链接地址，该地址仅在该网络中的本地链接中有效。Link-local unicast addresses allow for local network segment communications and are configured based upon a host's MAC address.
 
 |ff00::/8
 |多播
 |等效于 IPv4 中的 `224.0.0.0/4`，多播用于同时传播到多个主机，并且在 IPv6 中特别重要，因为其没有广播地址。
 |===
+
+=== IPv6 Headers
+
+image:img/ipv6-headers.png[]
+
+* *Version* - A 4-bit field that defines what version of IP is in use.
+* *Traffic Class* - An 8-bit field that defines the type of traffic contained within the IP datagram and allows for different classes of traffic to receive different priorities. 
+* *Flow Labe* - A 20-bit field that's used in conjunction with the traffic class field for routers to make decisions about the quality of service level for a specific datagram.
+* *Payload Length* - A 16-bit field that defines how long the data payload section of the datagram is.
+* *Next header* - The next header field defines what kind of header is immediately after this current one.
+* *Hop limit* - An 8-bit field that's identical in purpose to the TTL field in an IPv4 header.
+* *Source address* - 128 bits length
+* *Destination address* - 128 bits length
+
+=== IPv6 and IPv4 Harmony
+
+*IPv6 tunnels* - IPv6 tunnels are conceptually pretty simple. They consist of IPv6 tunnels servers on either end of a connection. These IPv6 tunnel servers take incoming IPv6 traffic and encapsulate it within traditional IPv4 datagrams. 
+
+*IPv6 tunnel broker* - Companies that provide IPv6 tunneling endpoints for you, so you don't have to introduce additional equipment to your network. 
+
+*Links:*
+
+* https://en.wikipedia.org/wiki/6in4[6in4]
+* https://en.wikipedia.org/wiki/Tunnel_Setup_Protocol[TSP(Tunnel Setup Protocol)]
+* https://en.wikipedia.org/wiki/Anything_In_Anything[Anything In Anything]
 
 === NetworkManager
 

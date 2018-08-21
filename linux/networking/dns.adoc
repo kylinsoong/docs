@@ -7,6 +7,7 @@
 
 * DNS is a global and highly distributed network service that resolves strings of letters into IP address for you.
 * A domain name is just the term we use for something that can be resolved by DNS.
+* https://www.icann.org/[ICANN] is responsible for DNS at a global level.
 
 === 什么是 DNS
 
@@ -312,6 +313,20 @@ google.com.		3600	IN	TXT	"v=spf1 include:_spf.google.com ~all"
 . http://tools.ietf.org/html/rfc1034[RFC 1034: Domain names - concepts and facilities]
 . http://tools.ietf.org/html/rfc1035[RFC 1035: Domain names - implementation and specification]
 . http://tools.ietf.org/html/rfc2181[RFC 2181: Clarifications to the DNS Specification]
+
+=== 公共 DNS 服务器
+
+* An ISP almost always gives you access to a recursive name server as part of the service it provides.
+* Public DNS servers are name servers specifically set up so that anyone can use them for free.
+
+* *Level 3 communication* - One of the largest ISPs in the world. The IP addresses for Level 3s public DNS servers are 4.2.2.1 through 4.2.2.6.
+* *Google's public DNS* - Google operates public name servers on the IPs 8.8.8.8 and 8.8.4.4.
+
+=== DNS Registration and Expiration
+
+*Registrar* - An organization responsible for assigning individual domain names to other organizations or individuals.
+
+https://godaddy.com
 
 == DNS 工具
 

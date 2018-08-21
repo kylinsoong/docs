@@ -78,3 +78,20 @@ $ sudo apt-get remove gimp
 * *Being conscious of your tone*
 * *Acknowledging the person*
 * *Developing trust*
+
+== What is The Cloud?
+
+* The cloud is the future.
+
+*定义：* - Cloud computing is a technological approach where computing resources are provisioned in a shareable way so that lots of users get what they need when they need it. 
+
+*核心技术：* - Hardware virtualization is a core concept of how cloud computing technologies work. It allows the concept of a physical machine and a logical machine to be abstracted away from each other.
+
+* *Virtualization* - A single physical machine called a host could run many individual virtual instances called guests.
+* *Hypervisor* - A hypervisor is a piece of software that runs and manages virtual machines while also offering these guests a virtual operating platform that's indistinguishable from actual hardware.
+
+* *Public cloud* - A large cluster of machines run by another company. 
+* *Private cloud* -  A private cloud takes the same concepts of public cloud, but instead, it's entirely used by a single large corporation and generally physically hosted on its own premises.
+* *Hybrid cloud* - A term used to describe situations where companies might run things like their most sensitive proprietary technologies on a private cloud while entrusting their less sensitive servers to a public cloud.
+
+*Cloud Computing:* A new model in computing where large clusters of machines let us use the total resources available in a better way.
