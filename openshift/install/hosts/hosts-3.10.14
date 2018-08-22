@@ -1,0 +1,162 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+nfs
+#lb
+
+[OSEv3:vars]
+ansible_ssh_user=root
+
+openshift_deployment_type=openshift-enterprise
+openshift_release=v3.10
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_disable_check=docker_image_availability,docker_storage,memory_availability,disk_availability,package_availability
+
+# Enable cockpit
+osm_use_cockpit=true
+#
+# Set cockpit plugins
+osm_cockpit_plugins=['cockpit-kubernetes']
+openshift_cockpit_deployer_prefix='registry.ocp.petrochina/openshift3/'
+openshift_cockpit_deployer_version=v3.10.14
+
+oreg_url=registry.ocp.petrochina/openshift3/ose-${component}:${version}
+system_images_registry="registry.ocp.petrochina"
+openshift_examples_modify_imagestreams=true
+
+openshift_clock_enabled=true
+os_firewall_use_firewalld=True
+openshift_enable_unsupported_configurations=True
+
+#osm_cluster_network_cidr=10.128.0.0/14
+osm_cluster_network_cidr=10.244.0.0/16
+openshift_portal_net=172.30.0.0/16
+openshift_master_api_port=8443
+openshift_master_console_port=8443
+
+openshift_web_console_prefix=registry.ocp.petrochina/openshift3/ose-
+openshift_web_console_install=true
+
+openshift_master_cluster_public_hostname=master.ocp.petrochina
+openshift_master_cluster_hostname=master.ocp.petrochina
+openshift_master_cluster_method=native
+
+# Enable service catalog
+openshift_enable_service_catalog=true
+
+# Enable template service broker (requires service catalog to be enabled, above)
+template_service_broker_install=true
+
+# Force a specific prefix (IE: registry) to use when pulling the service catalog image
+# NOTE: The registry all the way up to the start of the image name must be provided. Two examples
+# below are provided.
+openshift_service_catalog_image_prefix=registry.ocp.petrochina/openshift3/ose-
+
+# Force a specific image version to use when pulling the service catalog image
+openshift_image_tag=v3.10.14
+openshift_service_catalog_image_version=v3.10.14
+
+# Configure one of more namespaces whose templates will be served by the TSB
+openshift_template_service_broker_namespaces=['openshift','tsb']
+ansible_service_broker_image_prefix=registry.ocp.petrochina/openshift3/ose-
+ansible_service_broker_image_tag=v3.10.14
+ansible_service_broker_etcd_image_prefix=registry.ocp.petrochina/rhel7/
+ansible_service_broker_registry_url=https://registry.ocp.petrochina
+
+template_service_broker_prefix=registry.ocp.petrochina/openshift3/ose-
+template_service_broker_version=v3.10.14
+
+
+openshift_hosted_etcd_storage_kind=nfs
+openshift_hosted_etcd_storage_nfs_options="*(rw,root_squash,sync,no_wdelay)"
+openshift_hosted_etcd_storage_nfs_directory=/var/export
+openshift_hosted_etcd_storage_volume_name=asb
+openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+openshift_hosted_etcd_storage_volume_size=1G
+openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
+
+
+openshift_hosted_router_replicas=1
+openshift_hosted_router_selector='router=yes'
+openshift_master_default_subdomain=apps.ocp.petrochina
+
+openshift_registry_selector='region=infra'
+openshift_hosted_registry_replicas=1
+openshift_hosted_registry_cert_expire_days=3650
+openshift_hosted_manage_registry=true
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=10Gi
+
+openshift_hosted_etcd_storage_kind=nfs
+openshift_metrics_install_metrics=true
+openshift_metrics_hawkular_hostname=hawkular-metrics.apps.ocp.petrochina
+openshift_metrics_cassandra_storage_type=emptydir
+openshift_metrics_image_prefix=registry.ocp.petrochina/openshift3/
+
+#openshift_logging_install_logging=true
+#openshift_logging_image_prefix=registry.ocp.petrochina/openshift3/
+
+openshift_hosted_prometheus_deploy=true
+openshift_prometheus_storage_kind=nfs
+openshift_prometheus_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_storage_nfs_directory=/exports
+openshift_prometheus_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_storage_volume_name=prometheus
+openshift_prometheus_storage_volume_size=10Gi
+openshift_prometheus_storage_labels={'storage': 'prometheus'}
+openshift_prometheus_storage_type='pvc'
+openshift_prometheus_alertmanager_storage_kind=nfs
+openshift_prometheus_alertmanager_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_alertmanager_storage_nfs_directory=/exports
+openshift_prometheus_alertmanager_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_alertmanager_storage_volume_name=prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_volume_size=10Gi
+openshift_prometheus_alertmanager_storage_labels={'storage': 'prometheus-alertmanager'}
+openshift_prometheus_alertmanager_storage_type='pvc'
+openshift_prometheus_alertbuffer_storage_kind=nfs
+openshift_prometheus_alertbuffer_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_alertbuffer_storage_nfs_directory=/exports
+openshift_prometheus_alertbuffer_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_alertbuffer_storage_volume_name=prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_volume_size=10Gi
+openshift_prometheus_alertbuffer_storage_labels={'storage': 'prometheus-alertbuffer'}
+openshift_prometheus_alertbuffer_storage_type='pvc'
+openshift_prometheus_image_prefix=registry.ocp.petrochina/openshift3/
+openshift_prometheus_image_version=v3.10.14
+openshift_prometheus_proxy_image_prefix=registry.ocp.petrochina/openshift3/
+openshift_prometheus_proxy_image_version=v3.10.14
+openshift_prometheus_alertbuffer_image_prefix=registry.ocp.petrochina/openshift3/
+openshift_prometheus_alertbuffer_image_version=v3.10.14
+openshift_prometheus_altermanager_image_prefix=registry.ocp.petrochina/openshift3/
+openshift_prometheus_alertmanager_image_version=v3.10.14
+openshift_prometheus_node_exporter_image_prefix=registry.ocp.petrochina/openshift3/
+openshift_prometheus_node_exporter_image_version=v3.10.14
+
+osm_default_node_selector='region=default'
+
+# host group for masters
+[masters]
+master.ocp.petrochina 
+
+# host group for etcd
+[etcd]
+master.ocp.petrochina
+
+# host group for nodes, includes region info
+[nodes]
+master.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'default'}"
+infra.ocp.petrochina openshift_node_labels="{'region': 'infra', 'router': 'yes', 'zone': 'outer'}" openshift_schedulable=true
+node1.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'outer'}" openshift_schedulable=true
+node2.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'default'}" openshift_schedulable=true
+node3.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'default'}" openshift_schedulable=true
+
+[nfs]
+nfs.ocp.petrochina 
+
+#[lb]
+#master.ocp.petrochina

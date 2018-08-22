@@ -1,9 +1,58 @@
 = 文件系统
 :toc: manual
 
-== mount/unmount 文件系统
+== 基本概念
 
-mount 文件系统的一般步骤：
+=== Linux 磁盘分区
+
+磁盘分区可以将硬盘驱动器划分为多个逻辑存储单元，这些单元称为分区。通过将磁盘划分为多个分区，系统管理员可以使用不同的分区执行不同功能。以下是磁盘分区作为必要或有益步骤的一些情况示例：
+
+* 限制应用或用户的可用空间。
+* 允许从同一磁盘进行不同操作系统的多重启动。
+* 将操作系统和程序文件与用户文件分隔开。
+* 创建用于操作系统虚拟内存交换的单独区域。
+* 限制磁盘空间使用情况，以提高诊断工具和备份映像的性能。
+
+常见的磁盘分区方案有两种：
+
+* *MBR 分区方案* - 自 1982 年以来，主启动记录 (MBR) 分区方案指定了在运行 BIOS 固件的系统上应如何对磁盘进行分区。此方案支持最多四个主分区。在 Linux 系统上，管理员可以使用扩展分区和逻辑分区来创建最多 15 个分区。由于分区大小数据以 32 位值存储，使用 MBR 方案分区时，最大磁盘和分区大小限制为 2 TiB。
+* *GPT 分区方案* - 对于运行统一可扩展固件接口 (UEFI) 固件的系统，GPT 是在物理硬盘上布置分区表的标准。GPT 是 UEFI 标准的一部分，可以解决原有基于 MBR 的方案所带来的许多限制。根据 UEFI 规范，GPT 默认情况下支持最多 128 个分区。MBR 使用 32 位来存储逻辑块地址和大小信息；与此不同，GPT 为逻辑块地址分配 64 位。这就使得 GPT 可支持最多 8 泽字节 (ZiB)，即 80 亿太字节的分区和磁盘。GPT 的 8 ZiB 限制是基于 512 字节的块大小。随着硬盘驱动器供应商转为使用 4,096 字节块，此限制将增加至 64 ZiB。除解决 MBR 分区方案的限制以外，GPT 还可提供一些其他功能特性和优势。正如其名，GPT 使用 128 位 GUID 来唯一识别每个磁盘和分区。与 MBR 存在单一故障点不同，GPT 提供分区表信息的冗余。主 GPT 位于磁盘头部，而备份副本（次要 GPT）位于磁盘尾部。此外，GPT 采用 CRC 校验和来检测 GPT 头和分区表中的错误与损坏。
+
+[source, test]
+.*查看分区列表*
+----
+# parted -l
+# fdisk -l
+----
+
+=== 永久挂载文件系统
+
+通过将设备的列表添加到 /etc/fstab 文件中，管理员可以将设备配置为在系统启动时挂载到挂载点。
+
+*/etc/fstab* 是以空格分隔的文件，每行具有六个字段。
+
+----
+UUID=7a20315d-ed8b-4e75-a5b6-24ff9e1f9838  /  xfs  defaults  1 1
+----
+
+* 第一个字段指定要使用的设备。此外，也可使用设备文件（例如 /dev/vdb1）指定设备。UUID 存储在文件系统超级块中，并在文件系统创建时创建。
+* 第二个字段是设备应连接到目录层次结构中的挂载点。挂载点应已存在；如果不存在，可以使用 mkdir 创建挂载点。
+* 第三个字段包含已应用于块设备的文件系统类型。
+* 第四个字段是挂载时应该应用于设备以便自定义行为的选项列表。此字段是必需的，且有一组称为 defaults 的常用选项。其他选项记录在 mount man page 中。
+* 第五个字段是转储标志，转储标志与 dump 命令配合使用，用于生成设备内容的备份。
+* 第六个字段是fsck 顺序标志，fsck 顺序字段确定在文件系统未完全卸载的情况下，是否应在启动时运行 fsck。fsck 顺序的值指示当有多个文件系统需要检查时，应对这些文件系统运行 fsck 的顺序。
+
+=== Swap 空间
+
+Swap 空间也称交换空间，它是可与 Linux 内核内存管理子系统配合使用的磁盘区域，用于通过保存不活动的内存页来补充系统 RAM。系统 RAM 与 Swap 空间组合在一起称为虚拟内存。
+
+当系统上的内存使用量超过定义的限制时，内核将梳理 RAM，寻找已分配给进程但空闲的内存页。内核将空闲的内存页写入到交换区，并且重新分配 RAM 页面以供其他进程使用。如果某个程序需要访问已写入到磁盘的页面，则内核会找到另一个空闲的内存页，将其写入到磁盘，然后从交换区重新调用所需的页面。
+
+由于交换区位于磁盘上，所以与 RAM 相比交换非常慢。尽管交换空间用于扩充系统 RAM，但应仅可能将交换空间的使用保持在最低限度。
+
+== 挂载和卸载文件系统
+
+=== 挂载和卸载文件系统的一般步骤：
 
 [source, text]
 .*1 - 查看存在的分区及文件系统 UUID*
@@ -39,6 +88,69 @@ lsof    5098 root  cwd    DIR  252,1     4096   64 /mnt/mydata
 # umount /mnt/mydata
 ----
 
+=== 挂载和卸载文件系统示例
+
+本部分练习在指定的挂载点识别和挂载新的文件系统，然后将它卸载。
+
+[source, text]
+.*1 - 执行如下命令创建一个分区*
+----
+echo "Checking device availability ..."
+PDISK=$(df | grep '/$' | sed 's:/dev/\([a-z]*\).*:\1:')
+SDISK=$(grep -v "${PDISK}" /proc/partitions | sed '1,2d; s/.* //' | grep "${PDISK:0:${#PDISK}-1}.$" | sort | head -n 1)
+PDISKDEV=/dev/${PDISK}
+SDISKDEV=/dev/${SDISK}
+
+if [[ -z "${SDISKDEV}" ]]; then
+  echo "No secondary disk device recognized."
+  exit 15
+fi
+DEVICE=${SDISKDEV}
+PART_DEV=${DEVICE}1
+
+echo "Creating partition on $DEVICE ..."
+parted -s ${DEVICE} mklabel msdos mkpart primary 2048s 1050623s &> /dev/null || srv_exit "parted failed: $?" 151
+partprobe &> /dev/null || srv_exit "partprobe failed: $?" 151
+
+echo "Creating XFS on PARTITION ..."
+mkfs.xfs -f ${PART_DEV} &> /dev/null || srv_exit "mkfs failed: $?" 153
+
+echo -e '\033[1;36mSUCCESS\033[0;39m'
+----
+
+[source, text]
+.*2 - 使用 blkid 查看新增分区 vdb1 的 UUID*
+----
+# blkid
+/dev/vda1: UUID="9bf6b9f7-92ad-441b-848e-0257cbb883d1" TYPE="xfs" 
+/dev/vdb1: UUID="28fe8334-7808-4d53-a251-4e3605372dae" TYPE="xfs"
+----
+
+[source, text]
+.*3 - 创建挂载点 /mnt/newspace*
+----
+# mkdir /mnt/newspace
+----
+
+[source, text]
+.*4 - 根据 UUID 将文件系统挂载到 /mnt/newspace 目录*
+----
+# mount UUID="28fe8334-7808-4d53-a251-4e3605372dae" /mnt/newspace
+----
+
+[source, text]
+.*5 - 在 /mnt/newspace 目录中，创建一个新目录 /mnt/newspace/newdir，以及一个空文件 /mnt/newspace/newdir/newfile*
+----
+# cd /mnt/newspace/ && mkdir newdir
+# cd newdir/ &&  echo "test" >> newfile
+----
+
+[source, text]
+.*6 - 卸载 /mnt/newspace 目录中挂载的文件系统*
+----
+# umount /mnt/newspace
+----
+
 == 访问移动存储设备
 
 通常移动存储设备会自动 mount，通过 `df` 可以查看 mount 位置，通常路径为 `/run/media/<user>/<label>`。
@@ -60,62 +172,83 @@ $ mkdir eap && cd eap
 $ cp /run/media/kylin/DISK_IMG/jboss-eap-7.0.0.zip ./
 ----
 
-== 添加分区、文件系统及持久化 Mount
+== 添加分区、文件系统及持久化挂载
+
+本部分目的是在一个新分配的磁盘上创建一个 MBR 分区，将该分区格式化为 ext4 文件系统，然后配置该文件系统以进行永久挂载。
 
 [source, text]
-.*创建一个 1 GB MBR 分区*
+.*1 - 查看所有磁盘*
 ----
-# fdisk /dev/sda 
+# lsblk 
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+vda    253:0    0  10G  0 disk 
+└─vda1 253:1    0  10G  0 part /
+vdb    253:16   0  10G  0 disk
+----
+
+[source, text]
+.*2 - 在第二块盘上创建一个 1 GB MBR 分区*
+----
+# fdisk /dev/vdb 
 Welcome to fdisk (util-linux 2.23.2).
 
 Changes will remain in memory only, until you decide to write them.
 Be careful before using the write command.
 
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xcdad335a.
 
 Command (m for help): p
 
-Disk /dev/sda: 256.1 GB, 256060514304 bytes, 500118192 sectors
+Disk /dev/vdb: 10.7 GB, 10737418240 bytes, 20971520 sectors
 Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
 Disk label type: dos
-Disk identifier: 0x000e1d3d
+Disk identifier: 0xcdad335a
 
    Device Boot      Start         End      Blocks   Id  System
-/dev/sda1   *        2048     3907583     1952768   83  Linux
-/dev/sda2         3907584   480534527   238313472   8e  Linux LVM
 
 Command (m for help): n
 Partition type:
-   p   primary (2 primary, 0 extended, 2 free)
+   p   primary (0 primary, 0 extended, 4 free)
    e   extended
-Select (default p): 
-Using default response p
-Partition number (3,4, default 3): 
-First sector (480534528-500118191, default 480534528): 
-Using default value 480534528
-Last sector, +sectors or +size{K,M,G} (480534528-500118191, default 500118191): +1G
-Partition 3 of type Linux and of size 1 GiB is set
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-20971519, default 2048): 
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-20971519, default 20971519): +1G
+Partition 1 of type Linux and of size 1 GiB is set
 
 Command (m for help): w
 The partition table has been altered!
 
 Calling ioctl() to re-read partition table.
-
-WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
-The kernel still uses the old table. The new table will be used at
-the next reboot or after you run partprobe(8) or kpartx(8)
 Syncing disks.
+----
 
+[source, text]
+.*3 - 更新磁盘分区表*
+----
 # partprobe
 ----
 
 [source, text]
-.*格式化新创建的分区为 ext4 格式的文件系统*
+.*4 - 查看所有磁盘及分区*
 ----
-# mkfs -t ext4 /dev/sda3
+# lsblk 
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+vda    253:0    0  10G  0 disk 
+└─vda1 253:1    0  10G  0 part /
+vdb    253:16   0  10G  0 disk 
+└─vdb1 253:17   0   1G  0 part 
+----
+
+[source, text]
+.*5 - 格式化新创建的分区为 ext4 格式的文件系统*
+----
+# mkfs -t ext4 /dev/vdb1
 mke2fs 1.42.9 (28-Dec-2013)
-Discarding device blocks: done                            
 Filesystem label=
 OS type: Linux
 Block size=4096 (log=2)
@@ -138,16 +271,43 @@ Writing superblocks and filesystem accounting information: done
 ----
 
 [source, text]
-.*Mount ext4 文件系统*
+.*6 - 将新创建的文件系统配置为永久挂载于 /archive*
 ----
 # mkdir /archive
-# blkid /dev/sda3
-/dev/sda3: UUID="c855ceda-66f5-417e-9f3f-95e188d92992" TYPE="ext4"
-# vim /etc/fstab
-UUID=c855ceda-66f5-417e-9f3f-95e188d92992 /archive                ext4    defaults        0 2
+# blkid 
+/dev/vda1: UUID="9bf6b9f7-92ad-441b-848e-0257cbb883d1" TYPE="xfs" 
+/dev/vdb1: UUID="410fd8ab-0458-4e75-a649-2001b3e3946b" TYPE="ext4" 
+
+# cat /etc/fstab 
+
+#
+# /etc/fstab
+# Created by anaconda on Wed May  7 01:22:57 2014
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=9bf6b9f7-92ad-441b-848e-0257cbb883d1 /                       xfs     defaults        1 1
+UUID=410fd8ab-0458-4e75-a649-2001b3e3946b /archive   ext4   defaults  0  2
+----
+
+[source, text]
+.*7 - 挂载新文件系统*
+----
 # mount -a
 # mount | grep -w /archive
-/dev/sda3 on /archive type ext4 (rw,relatime,seclabel,data=ordered)
+/dev/vdb1 on /archive type ext4 (rw,relatime,seclabel,data=ordered)
+----
+
+[source, text]
+.*8 - 再次查看磁盘、分区、挂载点*
+----
+# lsblk 
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+vda    253:0    0  10G  0 disk 
+└─vda1 253:1    0  10G  0 part /
+vdb    253:16   0  10G  0 disk 
+└─vdb1 253:17   0   1G  0 part /archive
 ----
 
 == 添加一个 Swap 空间

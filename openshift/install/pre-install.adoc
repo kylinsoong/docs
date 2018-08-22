@@ -1,26 +1,66 @@
 = 安装准备
 :toc: manual
 
-== 操作控制节点安装 Ansible
+== 安装准备说明
 
-[source, text]
-.*1 - 安装*
+.*软件安装需求*
+[cols="2,5a"]
+|===
+|类型 |说明
+
+|SELinux
+|配置 SELinux(/etc/selinux/config)，确保:
+
+* SELINUX=enforcing
+* SELINUXTYPE=targeted
+
+|DNS
+|`/etc/hosts` 中添加静态域名
+
+|DNA A record
+|添加 A 记录
+
 ----
-# yum install ansible
+*.cloudapps.example.com. 300 IN  A 10.0.0.1
 ----
 
-[source, bash]
-.*2 - 验证是否已安装了 ansible 软件包*
-----
-$ rpm -qa | grep ansible
-ansible-2.3.2.0-2.el7.noarch
+|NetworkManager
+|可选择的，如果禁用，需要手动配置 DNS
 
-$ ansible --version
-ansible 2.3.2.0
-  config file = /etc/ansible/ansible.cfg
-  configured module search path = Default w/o overrides
-  python version = 2.7.5 (default, May  3 2017, 07:55:04) [GCC 4.8.5 20150623 (Red Hat 4.8.5-14)]
+|firewall
+|推荐打开，对应 ansible inventory 中添加:
+
 ----
+os_firewall_use_firewalld=True
+----
+
+|Storage
+|NFS, GlusterFS, Ceph RBD, OpenStack Cinder, AWS Elastic Block Store (EBS), GCE Persistent Disks, iSCSI.
+
+|安装包
+|
+----
+# yum install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
+# yum update
+# systemctl reboot
+---- 
+
+|Ansible Task
+|
+----
+# yum install openshift-ansible
+----
+
+|docker
+|
+----
+# yum install docker-1.13.1
+# rpm -V docker-1.13.1
+# docker version
+----
+
+|===
+
 
 == 操作控制节点配置到各节点免密登录
 
@@ -65,9 +105,30 @@ The key's randomart image is:
 for i in master node1 node2; do ssh-copy-id $i; done;
 ----
 
-== 前续安装
+== Ansible 执行前续安装
 
 本部分是在操作控制节点上进行。
+
+=== 操作控制节点安装 Ansible
+
+[source, text]
+.*1 - 安装*
+----
+# yum install ansible
+----
+
+[source, bash]
+.*2 - 验证是否已安装了 ansible 软件包*
+----
+$ rpm -qa | grep ansible
+ansible-2.3.2.0-2.el7.noarch
+
+$ ansible --version
+ansible 2.3.2.0
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = Default w/o overrides
+  python version = 2.7.5 (default, May  3 2017, 07:55:04) [GCC 4.8.5 20150623 (Red Hat 4.8.5-14)]
+----
 
 === 准备 Playbook 脚本
 
@@ -90,6 +151,8 @@ image:img/ocp-pre-files.png[]
 ----
 ansible-playbook -i inventory prepare_install.yml
 ----
+
+== Bash 执行前续安装
 
 == 前续安装认证
 
