@@ -313,7 +313,7 @@ vdb    253:16   0  10G  0 disk
 == 添加一个 Swap 空间
 
 [source, text]
-.*创建一个 500MB Linux swap 类型的分区*
+.*1 - 创建一个 500MB Linux swap 类型的分区*
 ----
 # fdisk /dev/mapper/rhel-swap
 Welcome to fdisk (util-linux 2.23.2).
@@ -361,41 +361,214 @@ WARNING: Re-reading the partition table failed with error 22: Invalid argument.
 The kernel still uses the old table. The new table will be used at
 the next reboot or after you run partprobe(8) or kpartx(8)
 Syncing disks.
-
-# partprobe 
 ----
 
 [source, text]
-.*初始化 swap 分区*
+.*2 - 更新磁盘分区表*
 ----
-# mkswap /dev/mapper/rhel-swap1 
+# partprobe
+----
+
+[source, text]
+.*3 - 初始化 swap 分区*
+----
+# mkswap /dev/vdb1 
 Setting up swapspace version 1, size = 511996 KiB
-no label, UUID=76ef8d5e-dab3-4bee-a801-fe1aa7b74b38
+no label, UUID=c4d1b1d3-18db-47c0-ae2e-339091d009d2
 ----
 
 [source, text]
-.*配置 swap*
+.*4 - 激活和删除 swap 分区*
+----
+# swapon /dev/vdb1 
+# swapon -s
+Filename				Type		Size	Used	Priority
+/dev/vdb1                              	partition	511996	0	-1
+
+# swapoff /dev/vdb1
+----
+
+[source, text]
+.*5 - 持久化配置 swap*
 ----
 # vim /etc/fstab
-UUID=76ef8d5e-dab3-4bee-a801-fe1aa7b74b38  swap  swap  defaults        0 0
+UUID=c4d1b1d3-18db-47c0-ae2e-339091d009d2  swap  swap  defaults        0 0
 ----
 
 [source, text]
-.*激活 swap*
+.*6 - 激活 swap*
 ----
 # swapon -a
+# swapon -s
+Filename				Type		Size	Used	Priority
+/dev/vdb1                              	partition	511996	0	-1
 ----
 
 [source, text]
-.*验证 swap*
+.7 - 重起系统后检查 Swap 配置生效*
 ----
 # swapon -s
 Filename				Type		Size	Used	Priority
-/dev/dm-2                              	partition	511996	0	-1
+/dev/vdb1                              	partition	511996	0	-1
 
-# free
-              total        used        free      shared  buff/cache   available
-Mem:        1883456      676432      684736        9912      522288     1009096
-Swap:        511996           0      511996
+# free 
+             total       used       free     shared    buffers     cached
+Mem:       1885296     506816    1378480      17092        692     210168
+-/+ buffers/cache:     295956    1589340
+Swap:       511996          0     511996
 ----
+
+== Linux 服务器添加磁盘、分区、文件系统
+
+本部分将完成将在一个新分配的磁盘上创建一个 GPT 分区，将该分区格式化为 XFS 文件系统，然后配置该文件系统以进行永久挂载，还将创建两个 512 MiB 的交换分区。然后将其中一个交换分区的优先级配置为 1。
+
+[source, text]
+.*1 - 在 /dev/vdb 上创建一个类型为 Linux 的 2 GiB GPT 分区*
+----
+# gdisk /dev/vdb 
+GPT fdisk (gdisk) version 0.8.6
+
+Partition table scan:
+  MBR: not present
+  BSD: not present
+  APM: not present
+  GPT: not present
+
+Creating new GPT entries.
+
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (34-20971486, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-20971486, default = 20971486) or {+-}size{KMGTP}: +2G
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): 
+Changed type of partition to 'Linux filesystem'
+----
+
+[source, text]
+.*2 - 在 /dev/vdb 上创建两个类型为 Linux swap 的 512 MiB 分区*
+----
+Command (? for help): n
+Partition number (2-128, default 2): 
+First sector (34-20971486, default = 4196352) or {+-}size{KMGTP}: 
+Last sector (4196352-20971486, default = 20971486) or {+-}size{KMGTP}: +512M
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): 8200
+Changed type of partition to 'Linux swap'
+
+Command (? for help): n
+Partition number (3-128, default 3): 
+First sector (34-20971486, default = 5244928) or {+-}size{KMGTP}: 
+Last sector (6293504-20971486, default = 20971486) or {+-}size{KMGTP}: +512M
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): p
+Hex code or GUID (L to show codes, Enter = 8300): 8200
+Changed type of partition to 'Linux swap'
+
+Command (? for help): p
+Disk /dev/vdb: 20971520 sectors, 10.0 GiB
+Logical sector size: 512 bytes
+Disk identifier (GUID): 329AE943-B779-44E9-85C4-D402B436F67D
+Partition table holds up to 128 entries
+First usable sector is 34, last usable sector is 20971486
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 14679997 sectors (7.0 GiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048         4196351   2.0 GiB     8300  Linux filesystem
+   2         4196352         5244927   512.0 MiB   8200  Linux swap
+   3         6293504         7342079   512.0 MiB   8200  Linux swap
+
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): y
+OK; writing new GUID partition table (GPT) to /dev/vdb.
+The operation has completed successfully.
+----
+
+[source, text]
+.*3 - 更新系统分区表*
+----
+# partprobe
+----
+
+[source, text]
+.*4 - 格式化新创建的分区。将 2 GiB 的分区格式化为 XFS 文件系统。将两个 512 MiB 的分区初始化为交换空间*
+----
+# mkfs -t xfs /dev/vdb1
+meta-data=/dev/vdb1              isize=256    agcount=4, agsize=131072 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=0
+data     =                       bsize=4096   blocks=524288, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=0
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+# mkswap /dev/vdb2 
+Setting up swapspace version 1, size = 524284 KiB
+no label, UUID=172c20f5-a3e2-400f-bdcd-89d9cd738df6
+
+# mkswap /dev/vdb3
+Setting up swapspace version 1, size = 524284 KiB
+no label, UUID=19f2b8a4-329b-48d2-bd46-0c176a3ab67d
+----
+
+[source, text]
+.*5 - 将新创建的 XFS 文件系统配置为永久挂载于 /backup*
+----
+# mkdir /backup
+
+# blkid /dev/vdb1 
+/dev/vdb1: UUID="45ce2a69-efda-4208-b686-92c68de592f3" TYPE="xfs" PARTLABEL="Linux filesystem" PARTUUID="f6aeaad2-fe8a-4fef-907d-f5a8c1614be2"
+
+
+# vim /etc/fstab
+UUID=45ce2a69-efda-4208-b686-92c68de592f3 /backup  xfs  defaults  0  2
+----
+
+[source, text]
+.*6 - 将新创建的交换空间配置为在启动时启用。将其中一个交换空间设置为优先于另一个交换空间*
+----
+# blkid | grep "swap"
+/dev/vdb2: UUID="172c20f5-a3e2-400f-bdcd-89d9cd738df6" TYPE="swap" PARTLABEL="Linux swap" PARTUUID="8b7060fc-0438-444c-9711-a5afbad0d028" 
+/dev/vdb3: UUID="19f2b8a4-329b-48d2-bd46-0c176a3ab67d" TYPE="swap" PARTLABEL="Linux swap" PARTUUID="20fe79f3-1500-43ea-bee3-cfaa71dc3d04"
+
+# vim /etc/fstab
+UUID=172c20f5-a3e2-400f-bdcd-89d9cd738df6 swap  swap  defaults  0  0
+UUID=19f2b8a4-329b-48d2-bd46-0c176a3ab67d swap  swap  pri=1  0  0
+----
+
+[source, text]
+.*7 - 服务器重新启动后，登录并验证 /dev/vdb1 是否已挂载于 /backup。另请验证两个 512 MiB 的交换分区是否已启用，并且其中一个分区具有默认优先级，而另一个分区具有优先级 1*
+----
+# mount | grep ^/
+/dev/vda1 on / type xfs (rw,relatime,seclabel,attr2,inode64,noquota)
+/dev/vdb1 on /backup type xfs (rw,relatime,seclabel,attr2,inode64,noquota)
+
+# free 
+             total       used       free     shared    buffers     cached
+Mem:       1885296     504016    1381280      17108        716     210188
+-/+ buffers/cache:     293112    1592184
+Swap:      1048568          0    1048568
+
+# swapon -s
+Filename				Type		Size	Used	Priority
+/dev/vdb3                              	partition	524284	0	1
+/dev/vdb2                              	partition	524284	0	-1
+
+# lsblk 
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+vda    253:0    0   10G  0 disk 
+└─vda1 253:1    0   10G  0 part /
+vdb    253:16   0   10G  0 disk 
+├─vdb1 253:17   0    2G  0 part /backup
+├─vdb2 253:18   0  512M  0 part [SWAP]
+└─vdb3 253:19   0  512M  0 part [SWAP]
+----
+
 

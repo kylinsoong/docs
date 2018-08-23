@@ -1,47 +1,86 @@
 = LVM
 :toc: manual
 
-== 创建一个逻辑卷
+== 基本概念
+
+=== 创建逻辑卷
+
+创建一个可用的逻辑卷需要五个步骤:
+
+[source, bash]
+.*1. 准备物理设备，可以使用完整磁盘、RAID 阵列或 SAN，也可以一块盘上的多个分区，使用 fdisk、gdisk 或 parted 创建新分区，分区类型需设置为 Linux LVM*
+----
+fdisk /dev/vda
+----
 
 [source, text]
-.*1 - 创建一个 256M 的分区*
+.*2. 创建物理卷，使用 pvcreate 为分区（或其他物理设备）添加标签，使其作为物理卷与 LVM 结合使用。会将用于存储 LVM 配置数据的一个标头直接写入到 PV。PV 分为多个固定大小的物理范围 (PE)*
 ----
-# fdisk /dev/sda 
-Welcome to fdisk (util-linux 2.23.2).
-
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
-
-
-Command (m for help): n
-Partition type:
-   p   primary (2 primary, 0 extended, 2 free)
-   e   extended
-Select (default p): 
-Using default response p
-Partition number (3,4, default 3): 
-First sector (896512000-976773167, default 896512000): 
-Using default value 896512000
-Last sector, +sectors or +size{K,M,G} (896512000-976773167, default 976773167): +256M
-Partition 3 of type Linux and of size 256 MiB is set
-
-Command (m for help): t
-Partition number (1-3, default 3): 
-Hex code (type L to list all codes): 8e
-Changed type of partition 'Linux' to 'Linux LVM'
-
-Command (m for help): w
-The partition table has been altered!
-
-Calling ioctl() to re-read partition table.
-
-WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
-The kernel still uses the old table. The new table will be used at
-the next reboot or after you run partprobe(8) or kpartx(8)
-Syncing disks.
-
-# partprobe
+pvcreate /dev/vda2 /dev/vdb1
 ----
+
+[source, bash]
+.*3. 创建卷组，vgcreate 用于创建包含一个或多个物理卷的池，称为卷组。VG 的大小由池中物理范围的总数决定。VG 负责通过向 LV 分配空闲 PE 来托管一个或多个逻辑卷*
+----
+vgcreate vg-alpha /dev/vda2 /dev/vdb1
+----
+
+[source, bash]
+.*4. 创建逻辑卷，lvcreate 根据卷组中的可用物理范围创建新的逻辑卷*
+----
+lvcreate -n hercules -L 2G vg-alpha
+----
+
+[source, bash]
+.*5. 添加文件系统，使用 mkfs 在新逻辑卷上创建 xfs 文件系统*
+----
+mkfs -t xfs /dev/vg-alpha/hercules
+----
+
+=== 删除逻辑卷
+
+删除一个逻辑卷组件需要四个步骤：
+
+[source, bash]
+.*1. 准备文件系统, 备份文件，使用 umount 卸载该文件系统，删除与此文件系统关联的任何 /etc/fstab 条目*
+----
+umount /mnt/hercules
+----
+
+[source, bash]
+.*2. 删除逻辑卷，使用 lvremove 删除不再需要的逻辑卷*
+----
+lvremove /dev/vg-alpha/hercules
+----
+
+[source, bash]
+.*3. 删除卷组，使用 vgremove 删除不再需要的卷组*
+----
+vgremove vg-alpha
+----
+
+[source, bash]
+.*4. 删除物理卷，使用 pvremove 删除不再需要的物理卷。使用空格分隔的 PV 设备列表同时删除多个 PV*
+----
+pvremove /dev/vda2 /dev/vdb1
+----
+
+== 创建一个逻辑卷
+
+本部分将添加物理卷、卷组、逻辑卷和 XFS 文件系统
+
+[source, text]
+.*1 - 使用 fdisk 创建大小各为 256MiB 的两个分区，并将其类型设置为 Linux LVM*
+----
+
+----
+
+[source, text]
+.*2 - 更新磁盘分区表*
+----
+
+----
+
 
 [source, text]
 .*2 - 创建 PV*

@@ -25,27 +25,30 @@ image:img/openshift-install-arch.png[]
 
 |192.168.122.101
 |master.example.com
-|
-* 管理节点
-* DNS 服务器
-* 基础设施节点（内部镜像仓库、日志、监控）
+|管理节点
+
+|192.168.122.102
+|infra.example.com
+|基础设施节点（内部镜像仓库、日志、监控）
+
+|192.168.122.103
+|nfs.example.com
+|NFS 服务器
 
 |192.168.122.105
 |node1.example.com
-|
-* 计算节点
-* Router
+|计算节点
 
 |192.168.122.106
 |node2.example.com
-|
-* 计算节点
+|计算节点
 
 |10.66.192.104
-|yum.example.com registry.example.com  nfs.example.com
+|yum.example.com registry.example.com
 |
 * 公共镜像仓库
 * yum 源服务器
+* DNS 服务器
 
 |10.66.192.100
 |workstation.example.com
@@ -62,10 +65,11 @@ Red Hat Enterprise Linux Server release 7.5 (Maipo)
 
 === 静态 IP 地址配置
 
-在 master, node1, node1 分别配置 IP 地址为静态 IP 地址
+在 master, infra, nfs, node1, node2 分别配置 IP 地址为静态 IP 地址
 
 [source, bash]
 ----
+hostnamectl set-hostname master.example.com
 nmcli connection modify eth0 ipv4.addresses 192.168.122.101/24
 nmcli connection modify eth0 ipv4.gateway 192.168.122.1
 nmcli connection modify eth0 ipv4.method manual
@@ -73,6 +77,23 @@ nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
 
+hostnamectl set-hostname infra.example.com
+nmcli connection modify eth0 ipv4.addresses 192.168.122.102/24
+nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+
+hostnamectl set-hostname nfs.example.com
+nmcli connection modify eth0 ipv4.addresses 192.168.122.103/24
+nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+
+hostnamectl set-hostname node1.example.com
 nmcli connection modify eth0 ipv4.addresses 192.168.122.105/24
 nmcli connection modify eth0 ipv4.gateway 192.168.122.1
 nmcli connection modify eth0 ipv4.method manual
@@ -80,6 +101,7 @@ nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
 
+hostnamectl set-hostname node2.example.com
 nmcli connection modify eth0 ipv4.addresses 192.168.122.106/24
 nmcli connection modify eth0 ipv4.gateway 192.168.122.1
 nmcli connection modify eth0 ipv4.method manual
@@ -106,15 +128,19 @@ reboot
 [source, text]
 .*1 - 创建快照*
 ----
-# qemu-img snapshot -c 2018-06-09 /var/lib/libvirt/images/master.qcow2 
-# qemu-img snapshot -c 2018-06-09 /var/lib/libvirt/images/node1.qcow2 
-# qemu-img snapshot -c 2018-06-09 /var/lib/libvirt/images/node2.qcow2 
+# qemu-img snapshot -c 2018-08-23 /var/lib/libvirt/images/master.qcow2 
+# qemu-img snapshot -c 2018-08-23 /var/lib/libvirt/images/infra.qcow2 
+# qemu-img snapshot -c 2018-08-23 /var/lib/libvirt/images/nfs.qcow2 
+# qemu-img snapshot -c 2018-08-23 /var/lib/libvirt/images/node1.qcow2
+# qemu-img snapshot -c 2018-08-23 /var/lib/libvirt/images/node2.qcow2
 ----
 
 [source, text]
 .*2 - 查看快照*
 ----
 # qemu-img snapshot -l /var/lib/libvirt/images/master.qcow2 
+# qemu-img snapshot -l /var/lib/libvirt/images/infra.qcow2
+# qemu-img snapshot -l /var/lib/libvirt/images/nfs.qcow2
 # qemu-img snapshot -l /var/lib/libvirt/images/node1.qcow2 
 # qemu-img snapshot -l /var/lib/libvirt/images/node2.qcow2 
 ----
@@ -122,7 +148,9 @@ reboot
 [source, text]
 .*3 - 恢复快照(Optional: 只在需要恢复时执行)*
 ----
-# qemu-img snapshot -a 2018-06-09 /var/lib/libvirt/images/master.qcow2
-# qemu-img snapshot -a 2018-06-09 /var/lib/libvirt/images/node1.qcow2
-# qemu-img snapshot -a 2018-06-09 /var/lib/libvirt/images/node2.qcow2
+# qemu-img snapshot -a 2018-08-23 /var/lib/libvirt/images/master.qcow2
+# qemu-img snapshot -a 2018-08-23 /var/lib/libvirt/images/infra.qcow2
+# qemu-img snapshot -a 2018-08-23 /var/lib/libvirt/images/nfs.qcow2
+# qemu-img snapshot -a 2018-08-23 /var/lib/libvirt/images/node1.qcow2
+# qemu-img snapshot -a 2018-08-23 /var/lib/libvirt/images/node2.qcow2
 ----

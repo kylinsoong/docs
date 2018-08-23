@@ -10,8 +10,10 @@ ansible_ssh_user=root
 
 openshift_deployment_type=openshift-enterprise
 openshift_release=v3.10
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 openshift_disable_check=docker_image_availability,docker_storage,memory_availability,disk_availability,package_availability
+
+#openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true']}, {'name': 'node-config-infra', 'labels':['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute','labels': ['node-role.kubernetes.io/compute=true']}]
 
 # Enable cockpit
 osm_use_cockpit=true
@@ -149,11 +151,11 @@ master.ocp.petrochina
 
 # host group for nodes, includes region info
 [nodes]
-master.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'default'}"
-infra.ocp.petrochina openshift_node_labels="{'region': 'infra', 'router': 'yes', 'zone': 'outer'}" openshift_schedulable=true
-node1.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'outer'}" openshift_schedulable=true
-node2.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'default'}" openshift_schedulable=true
-node3.ocp.petrochina openshift_node_labels="{'region': 'default', 'zone': 'default'}" openshift_schedulable=true
+master.ocp.petrochina openshift_node_group_name='node-config-master'
+infra.ocp.petrochina openshift_node_group_name='node-config-infra' openshift_schedulable=true
+node1.ocp.petrochina openshift_node_group_name='node-config-compute' openshift_schedulable=true
+node2.ocp.petrochina openshift_node_group_name='node-config-compute' openshift_schedulable=true
+node3.ocp.petrochina openshift_node_group_name='node-config-compute' openshift_schedulable=true
 
 [nfs]
 nfs.ocp.petrochina 
