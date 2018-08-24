@@ -10,7 +10,12 @@ OpenShift 安装和运行依赖 4 大类 docker 镜像，分别是：
 * Ansible broker 相关的镜像
 * S2I 应用镜像构建相关的镜像
 
-link:images-syncing.sh[images-syncing.sh] 可以用来同步镜像，具体执行 `./images-syncing.sh <registry> <version> <isSave>` 可同步，
+如下脚本可以用来同步镜像：
+
+* link:images-syncing.sh[images-syncing.sh]
+* link:images-syncing-310.sh[images-syncing-310.sh]
+
+具体执行 `./images-syncing-<version>.sh <registry> <version> <isSave>` 可同步，
 
 * registry - 红帽仓库地址
 * version - 镜像版本号
@@ -18,7 +23,7 @@ link:images-syncing.sh[images-syncing.sh] 可以用来同步镜像，具体执�
 
 [source]
 ----
-./images-syncing.sh registry.access.redhat.com v3.9.27 false
+./images-syncing-310.sh registry.access.redhat.com v3.10.14 false
 ----
 
 [source, text]

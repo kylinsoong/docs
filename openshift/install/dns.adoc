@@ -1,0 +1,78 @@
+= DNS 服务
+:toc: manual
+
+== 概述
+
+OCP 运行依赖 DNS 服务主要体现在两个方面：
+
+*解析 OCP 各节点的域名，及应用服务域名（必须）*
+
+通常需要添加 A 类型记录
+
+[source, bash]
+----
+master.example.com    A   192.168.122.101
+infra.example.com     A   192.168.122.102
+nfs.example.com       A   192.168.122.103
+node1.example.com     A   192.168.122.105
+node2.example.com     A   192.168.122.106
+
+*.apps.example.com. 300 IN  A 192.168.122.102
+---- 
+
+NOTE: 应用服务 A 记录 IP 地址位 router IP。
+
+DNS 服务可以通过两种方式提供：dnsmasq，unbound，两者选其一即可，生产环境推荐使用 unbound。
+
+== dnsmasq 配置
+
+[source, text]
+.*1. dnsmasq 安装*
+----
+# rpm -qa | grep dnsmasq
+dnsmasq-2.76-5.el7.x86_64
+----
+
+[source, text]
+.*2. A Records 添加*
+----
+# cat /etc/dnsmasq.d/openshift-cluster.conf
+local=/example.com/
+address=/.apps.example.com/192.168.122.102
+address=/master.example.com/192.168.122.101
+address=/infra.example.com/192.168.122.102
+address=/nfs.example.com/192.168.122.103
+address=/node1.example.com/192.168.122.105
+address=/registry.example.com/192.168.5.106
+----
+
+[source, text]
+.*3. 配置 forward/upstream，是 OCP 环境能够解析外部域名*
+----
+//TODO--
+----
+
+[source, text]
+.*4. 启动服务*
+----
+# systemctl start dnsmasq.service && systemctl enable dnsmasq.service && systemctl status dnsmasq.service
+----
+
+[source, text]
+.*5. 测试*
+----
+# for i in master infra nfs node1 ; do dig $i.example.com @192.168.5.106 +short ; done
+192.168.122.101
+192.168.122.102
+192.168.122.103
+192.168.122.105
+
+# for i in test xyz ttt ; do dig $i.apps.example.com @192.168.5.106 +short ; done
+192.168.122.102
+192.168.122.102
+192.168.122.102
+----
+
+NOTE: 192.168.5.106 为 DNS 服务器 IP 地址。
+
+== unbound

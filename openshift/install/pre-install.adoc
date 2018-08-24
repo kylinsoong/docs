@@ -136,7 +136,7 @@ ansible-playbook -i inventory prepare_install.yml
 
 == Bash 执行前续安装
 
-=== 静态域名配置
+=== 控制节点静态域名配置
 
 [source, text]
 .*Master 上配置 hosts 内容如下*
@@ -163,6 +163,71 @@ echo "192.168.5.106 yum.example.com yum" >> /etc/hosts
 ----
 # for i in master infra nfs node1 node2 registry; do ssh-copy-id $i.example.com; done;
 ----
+
+=== 所有节点 hosts 文件拷贝
+
+[source, text]
+----
+# for i in master infra nfs node1 ; do scp /etc/hosts root@$i.example.com:/etc/hosts ; done
+----
+
+=== 所有节点 yum 源配置
+
+[source, text]
+.*1. 控制节点创建 ocp.repo*
+----
+cat << EOF > ocp.repo
+[rhel-7-server-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-rpms
+
+[rhel-7-server-extras-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-extras-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-extras-rpms
+
+[rhel-7-server-ose-3.10-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.10-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ose-3.10-rpms
+
+[rhel-7-fast-datapath-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-fast-datapath-rpms
+
+[rhel-7-server-ansible-2.4-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ansible-2.4-rpms
+EOF
+----
+
+[source, text]
+.*2. 确保所有用户有可读权限*
+----
+# chmod a+x ocp.repo
+----
+
+[source, text]
+.*3. 所有节点 yum 源配置*
+----
+# for i in master infra node1 nfs ; do scp ocp.repo root@$i.example.com:/etc/yum.repos.d/ ; done
+----
+
+[source, text]
+.*4. 测试 yum 源配置*
+----
+# for i in master infra node1 nfs ; do ssh $i.example.com 'yum list | grep openshift-ansible ; echo' ; done
+----
+
+=== DNS 配置
 
 == 前续安装认证
 

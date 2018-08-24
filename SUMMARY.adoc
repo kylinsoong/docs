@@ -55,6 +55,7 @@
 .. link:openshift/install/README.adoc[安装]
 ... link:openshift/install/yum.adoc[本地 yum 源配置]
 ... link:openshift/install/docker-dist.adoc[本地 docker 镜像仓库配置]
+... link:openshift/install/dns.adoc[DNS 服务]
 ... link:openshift/install/pre-install.adoc[前续安装]
 ... link:openshift/install/install.adoc[安装]
 ... link:openshift/install/post-install.adoc[后续安装]
