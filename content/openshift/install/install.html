@@ -870,7 +870,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="pre-install.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="dns.html">
+            
+                <a href="dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="pre-install.html">
             
                 <a href="pre-install.html">
             
@@ -883,7 +896,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.2.4" data-path="install.html">
+        <li class="chapter active" data-level="1.4.2.5" data-path="install.html">
             
                 <a href="install.html">
             
@@ -896,7 +909,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.5" data-path="post-install.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="post-install.html">
             
                 <a href="post-install.html">
             
@@ -909,7 +922,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.6" data-path="qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="qa.html">
             
                 <a href="qa.html">
             
@@ -2297,137 +2310,69 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="ocp-&#x5B89;&#x88C5;">OCP &#x5B89;&#x88C5;</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>OpenShift Container Platform  &#x5B89;&#x88C5;&#x3002;</p>
-</div>
-</div>
+                                <h1 id="&#x5B89;&#x88C5;">&#x5B89;&#x88C5;</h1>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</a>
-<ul class="sectlevel2">
-<li><a href="#_ansible_inventory">Ansible Inventory &#x53D8;&#x91CF;</a></li>
-<li><a href="#_inventory">Inventory &#x793A;&#x4F8B;</a></li>
-</ul>
-</li>
 <li><a href="#__">&#x5B89;&#x88C5;</a></li>
+<li><a href="#___2">&#x5B89;&#x88C5;&#x6210;&#x529F;&#x9A8C;&#x8BC1;</a></li>
 </ul>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>&#x767B;&#x5F55; Master &#x8282;&#x70B9;&#x7F16;&#x8F91; <code>/etc/ansible/hosts</code>&#x3002;</p>
-</div>
-<div class="sect2">
-<h3 id="_ansible_inventory">Ansible Inventory &#x53D8;&#x91CF;</h3>
-<div class="listingblock">
-<div class="title"><strong>1 - &#x914D;&#x7F6E;&#x8BA4;&#x8BC1;&#x63D0;&#x4F9B;&#x8005;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">openshift_master_identity_providers=[{<span class="hljs-string">&apos;name&apos;</span>: <span class="hljs-string">&apos;htpasswd_auth&apos;</span>, <span class="hljs-string">&apos;login&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;challenge&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;kind&apos;</span>: <span class="hljs-string">&apos;HTPasswdPasswordIdentityProvider&apos;</span>, <span class="hljs-string">&apos;filename&apos;</span>: <span class="hljs-string">&apos;/etc/origin/master/htpasswd&apos;</span>}]</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2 - Web Console &#x63A7;&#x5236;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">openshift_web_console_install=<span class="hljs-literal">true</span>
-openshift_web_console_prefix=registry.example.com/openshift3/ose-
-openshift_web_console_version=v3.9.30</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3 - 3.9 &#x53CA;&#x4EE5;&#x540E;&#x7684;&#x7248;&#x672C;&#x5B89;&#x88C5;&#x63A8;&#x8350;&#x4F7F;&#x7528; firewalld&#xFF0C;&#x5982;&#x4E0B;&#x53C2;&#x6570;&#x5F00;&#x542F; firewalld</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">os_firewall_use_firewalld=True</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4 - &#x5B89;&#x88C5; Standalone Registry&#xFF0C;&#x5FFD;&#x7565; WebConsole &#x7B49;&#x5176;&#x5B83;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">deployment_subtype=registry</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_inventory">Inventory &#x793A;&#x4F8B;</h3>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Inventory</th>
-<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.9.30">hosts-3.9.30</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.9.30</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.9.25">hosts-3.9.25</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.9.25</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.9.14">hosts-3.9.14</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.9.14</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.6">hosts-3.6</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.6</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div class="sect1">
 <h2 id="__">&#x5B89;&#x88C5;</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="title"><strong>1 - Master &#x4E0A;&#x6267;&#x884C; ansible &#x811A;&#x672C;</strong></div>
+<div class="title"><strong>Master &#x4E0A;&#x6267;&#x884C; ansible &#x811A;&#x672C;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># ansible-playbook -i hosts-3.10.14 /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x5B89;&#x88C5;&#x6210;&#x529F;&#x9A8C;&#x8BC1;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1 - &#x67E5;&#x770B; INSTALLER STATUS&#xFF08;ansible &#x811A;&#x672C;&#x8FD0;&#x884C;&#x7684;&#x7ED3;&#x5C3E;&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">INSTALLER STATUS *****************************************************************************************************************************************************************************
+Initialization              : Complete (0:00:27)
+Health Check                : Complete (0:00:03)
+Node Bootstrap Preparation  : Complete (0:11:25)
+etcd Install                : Complete (0:00:42)
+NFS Install                 : Complete (0:00:09)
+Master Install              : Complete (0:03:43)
+Master Additional Install   : Complete (0:01:02)
+Node Join                   : Complete (0:03:48)
+Hosted Install              : Complete (0:00:58)
+Web Console Install         : Complete (0:00:41)
+Metrics Install             : Complete (0:02:03)
+Prometheus Install          : Complete (0:01:10)
+Service Catalog Install     : Complete (0:07:20)</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2 - Master &#x4E0A;&#x9A8C;&#x8BC1;&#x5B89;&#x88C5;&#x662F;&#x5426;&#x5B8C;&#x6210;</strong></div>
+<div class="title"><strong>2 - &#x67E5;&#x770B;&#x6240;&#x6709; Nodes</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># oc get nodes
-NAME                 STATUS     ROLES     AGE       VERSION
-infra.example.com    Ready      &lt;none&gt;    25s       v1.9.1+a0ce1bc657
-master.example.com   NotReady   &lt;none&gt;    5s        v1.9.1+a0ce1bc657
-node1.example.com    Ready      &lt;none&gt;    25s       v1.9.1+a0ce1bc657
-node2.example.com    Ready      &lt;none&gt;    25s       v1.9.1+a0ce1bc657
-
-
-# oc get pods -o wide --all-namespaces
-NAMESPACE                           NAME                             READY     STATUS             RESTARTS   AGE       IP              NODE
-default                             docker-registry-1-gpntv          1/1       Running            0          7m        10.244.4.17     infra.example.com
-default                             registry-console-1-v2g6z         1/1       Running            0          6m        10.244.0.2      node1.example.com
-default                             router-1-cp6hc                   1/1       Running            0          7m        192.168.56.64   infra.example.com
-kube-service-catalog                apiserver-tc5ff                  1/1       Running            0          1m        10.244.6.4      master.example.com
-kube-service-catalog                controller-manager-fvzwn         1/1       Running            0          1m        10.244.6.5      master.example.com
-openshift-ansible-service-broker    asb-1-deploy                     1/1       Running            0          1m        10.244.4.21     infra.example.com
-openshift-ansible-service-broker    asb-1-n488l                      0/1       CrashLoopBackOff   3          1m        10.244.4.23     infra.example.com
-openshift-ansible-service-broker    asb-etcd-1-8kchr                 0/1       CrashLoopBackOff   3          1m        10.244.4.24     infra.example.com
-openshift-ansible-service-broker    asb-etcd-1-deploy                1/1       Running            0          1m        10.244.4.22     infra.example.com
-openshift-infra                     hawkular-cassandra-1-v4jbj       1/1       Running            0          5m        10.244.2.3      node2.example.com
-openshift-infra                     hawkular-metrics-fft5n           1/1       Running            0          5m        10.244.4.19     infra.example.com
-openshift-infra                     heapster-lv5vc                   1/1       Running            0          5m        10.244.0.3      node1.example.com
-openshift-metrics                   prometheus-0                     4/6       CrashLoopBackOff   10         4m        10.244.4.20     infra.example.com
-openshift-metrics                   prometheus-node-exporter-dx98n   1/1       Running            0          4m        192.168.56.66   master.example.com
-openshift-metrics                   prometheus-node-exporter-g5ncc   1/1       Running            0          4m        192.168.56.62   node1.example.com
-openshift-metrics                   prometheus-node-exporter-jstjz   1/1       Running            0          4m        192.168.56.63   node2.example.com
-openshift-metrics                   prometheus-node-exporter-ncnf6   1/1       Running            0          4m        192.168.56.64   infra.example.com
-openshift-template-service-broker   apiserver-pp2hx                  1/1       Running            0          1m        10.244.4.25     infra.example.com
-openshift-web-console               webconsole-64f899d7d6-fxgkc      1/1       Running            1          6m        10.244.6.2      master.example.com</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># oc get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x67E5;&#x770B;&#x6240;&#x6709; Pods</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># oc get pods --all-namespaces -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x67E5;&#x770B;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x8282;&#x70B9;&#x7684;&#x955C;&#x50CF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;docker images ; echo&apos; ; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x67E5;&#x770B; Master &#x76D1;&#x542C;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># netstat -antulop</code></pre>
 </div>
 </div>
 </div>
@@ -2474,7 +2419,7 @@ openshift-web-console               webconsole-64f899d7d6-fxgkc      1/1       R
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.4","depth":3,"next":{"title":"后续安装","level":"1.4.2.5","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.3","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-07-09T09:56:53.555Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.5","depth":3,"next":{"title":"后续安装","level":"1.4.2.6","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.4","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-08-26T18:19:24.731Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

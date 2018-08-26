@@ -870,7 +870,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/pre-install.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
             
                 <a href="../../openshift/install/pre-install.html">
             
@@ -883,7 +896,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
             
                 <a href="../../openshift/install/install.html">
             
@@ -896,7 +909,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/post-install.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
             
                 <a href="../../openshift/install/post-install.html">
             
@@ -909,7 +922,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/qa.html">
             
                 <a href="../../openshift/install/qa.html">
             
@@ -2359,9 +2372,31 @@
 <li><a href="#_application_layer_and_the_osi_model">Application Layer and the OSI Model</a></li>
 </ul>
 </li>
+<li><a href="#_the_five_layer_network_model_scenario">The Five-Layer Network Model Scenario</a>
+<ul class="sectlevel2">
+<li><a href="#_scenario_description">Scenario Description</a></li>
+<li><a href="#_operation_steps">Operation Steps</a></li>
+</ul>
+</li>
 <li><a href="#___11">&#x7F51;&#x7EDC;&#x670D;&#x52A1;</a>
 <ul class="sectlevel2">
 <li><a href="#_dhcp">DHCP</a></li>
+<li><a href="#_nat_network_address_translation">NAT(Network Address Translation)</a></li>
+<li><a href="#_vpn_virtual_private_networks">VPN(Virtual Private Networks)</a></li>
+<li><a href="#_proxy_services">Proxy Services</a></li>
+</ul>
+</li>
+<li><a href="#___12">&#x7F51;&#x7EDC;&#x63A5;&#x5165;</a>
+<ul class="sectlevel2">
+<li><a href="#___13">&#x62E8;&#x53F7;&#x63A5;&#x5165;</a></li>
+<li><a href="#___14">&#x5BBD;&#x5E26;&#x63A5;&#x5165;</a></li>
+<li><a href="#_wans_wide_area_network">WANs(Wide Area Network)</a></li>
+<li><a href="#__wifi">&#x65E0;&#x7EBF;&#x7F51;&#x7EDC;(WIFI)</a></li>
+</ul>
+</li>
+<li><a href="#___15">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x89E3;&#x51B3;</a>
+<ul class="sectlevel2">
+<li><a href="#___16">&#x8FDE;&#x901A;&#x6027;&#x9A8C;&#x8BC1;</a></li>
 </ul>
 </li>
 </ul>
@@ -3312,21 +3347,621 @@ The transport layer handles multiplexing and demultiplexing through ports.
 </div>
 </div>
 <div class="sect1">
+<h2 id="_the_five_layer_network_model_scenario">The Five-Layer Network Model Scenario</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_scenario_description">Scenario Description</h3>
+<div class="paragraph">
+<p><span class="image"><img src="img/five-models-scenario.png" alt="five models scenario.png"></span></p>
+</div>
+<div class="paragraph">
+<p>As depicted in above figure:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Network A contains address space 10.1.1.0/24, and computer A is part of Network A and has been assigned an IP address of 10.1.1.100</p>
+</li>
+<li>
+<p>Network B contains address space 192.168.1.0/24, and computer B is part of Network B and has been assigned an <strong>IP address</strong> of 192.168.1.100, web server on computer B is running and listening on port 80</p>
+</li>
+<li>
+<p>Router sits between network A and network B, with an interface configured with an IP of 10.1.1.1 on network A, and an interface at 192.168.1.1 on network B</p>
+</li>
+<li>
+<p>An end user sitting at computer A opens up a web browser and enters 192.168.1.100 into the address bar to access the content in computer B&#x2019;s web server</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_operation_steps">Operation Steps</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The web browser communicates with the local networking stack(part of OS), and know that it&#x2019;s going to establish a TCP connection to 192.168.1.100, port 80 on another network.</p>
+</li>
+<li>
+<p>Computer A looks at its ARP table to determine what MAC address of it&#x2019;s gateway 10.1.1.1 is, but it doesn&#x2019;t find any corresponding entry.</p>
+</li>
+<li>
+<p>Router receives ARP message, check that currently it assigned the IP address of 10.1.1.1. So it responds to computer A to let it know about its own <strong>MAC address</strong> of 00:11:22:33:44:55.</p>
+</li>
+<li>
+<p>Computer A receives this response and now knows the hardware address of its gateway, and ready to start constructing the outbound packet.</p>
+</li>
+<li>
+<p><strong>Application layer</strong>&apos;s web browser trigger to open a socket, and get a ephemeral port 50000 from computer A OS</p>
+</li>
+<li>
+<p>In the <strong>Transport layer</strong>, the networking stack starts to build a <code>TCP segment</code>, with appropriate fields in the header, including a source port of 50000, destination port of 80, sequence number field filled with a appropriate sequence number, the <code>SYN</code> flag is set, checksum for the segment is calculated and written to the checksum field.</p>
+</li>
+<li>
+<p>The <code>TCP segment</code> passed along to the <strong>Network layer</strong> and start to encapsulate a <code>IP Datagram</code>, fill IP header with the source IP, the destination IP, a <strong>TTL</strong> of 64, fill the <code>TCP segment</code> as the data payload of the <code>IP datagram</code>, a checksum is calculated and put in checksum field.</p>
+</li>
+<li>
+<p>The <code>IP datagram</code> passed alone to the <strong>Data link layer</strong> and start to construct a <code>Ethernet frame</code>, fill <code>00:11:22:33:44:55</code> as destination MAC addresses and computer A&#x2019;s MAC addresses as source MAC addresses, insert <code>IP datagram</code> as he data payload of the Ethernet frame, enter a calculated checksum to reference field.</p>
+</li>
+<li>
+<p>The <code>Ethernet frame</code> is ready to be sent across the <strong>physical layer</strong>, the <code>network interface</code> connected to computer A sends this binary data as modulations of the voltage of an electrical current running across a <code>CAT6 cable</code> that&#x2019;s connected between it and a network switch.</p>
+</li>
+<li>
+<p>This switch receives the frame and inspects the destination MAC address. The switch knows which of its interfaces this MAC address is attached to, and forwards the frame across only the cable connected to this interface.</p>
+</li>
+<li>
+<p>Router receives the frame and recognizes its own hardware address as the destination. Router knows that this frame is intended for itself. So it now takes the entirety of the frame and performa <strong>checksum check</strong> against it. Router compares this checksum with the one in the Ethernet frame header and sees that they match.</p>
+</li>
+<li>
+<p>Router strips away the <code>Ethernet frame</code>, leaving it with just the <code>IP datagram</code>. Again, it performs a checksum calculation against the entire datagram. And again, it finds that it matches. It then inspects the destination IP address and performs a lookup of this destination in its <strong>routing table</strong>, the look up results is that the router sees that the destination address 192.168.1.100 is on a locally connected network.</p>
+</li>
+<li>
+<p>Continue in Router, the TTL be decrement, a new checksum be re-calculated, and creates a new <code>IP datagram</code>. Similar with Step 8, this new IP datagram is again encapsulated by a new <code>Ethernet frame</code>, which the source and destination MAC address of router and and computer B</p>
+</li>
+<li>
+<p>The new Ethernet frame` is ready to be sent, and computer B receives the frame.</p>
+</li>
+<li>
+<p>Computer B identifies its own MAC address as the destination, and knows that it&#x2019;s intended for itself. computer B then strips away the Ethernet frame, leaving it with the IP datagram. It performs a <code>checksum check</code> and recognizes that the data has been delivered intact. It then examines the destination IP address and recognizes that as its own.</p>
+</li>
+<li>
+<p>Computer B strips away the IP datagram, leaving it with just the <code>TCP segment</code>. Again, the checksum for this layer is examined, and everything checks out.</p>
+</li>
+<li>
+<p>Computer B examines the destination port, which is <strong>TCP port</strong> 80. The networking stack on computer B checks to ensure that there&#x2019;s an open socket on port 80, which there is. It&#x2019;s in the listen state, and held open by a running Apache web server.</p>
+</li>
+<li>
+<p>Computer B then sees that this packet has the <code>SYN</code> flag and knows that this is a TCP connection request.</p>
+</li>
+<li>
+<p>Repeat the steps from 6 - 16, and form a <code>TCP segment</code> with flag <code>SYN-ACK</code>, and other field be filled correctly.</p>
+</li>
+<li>
+<p>Computer A receives frame and awared the <code>SYN-ACK</code> flag and knows that the Computer B are ready to establish connection.</p>
+</li>
+<li>
+<p>Repeat the steps from 6 - 16, and form a <code>TCP segment</code> with flag <code>ACK</code>, and other field be filled correctly.</p>
+</li>
+<li>
+<p>Computer B receives frame and awared the <code>ACK</code> flag from computer A, knows that the Computer A are acknowledged. And finally finish the socket instantiation, and set the state to <code>ESTABLISHED</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="___11">&#x7F51;&#x7EDC;&#x670D;&#x52A1;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_dhcp">DHCP</h3>
-<div class="paragraph">
+<div class="ulist">
+<ul>
+<li>
 <p>DHCP stands for Dynamic Host Configuration Protocol, which is an application layer protocol that automates the configuration process of hosts on a network. With DHCP, a machine can query a DHCP server when the computer connects to the network and receive all the network configuration in one go.</p>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p>DHCP is an application layer protocol, which means it relies on the transport, network, data link and physical layers to operate.</p>
+</li>
+<li>
+<p>The process by which a client configured to use DHCP attempts to get network configuration information is known as DHCP discovery.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><strong>DHCP discovery process - 4 steps:</strong></p>
 </div>
 <div class="paragraph">
-<p>*</p>
+<p><span class="image"><img src="img/DHCP-process.jpg" alt="DHCP process.jpg"></span></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>DHCP Discovery</strong> - DHCP clients sends a <code>DHCP discover message(DHCPDISCOVER)</code> out onto the network, the DHCPDISCOVER message is encapsulated in a UDP datagram with a destination port of 67 and a source port of 68, this is then encapsulated inside of an IP datagram with a destination IP of 255.255.255.255, and a source IP of 0.0.0.0.</p>
+</li>
+<li>
+<p><strong>DHCP Offer</strong> - DHCP server examine its own configuration and make a decision on what, if any, IP address to offer to the client, the response would be sent as a DHCPOFFER message with a destination port of 68, a source port of 67, a destination broadcast IP of 255.255.255.255, and its actual IP as the source.</p>
+</li>
+<li>
+<p><strong>DHCP Request</strong> - DHCP client respond to the DHCPOFFER message with a DHCPREQUEST message, which essentially says, yes, I would like to have an IP that you offer to me. Since the IP hasn&#x2019;t been assigned yet, this is again sent from an IP of 0.0.0.0 and to the broadcast IP of 255.255.255.255.</p>
+</li>
+<li>
+<p><strong>DHCP ACK</strong> - DHCP server receives the DHCPREQUEST message and responds with a DHCPACK or DHCP acknowledgement message, which is again sent to a broadcast IP of 255.255.255.255, and with a source IP corresponding to the actual IP of the DHCP server.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nat_network_address_translation">NAT(Network Address Translation)</h3>
+<div class="paragraph">
+<p>&#x5B57;&#x9762;&#x4E0A;&#x7406;&#x89E3;&#xFF0C;NAT(Network Address Translation) &#x5C31;&#x662F;&#x5C06;&#x4E00;&#x4E2A; IP &#x5730;&#x5740;&#x7FFB;&#x8BD1;/&#x8F6C;&#x6362;&#x6210;&#x53E6;&#x4E00;&#x4E2A; IP &#x5730;&#x5740;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>NAT is a technology that allows a gateway usually a router or a firewall to rewrite the source IP of an outgoing IP datagram, while retaining the original IP in order to rewrite it into the response.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ip-address-masquerading-nat.png" alt="ip address masquerading nat.png"></span></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+IP masquerading is an important security concept. The most basic concept at play here, is that no one can establish a connection to your computer if they don&#x2019;t know what IP address it has. By using NAT in the way we&#x2019;ve just described, we could actually have hundreds of computers on network A, all of their IPs being translated by the router to its own. To the outside world, the entire address space of network A is protected and invisible. This is known as one to many NAT, and you&#x2019;ll see it in use on lots of LANs today.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_nat_and_the_transport_layer">NAT and the Transport Layer</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Port preservation is a technique where the source port chosen by a client, is the same port used by the router.</p>
+</li>
+<li>
+<p>Port forwarding is a technique where a specific destination ports can be configured to always be delivered to specific nodes.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rir_regional_internet_registries">RIR(regional internet registries)</h4>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 4. <strong>The IANA assigned address blocks to the five regional internet registries or RIRs</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x540D;&#x79F0;</th>
+<th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AFRINIC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serves the continent of Africa.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARIN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serves the United States, Canada and parts of the Caribbean.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APNIC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">responses ost of Asia, Australia and New Zealand and Pacific Island nations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LACNIC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">covers Central and South America and any parts of the Caribbean not covered by ARIN.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RIPE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serves Europe, Russia and the Middle East and portions of Central Asia.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/IPv4_address_exhaustion" target="_blank">IPv4 address exhaustion</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nat_and_non_routable_address_space">NAT and non-routable address space</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Non-routable address space was defined in RFC1918 and consists of several different IP ranges that anyone can use.</p>
+</li>
+<li>
+<p>And unlimited number of networks can use non-routable address space internally because internet routers won&#x2019;t forward traffic to it. This means there&#x2019;s never any global collision of IP addresses when people use those address spaces.</p>
+</li>
+<li>
+<p>Non-routable address space is largely usable today because of technologies like NAT.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vpn_virtual_private_networks">VPN(Virtual Private Networks)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Virtual Private Networks or VPNs, are a technology that allows for the extension of a private or local network, to a host that might not work on that same local network.</p>
+</li>
+<li>
+<p>VPNs are a tunneling protocol. Which means, they provision access to something not locally available.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title"><strong>VPN Tunnel Example:</strong></div>
+<p><span class="image"><img src="img/vpn-tunel-example.png" alt="vpn tunel example.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>VPNs, usually requires strict authentication procedures in order to ensure that they can only be connected to by computers and users authorized to do so. In fact, VPNs were one of the first technologies where two-factor authentication became common.</p>
+</li>
+<li>
+<p>Two-factor authentication is a technique where more than just a username and password are required to authenticate. Usually, a short-lived numerical token is generated by the user through a specialized piece of hardware or software.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_vpn">VPN &#x6784;&#x5EFA;&#x70B9;&#x5BF9;&#x70B9;&#x8FDE;&#x63A5;</h4>
+<div class="paragraph">
+<p>VPNs can also be used to establish site-to-site connectivity. It&#x2019;s just that the router, or sometimes a specialized VPN device on one network, establishes the VPN tunnel to the router or VPN device on another network. This way, two physically separated offices might be able to act as one network and access network resources across the tunnel.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/vpn-p2p-connectivity.png" alt="vpn p2p connectivity.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_proxy_services">Proxy Services</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A proxy service is a server that actson behalf of a client in order to access another service. Proxies sit between clients and other servers, providing some additional benefit, anonymity, security, content filtering, increased performance, a couple other things.</p>
+</li>
+<li>
+<p>Proxies doesn&#x2019;t refer to any specific implementation. Proxies exist at almost every layer of our networking model.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_reverse_proxy">Reverse proxy</h4>
+<div class="paragraph">
+<p>A reverse proxy is a service that might appear to be a single server to external clients, but actually represents many servers living behind it.</p>
+</div>
+<div class="paragraph">
+<div class="title"><strong>&#x73B0;&#x4EE3; Web &#x5E94;&#x7528;&#x67B6;&#x6784;&#x4F7F;&#x7528; Reverse proxy&#xFF1A;</strong></div>
+<p><span class="image"><img src="img/proxy-reverse.png" alt="proxy reverse.png"></span></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Reverse proxy can also used in encrypting and decrypting web data.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___12">&#x7F51;&#x7EDC;&#x63A5;&#x5165;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___13">&#x62E8;&#x53F7;&#x63A5;&#x5165;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>PSTN(Public Switched Telephone Network) is also referred to as the POTS(Plain Old Telephone Service).</p>
+</li>
+<li>
+<p>A dial-up connection uses POTS for data transfer, and gets its name because the connection is established by actually dialing a phone number.</p>
+</li>
+<li>
+<p>Modem stands for modulator/demodulator, and they take data that computers can understand and turn them into audible wavelengths that can be transmitted over POTS.</p>
+</li>
+<li>
+<p>A baud rate is a measurement of how many bits could be passed across a phone line in a second.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/dial-up-moderms.png" alt="dial up moderms.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___14">&#x5BBD;&#x5E26;&#x63A5;&#x5165;</h3>
+<div class="sect3">
+<h4 id="_what_is_broadband">What is broadband?</h4>
+<div class="paragraph">
+<p>In terms of internet connectivity, it&#x2019;s used to refer to any connectivity technology that isn&#x2019;t dial-up Internet. Broadband Internet is almost always much faster than even the fastest dial-up connections and refers to connections that are always on. This means that they&#x2019;re long lasting connections that don&#x2019;t need to be established with each use. They&#x2019;re essentially links that are always present.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_t_carrier_technologies">T-Carrier Technologies</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>T-Carrier Technologies were originally invented by AT&amp;T in order to transmit multiple phone calls over a single link.</p>
+</li>
+<li>
+<p>T1 stands for Transmission System 1.</p>
+</li>
+<li>
+<p>A T1 communicates at speeds of 1.544 Kb/sec.</p>
+</li>
+<li>
+<p>A T3 is just 28 multiplexed T1 lines.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_digital_subscriber_lines">Digital Subscriber Lines</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>DSL(digital subscriber line) was able to send much more data across the wire than traditional dial-up technologies.</p>
+</li>
+<li>
+<p>DSL technologies use DSLAMs or Digital Subscriber Line Access Multiplexers to establish data connections across phone lines.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x4E24;&#x79CD;&#x5E38;&#x89C1;&#x7684; DSL &#x7C7B;&#x578B;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>ADSL</strong> - ADSL stands for Asymmetric Digital Subscriber Line. ADSL connections featured different speeds for outbound and incoming data. Generally, this means faster download speeds and slower upload speeds.</p>
+</li>
+<li>
+<p><strong>SDSL</strong> - SDSL stands for Symmetric Digital Subscriber Line. SDSL technology is basically the same as ADSL, except the upload and download speeds are the same.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cable_broadband">Cable Broadband</h4>
+<div class="paragraph">
+<p>Cable Internet connections are usually managed by what&#x2019;s known as a cable modem. This is a device that sits at the edge of a consumer&#x2019;s network and connects it to the cable modem termination system, or CMTS. The CMTS is what connects lots of different cable connections to an ISP&#x2019;s core network.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/cable-broadband.png" alt="cable broadband.png"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fiber_connections">Fiber Connections</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>FTTN means fiber to the neighborhood that fiber technologies are used to deliver data to a single physical cabinet that serves a certain amount of the population.</p>
+</li>
+<li>
+<p>FTTB stands for fiber to the building, fiber to the business or even a fiber to the basement, since this is generally where cables to buildings physically enter.</p>
+</li>
+<li>
+<p>FTTH stands for fiber to the home, that is used in instances where fiber is actually run to each individual residents in a neighborhood or apartment building.</p>
+</li>
+<li>
+<p>FTTP fiber to the premises, FTTH and FTTB may both also be referred to as FTTP.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instead of a modem, the demarcation point for fiber technologies is known as Optical Network Terminator, or ONT. An ONT converts data from protocols the fiber network can understand to those that are more traditional twisted pair copper networks can understand.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_wans_wide_area_network">WANs(Wide Area Network)</h3>
+<div class="paragraph">
+<p>WAN stands for wide area network. A wide area network acts like a single network but spans across multiple physical locations.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+WAN technologies usually require that you contract a link across the Internet with your ISP. This ISP handles sending your data from one side to the other. So, it could be like all of your computers are in the same physical location.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>WAN &#x534F;&#x8BAE;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Frame_Relay" target="_blank">Frame Relay</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/High-Level_Data_Link_Control" target="_blank">High-Level Data Link Control</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Asynchronous_transfer_mode" target="_blank">Asynchronous transfer mode</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__wifi">&#x65E0;&#x7EBF;&#x7F51;&#x7EDC;(WIFI)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The most common specifications for how wireless networking devices should communicate, are defined by the IEEE 802.11 standards. This set of specifications, also called the 802.11 family, make up the set of technologies we call WiFi.</p>
+</li>
+<li>
+<p>A frequency band is a certain section of the radio spectrum that&#x2019;s been agreed upon to be used for certain communications.</p>
+</li>
+<li>
+<p>WiFi networks operate on a few different frequency bands. Most commonly, the 2.4 gigahertz and 5 gigahertz bands. There are lots of 802.11 specifications including some that exist just experimentally or for testing. The most common specifications you might run into are 802.11b, 802.11a, 802.11g, 802.11n, and 802.11ac.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>802.11 frame</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/802.11-frame.png" alt="802.11 frame.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Frame Control</strong> - Frame control field is 16 bits long, and contains a number of sub-fields that are used to describe how the frame itself should be processed.</p>
+</li>
+<li>
+<p><strong>Duration ID</strong> - It specifies how long the total frame is. So, the receiver knows how long it should expect to have to listen to the transmission.</p>
+</li>
+<li>
+<p><strong>Address</strong> - There are four address fields, because there needs to be room to indicate which wireless access point should be processing the frame. So, we&#x2019;d have our normal source address field, which would represent the MAC address of the sending device.</p>
+</li>
+<li>
+<p><strong>Sequence Control</strong> - Sequence control field is 16 bits long and mainly contains a sequence number used to keep track of ordering the frames.</p>
+</li>
+<li>
+<p><strong>Data payload</strong> - Data payload section which has all of the data of the protocols further up the stack.</p>
+</li>
+<li>
+<p><strong>FCS</strong> - Frame check sequence field which contains a checksum used for a cyclical redundancy check.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_wireless_channels">Wireless Channels</h4>
+<div class="paragraph">
+<p>Channels are individual, smaller sections of the overall frequency band used by a wireless network.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_wireless_security">Wireless Security</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>WEP stands for Wired Equivalent Privacy, it&#x2019;s an encryption technology that provides a very low level of privacy.</p>
+</li>
+<li>
+<p>WPA stabds for Wi-Fi Protected Access, by default, uses a 128-bit key, making it a whole lot more difficult to crack than WEP.</p>
+</li>
+<li>
+<p>WPA2,  an update to the original WPA. WPA2 uses a 256-bit key make it even harder to crack.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cellular_networking">Cellular Networking</h4>
+<div class="paragraph">
+<p>Cellular networks are built around the concept of cells. Each cell is assigned a specific frequency band for use.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___15">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x89E3;&#x51B3;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___16">&#x8FDE;&#x901A;&#x6027;&#x9A8C;&#x8BC1;</h3>
+<div class="paragraph">
+<p>ICMP(internet control message protocol) is mainly used by router or remote hosts to communicate while transmission has failed back to the origin of the transmission.</p>
+</div>
+<div class="paragraph">
+<div class="title"><strong>ICMP packet Struct:</strong></div>
+<p><span class="image"><img src="img/icmp-struct.png" alt="icmp struct.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Type</strong> - Type field is eight bits long which specifies what type of message is being delivered.</p>
+</li>
+<li>
+<p><strong>Code</strong> - Code field indicates a more specific reason for the message than just the type.</p>
+</li>
+<li>
+<p><strong>Checksum</strong> - Checksum is 16 bit length, that works like every other checksum field in other frame, like Ethernet frame, IP datagram and TCP segment.</p>
+</li>
+<li>
+<p><strong>Rest of header</strong> - A 32 bit field with an uninspired name, this field is optionally used by some of the specific types and codes to send more data.</p>
+</li>
+<li>
+<p><strong>Data payload</strong> - Data payload for an ICMP packet exists entirely so that the recipient of the message knows which of their transmissions caused the error being reported.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_ping">Ping</h4>
+<div class="paragraph">
+<p>Ping is a super simple program and the basics are the same no matter which operating system you&#x2019;re using.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ping 10.4.204.55 -c3
+PING 10.4.204.55 (10.4.204.55) 56(84) bytes of data.
+64 bytes from 10.4.204.55: icmp_seq=1 ttl=249 time=239 ms
+64 bytes from 10.4.204.55: icmp_seq=2 ttl=249 time=239 ms
+64 bytes from 10.4.204.55: icmp_seq=3 ttl=249 time=240 ms
+
+--- 10.4.204.55 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 239.552/239.787/240.212/0.500 ms</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_traceroute">Traceroute</h4>
+<div class="paragraph">
+<p>Traceroute is an awesome utility that lets you discover the paths between two nodes, and gives you information about each hop along the way.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ traceroute redhat.com
+traceroute to redhat.com (10.4.204.55), 30 hops max, 60 byte packets
+ 1  10.66.193.253 (10.66.193.253)  1.009 ms  1.133 ms  1.524 ms
+ 2  10.66.254.13 (10.66.254.13)  0.464 ms  0.455 ms  0.438 ms
+ 3  10.4.57.254 (10.4.57.254)  239.447 ms  239.446 ms  239.425 ms
+ 4  10.4.56.12 (10.4.56.12)  250.716 ms  250.678 ms  261.759 ms
+ 5  unused (10.4.60.2)  253.584 ms  253.562 ms unused (10.4.60.6)  253.529 ms
+ 6  unused (10.4.253.2)  274.428 ms network (10.4.253.0)  247.439 ms unused (10.4.253.6)  274.089 ms
+ 7  10.4.255.154 (10.4.255.154)  241.891 ms 10.4.255.156 (10.4.255.156)  241.231 ms  240.579 ms
+ 8  10.4.192.5 (10.4.192.5)  239.829 ms  239.946 ms  240.473 ms
+ 9  redirect-redhat-com.vserver.prod.ext.phx2.redhat.com (10.4.204.55)  239.598 ms  240.883 ms  239.943 ms</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nc">nc</h4>
+<div class="paragraph">
+<p>The Netcat tool can be run through the command nc, and has two mandatory arguments, a host and a port.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ nc -z -v redhat.com 80
+Ncat: Version 7.50 ( https://nmap.org/ncat )
+Ncat: Connected to 10.4.204.55:80.
+Ncat: 0 bytes sent, 0 bytes received <span class="hljs-keyword">in</span> 0.25 seconds.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=win10-ps" target="_blank">Microsoft&#x2019;s Documentation: Test-NetConnection</a></p>
+</div>
 </div>
 </div>
 </div>
@@ -3373,7 +4008,7 @@ The transport layer handles multiplexing and demultiplexing through ports.
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"网络基础","level":"1.2.3.1","depth":3,"next":{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},"previous":{"title":"网络","level":"1.2.3","depth":2,"path":"linux/networking/README.adoc","ref":"linux/networking/README.adoc","articles":[{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[]},{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},{"title":"IPv6 网络配置","level":"1.2.3.3","depth":3,"path":"linux/networking/ipv6cfg.adoc","ref":"linux/networking/ipv6cfg.adoc","articles":[]},{"title":"namespace","level":"1.2.3.4","depth":3,"path":"linux/networking/netns.adoc","ref":"linux/networking/netns.adoc","articles":[]},{"title":"teaming","level":"1.2.3.5","depth":3,"path":"linux/networking/teaming.adoc","ref":"linux/networking/teaming.adoc","articles":[]},{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/fundamentals.adoc","mtime":"2018-08-19T16:01:54.514Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络基础","level":"1.2.3.1","depth":3,"next":{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},"previous":{"title":"网络","level":"1.2.3","depth":2,"path":"linux/networking/README.adoc","ref":"linux/networking/README.adoc","articles":[{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[]},{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},{"title":"IPv6 网络配置","level":"1.2.3.3","depth":3,"path":"linux/networking/ipv6cfg.adoc","ref":"linux/networking/ipv6cfg.adoc","articles":[]},{"title":"namespace","level":"1.2.3.4","depth":3,"path":"linux/networking/netns.adoc","ref":"linux/networking/netns.adoc","articles":[]},{"title":"teaming","level":"1.2.3.5","depth":3,"path":"linux/networking/teaming.adoc","ref":"linux/networking/teaming.adoc","articles":[]},{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/fundamentals.adoc","mtime":"2018-08-20T16:35:53.135Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

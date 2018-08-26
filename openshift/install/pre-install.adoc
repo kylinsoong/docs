@@ -227,15 +227,170 @@ EOF
 # for i in master infra node1 nfs ; do ssh $i.example.com 'yum list | grep openshift-ansible ; echo' ; done
 ----
 
+=== 安装软件包
+
+[source, text]
+.*1. yum 更新*
+----
+# for i in master infra node1 nfs ; do ssh $i.example.com 'yum list | grep openshift-ansible ; echo' ; done
+----
+
+[source, text]
+.*2. 安装基本包*
+----
+# for i in master infra node1 nfs ; do ssh $i.example.com 'yum -y install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct vim tree; echo' ; done
+----
+
+[source, text]
+.*3. Master 上安装 openshift-ansible*
+----
+# ssh master.example.com 'yum -y install openshift-ansible'
+----
+
+[source, text]
+.*4. 重起所有节点*
+----
+# for i in infra node1 nfs master ; do ssh $i.example.com 'reboot' ; done
+----
+
 === DNS 配置
 
-== 前续安装认证
+[source, text]
+.*1. 所有节点配置 DNS*
+----
+# for i in master infra node1 nfs ; do ssh $i.example.com 'nmcli connection modify eth0 ipv4.dns 192.168.5.106' ; done
+----
+
+[source, text]
+.*2. 测试 DNS*
+----
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig master.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig infra.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig nfs.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig node1.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig registry.example.com @192.168.5.106 +short' ; done
+
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig test.apps.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig xyz.apps.example.com @192.168.5.106 +short' ; done
+----
+
+=== 安装 Docker
+
+[source, text]
+.*1. 安装*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'yum -y install docker'; done
+----
+
+[source, text]
+.*2. 配置 Docker Storage(可选)*
+----
+
+----
+
+[source, text]
+.*3. 启动*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'systemctl enable docker'; done
+# for i in master infra node1 ; do ssh $i.example.com 'systemctl start docker'; done
+----
+
+[source, text]
+.*4. 启动验证*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'systemctl status docker'; done
+# for i in master infra node1 ; do ssh $i.example.com 'systemctl is-active docker'; done
+----
+
+=== Docker 证书配置
+
+[source, text]
+.*1. 拷贝证书*
+----
+# for i in master infra node1 ; do scp example.com.crt root@$i.example.com:/etc/pki/ca-trust/source/anchors/ ; done
+----
+
+[source, text]
+.*2. 更新信任自签名证书*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'update-ca-trust extract'; done
+----
+
+[source, text]
+.*3. 重起 Docker*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'systemctl restart docker ; systemctl is-active docker'; done
+# for i in master infra node1 ; do ssh $i.example.com 'systemctl is-enabled docker'; don
+----
+
+[source, text]
+.*4. 镜像下载测试*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'docker pull registry.example.com/rhscl/php-56-rhel7:latest'; done
+----
+
+
+== Ansible hosts 文件编辑
+
+登录 Master 节点编辑 `/etc/ansible/hosts`。
+
+
+=== Ansible Inventory 变量
+
+[source, bash]
+.*1 - 配置认证提供者*
+----
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+----
+
+[source, bash]
+.*2 - Web Console 控制*
+----
+openshift_web_console_install=true
+openshift_web_console_prefix=registry.example.com/openshift3/ose-
+openshift_web_console_version=v3.10.14
+----
+
+[source, bash]
+.*3 - 3.9 及以后的版本安装推荐使用 firewalld，如下参数开启 firewalld*
+----
+os_firewall_use_firewalld=True
+----
+
+[source, bash]
+.*4 - 安装 Standalone Registry，忽略 WebConsole 等其它*
+----
+deployment_subtype=registry
+----
+
+=== Inventory 示例
+
+|===
+|Inventory | 说明
+
+|link:hosts/hosts-3.10.14[hosts-3.10.14]
+|OpenShift 3.10.14
+
+|link:hosts/hosts-3.9.30[hosts-3.9.30]
+|OpenShift 3.9.30
+
+|link:hosts/hosts-3.9.25[hosts-3.9.25]
+|OpenShift 3.9.25
+
+|link:hosts/hosts-3.9.14[hosts-3.9.14]
+|OpenShift 3.9.14
+
+|link:hosts/hosts-3.6[hosts-3.6]
+|OpenShift 3.6
+|===
+
+== 前续安装验证
 
 本部分在 master 上执行。
 
-[source, bash]
+[source, text]
 .*执行 prerequisites 验证*
 ----
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+# ansible-playbook -i hosts-3.10.14 /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 ----
 

@@ -1,105 +1,57 @@
-
-= OCP 安装
+= 安装
 :toc: manual
-:toc-placement: preamble
-
-OpenShift Container Platform  安装。
-
-
-== Ansible hosts 文件编辑
-
-登录 Master 节点编辑 `/etc/ansible/hosts`。
-
-
-=== Ansible Inventory 变量
-
-[source, bash]
-.*1 - 配置认证提供者*
-----
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-----
-
-[source, bash]
-.*2 - Web Console 控制*
-----
-openshift_web_console_install=true
-openshift_web_console_prefix=registry.example.com/openshift3/ose-
-openshift_web_console_version=v3.9.30
-----
-
-[source, bash]
-.*3 - 3.9 及以后的版本安装推荐使用 firewalld，如下参数开启 firewalld*
-----
-os_firewall_use_firewalld=True
-----
-
-[source, bash]
-.*4 - 安装 Standalone Registry，忽略 WebConsole 等其它*
-----
-deployment_subtype=registry
-----
-
-=== Inventory 示例
-
-|===
-|Inventory | 说明
-
-|link:hosts/hosts-3.10.14[hosts-3.10.14]
-|OpenShift 3.10.14
-
-|link:hosts/hosts-3.9.30[hosts-3.9.30]
-|OpenShift 3.9.30
-
-|link:hosts/hosts-3.9.25[hosts-3.9.25]
-|OpenShift 3.9.25
-
-|link:hosts/hosts-3.9.14[hosts-3.9.14]
-|OpenShift 3.9.14
-
-|link:hosts/hosts-3.6[hosts-3.6]
-|OpenShift 3.6
-|===
 
 == 安装
 
-[source, bash]
-.*1 - Master 上执行 ansible 脚本*
+[source, text]
+.*Master 上执行 ansible 脚本*
 ----
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+# ansible-playbook -i hosts-3.10.14 /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+----
+
+== 安装成功验证
+
+[source, text]
+.*1 - 查看 INSTALLER STATUS（ansible 脚本运行的结尾）*
+----
+INSTALLER STATUS *****************************************************************************************************************************************************************************
+Initialization              : Complete (0:00:27)
+Health Check                : Complete (0:00:03)
+Node Bootstrap Preparation  : Complete (0:11:25)
+etcd Install                : Complete (0:00:42)
+NFS Install                 : Complete (0:00:09)
+Master Install              : Complete (0:03:43)
+Master Additional Install   : Complete (0:01:02)
+Node Join                   : Complete (0:03:48)
+Hosted Install              : Complete (0:00:58)
+Web Console Install         : Complete (0:00:41)
+Metrics Install             : Complete (0:02:03)
+Prometheus Install          : Complete (0:01:10)
+Service Catalog Install     : Complete (0:07:20)
 ----
 
 [source, text]
-.*2 - Master 上验证安装是否完成*
+.*2 - 查看所有 Nodes*
 ----
 # oc get nodes
-NAME                 STATUS     ROLES     AGE       VERSION
-infra.example.com    Ready      <none>    25s       v1.9.1+a0ce1bc657
-master.example.com   NotReady   <none>    5s        v1.9.1+a0ce1bc657
-node1.example.com    Ready      <none>    25s       v1.9.1+a0ce1bc657
-node2.example.com    Ready      <none>    25s       v1.9.1+a0ce1bc657
+----
 
+[source, text]
+.*3 - 查看所有 Pods*
+----
+# oc get pods --all-namespaces -o wide
+----
 
-# oc get pods -o wide --all-namespaces
-NAMESPACE                           NAME                             READY     STATUS             RESTARTS   AGE       IP              NODE
-default                             docker-registry-1-gpntv          1/1       Running            0          7m        10.244.4.17     infra.example.com
-default                             registry-console-1-v2g6z         1/1       Running            0          6m        10.244.0.2      node1.example.com
-default                             router-1-cp6hc                   1/1       Running            0          7m        192.168.56.64   infra.example.com
-kube-service-catalog                apiserver-tc5ff                  1/1       Running            0          1m        10.244.6.4      master.example.com
-kube-service-catalog                controller-manager-fvzwn         1/1       Running            0          1m        10.244.6.5      master.example.com
-openshift-ansible-service-broker    asb-1-deploy                     1/1       Running            0          1m        10.244.4.21     infra.example.com
-openshift-ansible-service-broker    asb-1-n488l                      0/1       CrashLoopBackOff   3          1m        10.244.4.23     infra.example.com
-openshift-ansible-service-broker    asb-etcd-1-8kchr                 0/1       CrashLoopBackOff   3          1m        10.244.4.24     infra.example.com
-openshift-ansible-service-broker    asb-etcd-1-deploy                1/1       Running            0          1m        10.244.4.22     infra.example.com
-openshift-infra                     hawkular-cassandra-1-v4jbj       1/1       Running            0          5m        10.244.2.3      node2.example.com
-openshift-infra                     hawkular-metrics-fft5n           1/1       Running            0          5m        10.244.4.19     infra.example.com
-openshift-infra                     heapster-lv5vc                   1/1       Running            0          5m        10.244.0.3      node1.example.com
-openshift-metrics                   prometheus-0                     4/6       CrashLoopBackOff   10         4m        10.244.4.20     infra.example.com
-openshift-metrics                   prometheus-node-exporter-dx98n   1/1       Running            0          4m        192.168.56.66   master.example.com
-openshift-metrics                   prometheus-node-exporter-g5ncc   1/1       Running            0          4m        192.168.56.62   node1.example.com
-openshift-metrics                   prometheus-node-exporter-jstjz   1/1       Running            0          4m        192.168.56.63   node2.example.com
-openshift-metrics                   prometheus-node-exporter-ncnf6   1/1       Running            0          4m        192.168.56.64   infra.example.com
-openshift-template-service-broker   apiserver-pp2hx                  1/1       Running            0          1m        10.244.4.25     infra.example.com
-openshift-web-console               webconsole-64f899d7d6-fxgkc      1/1       Running            1          6m        10.244.6.2      master.example.com
+[source, text]
+.*4 - 查看不同类型节点的镜像*
+----
+# for i in master infra node1 ; do ssh $i.example.com 'docker images ; echo' ; done
+----
+
+[source, text]
+.*5 - 查看 Master 监听端口*
+----
+# netstat -antulop
 ----
 
 

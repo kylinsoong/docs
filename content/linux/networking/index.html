@@ -870,7 +870,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/pre-install.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
             
                 <a href="../../openshift/install/pre-install.html">
             
@@ -883,7 +896,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
             
                 <a href="../../openshift/install/install.html">
             
@@ -896,7 +909,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/post-install.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
             
                 <a href="../../openshift/install/post-install.html">
             
@@ -909,7 +922,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/qa.html">
             
                 <a href="../../openshift/install/qa.html">
             
@@ -2306,6 +2319,8 @@
 <li><a href="#_tcp_ip">TCP/IP &#x56DB;&#x5C42;&#x6A21;&#x578B;</a></li>
 <li><a href="#_ipv4">IPv4 &#x5730;&#x5740;</a></li>
 <li><a href="#_ipv6">IPv6 &#x5730;&#x5740;</a></li>
+<li><a href="#_ipv6_headers">IPv6 Headers</a></li>
+<li><a href="#_ipv6_and_ipv4_harmony">IPv6 and IPv4 Harmony</a></li>
 <li><a href="#_networkmanager">NetworkManager</a></li>
 <li><a href="#_ifcfg">ifcfg &#x6587;&#x4EF6;&#x7684;&#x4E00;&#x822C;&#x914D;&#x7F6E;&#x5C5E;&#x6027;</a></li>
 <li><a href="#_nmcli_con_mod_nm_settings_ifcfg">nmcli con mod nm-settings &#x4E0E; ifcfg-* &#x6307;&#x4EE4;&#x7684;&#x6BD4;&#x8F83;</a></li>
@@ -2415,6 +2430,10 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<div class="title"><strong>IPv6 &#x5730;&#x5740;&#x793A;&#x4F8B;&#xFF1A;</strong></div>
+<p><span class="image"><img src="img/ipv6-shortern-excercise.png" alt="ipv6 shortern excercise.png"></span></p>
+</div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. <strong>IPv6 &#x901A;&#x7528;&#x5730;&#x5740;&#x8868;</strong></caption>
 <colgroup>
@@ -2458,7 +2477,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">fe80::/64</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&#x672C;&#x5730;&#x94FE;&#x63A5;&#x5730;&#x5740;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6BCF;&#x4E2A; IPv6 &#x63A5;&#x53E3;&#x81EA;&#x52A8;&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x94FE;&#x63A5;&#x5730;&#x5740;&#xFF0C;&#x8BE5;&#x5730;&#x5740;&#x4EC5;&#x5728;&#x8BE5;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x672C;&#x5730;&#x94FE;&#x63A5;&#x4E2D;&#x6709;&#x6548;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6BCF;&#x4E2A; IPv6 &#x63A5;&#x53E3;&#x81EA;&#x52A8;&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x94FE;&#x63A5;&#x5730;&#x5740;&#xFF0C;&#x8BE5;&#x5730;&#x5740;&#x4EC5;&#x5728;&#x8BE5;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x672C;&#x5730;&#x94FE;&#x63A5;&#x4E2D;&#x6709;&#x6548;&#x3002;Link-local unicast addresses allow for local network segment communications and are configured based upon a host&#x2019;s MAC address.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ff00::/8</p></td>
@@ -2467,6 +2486,65 @@
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_ipv6_headers">IPv6 Headers</h3>
+<div class="paragraph">
+<p><span class="image"><img src="img/ipv6-headers.png" alt="ipv6 headers.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Version</strong> - A 4-bit field that defines what version of IP is in use.</p>
+</li>
+<li>
+<p><strong>Traffic Class</strong> - An 8-bit field that defines the type of traffic contained within the IP datagram and allows for different classes of traffic to receive different priorities.</p>
+</li>
+<li>
+<p><strong>Flow Labe</strong> - A 20-bit field that&#x2019;s used in conjunction with the traffic class field for routers to make decisions about the quality of service level for a specific datagram.</p>
+</li>
+<li>
+<p><strong>Payload Length</strong> - A 16-bit field that defines how long the data payload section of the datagram is.</p>
+</li>
+<li>
+<p><strong>Next header</strong> - The next header field defines what kind of header is immediately after this current one.</p>
+</li>
+<li>
+<p><strong>Hop limit</strong> - An 8-bit field that&#x2019;s identical in purpose to the TTL field in an IPv4 header.</p>
+</li>
+<li>
+<p><strong>Source address</strong> - 128 bits length</p>
+</li>
+<li>
+<p><strong>Destination address</strong> - 128 bits length</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ipv6_and_ipv4_harmony">IPv6 and IPv4 Harmony</h3>
+<div class="paragraph">
+<p><strong>IPv6 tunnels</strong> - IPv6 tunnels are conceptually pretty simple. They consist of IPv6 tunnels servers on either end of a connection. These IPv6 tunnel servers take incoming IPv6 traffic and encapsulate it within traditional IPv4 datagrams.</p>
+</div>
+<div class="paragraph">
+<p><strong>IPv6 tunnel broker</strong> - Companies that provide IPv6 tunneling endpoints for you, so you don&#x2019;t have to introduce additional equipment to your network.</p>
+</div>
+<div class="paragraph">
+<p><strong>Links:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/6in4" target="_blank">6in4</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Tunnel_Setup_Protocol" target="_blank">TSP(Tunnel Setup Protocol)</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Anything_In_Anything" target="_blank">Anything In Anything</a></p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_networkmanager">NetworkManager</h3>
@@ -3344,7 +3422,7 @@ master.example.com</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"网络","level":"1.2.3","depth":2,"next":{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[]},"previous":{"title":"QA","level":"1.2.2.7","depth":3,"path":"linux/basic/ex.adoc","ref":"linux/basic/ex.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/README.adoc","mtime":"2018-06-01T01:29:15.021Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络","level":"1.2.3","depth":2,"next":{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[]},"previous":{"title":"QA","level":"1.2.2.7","depth":3,"path":"linux/basic/ex.adoc","ref":"linux/basic/ex.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/README.adoc","mtime":"2018-08-21T04:11:26.999Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

@@ -159,11 +159,11 @@ enabled = 1
 gpgcheck = 0
 name = rhel-7-server-extras-rpms
 
-[rhel-7-server-ose-3.9-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.9-rpms
+[rhel-7-server-ose-3.10-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.10-rpms
 enabled = 1
 gpgcheck = 0
-name = rhel-7-server-ose-3.9-rpms
+name = rhel-7-server-ose-3.10-rpms
 
 [rhel-7-fast-datapath-rpms]
 baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms

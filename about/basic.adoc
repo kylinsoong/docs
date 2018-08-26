@@ -95,3 +95,43 @@ $ sudo apt-get remove gimp
 * *Hybrid cloud* - A term used to describe situations where companies might run things like their most sensitive proprietary technologies on a private cloud while entrusting their less sensitive servers to a public cloud.
 
 *Cloud Computing:* A new model in computing where large clusters of machines let us use the total resources available in a better way.
+
+== Windowns Powershell 
+
+[source, bash]
+.*查看某文件权限*
+----
+> ICACLS C:\Users\Qwiklab\Documents\important_document
+
+C:\Users\Qwiklab\Documents\important_document WINDOWS-INSTANC\Kara:(R,W)
+                                              NT AUTHORITY\SYSTEM:(I)(F)
+                                              BUILTIN\Administrators:(I)(F)
+                                              BUILTIN\Users:(I)(RX)
+                                              Everyone:(I)(RX)
+
+Successfully processed 1 files; Failed processing 0 files
+----
+
+[source, bash]
+.*修改某用户基于某一文件的权限*
+----
+> ICACLS C:\Users\Qwiklab\Documents\important_document /remove "Kara"
+> ICACLS C:\Users\Qwiklab\Documents\important_document
+> ICACLS C:\Users\Qwiklab\Documents\important_document /grant "Kara:(r)"
+----
+
+[source, bash]
+.*给用户分配读写文件权限*
+----
+ICACLS C:\Users\Qwiklab\Secret\ /grant "Phoebe:(r)"
+ICACLS C:\Users\Qwiklab\Secret\ /grant "Kara:(w)"
+----
+
+[source, bash]
+.*修给组权限*
+----
+ICACLS C:\Users\Qwiklab\Music\ /remove "Everyone"
+ICACLS C:\Users\Qwiklab\Music\ /grant "Everyone:(r)"
+----
+
+

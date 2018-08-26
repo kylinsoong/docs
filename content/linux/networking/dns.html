@@ -870,7 +870,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/pre-install.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
             
                 <a href="../../openshift/install/pre-install.html">
             
@@ -883,7 +896,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
             
                 <a href="../../openshift/install/install.html">
             
@@ -896,7 +909,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/post-install.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
             
                 <a href="../../openshift/install/post-install.html">
             
@@ -909,7 +922,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/qa.html">
             
                 <a href="../../openshift/install/qa.html">
             
@@ -2310,10 +2323,17 @@
 <li><a href="#___2">&#x57DF;&#x540D;&#x67E5;&#x8BE2;&#x89E3;&#x6790;</a></li>
 <li><a href="#_dns_and_udp">DNS and UDP</a></li>
 <li><a href="#_dns_rrs">DNS RRs</a></li>
+<li><a href="#__dns_2">&#x516C;&#x5171; DNS &#x670D;&#x52A1;&#x5668;</a></li>
+<li><a href="#_dns_registration_and_expiration">DNS Registration and Expiration</a></li>
+</ul>
+</li>
+<li><a href="#_dns_2">DNS &#x5DE5;&#x5177;</a>
+<ul class="sectlevel2">
+<li><a href="#_nslookup">nslookup</a></li>
 </ul>
 </li>
 <li><a href="#__unbound">&#x914D;&#x7F6E;&#x7BA1;&#x7406; unbound</a></li>
-<li><a href="#_dns_2">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
+<li><a href="#_dns_3">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
 </ul>
 </div>
 <div class="sect1">
@@ -2328,6 +2348,9 @@
 </li>
 <li>
 <p>A domain name is just the term we use for something that can be resolved by DNS.</p>
+</li>
+<li>
+<p><a href="https://www.icann.org/" target="_blank">ICANN</a> is responsible for DNS at a global level.</p>
 </li>
 </ul>
 </div>
@@ -2590,7 +2613,7 @@ google.com.		220	IN	A	74.125.24.113</code></pre>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AAAA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AAAA(Quad A)</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>&#x4E3B;&#x673A;&#x540D;&#x548C; IPv6 &#x5730;&#x5740;&#x7684;&#x6620;&#x5C04;</p>
 </div>
@@ -2825,6 +2848,66 @@ google.com.		3600	IN	TXT	<span class="hljs-string">&quot;v=spf1 include:_spf.goo
 </ol>
 </div>
 </div>
+<div class="sect2">
+<h3 id="__dns_2">&#x516C;&#x5171; DNS &#x670D;&#x52A1;&#x5668;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An ISP almost always gives you access to a recursive name server as part of the service it provides.</p>
+</li>
+<li>
+<p>Public DNS servers are name servers specifically set up so that anyone can use them for free.</p>
+</li>
+<li>
+<p><strong>Level 3 communication</strong> - One of the largest ISPs in the world. The IP addresses for Level 3s public DNS servers are 4.2.2.1 through 4.2.2.6.</p>
+</li>
+<li>
+<p><strong>Google&#x2019;s public DNS</strong> - Google operates public name servers on the IPs 8.8.8.8 and 8.8.4.4.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dns_registration_and_expiration">DNS Registration and Expiration</h3>
+<div class="paragraph">
+<p><strong>Registrar</strong> - An organization responsible for assigning individual domain names to other organizations or individuals.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://godaddy.com" class="bare" target="_blank">https://godaddy.com</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dns_2">DNS &#x5DE5;&#x5177;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_nslookup">nslookup</h3>
+<div class="paragraph">
+<p>Nslookup is way more powerful than just that. It includes an interactive mode that lets you set additional options and run lots of queries in a row. To start an interactive nslookup session, you just enter nslookup, without any hostname following it. You should see an angle bracket acting as your prompt. From interactive mode, you can make lots of requests in a row. You can also perform some extra configuration to help with more in-depth trouble shooting.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ nslookup google.com
+Server:		10.72.17.5
+Address:	10.72.17.5<span class="hljs-comment">#53</span>
+
+Non-authoritative answer:
+Name:	google.com
+Address: 74.125.24.102
+Name:	google.com
+Address: 74.125.24.113
+Name:	google.com
+Address: 74.125.24.138
+Name:	google.com
+Address: 74.125.24.139
+Name:	google.com
+Address: 74.125.24.100
+Name:	google.com
+Address: 74.125.24.101</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2874,7 +2957,7 @@ google.com.		3600	IN	TXT	<span class="hljs-string">&quot;v=spf1 include:_spf.goo
 </div>
 </div>
 <div class="sect1">
-<h2 id="_dns_2">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</h2>
+<h2 id="_dns_3">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title"><strong>DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;&#x5206;&#x6790;</strong></div>
@@ -2932,7 +3015,7 @@ $ dig A example.com</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2018-08-19T15:48:59.234Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2018-08-21T02:42:31.322Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

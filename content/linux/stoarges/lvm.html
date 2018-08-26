@@ -870,7 +870,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/pre-install.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
             
                 <a href="../../openshift/install/pre-install.html">
             
@@ -883,7 +896,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
             
                 <a href="../../openshift/install/install.html">
             
@@ -896,7 +909,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/post-install.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
             
                 <a href="../../openshift/install/post-install.html">
             
@@ -909,7 +922,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/qa.html">
             
                 <a href="../../openshift/install/qa.html">
             
@@ -2301,51 +2314,103 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__">&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</a></li>
-<li><a href="#___2">&#x6269;&#x5C55;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</a></li>
+<li><a href="#__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</a>
+<ul class="sectlevel2">
+<li><a href="#___2">&#x521B;&#x5EFA;&#x903B;&#x8F91;&#x5377;</a></li>
+<li><a href="#___3">&#x5220;&#x9664;&#x903B;&#x8F91;&#x5377;</a></li>
+</ul>
+</li>
+<li><a href="#___4">&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</a></li>
+<li><a href="#___5">&#x6269;&#x5C55;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</a></li>
 </ul>
 </div>
 <div class="sect1">
-<h2 id="__">&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</h2>
+<h2 id="__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">&#x521B;&#x5EFA;&#x903B;&#x8F91;&#x5377;</h3>
+<div class="paragraph">
+<p>&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x53EF;&#x7528;&#x7684;&#x903B;&#x8F91;&#x5377;&#x9700;&#x8981;&#x4E94;&#x4E2A;&#x6B65;&#x9AA4;:</p>
+</div>
 <div class="listingblock">
-<div class="title"><strong>1 - &#x521B;&#x5EFA;&#x4E00;&#x4E2A; 256M &#x7684;&#x5206;&#x533A;</strong></div>
+<div class="title"><strong>1. &#x51C6;&#x5907;&#x7269;&#x7406;&#x8BBE;&#x5907;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x5B8C;&#x6574;&#x78C1;&#x76D8;&#x3001;RAID &#x9635;&#x5217;&#x6216; SAN&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x4E00;&#x5757;&#x76D8;&#x4E0A;&#x7684;&#x591A;&#x4E2A;&#x5206;&#x533A;&#xFF0C;&#x4F7F;&#x7528; fdisk&#x3001;gdisk &#x6216; parted &#x521B;&#x5EFA;&#x65B0;&#x5206;&#x533A;&#xFF0C;&#x5206;&#x533A;&#x7C7B;&#x578B;&#x9700;&#x8BBE;&#x7F6E;&#x4E3A; Linux LVM</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># fdisk /dev/sda
-Welcome to fdisk (util-linux 2.23.2).
-
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
-
-
-Command (m for help): n
-Partition type:
-   p   primary (2 primary, 0 extended, 2 free)
-   e   extended
-Select (default p):
-Using default response p
-Partition number (3,4, default 3):
-First sector (896512000-976773167, default 896512000):
-Using default value 896512000
-Last sector, +sectors or +size{K,M,G} (896512000-976773167, default 976773167): +256M
-Partition 3 of type Linux and of size 256 MiB is set
-
-Command (m for help): t
-Partition number (1-3, default 3):
-Hex code (type L to list all codes): 8e
-Changed type of partition &apos;Linux&apos; to &apos;Linux LVM&apos;
-
-Command (m for help): w
-The partition table has been altered!
-
-Calling ioctl() to re-read partition table.
-
-WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
-The kernel still uses the old table. The new table will be used at
-the next reboot or after you run partprobe(8) or kpartx(8)
-Syncing disks.
-
-# partprobe</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">fdisk /dev/vda</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x7269;&#x7406;&#x5377;&#xFF0C;&#x4F7F;&#x7528; pvcreate &#x4E3A;&#x5206;&#x533A;&#xFF08;&#x6216;&#x5176;&#x4ED6;&#x7269;&#x7406;&#x8BBE;&#x5907;&#xFF09;&#x6DFB;&#x52A0;&#x6807;&#x7B7E;&#xFF0C;&#x4F7F;&#x5176;&#x4F5C;&#x4E3A;&#x7269;&#x7406;&#x5377;&#x4E0E; LVM &#x7ED3;&#x5408;&#x4F7F;&#x7528;&#x3002;&#x4F1A;&#x5C06;&#x7528;&#x4E8E;&#x5B58;&#x50A8; LVM &#x914D;&#x7F6E;&#x6570;&#x636E;&#x7684;&#x4E00;&#x4E2A;&#x6807;&#x5934;&#x76F4;&#x63A5;&#x5199;&#x5165;&#x5230; PV&#x3002;PV &#x5206;&#x4E3A;&#x591A;&#x4E2A;&#x56FA;&#x5B9A;&#x5927;&#x5C0F;&#x7684;&#x7269;&#x7406;&#x8303;&#x56F4; (PE)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">pvcreate /dev/vda2 /dev/vdb1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x5377;&#x7EC4;&#xFF0C;vgcreate &#x7528;&#x4E8E;&#x521B;&#x5EFA;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x7269;&#x7406;&#x5377;&#x7684;&#x6C60;&#xFF0C;&#x79F0;&#x4E3A;&#x5377;&#x7EC4;&#x3002;VG &#x7684;&#x5927;&#x5C0F;&#x7531;&#x6C60;&#x4E2D;&#x7269;&#x7406;&#x8303;&#x56F4;&#x7684;&#x603B;&#x6570;&#x51B3;&#x5B9A;&#x3002;VG &#x8D1F;&#x8D23;&#x901A;&#x8FC7;&#x5411; LV &#x5206;&#x914D;&#x7A7A;&#x95F2; PE &#x6765;&#x6258;&#x7BA1;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x903B;&#x8F91;&#x5377;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">vgcreate vg-alpha /dev/vda2 /dev/vdb1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA;&#x903B;&#x8F91;&#x5377;&#xFF0C;lvcreate &#x6839;&#x636E;&#x5377;&#x7EC4;&#x4E2D;&#x7684;&#x53EF;&#x7528;&#x7269;&#x7406;&#x8303;&#x56F4;&#x521B;&#x5EFA;&#x65B0;&#x7684;&#x903B;&#x8F91;&#x5377;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">lvcreate -n hercules -L 2G vg-alpha</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x6DFB;&#x52A0;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#xFF0C;&#x4F7F;&#x7528; mkfs &#x5728;&#x65B0;&#x903B;&#x8F91;&#x5377;&#x4E0A;&#x521B;&#x5EFA; xfs &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkfs -t xfs /dev/vg-alpha/hercules</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x5220;&#x9664;&#x903B;&#x8F91;&#x5377;</h3>
+<div class="paragraph">
+<p>&#x5220;&#x9664;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;&#x7EC4;&#x4EF6;&#x9700;&#x8981;&#x56DB;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x51C6;&#x5907;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;, &#x5907;&#x4EFD;&#x6587;&#x4EF6;&#xFF0C;&#x4F7F;&#x7528; umount &#x5378;&#x8F7D;&#x8BE5;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#xFF0C;&#x5220;&#x9664;&#x4E0E;&#x6B64;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x5173;&#x8054;&#x7684;&#x4EFB;&#x4F55; /etc/fstab &#x6761;&#x76EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">umount /mnt/hercules</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5220;&#x9664;&#x903B;&#x8F91;&#x5377;&#xFF0C;&#x4F7F;&#x7528; lvremove &#x5220;&#x9664;&#x4E0D;&#x518D;&#x9700;&#x8981;&#x7684;&#x903B;&#x8F91;&#x5377;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">lvremove /dev/vg-alpha/hercules</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5220;&#x9664;&#x5377;&#x7EC4;&#xFF0C;&#x4F7F;&#x7528; vgremove &#x5220;&#x9664;&#x4E0D;&#x518D;&#x9700;&#x8981;&#x7684;&#x5377;&#x7EC4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">vgremove vg-alpha</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x5220;&#x9664;&#x7269;&#x7406;&#x5377;&#xFF0C;&#x4F7F;&#x7528; pvremove &#x5220;&#x9664;&#x4E0D;&#x518D;&#x9700;&#x8981;&#x7684;&#x7269;&#x7406;&#x5377;&#x3002;&#x4F7F;&#x7528;&#x7A7A;&#x683C;&#x5206;&#x9694;&#x7684; PV &#x8BBE;&#x5907;&#x5217;&#x8868;&#x540C;&#x65F6;&#x5220;&#x9664;&#x591A;&#x4E2A; PV</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">pvremove /dev/vda2 /dev/vdb1</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5C06;&#x6DFB;&#x52A0;&#x7269;&#x7406;&#x5377;&#x3001;&#x5377;&#x7EC4;&#x3001;&#x903B;&#x8F91;&#x5377;&#x548C; XFS &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x4F7F;&#x7528; fdisk &#x521B;&#x5EFA;&#x5927;&#x5C0F;&#x5404;&#x4E3A; 256MiB &#x7684;&#x4E24;&#x4E2A;&#x5206;&#x533A;&#xFF0C;&#x5E76;&#x5C06;&#x5176;&#x7C7B;&#x578B;&#x8BBE;&#x7F6E;&#x4E3A; Linux LVM</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x66F4;&#x65B0;&#x78C1;&#x76D8;&#x5206;&#x533A;&#x8868;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -2382,7 +2447,7 @@ Syncing disks.
 </div>
 </div>
 <div class="sect1">
-<h2 id="___2">&#x6269;&#x5C55;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</h2>
+<h2 id="___5">&#x6269;&#x5C55;&#x4E00;&#x4E2A;&#x903B;&#x8F91;&#x5377;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title"><strong>1 - &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x5206;&#x533A;</strong></div>
@@ -2517,7 +2582,7 @@ data blocks changed from 51200 to 179200</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"LVM","level":"1.2.4.2","depth":3,"next":{"title":"NFS","level":"1.2.4.3","depth":3,"path":"linux/stoarges/nfs.adoc","ref":"linux/stoarges/nfs.adoc","articles":[]},"previous":{"title":"文件系统","level":"1.2.4.1","depth":3,"path":"linux/stoarges/fs.adoc","ref":"linux/stoarges/fs.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/stoarges/lvm.adoc","mtime":"2018-06-01T01:29:15.039Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"LVM","level":"1.2.4.2","depth":3,"next":{"title":"NFS","level":"1.2.4.3","depth":3,"path":"linux/stoarges/nfs.adoc","ref":"linux/stoarges/nfs.adoc","articles":[]},"previous":{"title":"文件系统","level":"1.2.4.1","depth":3,"path":"linux/stoarges/fs.adoc","ref":"linux/stoarges/fs.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/stoarges/lvm.adoc","mtime":"2018-08-23T06:36:16.136Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

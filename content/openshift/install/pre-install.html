@@ -64,7 +64,7 @@
     <link rel="next" href="install.html" />
     
     
-    <link rel="prev" href="docker-dist.html" />
+    <link rel="prev" href="dns.html" />
     
 
     </head>
@@ -870,7 +870,20 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.2.3" data-path="pre-install.html">
+        <li class="chapter " data-level="1.4.2.3" data-path="dns.html">
+            
+                <a href="dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2.4" data-path="pre-install.html">
             
                 <a href="pre-install.html">
             
@@ -883,7 +896,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.4" data-path="install.html">
+        <li class="chapter " data-level="1.4.2.5" data-path="install.html">
             
                 <a href="install.html">
             
@@ -896,7 +909,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.5" data-path="post-install.html">
+        <li class="chapter " data-level="1.4.2.6" data-path="post-install.html">
             
                 <a href="post-install.html">
             
@@ -909,7 +922,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.6" data-path="qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="qa.html">
             
                 <a href="qa.html">
             
@@ -2301,20 +2314,151 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__ansible">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x5B89;&#x88C5; Ansible</a></li>
-<li><a href="#__">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</a></li>
-<li><a href="#___2">&#x524D;&#x7EED;&#x5B89;&#x88C5;</a>
+<li><a href="#__">&#x5B89;&#x88C5;&#x51C6;&#x5907;&#x8BF4;&#x660E;</a></li>
+<li><a href="#_ansible">Ansible &#x6267;&#x884C;&#x524D;&#x7EED;&#x5B89;&#x88C5;</a>
 <ul class="sectlevel2">
+<li><a href="#__ansible">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x5B89;&#x88C5; Ansible</a></li>
+<li><a href="#___2">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</a></li>
 <li><a href="#__playbook">&#x51C6;&#x5907; Playbook &#x811A;&#x672C;</a></li>
 <li><a href="#__playbook_2">&#x6267;&#x884C; Playbook &#x811A;&#x672C;</a></li>
 </ul>
 </li>
-<li><a href="#___3">&#x524D;&#x7EED;&#x5B89;&#x88C5;&#x8BA4;&#x8BC1;</a></li>
+<li><a href="#_bash">Bash &#x6267;&#x884C;&#x524D;&#x7EED;&#x5B89;&#x88C5;</a>
+<ul class="sectlevel2">
+<li><a href="#___3">&#x63A7;&#x5236;&#x8282;&#x70B9;&#x9759;&#x6001;&#x57DF;&#x540D;&#x914D;&#x7F6E;</a></li>
+<li><a href="#_master">Master &#x5230;&#x5176;&#x5B83;&#x8282;&#x70B9;&#x4E92;&#x4FE1;</a></li>
+<li><a href="#__hosts">&#x6240;&#x6709;&#x8282;&#x70B9; hosts &#x6587;&#x4EF6;&#x62F7;&#x8D1D;</a></li>
+<li><a href="#__yum">&#x6240;&#x6709;&#x8282;&#x70B9; yum &#x6E90;&#x914D;&#x7F6E;</a></li>
+<li><a href="#___4">&#x5B89;&#x88C5;&#x8F6F;&#x4EF6;&#x5305;</a></li>
+<li><a href="#_dns">DNS &#x914D;&#x7F6E;</a></li>
+<li><a href="#__docker">&#x5B89;&#x88C5; Docker</a></li>
+<li><a href="#_docker">Docker &#x8BC1;&#x4E66;&#x914D;&#x7F6E;</a></li>
+</ul>
+</li>
+<li><a href="#_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</a>
+<ul class="sectlevel2">
+<li><a href="#_ansible_inventory">Ansible Inventory &#x53D8;&#x91CF;</a></li>
+<li><a href="#_inventory">Inventory &#x793A;&#x4F8B;</a></li>
+</ul>
+</li>
+<li><a href="#___5">&#x524D;&#x7EED;&#x5B89;&#x88C5;&#x9A8C;&#x8BC1;</a></li>
 </ul>
 </div>
 <div class="sect1">
-<h2 id="__ansible">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x5B89;&#x88C5; Ansible</h2>
+<h2 id="__">&#x5B89;&#x88C5;&#x51C6;&#x5907;&#x8BF4;&#x660E;</h2>
 <div class="sectionbody">
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. <strong>&#x8F6F;&#x4EF6;&#x5B89;&#x88C5;&#x9700;&#x6C42;</strong></caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x7C7B;&#x578B;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SELinux</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x914D;&#x7F6E; SELinux(/etc/selinux/config)&#xFF0C;&#x786E;&#x4FDD;:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>SELINUX=enforcing</p>
+</li>
+<li>
+<p>SELINUXTYPE=targeted</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DNS</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>/etc/hosts</code> &#x4E2D;&#x6DFB;&#x52A0;&#x9759;&#x6001;&#x57DF;&#x540D;</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DNA A record</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6DFB;&#x52A0; A &#x8BB0;&#x5F55;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>*.cloudapps.example.com. 300 IN  A 10.0.0.1</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetworkManager</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x53EF;&#x9009;&#x62E9;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x7981;&#x7528;&#xFF0C;&#x9700;&#x8981;&#x624B;&#x52A8;&#x914D;&#x7F6E; DNS</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">firewall</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x63A8;&#x8350;&#x6253;&#x5F00;&#xFF0C;&#x5BF9;&#x5E94; ansible inventory &#x4E2D;&#x6DFB;&#x52A0;:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>os_firewall_use_firewalld=True</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>NFS, GlusterFS, Ceph RBD, OpenStack Cinder, AWS Elastic Block Store (EBS), GCE Persistent Disks, iSCSI.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5B89;&#x88C5;&#x5305;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre># yum install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
+# yum update
+# systemctl reboot</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ansible Task</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre># yum install openshift-ansible</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre># yum install docker-1.13.1
+# rpm -V docker-1.13.1
+# docker version</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x63D0;&#x4F9B;&#x4E24;&#x79CD;&#x5B89;&#x88C5;&#x65B9;&#x5F0F;&#xFF1A;Ansible &#x6267;&#x884C;&#x524D;&#x7EED;&#x5B89;&#x88C5;&#xFF0C;&#x53CA; Bash &#x6267;&#x884C;&#x524D;&#x7EED;&#x5B89;&#x88C5;&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ansible">Ansible &#x6267;&#x884C;&#x524D;&#x7EED;&#x5B89;&#x88C5;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x662F;&#x5728;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x4E0A;&#x8FDB;&#x884C;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="__ansible">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x5B89;&#x88C5; Ansible</h3>
 <div class="listingblock">
 <div class="title"><strong>1 - &#x5B89;&#x88C5;</strong></div>
 <div class="content">
@@ -2335,14 +2479,14 @@ ansible 2.3.2.0
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="__">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</h3>
 <div class="listingblock">
 <div class="title"><strong>1 - &#x914D;&#x7F6E;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x5230;&#x5404;&#x8282;&#x70B9;&#x9759;&#x6001;&#x57DF;&#x540D;&#x89E3;&#x6790;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.122.101 master.example.com master&quot;</span> &gt;&gt; /etc/hosts
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.122.102 infra.example.com infra&quot;</span> &gt;&gt; /etc/hosts
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.122.103 nfs.example.com nfs&quot;</span> &gt;&gt; /etc/hosts
 <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.122.105 node1.example.com node1&quot;</span> &gt;&gt; /etc/hosts
 <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.122.106 node2.example.com node2&quot;</span> &gt;&gt; /etc/hosts</code></pre>
 </div>
@@ -2350,43 +2494,15 @@ ansible 2.3.2.0
 <div class="listingblock">
 <div class="title"><strong>2 - &#x914D;&#x7F6E;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x751F;&#x6210; SSH &#x6240;&#x9700;&#x4E4B;&#x79D8;&#x94A5;&#x3002;&#x547D;&#x4EE4;&#x5982;&#x4E0B;&#xFF0C;&#x5E94;&#x7B54;&#x8F93;&#x5165;&#x8BF7;&#x76F4;&#x63A5;&#x8F93;&#x5165;&#x56DE;&#x8F66;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># ssh-keygen
-Generating public/private rsa key pair.
-Enter file in which to save the key (/root/.ssh/id_rsa):
-Created directory &apos;/root/.ssh&apos;.
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /root/.ssh/id_rsa.
-Your public key has been saved in /root/.ssh/id_rsa.pub.
-The key fingerprint is:
-SHA256:MGlaj6K0jRmB+/3kbvMNkRCmlzTCROGack8nsoq9tw8 root@ksoong.redhat.com
-The key&apos;s randomart image is:
-+---[RSA 2048]----+
-|   +=.=          |
-| . ..= =         |
-|. . o X          |
-| . + = * .       |
-|o B = o S        |
-| = &amp; +   .       |
-|  B E . .        |
-|.o  .=o  o       |
-|o oo.==o. .      |
-+----[SHA256]-----+</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># ssh-keygen</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>3 - &#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> master node1 node2; <span class="hljs-keyword">do</span> ssh-copy-id <span class="hljs-variable">$i</span>; <span class="hljs-keyword">done</span>;</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> master infra nfs node1 node2; <span class="hljs-keyword">do</span> ssh-copy-id <span class="hljs-variable">$i</span>; <span class="hljs-keyword">done</span>;</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="___2">&#x524D;&#x7EED;&#x5B89;&#x88C5;</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>&#x672C;&#x90E8;&#x5206;&#x662F;&#x5728;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x8282;&#x70B9;&#x4E0A;&#x8FDB;&#x884C;&#x3002;</p>
 </div>
 <div class="sect2">
 <h3 id="__playbook">&#x51C6;&#x5907; Playbook &#x811A;&#x672C;</h3>
@@ -2436,21 +2552,295 @@ The key&apos;s randomart image is:
 </div>
 </div>
 <div class="sect1">
-<h2 id="___3">&#x524D;&#x7EED;&#x5B89;&#x88C5;&#x8BA4;&#x8BC1;</h2>
+<h2 id="_bash">Bash &#x6267;&#x884C;&#x524D;&#x7EED;&#x5B89;&#x88C5;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___3">&#x63A7;&#x5236;&#x8282;&#x70B9;&#x9759;&#x6001;&#x57DF;&#x540D;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>Master &#x4E0A;&#x914D;&#x7F6E; hosts &#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">echo &quot;192.168.122.101 master.example.com master&quot; &gt;&gt; /etc/hosts
+echo &quot;192.168.122.102 infra.example.com infra&quot; &gt;&gt; /etc/hosts
+echo &quot;192.168.122.103 nfs.example.com nfs&quot; &gt;&gt; /etc/hosts
+echo &quot;192.168.122.105 node1.example.com node1&quot; &gt;&gt; /etc/hosts
+echo &quot;192.168.122.106 node2.example.com node2&quot; &gt;&gt; /etc/hosts
+echo &quot;192.168.5.106 registry.example.com registry&quot; &gt;&gt; /etc/hosts
+echo &quot;192.168.5.106 yum.example.com yum&quot; &gt;&gt; /etc/hosts</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_master">Master &#x5230;&#x5176;&#x5B83;&#x8282;&#x70B9;&#x4E92;&#x4FE1;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x751F;&#x6210; SSH &#x6240;&#x9700;&#x4E4B;&#x79D8;&#x94A5;&#x3002;&#x547D;&#x4EE4;&#x5982;&#x4E0B;&#xFF0C;&#x5E94;&#x7B54;&#x8F93;&#x5165;&#x8BF7;&#x76F4;&#x63A5;&#x8F93;&#x5165;&#x56DE;&#x8F66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ssh-keygen</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra nfs node1 node2 registry; do ssh-copy-id $i.example.com; done;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__hosts">&#x6240;&#x6709;&#x8282;&#x70B9; hosts &#x6587;&#x4EF6;&#x62F7;&#x8D1D;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra nfs node1 ; do scp /etc/hosts root@$i.example.com:/etc/hosts ; done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__yum">&#x6240;&#x6709;&#x8282;&#x70B9; yum &#x6E90;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x63A7;&#x5236;&#x8282;&#x70B9;&#x521B;&#x5EFA; ocp.repo</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">cat &lt;&lt; EOF &gt; ocp.repo
+[rhel-7-server-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-rpms
+
+[rhel-7-server-extras-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-extras-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-extras-rpms
+
+[rhel-7-server-ose-3.10-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.10-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ose-3.10-rpms
+
+[rhel-7-fast-datapath-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-fast-datapath-rpms
+
+[rhel-7-server-ansible-2.4-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ansible-2.4-rpms
+EOF</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x786E;&#x4FDD;&#x6240;&#x6709;&#x7528;&#x6237;&#x6709;&#x53EF;&#x8BFB;&#x6743;&#x9650;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># chmod a+x ocp.repo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6240;&#x6709;&#x8282;&#x70B9; yum &#x6E90;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do scp ocp.repo root@$i.example.com:/etc/yum.repos.d/ ; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x6D4B;&#x8BD5; yum &#x6E90;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;yum list | grep openshift-ansible ; echo&apos; ; done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x5B89;&#x88C5;&#x8F6F;&#x4EF6;&#x5305;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. yum &#x66F4;&#x65B0;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;yum list | grep openshift-ansible ; echo&apos; ; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5B89;&#x88C5;&#x57FA;&#x672C;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;yum -y install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct vim tree; echo&apos; ; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. Master &#x4E0A;&#x5B89;&#x88C5; openshift-ansible</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ssh master.example.com &apos;yum -y install openshift-ansible&apos;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x91CD;&#x8D77;&#x6240;&#x6709;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in infra node1 nfs master ; do ssh $i.example.com &apos;reboot&apos; ; done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dns">DNS &#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x6240;&#x6709;&#x8282;&#x70B9;&#x914D;&#x7F6E; DNS</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;nmcli connection modify eth0 ipv4.dns 192.168.5.106&apos; ; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6D4B;&#x8BD5; DNS</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig master.example.com @192.168.5.106 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig infra.example.com @192.168.5.106 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig nfs.example.com @192.168.5.106 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig node1.example.com @192.168.5.106 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig registry.example.com @192.168.5.106 +short&apos; ; done
+
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig test.apps.example.com @192.168.5.106 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig xyz.apps.example.com @192.168.5.106 +short&apos; ; done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__docker">&#x5B89;&#x88C5; Docker</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;yum -y install docker&apos;; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; Docker Storage(&#x53EF;&#x9009;)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;systemctl enable docker&apos;; done
+# for i in master infra node1 ; do ssh $i.example.com &apos;systemctl start docker&apos;; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x542F;&#x52A8;&#x9A8C;&#x8BC1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;systemctl status docker&apos;; done
+# for i in master infra node1 ; do ssh $i.example.com &apos;systemctl is-active docker&apos;; done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_docker">Docker &#x8BC1;&#x4E66;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x62F7;&#x8D1D;&#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do scp example.com.crt root@$i.example.com:/etc/pki/ca-trust/source/anchors/ ; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x66F4;&#x65B0;&#x4FE1;&#x4EFB;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;update-ca-trust extract&apos;; done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x91CD;&#x8D77; Docker</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;systemctl restart docker ; systemctl is-active docker&apos;; done
+# for i in master infra node1 ; do ssh $i.example.com &apos;systemctl is-enabled docker&apos;; don</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x955C;&#x50CF;&#x4E0B;&#x8F7D;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;docker pull registry.example.com/rhscl/php-56-rhel7:latest&apos;; done</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ansible_hosts">Ansible hosts &#x6587;&#x4EF6;&#x7F16;&#x8F91;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x767B;&#x5F55; Master &#x8282;&#x70B9;&#x7F16;&#x8F91; <code>/etc/ansible/hosts</code>&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="_ansible_inventory">Ansible Inventory &#x53D8;&#x91CF;</h3>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x914D;&#x7F6E;&#x8BA4;&#x8BC1;&#x63D0;&#x4F9B;&#x8005;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openshift_master_identity_providers=[{<span class="hljs-string">&apos;name&apos;</span>: <span class="hljs-string">&apos;htpasswd_auth&apos;</span>, <span class="hljs-string">&apos;login&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;challenge&apos;</span>: <span class="hljs-string">&apos;true&apos;</span>, <span class="hljs-string">&apos;kind&apos;</span>: <span class="hljs-string">&apos;HTPasswdPasswordIdentityProvider&apos;</span>}]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - Web Console &#x63A7;&#x5236;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openshift_web_console_install=<span class="hljs-literal">true</span>
+openshift_web_console_prefix=registry.example.com/openshift3/ose-
+openshift_web_console_version=v3.10.14</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - 3.9 &#x53CA;&#x4EE5;&#x540E;&#x7684;&#x7248;&#x672C;&#x5B89;&#x88C5;&#x63A8;&#x8350;&#x4F7F;&#x7528; firewalld&#xFF0C;&#x5982;&#x4E0B;&#x53C2;&#x6570;&#x5F00;&#x542F; firewalld</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">os_firewall_use_firewalld=True</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x5B89;&#x88C5; Standalone Registry&#xFF0C;&#x5FFD;&#x7565; WebConsole &#x7B49;&#x5176;&#x5B83;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">deployment_subtype=registry</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_inventory">Inventory &#x793A;&#x4F8B;</h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Inventory</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.10.14">hosts-3.10.14</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.10.14</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.9.30">hosts-3.9.30</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.9.30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.9.25">hosts-3.9.25</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.9.25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.9.14">hosts-3.9.14</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.9.14</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="hosts/hosts-3.6">hosts-3.6</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift 3.6</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">&#x524D;&#x7EED;&#x5B89;&#x88C5;&#x9A8C;&#x8BC1;</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x5728; master &#x4E0A;&#x6267;&#x884C;&#x3002;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>Mater &#x5230;&#x5404;&#x8282;&#x70B9;&#x4E92;&#x4FE1;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> master node1 node2 nfs registry ; <span class="hljs-keyword">do</span> ssh-copy-id <span class="hljs-variable">$i</span>.example.com ; <span class="hljs-keyword">done</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
 <div class="title"><strong>&#x6267;&#x884C; prerequisites &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># ansible-playbook -i hosts-3.10.14 /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml</code></pre>
 </div>
 </div>
 </div>
@@ -2481,7 +2871,7 @@ The key&apos;s randomart image is:
 
             
                 
-                <a href="docker-dist.html" class="navigation navigation-prev " aria-label="Previous page: 本地 docker 镜像仓库配置">
+                <a href="dns.html" class="navigation navigation-prev " aria-label="Previous page: DNS 服务">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -2497,7 +2887,7 @@ The key&apos;s randomart image is:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"前续安装","level":"1.4.2.3","depth":3,"next":{"title":"安装","level":"1.4.2.4","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"previous":{"title":"本地 docker 镜像仓库配置","level":"1.4.2.2","depth":3,"path":"openshift/install/docker-dist.adoc","ref":"openshift/install/docker-dist.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/pre-install.adoc","mtime":"2018-06-17T09:13:24.889Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-19T16:02:27.544Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"前续安装","level":"1.4.2.4","depth":3,"next":{"title":"安装","level":"1.4.2.5","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"previous":{"title":"DNS 服务","level":"1.4.2.3","depth":3,"path":"openshift/install/dns.adoc","ref":"openshift/install/dns.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/pre-install.adoc","mtime":"2018-08-26T17:37:31.346Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
