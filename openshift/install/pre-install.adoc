@@ -146,8 +146,8 @@ echo "192.168.122.102 infra.example.com infra" >> /etc/hosts
 echo "192.168.122.103 nfs.example.com nfs" >> /etc/hosts
 echo "192.168.122.105 node1.example.com node1" >> /etc/hosts
 echo "192.168.122.106 node2.example.com node2" >> /etc/hosts
-echo "192.168.5.106 registry.example.com registry" >> /etc/hosts
-echo "192.168.5.106 yum.example.com yum" >> /etc/hosts
+echo "10.66.192.47 registry.example.com registry" >> /etc/hosts
+echo "10.66.192.47 yum.example.com yum" >> /etc/hosts
 ----
 
 === Master 到其它节点互信
@@ -162,6 +162,12 @@ echo "192.168.5.106 yum.example.com yum" >> /etc/hosts
 .*2. 配置到各节点免密登录*
 ----
 # for i in master infra nfs node1 node2 registry; do ssh-copy-id $i.example.com; done;
+----
+
+[source, text]
+.*3. 免密登录验证*
+----
+# for i in master infra node1 nfs ; do ssh $i.example.com 'date'; done
 ----
 
 === 所有节点 hosts 文件拷贝
@@ -232,7 +238,7 @@ EOF
 [source, text]
 .*1. yum 更新*
 ----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'yum list | grep openshift-ansible ; echo' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'yum update -y' ; done
 ----
 
 [source, text]
@@ -258,20 +264,20 @@ EOF
 [source, text]
 .*1. 所有节点配置 DNS*
 ----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'nmcli connection modify eth0 ipv4.dns 192.168.5.106' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'nmcli connection modify eth0 ipv4.dns 10.66.192.47' ; done
 ----
 
 [source, text]
 .*2. 测试 DNS*
 ----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig master.example.com @192.168.5.106 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig infra.example.com @192.168.5.106 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig nfs.example.com @192.168.5.106 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig node1.example.com @192.168.5.106 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig registry.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig master.example.com @10.66.192.47 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig infra.example.com @10.66.192.47 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig nfs.example.com @10.66.192.47 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig node1.example.com @10.66.192.47 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig registry.example.com @10.66.192.47 +short' ; done
 
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig test.apps.example.com @192.168.5.106 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig xyz.apps.example.com @192.168.5.106 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig test.apps.example.com @10.66.192.47 +short' ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com 'dig xyz.apps.example.com @10.66.192.47 +short' ; done
 ----
 
 === 安装 Docker

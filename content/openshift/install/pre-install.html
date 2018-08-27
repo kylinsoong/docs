@@ -2564,8 +2564,8 @@ echo &quot;192.168.122.102 infra.example.com infra&quot; &gt;&gt; /etc/hosts
 echo &quot;192.168.122.103 nfs.example.com nfs&quot; &gt;&gt; /etc/hosts
 echo &quot;192.168.122.105 node1.example.com node1&quot; &gt;&gt; /etc/hosts
 echo &quot;192.168.122.106 node2.example.com node2&quot; &gt;&gt; /etc/hosts
-echo &quot;192.168.5.106 registry.example.com registry&quot; &gt;&gt; /etc/hosts
-echo &quot;192.168.5.106 yum.example.com yum&quot; &gt;&gt; /etc/hosts</code></pre>
+echo &quot;10.66.192.47 registry.example.com registry&quot; &gt;&gt; /etc/hosts
+echo &quot;10.66.192.47 yum.example.com yum&quot; &gt;&gt; /etc/hosts</code></pre>
 </div>
 </div>
 </div>
@@ -2581,6 +2581,12 @@ echo &quot;192.168.5.106 yum.example.com yum&quot; &gt;&gt; /etc/hosts</code></p
 <div class="title"><strong>2. &#x914D;&#x7F6E;&#x5230;&#x5404;&#x8282;&#x70B9;&#x514D;&#x5BC6;&#x767B;&#x5F55;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra nfs node1 node2 registry; do ssh-copy-id $i.example.com; done;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x514D;&#x5BC6;&#x767B;&#x5F55;&#x9A8C;&#x8BC1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;date&apos;; done</code></pre>
 </div>
 </div>
 </div>
@@ -2654,7 +2660,7 @@ EOF</code></pre>
 <div class="listingblock">
 <div class="title"><strong>1. yum &#x66F4;&#x65B0;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;yum list | grep openshift-ansible ; echo&apos; ; done</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;yum update -y&apos; ; done</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -2681,20 +2687,20 @@ EOF</code></pre>
 <div class="listingblock">
 <div class="title"><strong>1. &#x6240;&#x6709;&#x8282;&#x70B9;&#x914D;&#x7F6E; DNS</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;nmcli connection modify eth0 ipv4.dns 192.168.5.106&apos; ; done</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;nmcli connection modify eth0 ipv4.dns 10.66.192.47&apos; ; done</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>2. &#x6D4B;&#x8BD5; DNS</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig master.example.com @192.168.5.106 +short&apos; ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig infra.example.com @192.168.5.106 +short&apos; ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig nfs.example.com @192.168.5.106 +short&apos; ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig node1.example.com @192.168.5.106 +short&apos; ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig registry.example.com @192.168.5.106 +short&apos; ; done
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig master.example.com @10.66.192.47 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig infra.example.com @10.66.192.47 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig nfs.example.com @10.66.192.47 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig node1.example.com @10.66.192.47 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig registry.example.com @10.66.192.47 +short&apos; ; done
 
-# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig test.apps.example.com @192.168.5.106 +short&apos; ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig xyz.apps.example.com @192.168.5.106 +short&apos; ; done</code></pre>
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig test.apps.example.com @10.66.192.47 +short&apos; ; done
+# for i in master infra node1 nfs ; do ssh $i.example.com &apos;dig xyz.apps.example.com @10.66.192.47 +short&apos; ; done</code></pre>
 </div>
 </div>
 </div>
@@ -2887,7 +2893,7 @@ openshift_web_console_version=v3.10.14</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"前续安装","level":"1.4.2.4","depth":3,"next":{"title":"安装","level":"1.4.2.5","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"previous":{"title":"DNS 服务","level":"1.4.2.3","depth":3,"path":"openshift/install/dns.adoc","ref":"openshift/install/dns.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/pre-install.adoc","mtime":"2018-08-26T17:37:31.346Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"前续安装","level":"1.4.2.4","depth":3,"next":{"title":"安装","level":"1.4.2.5","depth":3,"path":"openshift/install/install.adoc","ref":"openshift/install/install.adoc","articles":[]},"previous":{"title":"DNS 服务","level":"1.4.2.3","depth":3,"path":"openshift/install/dns.adoc","ref":"openshift/install/dns.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/pre-install.adoc","mtime":"2018-08-27T02:58:10.043Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-27T07:43:14.273Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

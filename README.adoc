@@ -42,3 +42,14 @@ $ gitbook mobi ./ cookbook.mobi
 ----
 
 Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`, `cookbook.epub`, and `cookbook.mobi` will be generated.
+
+== Changes
+
+|===
+|版本 |时间 |Notes
+
+|1.0.0
+|2018-08-27
+|基本 OpenShift 安装(3.10.14)，基本 Linux 基础，APPDEV 相关内容
+
+|===

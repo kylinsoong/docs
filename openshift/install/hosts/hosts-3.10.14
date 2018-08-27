@@ -11,9 +11,9 @@ ansible_ssh_user=root
 openshift_deployment_type=openshift-enterprise
 openshift_release=v3.10
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
-openshift_disable_check=docker_image_availability,docker_storage,memory_availability,disk_availability,package_availability
+openshift_disable_check=docker_storage,memory_availability,disk_availability
 
-#openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true']}, {'name': 'node-config-infra', 'labels':['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute','labels': ['node-role.kubernetes.io/compute=true']}]
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true']}, {'name': 'node-config-infra', 'labels':['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute','labels': ['node-role.kubernetes.io/compute=true']}]
 
 # Enable cockpit
 osm_use_cockpit=true

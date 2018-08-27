@@ -2354,25 +2354,118 @@ Service Catalog Install     : Complete (0:07:20)</code></pre>
 <div class="listingblock">
 <div class="title"><strong>2 - &#x67E5;&#x770B;&#x6240;&#x6709; Nodes</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># oc get nodes</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># oc get nodes
+NAME                 STATUS    ROLES     AGE       VERSION
+infra.example.com    Ready     infra     1h        v1.10.0+b81c8f8
+master.example.com   Ready     master    1h        v1.10.0+b81c8f8
+node1.example.com    Ready     compute   1h        v1.10.0+b81c8f8</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>3 - &#x67E5;&#x770B;&#x6240;&#x6709; Pods</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># oc get pods --all-namespaces -o wide</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># oc get pods --all-namespaces -o wide | grep master.example.com
+default                             registry-console-1-bgcqm                1/1       Running     0          1h        10.244.0.3        master.example.com
+kube-service-catalog                apiserver-t4f2m                         1/1       Running     0          1h        10.244.0.7        master.example.com
+kube-service-catalog                controller-manager-bswhl                1/1       Running     0          1h        10.244.0.8        master.example.com
+kube-system                         master-api-master.example.com           1/1       Running     0          1h        192.168.122.101   master.example.com
+kube-system                         master-controllers-master.example.com   1/1       Running     0          1h        192.168.122.101   master.example.com
+kube-system                         master-etcd-master.example.com          1/1       Running     0          1h        192.168.122.101   master.example.com
+openshift-infra                     hawkular-metrics-hszwd                  1/1       Running     0          1h        10.244.0.6        master.example.com
+openshift-metrics                   prometheus-node-exporter-wxzjr          1/1       Running     0          1h        192.168.122.101   master.example.com
+openshift-node                      sync-4mll5                              1/1       Running     0          1h        192.168.122.101   master.example.com
+openshift-sdn                       ovs-cdq28                               1/1       Running     0          1h        192.168.122.101   master.example.com
+openshift-sdn                       sdn-sssfl                               1/1       Running     0          1h        192.168.122.101   master.example.com
+openshift-template-service-broker   apiserver-qkqvc                         1/1       Running     0          1h        10.244.0.9        master.example.com
+openshift-web-console               webconsole-7c484b9ff8-76rh5             1/1       Running     1          1h        10.244.0.4        master.example.com
+
+# oc get pods --all-namespaces -o wide | grep node1.example.com
+openshift-infra                     heapster-6wxj2                          1/1       Running     0          1h        10.244.4.3        node1.example.com
+openshift-metrics                   prometheus-node-exporter-lmsxz          1/1       Running     0          1h        192.168.122.105   node1.example.com
+openshift-node                      sync-xzxxv                              1/1       Running     0          1h        192.168.122.105   node1.example.com
+openshift-sdn                       ovs-grrvm                               1/1       Running     0          1h        192.168.122.105   node1.example.com
+openshift-sdn                       sdn-fbm27                               1/1       Running     0          1h        192.168.122.105   node1.example.com
+
+# oc get pods --all-namespaces -o wide | grep infra.example.com
+default                             docker-registry-1-77krn                 1/1       Running     0          1h        10.244.2.4        infra.example.com
+default                             router-1-x9q6x                          1/1       Running     0          1h        192.168.122.102   infra.example.com
+openshift-ansible-service-broker    asb-1-wbbhr                             1/1       Running     0          1h        10.244.2.8        infra.example.com
+openshift-infra                     hawkular-cassandra-1-ggwxr              1/1       Running     0          1h        10.244.2.6        infra.example.com
+openshift-infra                     hawkular-metrics-schema-5699f           0/1       Completed   0          1h        10.244.2.5        infra.example.com
+openshift-metrics                   prometheus-node-exporter-j7lr5          1/1       Running     0          1h        192.168.122.102   infra.example.com
+openshift-node                      sync-qs9x2                              1/1       Running     0          1h        192.168.122.102   infra.example.com
+openshift-sdn                       ovs-ghqhn                               1/1       Running     0          1h        192.168.122.102   infra.example.com
+openshift-sdn                       sdn-fnl8v                               1/1       Running     0          1h        192.168.122.102   infra.example.com</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>4 - &#x67E5;&#x770B;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x8282;&#x70B9;&#x7684;&#x955C;&#x50CF;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;docker images ; echo&apos; ; done</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in master infra node1 ; do ssh $i.example.com &apos;docker images ; echo&apos; ; done
+REPOSITORY                                                    TAG                 IMAGE ID            CREATED             SIZE
+registry.example.com/openshift3/ose-node                      v3.10.14            da5c8c13b7e8        11 days ago         1.27 GB
+registry.example.com/openshift3/registry-console              v3.10.14            8d51f41d6fa3        13 days ago         231 MB
+registry.example.com/openshift3/ose-deployer                  v3.10.14            414fcb4f3482        13 days ago         789 MB
+registry.example.com/openshift3/ose-web-console               v3.10.14            e3d8bd0ed7d1        13 days ago         318 MB
+registry.example.com/openshift3/ose-control-plane             v3.10.14            64b4a2f9caae        13 days ago         789 MB
+registry.example.com/openshift3/ose-service-catalog           v3.10.14            96ce9ced41cd        13 days ago         312 MB
+registry.example.com/openshift3/prometheus-node-exporter      v3.10.14            0a9d568fce09        13 days ago         223 MB
+registry.example.com/openshift3/metrics-hawkular-metrics      v3.10.14            ac44e9cebacf        13 days ago         1.71 GB
+registry.example.com/openshift3/ose-template-service-broker   v3.10.14            669fe6121623        13 days ago         283 MB
+registry.example.com/openshift3/ose-pod                       v3.10.14            ddeb851f17ad        13 days ago         214 MB
+registry.example.com/rhel7/etcd                               3.2.22              98217b7c8905        2 weeks ago         256 MB
+
+REPOSITORY                                                   TAG                 IMAGE ID            CREATED             SIZE
+registry.example.com/openshift3/ose-node                     v3.10.14            da5c8c13b7e8        11 days ago         1.27 GB
+registry.example.com/openshift3/ose-haproxy-router           v3.10.14            b0bd92d8865b        13 days ago         808 MB
+registry.example.com/openshift3/ose-deployer                 v3.10.14            414fcb4f3482        13 days ago         789 MB
+registry.example.com/openshift3/ose-docker-registry          v3.10.14            a21f6776105b        13 days ago         283 MB
+registry.example.com/openshift3/prometheus-node-exporter     v3.10.14            0a9d568fce09        13 days ago         223 MB
+registry.example.com/openshift3/metrics-cassandra            v3.10.14            ac838937235a        13 days ago         555 MB
+registry.example.com/openshift3/metrics-schema-installer     v3.10.14            c973002f575e        13 days ago         841 MB
+registry.example.com/openshift3/ose-ansible-service-broker   v3.10.14            b6b9a4fb59c0        13 days ago         440 MB
+registry.example.com/openshift3/ose-pod                      v3.10.14            ddeb851f17ad        13 days ago         214 MB
+
+REPOSITORY                                                 TAG                 IMAGE ID            CREATED             SIZE
+registry.example.com/openshift3/ose-node                   v3.10.14            da5c8c13b7e8        11 days ago         1.27 GB
+registry.example.com/openshift3/prometheus-node-exporter   v3.10.14            0a9d568fce09        13 days ago         223 MB
+registry.example.com/openshift3/metrics-heapster           v3.10.14            b43f9c9ba0c9        13 days ago         281 MB
+registry.example.com/openshift3/ose-pod                    v3.10.14            ddeb851f17ad        13 days ago         214 MB</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>5 - &#x67E5;&#x770B; Master &#x76D1;&#x542C;&#x7AEF;&#x53E3;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># netstat -antulop</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># netstat -antulop | grep LISTEN
+tcp        0      0 0.0.0.0:8443            0.0.0.0:*               LISTEN      12700/openshift      off (0.00/0/0)
+tcp        0      0 0.0.0.0:8444            0.0.0.0:*               LISTEN      12650/openshift      off (0.00/0/0)
+tcp        0      0 192.168.122.101:2379    0.0.0.0:*               LISTEN      12680/etcd           off (0.00/0/0)
+tcp        0      0 192.168.122.101:2380    0.0.0.0:*               LISTEN      12680/etcd           off (0.00/0/0)
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      26356/rpcbind        off (0.00/0/0)
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      20501/openshift      off (0.00/0/0)
+tcp        0      0 10.244.0.1:53           0.0.0.0:*               LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp        0      0 0.0.0.0:8053            0.0.0.0:*               LISTEN      12700/openshift      off (0.00/0/0)
+tcp        0      0 192.168.122.101:53      0.0.0.0:*               LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      992/sshd             off (0.00/0/0)
+tcp        0      0 127.0.0.1:11256         0.0.0.0:*               LISTEN      20501/openshift      off (0.00/0/0)
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      1382/master          off (0.00/0/0)
+tcp6       0      0 :::9090                 :::*                    LISTEN      1/systemd            off (0.00/0/0)
+tcp6       0      0 :::10250                :::*                    LISTEN      24344/hyperkube      off (0.00/0/0)
+tcp6       0      0 :::9100                 :::*                    LISTEN      21015/node_exporter  off (0.00/0/0)
+tcp6       0      0 :::111                  :::*                    LISTEN      26356/rpcbind        off (0.00/0/0)
+tcp6       0      0 :::10256                :::*                    LISTEN      20501/openshift      off (0.00/0/0)
+tcp6       0      0 fe80::e4ec:eeff:feec:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::bca3:6ff:fe69::53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::7cae:5cff:fe6d:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::d0d2:cdff:fe20:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::a018:1bff:fe00:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::b8bd:20ff:feb6:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::746a:65ff:fe41:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::88e8:5ff:fecb::53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 fe80::5054:ff:fe4c:2:53 :::*                    LISTEN      21745/dnsmasq        off (0.00/0/0)
+tcp6       0      0 :::22                   :::*                    LISTEN      992/sshd             off (0.00/0/0)
+tcp6       0      0 ::1:25                  :::*                    LISTEN      1382/master          off (0.00/0/0)</code></pre>
 </div>
 </div>
 </div>
@@ -2419,7 +2512,7 @@ Service Catalog Install     : Complete (0:07:20)</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.5","depth":3,"next":{"title":"后续安装","level":"1.4.2.6","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.4","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-08-26T18:19:24.731Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-26T18:21:20.995Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.4.2.5","depth":3,"next":{"title":"后续安装","level":"1.4.2.6","depth":3,"path":"openshift/install/post-install.adoc","ref":"openshift/install/post-install.adoc","articles":[]},"previous":{"title":"前续安装","level":"1.4.2.4","depth":3,"path":"openshift/install/pre-install.adoc","ref":"openshift/install/pre-install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/install/install.adoc","mtime":"2018-08-27T06:10:11.783Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-08-27T07:43:14.273Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
