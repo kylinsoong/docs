@@ -1,4 +1,4 @@
-= 基础知识
+= IT Professions
 :toc: manual
 
 == 十进制和二进制转换
@@ -134,4 +134,26 @@ ICACLS C:\Users\Qwiklab\Music\ /remove "Everyone"
 ICACLS C:\Users\Qwiklab\Music\ /grant "Everyone:(r)"
 ----
 
+== Chocolatey 管理 Windows 系统软件包
+
+[source, bash]
+.*安装 Chocolatey*
+----
+Unregister-PackageSource -Name chocolatey
+Register-PackageSource -Name chocolatey -ProviderName Chocolatey -Location http://chocolatey.org/api/v2/
+----
+
+[source, bash]
+.*Chocolatey 安装包*
+----
+Install-Package -Name vlc -Source chocolatey
+Get-Package -Name vlc
+----
+
+[source, bash]
+.*Chocolatey 卸载包*
+----
+Choco Uninstall GIMP
+Get-Package
+----
 

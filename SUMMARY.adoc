@@ -155,4 +155,4 @@
 .. link:solutions/ep-data-solution.adoc[企业数据整合案例]
 .. link:solutions/spark-gs.adoc[Spark Get Start]
 . link:about/README.adoc[ABOUT]
-.. link:about/basic.adoc[基础]
+.. link:about/it-professions.adoc[基础]

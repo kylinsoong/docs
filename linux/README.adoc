@@ -1,6 +1,8 @@
-= RedHat Enterprise Linux
+= Linux
+:toc: manual
 
-.*术语表*
+== 术语表
+
 |===
 |术语 |全称 |中文 |说明
 
@@ -54,5 +56,39 @@
 |又称网络接口控制器，网络适配器（network adapter），网卡（network interface card），或区域网络接收器（LAN adapter），是一块被设计用来允许计算机在计算机网络上进行通讯的计算机硬件
 
 |===
+
+== 设备(Devices)和驱动(Drivers)
+
+Linux 中一切都可以认为是一个文件，包括设备和驱动，`/dev`目录下是所有设备文件。
+
+有两种类型的设备:
+
+* *Character devices* - like a keyboard or mouse, transmit data character by character.
+* *Block devices* - like USB drives, hard drives, and CD-ROMs transfer blocks of data. A data block is just a unit of data storage.
+
+[source, bash]
+.*查看块设备*
+----
+$ ls -l /dev/ | grep brw
+brw-rw----. 1 root disk      253,     0 Aug 28 09:25 dm-0
+brw-rw----. 1 root disk      253,     1 Aug 28 09:25 dm-1
+brw-rw----. 1 root disk      253,     2 Aug 28 09:25 dm-2
+brw-rw----. 1 root disk      259,     0 Aug 28 09:25 nvme0n1
+brw-rw----. 1 root disk      259,     1 Aug 28 09:25 nvme0n1p1
+brw-rw----. 1 root disk      259,     2 Aug 28 09:25 nvme0n1p2
+brw-rw----. 1 root disk      259,     3 Aug 28 09:25 nvme0n1p3
+brw-rw----. 1 root disk        8,     0 Aug 28 20:32 sda
+brw-rw----. 1 root disk        8,    16 Aug 28 21:51 sdb
+brw-rw----. 1 root disk        8,    17 Aug 28 21:51 sdb1
+----
+
+https://en.wikipedia.org/wiki/Device_file[Linux Device file]
+
+https://en.wikipedia.org/wiki/Udev[udev]
+
+== 有用链接
+
+* https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/[Red Hat Enterprise Linux 7]
+
 
 link:files/rh200.txt[.] link:files/rh300.txt[.]
