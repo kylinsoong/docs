@@ -3,6 +3,54 @@
 
 == 基本概念
 
+=== 文件操作命令
+
+[cols="2a,2"]
+|===
+|命令 |说明
+
+|`cp file1 file2`
+`cp file1 file2 file3 dir`
+|拷贝文件
+
+|`mv file1 file2`
+`mv file1 file2 file3 dir`
+|移动文件
+
+|`rm file1`
+`rm -f file1 file2 file3`
+|删除文件
+
+|`mkdir dir`
+`mkdir -p par1/par2/dir`
+|创建文件夹
+
+|`cp -r dir1 dir2`
+`cp -r dir1 dir2 dir3 dir4`
+|拷贝文件夹
+
+|`mv dir1 dir2`
+`mv dir1 dir2 dir3 dir4`
+|移动文件夹
+
+|`rm -r dir1`
+`rm -rf dir1 dir2 dir3`
+|删除文件夹
+
+|`rmdir dir`
+|删除空文件夹
+
+|`ln file linkfile`
+|创建 hard link
+
+|`ln -s file linkfile`
+|创建 soft link
+|===
+
+=== 文件系统结构
+
+image:img/linux_filesystem_hierarchy.png[]
+
 === 文件系统类型
 
 |===
@@ -14,8 +62,11 @@
 |ext4
 |Linux 常见文件系统
 
+|xfs
+|Linux 常见文件系统类型，红帽企业 Linux 的安装程序 anaconda 中默认使用 xfs。
+
 |FAT32
-|支持 Windows, Linux, Mac, 单个文件最大 4 G，文件系统最大 32 G。https://support.microsoft.com/en-us/help/154997/description-of-the-fat32-file-system[fat32]
+|支持 Windows, Linux, Mac, 单个文件最大 4 G，文件系统最大 32 G。link:https://support.microsoft.com/en-us/help/154997/description-of-the-fat32-file-system[fat32]
 
 |===
 
@@ -38,13 +89,158 @@ image:img/disk-partition-mbr.png[]
 * *GPT 分区方案* - 对于运行统一可扩展固件接口 (UEFI) 固件的系统，GPT 是在物理硬盘上布置分区表的标准。GPT 是 UEFI 标准的一部分，可以解决原有基于 MBR 的方案所带来的许多限制。根据 UEFI 规范，GPT 默认情况下支持最多 128 个分区。MBR 使用 32 位来存储逻辑块地址和大小信息；与此不同，GPT 为逻辑块地址分配 64 位。这就使得 GPT 可支持最多 8 泽字节 (ZiB)，即 80 亿太字节的分区和磁盘。GPT 的 8 ZiB 限制是基于 512 字节的块大小。随着硬盘驱动器供应商转为使用 4,096 字节块，此限制将增加至 64 ZiB。除解决 MBR 分区方案的限制以外，GPT 还可提供一些其他功能特性和优势。正如其名，GPT 使用 128 位 GUID 来唯一识别每个磁盘和分区。与 MBR 存在单一故障点不同，GPT 提供分区表信息的冗余。主 GPT 位于磁盘头部，而备份副本（次要 GPT）位于磁盘尾部。此外，GPT 采用 CRC 校验和来检测 GPT 头和分区表中的错误与损坏。
 
 [source, test]
-.*查看分区列表*
+.*通过磁盘分区工具查看分区列表*
 ----
 # parted -l
 # fdisk -l
 ----
 
-=== 永久挂载文件系统
+=== 磁盘分区工具
+
+[cols="2,5a"]
+|===
+|名称 |说明
+
+|parted
+|支持 MBR 和 GPT，有两种模式：
+
+* 交互式(interactive)
+* 命令行(command line)
+
+interactive 模式示例
+
+[source, bash]
+----
+$ sudo parted /dev/sdb
+GNU Parted 3.1
+Using /dev/sdb
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+(parted)                    
+----
+
+|fdisk
+|支持 MBR 分区方案，交互式分区示例：
+
+[source, bash]
+----
+$ sudo fdisk /dev/sdb
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): 
+----
+
+|gdisk
+|支持 GPT 分区方案，交互式分区示例：
+
+[source, bash]
+----
+$ sudo gdisk /dev/sdb
+GPT fdisk (gdisk) version 0.8.6
+
+Partition table scan:
+  MBR: MBR only
+  BSD: not present
+  APM: not present
+  GPT: not present
+
+
+***************************************************************
+Found invalid GPT and valid MBR; converting MBR to GPT format.
+THIS OPERATION IS POTENTIALLY DESTRUCTIVE! Exit by typing 'q' if
+you don't want to convert your MBR partitions to GPT format!
+***************************************************************
+
+
+Warning! Secondary partition table overlaps the last partition by
+33 blocks!
+You will need to delete this partition or resize it in another utility.
+
+Command (? for help):
+----
+
+|===
+
+=== 文件系统创建/格式化块设备
+
+创建块设备后，下一步是为其创建文件系统格式。文件系统将向块设备生成一种结构，这样就可以存储数据并从其中检索数据。
+
+`mkfs` 命令可用于为块设备创建文件系统，或格式化块设备。
+
+NOTE: 如果设备已挂载文件系统，`mkfs` 创建文件系统之前，首先需要卸载文件系统。
+
+[source, bash]
+.*示例1：磁盘格式化*
+----
+$ sudo mkfs -t xfs -f /dev/sdb
+meta-data=/dev/sdb               isize=512    agcount=4, agsize=15360 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=61440, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=855, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+----
+
+[source, bash]
+.*示例2：分区格式化*
+----
+$ sudo mkfs -t xfs -f /dev/sdb1
+meta-data=/dev/sdb1              isize=512    agcount=4, agsize=6400 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=25600, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=855, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+$ sudo mkfs -t ext4  /dev/sdb2
+mke2fs 1.42.9 (28-Dec-2013)
+Filesystem label=
+OS type: Linux
+Block size=1024 (log=0)
+Fragment size=1024 (log=0)
+Stride=0 blocks, Stripe width=0 blocks
+25688 inodes, 102400 blocks
+5120 blocks (5.00%) reserved for the super user
+First data block=1
+Maximum filesystem blocks=33685504
+13 block groups
+8192 blocks per group, 8192 fragments per group
+1976 inodes per group
+Superblock backups stored on blocks: 
+	8193, 24577, 40961, 57345, 73729
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: done
+----
+
+=== 文件系统挂载
+
+应用文件系统格式后，添加新文件系统的最后一步是将该文件系统连接到目录结构中。文件系统连接到目录层次结构中后，用户空间实用程序可以访问设备上的文件或在设备上写入文件。
+
+`mount` 命令将设备手动连接到目录位置或挂载点，具体为指定设备和挂载点，以及可能需要的任何选项，从而自定义设备的行为。
+
+[source, bash]
+----
+$ sudo mount /dev/sdb1 /mnt/path1
+$ sudo mount /dev/sdb2 /mnt/path2
+
+$ fallocate -l 50M a-file && sudo cp a-file /mnt/path1/ && sudo mv a-file /mnt/path2/
+
+$ df -hT | grep sdb
+/dev/sdb1             xfs        97M   56M   42M  58% /mnt/path1
+/dev/sdb2             ext4      131M   52M   70M  43% /mnt/path2
+----
 
 通过将设备的列表添加到 /etc/fstab 文件中，管理员可以将设备配置为在系统启动时挂载到挂载点。
 
@@ -61,6 +257,8 @@ UUID=7a20315d-ed8b-4e75-a5b6-24ff9e1f9838  /  xfs  defaults  1 1
 * 第五个字段是转储标志，转储标志与 dump 命令配合使用，用于生成设备内容的备份。
 * 第六个字段是fsck 顺序标志，fsck 顺序字段确定在文件系统未完全卸载的情况下，是否应在启动时运行 fsck。fsck 顺序的值指示当有多个文件系统需要检查时，应对这些文件系统运行 fsck 的顺序。
 
+https://en.wikipedia.org/wiki/Fstab[fstab]
+
 === Swap 空间
 
 Swap 空间也称交换空间，它是可与 Linux 内核内存管理子系统配合使用的磁盘区域，用于通过保存不活动的内存页来补充系统 RAM。系统 RAM 与 Swap 空间组合在一起称为虚拟内存。
@@ -68,6 +266,124 @@ Swap 空间也称交换空间，它是可与 Linux 内核内存管理子系统�
 当系统上的内存使用量超过定义的限制时，内核将梳理 RAM，寻找已分配给进程但空闲的内存页。内核将空闲的内存页写入到交换区，并且重新分配 RAM 页面以供其他进程使用。如果某个程序需要访问已写入到磁盘的页面，则内核会找到另一个空闲的内存页，将其写入到磁盘，然后从交换区重新调用所需的页面。
 
 由于交换区位于磁盘上，所以与 RAM 相比交换非常慢。尽管交换空间用于扩充系统 RAM，但应仅可能将交换空间的使用保持在最低限度。
+
+=== inode
+
+In Linux, metadata and files are organized into a structure called an inode. The inodes be stored in an inode table and help users to manage the files on file system. The inode itself doesn't actually store file date or the file name, but it does store everything else about a file.
+
+=== Disk Usage
+
+The du or disk usage command shows us the disk usage of a specific directory. If you don't specify a directory, it'll default to your current one. The -h flag gives you the data measurements in human readable form. You should use the du command if you want to know how much data space is being used by files in a directory.
+ 
+[source, bash]
+----
+$ du -h
+----
+
+The df command, or disk free, which used if you want to know how much free space you have on your machine is the df command, or disk free. This shows you the free space available on your entire machine. The -h flag gives you the data measurements in human readable form.
+ 
+[source, bash]
+----
+$df -h
+----
+ 
+=== 文件系统检测
+
+`fsck` 命令可以用来检测未挂载的文件系统。
+
+[source, bash]
+----
+$ sudo fsck /dev/sdb1
+----
+
+https://en.wikipedia.org/wiki/Fsck[详细关于 fsck]
+
+== 文件的 hard link 和 soft link
+
+* Softlinks allow us to link to another file using a file name.
+* Hardlinks don't point to a file. In Linux, they link to an inode which is stored in an inode table on the file system.
+ 
+image:img/files-slink-hlink.png[]
+
+.*Hard Link 和 Soft Link 的区别*
+|===
+|编号 |描述
+
+|1
+|当原始文件删除后 hard link 文件保存了原始文件的内容，而 soft link 不会。
+
+|2
+|soft link 可以指向一个文件夹，而 hard link 不可以。
+|===
+
+=== ulimit 控制 hard link 和 soft link 最大打开数
+
+`/etc/security/limits.conf` 文件控制 hard link，soft link 以及最大打开文件数。
+
+[source, text]
+.*ulimit 查看 soft/hard link*
+----
+# ulimit
+# ulimit -a
+----
+
+=== 在文件上创建 link 示例
+
+[source, text]
+.*1 - 创建一个文件*
+----
+# echo "Hello World" > newfile.txt
+# ls -l newfile.txt
+-rw-r--r--. 1 root root 12 Nov 26 17:18 newfile.txt
+----
+
+[source, text]
+.*2 - ln 创建一个 hard link*
+----
+# ln newfile.txt /tmp/newfile-hlink.txt
+# ls -l newfile.txt /tmp/newfile-hlink.txt
+-rw-r--r--. 2 root root 12 Nov 26 17:18 newfile.txt
+-rw-r--r--. 2 root root 12 Nov 26 17:18 /tmp/newfile-hlink.txt
+----
+
+[source, text]
+.*3 - ln -s 创建一个 soft link*
+----
+# ln -s newfile.txt /tmp/newfile-slink.txt
+
+# ls -il newfile /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+  4693201 -rw-r--r--. 2 root root 0 Jul  9 11:39 newfile
+  4693201 -rw-r--r--. 2 root root 0 Jul  9 11:39 /tmp/newfile-hlink.txt
+134686970 lrwxrwxrwx. 1 root root 7 Jul  9 11:41 /tmp/newfile-slink.txt -> newfile
+----
+
+NOTE: 文件和其对应的 hard link 文件的 inode 是相同的。inode 是在磁盘格式化时创建。
+
+[source, text]
+.*4 - 编辑文件*
+----
+# echo "modify from hard link" >> /tmp/newfile-hlink.txt
+# echo "nodify from soft link" >> /tmp/newfile-slink.txt
+
+# cat newfile.txt && cat /tmp/newfile-hlink.txt && cat /tmp/newfile-slink.txt
+
+# rm newfile.txt
+# ls -l /tmp/newfile-hlink.txt /tmp/newfile-slink.txt
+-rw-r--r--. 1 root root 34 Jul  9 11:17 /tmp/newfile-hlink.txt
+lrwxrwxrwx. 1 root root 11 Jul  9 11:09 /tmp/newfile-slink.txt -> newfile.txt
+
+# cat /tmp/newfile-hlink.txt && cat /tmp/newfile-slink.txt
+----
+
+[source, text]
+.*5 - ln -s 创建一个 soft link 指向文件夹*
+----
+# ln -s /tmp /root/tempdir
+# ls -l /root/
+lrwxrwxrwx.  1 root  root          4 Feb 15 16:38 tempdir -> /tmp
+# cd /root/tempdir/
+# ls
+----
 
 == 挂载和卸载文件系统
 
