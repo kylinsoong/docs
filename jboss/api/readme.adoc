@@ -92,11 +92,28 @@ $ for x in apicast-wildcard-router zync; do echo Resuming dc:  $x; sleep 2; oc r
 .*1 - 查看运行的容器*
 ----
 $ oc get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+apicast-production-1-zxwkn        1/1       Running   0          22h
+apicast-staging-1-2t79s           1/1       Running   0          22h
+apicast-wildcard-router-1-vs8nn   1/1       Running   0          22h
+backend-cron-1-t5c5l              1/1       Running   0          22h
+backend-listener-1-88j9x          1/1       Running   0          23h
+backend-redis-1-qpdsq             1/1       Running   0          23h
+backend-worker-1-hvkjz            1/1       Running   0          23h
+system-app-1-2m8bf                3/3       Running   0          22h
+system-memcache-1-znf26           1/1       Running   0          23h
+system-mysql-1-bl7p9              1/1       Running   0          23h
+system-redis-1-52zs4              1/1       Running   0          23h
+system-resque-1-r2bw5             2/2       Running   0          22h
+system-sidekiq-1-4rdxv            1/1       Running   0          22h
+system-sphinx-1-999xt             1/1       Running   0          22h
+zync-1-nr4st                      1/1       Running   0          22h
+zync-database-1-tw4gs             1/1       Running   0          23h
 ----
 
 .*2 - 查看容器的镜像*
 
-使用 https://registry-console-default.apps.acme.192.168.42.78.nip.io/registry 可以查看内部镜像仓库。
+使用 https://registry-console-default.apps.na39.openshift.opentlc.com/registry 可以查看内部镜像仓库。
 
 [source, bash]
 .*3 - 查看 Mysql 数据库*
@@ -110,7 +127,10 @@ mysql> show tables;
 .*4 - 登录 3Scale 管理界面，执行如下命令获取登录 URL*
 ----
 $ cat /tmp/3scale_amp_provision_details.txt | grep Login
+     Login on https://ksoong-3scale-admin.apps.na39.openshift.opentlc.com as admin/admin
 ----
+
+登录 https://ksoong-3scale-admin.apps.na39.openshift.opentlc.com 查看欢迎页面。
 
 == CoolStore 服务
 
@@ -121,7 +141,7 @@ $ cat /tmp/3scale_amp_provision_details.txt | grep Login
 [source, bash]
 .*1 - 创建一个 Project*
 ----
-$ oc new-project ksoong-coolstore --display-name="CoolStore API" --description="CoolStore API Business Services"
+$ oc new-project $OCP_PROJECT_PREFIX-coolstore --display-name="CoolStore API" --description="CoolStore API Business Services"
 ----
 
 [source, bash]
@@ -146,12 +166,12 @@ $ oc create route edge catalog-route --service=catalog
 [source, bash]
 .*5 - 查看服务运行情况*
 ----
-$ oc get pods
-NAME                           READY     STATUS      RESTARTS   AGE
-cart-1-gnhkp                   1/1       Running     0          17m
-catalog-mongodb-1-l877h        1/1       Running     0          19m
-inventory-1-fdd9f              1/1       Running     0          18m
-inventory-postgresql-1-j9gzz   1/1       Running     0          15m
+$ oc get pods | grep Running
+cart-1-xjg94                   1/1       Running     0          2h
+catalog-1-kpff9                1/1       Running     0          11m
+catalog-mongodb-1-ssbl5        1/1       Running     0          2h
+inventory-1-clq7v              1/1       Running     0          2h
+inventory-postgresql-1-d7l7c   1/1       Running     0          2h
 ----
 
 [source, bash]
@@ -165,4 +185,124 @@ inventory-route   inventory-route-ksoong-coolstore.apps.na39.openshift.opentlc.c
 
 === 服务测试
 
+服务描述 Swagger 文件路径如下：
+
+* https://catalog-route-ksoong-coolstore.apps.na39.openshift.opentlc.com/api/swagger.json
+* https://inventory-route-ksoong-coolstore.apps.na39.openshift.opentlc.com/api/swagger.json
+
+可以通过 http://editor.swagger.io/ 进行服务测试。
+
+有效的 Inventory itemId 有：
+
+* 329299
+* 329199
+* 165613
+* 165954
+* 444434
+* 444435
+* 444436
+
+== REST 服务管理
+
+REST 服务管理具体要求如下：
+
+* Both the services *Inventory* & *Catalog* should be managed separately. 
+* Each service should have a *basic* plan and a *premium* plan, so that WebRetail Inc. can provide differentiated plans to users.
+** *basic* plan should not have the ability to invoke CRUD operations on the services. 
+** *premium* plan should not have impose any restrictions.
+** *basic* plan users should be limited to only 5 API requests per hour for each service. 
+* Metrics should be set up such that usage details can be viewed for each method separately. 
+
+=== 创建账户和用户
+
+根据如下步骤创建两个账户和两个用户。
+
+* 在 3Scale 管理门户选择 `Developers` → `Accounts`，点击绿色 `Create` 按钮。
+* 在 *Create new Account* 界面填入如下内容
+** Username - `catalog_user`
+** Email - `catalog@example.com`
+** Password - `redhat`
+** Organization/Group Name - `catalog_account`
+* 重复如上步骤，在 *Create new Account* 界面填入如下内容，创建另一个用户
+** Username - `inventory_user`
+** Email - `inventory@example.com`
+** Password - `redhat`
+** Organization/Group Name - `inventory_account`
+
+=== Catalog 服务
+
+本部分创建 3Scale Service，对接 Catalog 服务。
+
+==== 创建 Service
+
+* 在 3Scale 管理门户选择 `API`
+* 在 API 页面右上角，点击 `Create Service` 按钮
+** Name - catalog_service
+** System Name - catalog_service
+* 点击 *Create Service*，创建服务 
+
+==== 创建 Application Plan
+
+* 选择 `catalog_service` -> `Published Application Plans` -> `Create Application Plan`， 
+** Name - catalog_app_plan
+** System name - catalog_app_plan
+* 点击 *Create Application Plan*
+
+==== 创建 Application
+
+本部分关联 Application 和 用户。
+
+* 选择 `Developers` -> `inventory_account`，创建 Application
+** Application plan - catalog_app_plan
+** Service plan - Default
+** Name - catalog_app
+** Description - catalog_app
+* 点击 *Create Application* 后生成了一个 User Key `a1fb905cd95c19cd9341ddd514e6ec65`
+
+==== 在 AMP 中创建 route
+
+[source, bash]
+----
+$ oc create route edge catalog-apicast-prod --service=apicast-production --hostname=catalog-apicast-prod-$OCP_PROJECT_PREFIX.$OCP_WILDCARD_DOMAIN
+$ oc create route edge catalog-apicast-staging --service=apicast-staging --hostname=catalog-apicast-staging-$OCP_PROJECT_PREFIX.$OCP_WILDCARD_DOMAIN
+
+$ oc get route | grep catalog
+catalog-apicast-prod            catalog-apicast-prod-ksoong.apps.na39.openshift.opentlc.com                      apicast-production        gateway   edge          None
+catalog-apicast-staging         catalog-apicast-staging-ksoong.apps.na39.openshift.opentlc.com                   apicast-staging           gateway   edge          None
+----
+
+==== Service Integration
+
+* 在 3Scale 管理门户选择 `APIs`
+* 在 *Application Plans* 中 publish APP Plan
+* 在 *Integration* 关联 Base, Production, Staging URL:
+** Base - https://catalog-route-ksoong-coolstore.apps.na39.openshift.opentlc.com:443
+** Staging - https://catalog-apicast-staging-ksoong.apps.na39.openshift.opentlc.com:443
+** Production - https://catalog-apicast-prod-ksoong.apps.na39.openshift.opentlc.com:443
+
+==== 服务测试
+
+[source, bash]
+----
+$ curl -k https://catalog-apicast-prod-ksoong.apps.na39.openshift.opentlc.com/api/products?user_key=a1fb905cd95c19cd9341ddd514e6ec65
+----
+
+=== Inventory 服务
+
+[source, bash]
+----
+$ oc create route edge inventory-apicast-prod --service=apicast-production --hostname=inventory-apicast-prod-$OCP_PROJECT_PREFIX.$OCP_WILDCARD_DOMAIN
+$ oc create route edge inventory-apicast-staging --service=apicast-staging --hostname=inventory-apicast-staging-$OCP_PROJECT_PREFIX.$OCP_WILDCARD_DOMAIN
+
+$ oc get routes | grep inventory
+inventory-apicast-prod          inventory-apicast-prod-ksoong.apps.na39.openshift.opentlc.com                    apicast-production        gateway   edge          None
+inventory-apicast-staging       inventory-apicast-staging-ksoong.apps.na39.openshift.opentlc.com                 apicast-staging           gateway   edge          None
+----
+
+同样的步骤配置 Inventory 服务，服务测试通过
+
+[source, bash]
+----
+$ curl -k https://inventory-apicast-staging-ksoong.apps.na39.openshift.opentlc.com:443/api/availability/329299?user_key=9062d1ab8e8066f3cbd866fa1495b4c4
+----
 
