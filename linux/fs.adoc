@@ -280,6 +280,12 @@ The du or disk usage command shows us the disk usage of a specific directory. If
 $ du -h
 ----
 
+[source, bash]
+.*找出 home 目录下最大的 5 个文件*
+----
+$ sudo du -a /home | sort -n -r | head -n 5
+----
+
 The df command, or disk free, which used if you want to know how much free space you have on your machine is the df command, or disk free. This shows you the free space available on your entire machine. The -h flag gives you the data measurements in human readable form.
  
 [source, bash]

@@ -303,6 +303,8 @@ inventory-apicast-staging       inventory-apicast-staging-ksoong.apps.na39.opens
 
 [source, bash]
 ----
-$ curl -k https://inventory-apicast-staging-ksoong.apps.na39.openshift.opentlc.com:443/api/availability/329299?user_key=9062d1ab8e8066f3cbd866fa1495b4c4
+$ curl -k https://inventory-apicast-staging-ksoong.apps.na39.openshift.opentlc.com:443/api/availability/329299?user_key=a9c469c13e637421225e82c3a0f665a5
+$ curl "https://inventory-apicast-prod-ksoong.apps.na39.openshift.opentlc.com:443/api/availability/329299?user_key=a9c469c13e637421225e82c3a0f665a5"
 ----
+
 

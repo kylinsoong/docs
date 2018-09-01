@@ -226,3 +226,13 @@ http://www.open-iscsi.org/[Open-iSCSI 项目]
 http://www.t10.org/[技术委员会 T10 - SCSI 存储接口]
 
 http://www.ietf.org/rfc/rfc3720.txt[RFC 3270 - 互联网小型计算机系统接口 (iSCSI)]
+
+== 磁盘拷贝
+
+[source, text]
+.*dd 执行磁盘拷贝* 
+----
+$ sudo dd if=/dev/sdb of=~/Desktop/my_usb.img bs=8G
+----
+
+http://man7.org/linux/man-pages/man1/dd.1.html[更多信息]

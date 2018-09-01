@@ -157,3 +157,6 @@ Choco Uninstall GIMP
 Get-Package
 ----
 
+== 虚拟化对比
+
+https://en.wikipedia.org/wiki/Comparison_of_platform_virtualization_software[Comparison of platform virtualization software]
