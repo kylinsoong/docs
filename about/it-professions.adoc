@@ -160,3 +160,17 @@ Get-Package
 == 虚拟化对比
 
 https://en.wikipedia.org/wiki/Comparison_of_platform_virtualization_software[Comparison of platform virtualization software]
+
+== Types of IT Infrastructure Services
+
+* *IaaS(Infrastructure as a Service)* providers give you pre-configured virtual machines that you can use just as if you had a physical server. https://www.techrepublic.com/blog/the-enterprise-cloud/side-by-side-comparisons-of-iaas-service-providers[links]
+* *NaaS(Networking as a Service)* allows companies to offshore their networking services so that they don't have to deal with the expensive networking hardware. Companies also won't have to set up their own network security, manage their own routing, set up a WAN and private internets, and so on.
+* *SaaS(Software as a Service)* is the Cloud alternative to maintaining your own software.
+* *PaaS(Platform as a Service)* includes an entire platform that allows you to build code, store information in a database, and serve your application from a single platform. https://www.business.com/categories/cloud-computing-services[read more]
+* *DaaS(Directory as a Service)* centralizes your organizations users and computers in one location so that you can add, update, and remove users and computers. Some popular directory services that you can set up are Windows Active Directory, OpenLDAP.
+
+== FTP, SFTP, TFTP
+
+image:img/ftp-sftp-tftp.png[]
+
+
