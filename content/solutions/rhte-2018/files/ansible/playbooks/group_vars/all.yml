@@ -1,8 +1,0 @@
-home_dir: "{{ playbook_dir }}/../.."
-
-work_dir: "{{ playbook_dir }}/../work"
-
-ocp_dir: "{{ home_dir }}/openshift"
-
-# oc executable
-oc_executable: oc

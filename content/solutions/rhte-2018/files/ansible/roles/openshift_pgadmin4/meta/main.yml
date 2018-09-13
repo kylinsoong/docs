@@ -1,5 +1,0 @@
----
-
-dependencies:
-  - role: openshift_common
-  - role: openshift_project

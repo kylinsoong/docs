@@ -1,0 +1,18 @@
+---
+
+- name: Deploy Gogs git server
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/tools.yml
+
+  tasks:
+    - import_role:
+        name: openshift_gogs
+      vars:
+        ocp_project: "{{ project_tools }}"
+        ocp_project_display_name: "{{ project_tools_name }}"
+        ocp_project_desc: "{{ project_tools_desc }}"
+        resources_dir: "{{ ocp_dir }}/gogs"

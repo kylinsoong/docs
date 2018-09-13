@@ -1,0 +1,23 @@
+---
+
+- name: get {{ certs_secret }} from {{ certs_project }} project
+  shell: "{{ openshift_cli }} get secret {{ certs_secret }} -o json -n {{ certs_project }}"
+  register: certs_secret_value
+  changed_when: false
+
+- name: extract certificate from {{ certs_secret }}
+  shell: "echo {{ certs_secret_value.stdout|from_json|json_query(json_query) }} | base64 -d"
+  vars: 
+    json_query: data."tls.crt"
+  register: certs_certificate_value
+  changed_when: false
+
+- name: write certificate to tmp file
+  copy: content="{{ certs_certificate_value.stdout }}" dest="{{ playbook_work_dir }}/{{ certs_secret }}.crt"
+
+- name: create JKS keystore
+  shell: "keytool -importcert -trustcacerts -file {{ playbook_work_dir }}/{{ certs_secret }}.crt -keystore {{ playbook_work_dir }}/{{ truststore }} -storepass password -noprompt"
+
+- name: create {{ truststore_secret }} secret
+  shell: |
+     {{ openshift_cli }} create secret generic {{ truststore_secret }} --from-file={{ playbook_work_dir }}/{{ truststore }} -n {{ ocp_project }}
