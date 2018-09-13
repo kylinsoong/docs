@@ -1,0 +1,36 @@
+---
+
+- name: check if keycloak client jar is available
+  stat:
+    path: "{{ resources_dir }}/enmasse_keycloak_client/{{ enmasse_keycloak_client }}"
+  register: stat_result
+
+- debug:
+    msg: "Keycloak client jar is not available. Keycloak user will not be created"
+  when: stat_result.stat.exists == false
+
+- name: copy enmasse-keycloak-client.jar to {{ playbook_work_dir }}
+  copy: src={{ resources_dir }}/enmasse_keycloak_client/{{ enmasse_keycloak_client }} dest={{ playbook_work_dir }}/{{ enmasse_keycloak_client }}
+  changed_when: false
+  when: stat_result.stat.exists == true
+
+- name: wait until keycloak is running
+  shell: "{{ openshift_cli }} get deployment {{ keycloak_deployment }} -o template --template={{ json_template }} -n {{ ocp_project }}"
+  vars:
+    json_template: '\{\{.status.readyReplicas\}\}'
+  register: result
+  until: result.stdout == "1"
+  retries: 20
+  delay: 30
+  changed_when: false
+  when: stat_result.stat.exists == true
+
+- name: check if keycloak realm for address-space {{ address_space_name }} exists
+  shell: java -jar {{ playbook_work_dir }}/{{ enmasse_keycloak_client }} -n {{ ocp_project }} -o check-realm -r {{ address_space_name }}
+  changed_when: false
+  when: stat_result.stat.exists == true
+
+- name: create user in keycloak realm {{ address_space_name }}
+  shell: java -jar {{ playbook_work_dir }}/{{ enmasse_keycloak_client }} -n {{ ocp_project }} -o create-user -r {{ address_space_name }} -u {{ item.name }} -p {{ item.password }}
+  with_items: "{{ address_space_users }}"
+  when: stat_result.stat.exists == true

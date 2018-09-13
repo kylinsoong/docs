@@ -1,0 +1,53 @@
+---
+
+- name: give edit rights to all projects to serviceaccounts in {{ project_tools }}
+  shell: "{{ openshift_cli }} adm policy add-role-to-user edit system:serviceaccount:{{ project_tools }}:jenkins -n {{ ocp_project }}"
+
+- name: check if driver service deployment config exists
+  shell: "{{ openshift_cli }} get dc {{ ocp_deployment_config }} -n {{ ocp_project }}"
+  register: dc_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: deploy driver service service, route, dc
+  shell: |
+    {{ openshift_cli }} process -f {{ ocp_application_template }} \ 
+    -p APPLICATION_NAME={{ ocp_application_name }} \
+    -p APPLICATION_CONFIGMAP={{ application_configmap }} \
+    -p APPLICATION_TRUSTSTORE={{ enmasse_truststore_secret }} \
+    | oc create -f - -n {{ ocp_project }}
+  when: dc_exists is failed
+
+- name: check if {{ ocp_binary_build_config }} binary build config exists
+  shell: "{{ openshift_cli }} get bc {{ ocp_binary_build_config }} -n {{ project_tools }}"
+  register: bc_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: create {{ ocp_binary_build_config }} buildconfig in the {{ project_tools }} project
+  shell: |
+    {{ openshift_cli }} process -f {{ ocp_binary_build_config_template }} \
+    -p APPLICATION_NAME={{ ocp_application_name }} \
+    -p IMAGE_STREAM={{ ocp_build_imagestream }} \
+    | oc create -f - -n {{ project_tools }}
+  when: bc_exists is failed
+
+- name: check if the {{ ocp_pipeline_build_config }} pipeline exists in the {{ project_tools }} project
+  shell: "{{ openshift_cli }} get bc {{ ocp_pipeline_build_config }} -n {{ project_tools }}"
+  register: pipeline_buildconfig
+  ignore_errors: true
+  changed_when: false 
+
+- name: create the {{ ocp_pipeline_build_config }} pipeline in the {{ project_tools }} project
+  shell: |
+    {{ openshift_cli }} process -f {{ ocp_pipeline_build_config_template }} \
+    -p BC_NAME={{ ocp_pipeline_build_config }} \
+    -p GIT_URL=http://{{ git_url }} \
+    -p GIT_REPO={{ git_repository }}.git \
+    -p APP_BUILD={{ ocp_binary_build_config }} \
+    -p APP_PROJECT={{ ocp_project }} \
+    -p JENKINS_PROJECT={{ project_tools }} \
+    -p APP_IMAGESTREAM={{ ocp_application_name }} \    
+    -p APP_DC={{ ocp_application_name }} \
+    | oc create -f - -n {{ project_tools }}
+  when: pipeline_buildconfig is failed

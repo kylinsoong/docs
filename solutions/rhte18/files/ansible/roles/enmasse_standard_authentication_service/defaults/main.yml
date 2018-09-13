@@ -1,0 +1,7 @@
+---
+
+standard_authservice_service_name: standard-authservice
+keycloak_deployment_name: keycloak
+standard_authservice_deployment_name: keycloak-controller
+standard_authservice_pvc_name: keycloak-pvc
+standard_authservice_route_name: keycloak

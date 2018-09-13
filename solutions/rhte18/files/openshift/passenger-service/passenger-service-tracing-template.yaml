@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: Template
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+      group: acme-ride
+    name: ${APPLICATION_NAME}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      app: ${APPLICATION_NAME}
+      group: acme-ride
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          group: acme-ride
+      spec:
+        containers:
+        - env:
+          - name: JAVA_OPTIONS
+            value: >
+              -Djavax.net.ssl.trustStore=/app/truststore/enmasse.jks
+              -Djavax.net.ssl.trustStorePassword=password
+              -Djavax.net.ssl.trustStoreType=JKS
+          - name: AB_JOLOKIA_OFF
+            value: "true"
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          image: ${APPLICATION_NAME}
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: ${APPLICATION_NAME}
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9779
+            name: prometheus
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          securityContext:
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/truststore
+            name: truststore
+        - name: jaeger-agent
+          image: jaegertracing/jaeger-agent
+          command:
+            - /go/bin/agent-linux
+            - '--collector.host-port=jaeger-collector.${JAEGER_COLLECTOR_NAMESPACE}.svc:14267'
+          ports:
+            - containerPort: 5775
+              protocol: UDP
+            - containerPort: 5778
+              protocol: TCP
+            - containerPort: 6831
+              protocol: UDP
+            - containerPort: 6832
+              protocol: UDP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 100Mi                     
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - secret:
+            defaultMode: 420
+            secretName: ${APPLICATION_TRUSTSTORE}
+          name: truststore
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APPLICATION_NAME}
+        from:
+          kind: ImageStreamTag
+          name: ${APPLICATION_NAME}:latest
+      type: ImageChange
+parameters:
+- displayName: Application name
+  name: APPLICATION_NAME
+  required: true
+- displayName: Application name
+  name: APPLICATION_CONFIGMAP
+  required: true
+- displayName: Application name
+  name: APPLICATION_TRUSTSTORE
+  required: true
+- displayName: Namespace of the jaeger collector
+  name: JAEGER_COLLECTOR_NAMESPACE
+  required: true
