@@ -1,0 +1,43 @@
+---
+
+application_configmap: driver-service
+
+install_enmasse_truststore_secret: true
+enmasse_truststore_secret: enmasse-truststore
+enmasse_truststore: enmasse.jks
+
+http_port: 8080
+
+amqp_host: messaging.{{ project_enmasse }}.svc.cluster.local 
+amqp_port: 5671
+amqp_user: user
+amqp_password: password
+
+amqp_replyhandling: false
+amqp_ssl: true
+amqp_ssl_trustall: false
+amqp_ssl_verifyhost: true
+amqp_truststore_path: /app/truststore/enmasse.jks
+amqp_truststore_password: password
+
+amqp_consumer_driver_command: topic-driver-command
+amqp_producer_driver_event: topic-driver-event
+amqp_producer_ride_event: topic-ride-event
+
+driver_assigned_min_delay: 1
+driver_assigned_max_delay: 3
+ride_started_min_delay: 5
+ride_started_max_delay: 10
+ride_ended_min_delay: 5
+ride_ended_max_delay: 10
+
+ocp_application_template: "{{ resources_dir }}/driver-service-template.yaml"
+ocp_binary_build_config_template: "{{ resources_dir }}/driver-service-binary.yaml"
+ocp_pipeline_build_config_template: "{{ resources_dir }}/driver-service-pipeline.yaml"
+ocp_application_name: driver-service
+ocp_deployment_config: driver-service
+ocp_binary_build_config: "{{ ocp_application_name }}-binary"
+ocp_pipeline_build_config: "{{ ocp_application_name }}-pipeline"
+ocp_build_imagestream: redhat-openjdk18-openshift:1.4
+git_url: "gogs:3000"
+git_repository: "acme/driver-service"

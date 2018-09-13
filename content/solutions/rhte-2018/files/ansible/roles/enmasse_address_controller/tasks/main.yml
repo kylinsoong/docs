@@ -1,0 +1,35 @@
+---
+
+- name: check if address-space-controller-config configmap exists
+  shell: "{{ openshift_cli }} get configmap address-space-controller-config -n {{ ocp_project }}"
+  register: configmap_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: create the address-space-controller-config configmap
+  shell: |
+    {{ openshift_cli }} create configmap address-space-controller-config \
+    --from-literal=enableRbac={{ address_space_controller_enable_rbac }} \
+    --from-literal=environment={{ address_space_controller_enmasse_environment }} \
+    -n {{ ocp_project }}
+  when: configmap_exists is failed
+
+- name: check if address space definitions exists
+  shell: "{{ openshift_cli }} get template brokered-space-infra -n {{ ocp_project }}"
+  register: address_space_definitions_template_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: Create the address space definitions
+  shell: "{{ openshift_cli }} apply -f {{ resources_dir }}/address-space-controller/address-space-definitions.yaml -n {{ ocp_project }}"
+  when: address_space_definitions_template_exists is failed
+
+- name: check if address space controller deployment exists
+  shell: "{{ openshift_cli }} get deployment address-space-controller -n {{ ocp_project }}"
+  register: address_space_controller_deployment_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: Create the address space controller deployment
+  shell: "{{ openshift_cli }} apply -f {{ resources_dir }}/address-space-controller/deployment.yaml -n {{ ocp_project }}" 
+  when: address_space_controller_deployment_exists is failed

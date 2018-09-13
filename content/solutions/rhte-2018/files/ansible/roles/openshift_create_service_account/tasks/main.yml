@@ -1,0 +1,11 @@
+---
+
+- name: check if service account {{ service_account }} exists
+  shell: "{{ openshift_cli }} get sa {{ service_account }} -n {{ service_account_project }}"
+  register: service_account_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: create service account {{ service_account }}
+  shell: "{{ openshift_cli }} create sa {{ service_account }} -n {{ service_account_project }}"
+  when: service_account_exists is failed

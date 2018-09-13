@@ -1,0 +1,18 @@
+---
+
+- name: Deploy EnMasse
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/enmasse.yml
+
+  tasks:
+    - import_role:
+        name: openshift_enmasse
+      vars:
+        ocp_project: "{{ project_enmasse }}"
+        ocp_project_display_name: "{{ project_enmasse_name }}"
+        ocp_project_desc: "{{ project_enmasse_desc }}"
+        playbook_work_dir: "{{ work_dir }}/enmasse"

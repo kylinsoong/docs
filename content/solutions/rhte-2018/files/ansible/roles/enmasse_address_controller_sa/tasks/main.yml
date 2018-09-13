@@ -1,0 +1,8 @@
+---
+
+# address controller service account
+- import_role:
+    name: openshift_create_service_account
+  vars:
+    service_account: enmasse-admin
+    service_account_project: "{{ ocp_project }}"

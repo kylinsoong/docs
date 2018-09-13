@@ -1,0 +1,20 @@
+---
+
+# address-space-admin service account
+- import_role:
+    name: ../roles/openshift_create_service_account
+  vars:
+    service_account: address-space-admin
+    service_account_project: "{{ ocp_project }}"
+
+- name: give project view rights to default service account
+  shell: "{{ openshift_cli }} adm policy add-role-to-user view system:serviceaccount:{{ ocp_project }}:default -n {{ ocp_project }}"
+  ignore_errors: true
+
+- name: give project admin rights to enmasse-admin service account
+  shell: "{{ openshift_cli }} adm policy add-role-to-user admin system:serviceaccount:{{ ocp_project }}:enmasse-admin -n {{ ocp_project }}"
+  ignore_errors: true
+
+- name: give project admin rights to address-space-admin service account
+  shell: "{{ openshift_cli }} adm policy add-role-to-user admin system:serviceaccount:{{ ocp_project }}:address-space-admin -n {{ ocp_project }}"
+  ignore_errors: true

@@ -1,0 +1,7 @@
+---
+
+project_enmasse:
+project_enmasse_name: "EnMasse Messaging Service"
+project_enmasse_desc: "EnMasse Messaging Service"
+
+resources_dir: "{{ ocp_dir }}/enmasse"
