@@ -374,6 +374,9 @@ deployment_subtype=registry
 |===
 |Inventory | 说明
 
+|link:hosts/hosts-3.10.45[hosts-3.10.45]
+|OpenShift 3.10.45
+
 |link:hosts/hosts-3.10.14[hosts-3.10.14]
 |OpenShift 3.10.14
 

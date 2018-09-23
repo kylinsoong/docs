@@ -173,4 +173,14 @@ https://en.wikipedia.org/wiki/Comparison_of_platform_virtualization_software[Com
 
 image:img/ftp-sftp-tftp.png[]
 
+== Open IM Protocol
+
+*XMPP(Extensible Messaging and Presence Protocol)* which is an open source protocol used in instant messaging applications and social networking services. XMPP is even used in Internet of Things applications, among other things. 
+
+Pidgin and Padium is the application use the XMPP.
+
+https://zapier.com/blog/best-team-chat-app[The 12 Best Team Chat Apps]
+
+https://jabber.at/clients/?os=any[Jabber/XMPP Clients]
+
 

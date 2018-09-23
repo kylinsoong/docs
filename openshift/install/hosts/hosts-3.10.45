@@ -1,0 +1,205 @@
+[OSEv3:vars]
+
+###########################################################################
+### Ansible Vars
+###########################################################################
+timeout=60
+ansible_user=ec2-user
+ansible_become=yes
+
+###########################################################################
+### OpenShift Basic Vars
+###########################################################################
+
+openshift_disable_check="disk_availability,memory_availability,docker_image_availability"
+
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true','runtime=docker']}, {'name': 'node-config-infra', 'labels': ['node-role.kubernetes.io/infra=true','runtime=docker']}, {'name': 'node-config-glusterfs', 'labels': ['runtime=docker']}, {'name': 'node-config-compute', 'labels': ['node-role.kubernetes.io/compute=true','runtime=docker'], 'edits': [{ 'key': 'kubeletArguments.pods-per-core','value': ['20']}]}]
+# Configure node kubelet arguments. pods-per-core is valid in OpenShift Origin 1.3 or OpenShift Container Platform 3.3 and later. -> These  need to go into the above
+# openshift_node_kubelet_args={'pods-per-core': ['10'], 'max-pods': ['250'], 'image-gc-high-threshold': ['85'], 'image-gc-low-threshold': ['75']}
+
+# Configure logrotate scripts
+# See: https://github.com/nickhammond/ansible-logrotate
+logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n/var/log/messages\n/var/log/secure\n/var/log/spooler\n", "options": ["daily", "rotate 7","size 500M", "compress", "sharedscripts", "missingok"], "scripts": {"postrotate": "/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true"}}]
+
+deployment_type=openshift-enterprise
+containerized=false
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=loadbalancer1.f062.internal
+openshift_master_cluster_public_hostname=loadbalancer1.f062.example.opentlc.com
+openshift_master_default_subdomain=apps.f062.example.opentlc.com
+
+openshift_master_overwrite_named_certificates=True
+openshift_enable_unsupported_configurations=True
+
+###########################################################################
+#### OpenShift Network Vars
+############################################################################
+
+#osm_cluster_network_cidr=10.1.0.0/16
+#openshift_portal_net=172.30.0.0/16
+
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+#os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
+
+############################################################################
+#### OpenShift Authentication Vars
+############################################################################
+
+# htpasswd Authentication
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_file=/root/htpasswd.openshift
+
+# LDAP Authentication (download ipa-ca.crt first)
+# openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider','attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'ca': '/etc/origin/master/ipa-ca.crt','insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
+# openshift_master_ldap_ca_file=/root/ipa-ca.crt
+
+###########################################################################
+#### OpenShift Router and Registry Vars
+############################################################################
+
+openshift_hosted_router_replicas=2
+# openshift_hosted_router_certificate={"certfile": "/path/to/router.crt", "keyfile": "/path/to/router.key", "cafile": "/path/to/router-ca.crt"}
+
+openshift_hosted_registry_replicas=1
+
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/srv/nfs
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
+openshift_hosted_registry_pullthrough=true
+openshift_hosted_registry_acceptschema2=true
+openshift_hosted_registry_enforcequota=true
+
+###########################################################################
+#### OpenShift Service Catalog Vars
+############################################################################
+
+openshift_enable_service_catalog=true
+
+template_service_broker_install=true
+openshift_template_service_broker_namespaces=['openshift']
+
+ansible_service_broker_install=true
+ansible_service_broker_local_registry_whitelist=['.*-apb$']
+
+openshift_hosted_etcd_storage_kind=nfs
+openshift_hosted_etcd_storage_nfs_options="*(rw,root_squash,sync,no_wdelay)"
+openshift_hosted_etcd_storage_nfs_directory=/srv/nfs
+openshift_hosted_etcd_storage_labels={'storage': 'etcd-asb'}
+openshift_hosted_etcd_storage_volume_name=etcd-asb
+openshift_hosted_etcd_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_etcd_storage_volume_size=10G
+
+###########################################################################
+#### OpenShift Metrics and Logging Vars
+############################################################################
+
+## Enable cluster metrics
+openshift_metrics_install_metrics=True
+
+openshift_metrics_storage_kind=nfs
+openshift_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_metrics_storage_nfs_directory=/srv/nfs
+openshift_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_metrics_storage_volume_name=metrics
+openshift_metrics_storage_volume_size=10Gi
+
+## Enable cluster logging
+openshift_logging_install_logging=True
+
+openshift_logging_storage_kind=nfs
+openshift_logging_storage_access_modes=['ReadWriteOnce']
+openshift_logging_storage_nfs_directory=/srv/nfs
+openshift_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_logging_storage_volume_name=logging
+openshift_logging_storage_volume_size=10Gi
+
+openshift_logging_es_cluster_size=1
+
+###########################################################################
+#### OpenShift Prometheus Vars
+############################################################################
+
+## Add Prometheus Metrics:
+openshift_hosted_prometheus_deploy=true
+openshift_prometheus_namespace=openshift-metrics
+
+# Prometheus
+openshift_prometheus_storage_kind=nfs
+openshift_prometheus_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_storage_nfs_directory=/srv/nfs
+openshift_prometheus_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_storage_volume_name=prometheus
+openshift_prometheus_storage_volume_size=10Gi
+openshift_prometheus_storage_type='pvc'
+
+# For prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_kind=nfs
+openshift_prometheus_alertmanager_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_alertmanager_storage_nfs_directory=/srv/nfs
+openshift_prometheus_alertmanager_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_alertmanager_storage_volume_name=prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_volume_size=10Gi
+openshift_prometheus_alertmanager_storage_type='pvc'
+
+# For prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_kind=nfs
+openshift_prometheus_alertbuffer_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_alertbuffer_storage_nfs_directory=/srv/nfs
+openshift_prometheus_alertbuffer_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_alertbuffer_storage_volume_name=prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_volume_size=10Gi
+openshift_prometheus_alertbuffer_storage_type='pvc'
+
+###########################################################################
+### OpenShift Hosts
+###########################################################################
+[OSEv3:children]
+lb
+masters
+etcd
+nodes
+nfs
+
+[lb]
+loadbalancer1.f062.internal
+
+[masters]
+master1.f062.internal
+master2.f062.internal
+master3.f062.internal
+
+[etcd]
+master1.f062.internal
+master2.f062.internal
+master3.f062.internal
+
+[nodes]
+## These are the masters
+master1.f062.internal openshift_node_group_name='node-config-master'
+master2.f062.internal openshift_node_group_name='node-config-master'
+master3.f062.internal openshift_node_group_name='node-config-master'
+
+## These are infranodes
+infranode1.f062.internal openshift_node_group_name='node-config-infra'
+infranode2.f062.internal openshift_node_group_name='node-config-infra'
+
+## These are regular nodes
+node1.f062.internal openshift_node_group_name='node-config-compute'
+node2.f062.internal openshift_node_group_name='node-config-compute'
+node3.f062.internal openshift_node_group_name='node-config-compute'
+
+## These are OCS nodes
+# support1.f062.internal openshift_node_group_name='node-config-compute'
+# support2.f062.internal openshift_node_group_name='node-config-compute'
+# support3.f062.internal openshift_node_group_name='node-config-compute'
+
+[nfs]
+support1.f062.internal
+
+#[glusterfs]
+# support1.f062.internal glusterfs_devices='[ "/dev/xvdd" ]'
+# support2.f062.internal glusterfs_devices='[ "/dev/xvdd" ]'
+# support3.f062.internal glusterfs_devices='[ "/dev/xvdd" ]'

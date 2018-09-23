@@ -1,6 +1,29 @@
 = Postfix
 :toc: manual
 
+== 邮件服务协议
+
+=== POP3
+
+Post Office Protocol, or POP version 3, is an email protocol that downloads email from an email server onto your local device. It then deletes the email from the email server. If you want to retrieve your email through POP3, you can only view it from one device. 
+
+image:img/email-pop3.png[]
+
+There are a few reasons why you might want to use POP3 to get your email. If you need to keep your email storage under a certain quota, POP3 is a good way to maintain that storage limitation. Another benefit of POP3 is privacy. Your email can only be seen from your local device. If storage limitations and security are a concern for you, you might want to consider using POP3 over something like IMAP. 
+
+=== IMAP
+
+IMAP, or internet message access protocol, allows you to download emails from your email server onto multiple devices. It keeps your messages on the email server. This email protocol is one of the more popular ways to retrieve email.
+
+image:img/email-imap.png[]
+
+=== SMTP
+
+SMTP, or Simple Mail Transfer Protocol, which is a protocol used for sending emails. While POP3 and IMAP and other protocols can be used to retrieve email, there's only really one email protocol for sending email, SMTP. So there are lots of different email protocols that can be implemented, depending on the email software of you choose. 
+
+image:img/email-stmp.png[]
+
+
 == 配置只发送邮件服务
 
 [source, text]

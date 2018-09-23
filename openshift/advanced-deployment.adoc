@@ -1,0 +1,445 @@
+= OPENSHIFT 高级部署
+:toc: manual
+
+== OpenShift 高可用架构
+
+image:img/ocp-ha-arch.jpg[]
+
+* 负载均衡可以用任何负载均衡方案
+* 多个 Master 节点，多个 etcd 节点，多个计算节点
+
+== OpenShift 高可用部署
+
+=== 环境准备
+
+|===
+|类型 |主机名 
+
+|Administration
+|bastion.example.com
+
+|Support (NFS)
+|support1.example.com
+
+|LoadBalancer
+|loadbalancer.example.com
+
+|Master
+|master1.example.com
+
+|Master
+|master2.example.com
+
+|Master
+|master3.example.com
+
+|Infrastructure
+|infranode1.example.com
+
+|Infrastructure
+|infranode2.example.com
+
+|Node
+|node1.example.com
+
+|Node
+|node2.example.com
+
+|Node
+|node3.example.com
+
+|IPA
+|ipa.example.com
+|===
+
+[source, text]
+.*查看节点 hostname*
+----
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.f062.internal 'hostname' ; done
+loadbalancer1.f062.internal
+master1.f062.internal
+master2.f062.internal
+master3.f062.internal
+infranode1.f062.internal
+infranode2.f062.internal
+node1.f062.internal
+node2.f062.internal
+node3.f062.internal
+support1.f062.internal
+----
+
+[source, text]
+.*查看各节点的内存*
+----
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.f062.internal 'free -g' ; done
+----
+
+[source, text]
+.*查看各节点 CPU*
+----
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.f062.internal 'grep -c ^processor /proc/cpuinfo' ; done
+1
+4
+4
+4
+4
+4
+2
+2
+2
+2
+----
+
+=== 基础架构验证
+
+[source, text]
+.*确保所有节点运行*
+----
+# ansible all -m ping
+----
+
+[source, text]
+.*查看 docker 运行状态和版本*
+----
+# ansible nodes -m shell -a "systemctl is-active docker"
+# ansible nodes -m shell -a "docker version"
+----
+
+[source, text]
+.*查看 NFS*
+----
+# ansible nfs -m shell -a "exportfs"
+support1.f062.internal | SUCCESS | rc=0 >>
+/srv/nfs      	<world>
+----
+
+=== 安装
+
+拷贝 link:install/hosts/hosts-3.10.45[hosts-3.10.45] 内容到管理节点 bastion 的 /etc/ansible/hosts 文件。
+
+[source, text]
+.*前需安装验证*
+----
+# ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+----
+
+[source, text]
+.*安装*
+----
+# ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+----
+
+=== 卸载
+
+NOTE: 本部分只有在需要卸载 OpenShift 环境时使用
+
+[source, text]
+.*卸载*
+----
+# ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/adhoc/uninstall.yml
+# ansible nodes -a "rm -rf /etc/origin"
+# ansible nfs -a "rm -rf /srv/nfs/*"
+----
+
+=== 高可用安装验证
+
+[source, text]
+.*输出当前用户
+----
+# oc whoami 
+system:admin
+----
+
+[source, text]
+.*输出所有节点*
+----
+# oc get nodes
+NAME                       STATUS    ROLES     AGE       VERSION
+infranode1.f062.internal   Ready     infra     10m       v1.10.0+b81c8f8
+infranode2.f062.internal   Ready     infra     10m       v1.10.0+b81c8f8
+master1.f062.internal      Ready     master    13m       v1.10.0+b81c8f8
+master2.f062.internal      Ready     master    13m       v1.10.0+b81c8f8
+master3.f062.internal      Ready     master    13m       v1.10.0+b81c8f8
+node1.f062.internal        Ready     compute   10m       v1.10.0+b81c8f8
+node2.f062.internal        Ready     compute   10m       v1.10.0+b81c8f8
+node3.f062.internal        Ready     compute   10m       v1.10.0+b81c8f8
+----
+
+[source, text]
+.*输出所有 Pod*
+----
+# oc get pod --all-namespaces -o wide | wc -l
+76
+# oc get pod --all-namespaces -o wide
+NAMESPACE                           NAME                                       READY     STATUS      RESTARTS   AGE       IP              NODE
+default                             docker-registry-1-qgnst                    1/1       Running     0          10m       10.130.2.2      infranode1.f062.internal
+default                             registry-console-1-bdjl2                   1/1       Running     0          10m       10.130.0.2      master1.f062.internal
+default                             router-1-67g5t                             1/1       Running     0          10m       192.199.0.40    infranode1.f062.internal
+default                             router-1-s7vql                             1/1       Running     0          10m       192.199.0.138   infranode2.f062.internal
+kube-service-catalog                apiserver-8cqtd                            1/1       Running     0          3m        10.128.0.6      master3.f062.internal
+kube-service-catalog                apiserver-gr6nn                            1/1       Running     0          3m        10.130.0.5      master1.f062.internal
+kube-service-catalog                apiserver-jmk9b                            1/1       Running     0          3m        10.129.0.7      master2.f062.internal
+kube-service-catalog                controller-manager-ql84k                   1/1       Running     0          3m        10.129.0.8      master2.f062.internal
+kube-service-catalog                controller-manager-qrfk6                   1/1       Running     0          3m        10.128.0.7      master3.f062.internal
+kube-service-catalog                controller-manager-rftnl                   1/1       Running     0          3m        10.130.0.6      master1.f062.internal
+kube-system                         master-api-master1.f062.internal           1/1       Running     0          13m       192.199.0.189   master1.f062.internal
+kube-system                         master-api-master2.f062.internal           1/1       Running     0          13m       192.199.0.105   master2.f062.internal
+kube-system                         master-api-master3.f062.internal           1/1       Running     0          13m       192.199.0.220   master3.f062.internal
+kube-system                         master-controllers-master1.f062.internal   1/1       Running     0          13m       192.199.0.189   master1.f062.internal
+kube-system                         master-controllers-master2.f062.internal   1/1       Running     0          13m       192.199.0.105   master2.f062.internal
+kube-system                         master-controllers-master3.f062.internal   1/1       Running     0          13m       192.199.0.220   master3.f062.internal
+kube-system                         master-etcd-master1.f062.internal          1/1       Running     0          13m       192.199.0.189   master1.f062.internal
+kube-system                         master-etcd-master2.f062.internal          1/1       Running     0          13m       192.199.0.105   master2.f062.internal
+kube-system                         master-etcd-master3.f062.internal          1/1       Running     0          13m       192.199.0.220   master3.f062.internal
+openshift-ansible-service-broker    asb-1-fjkxx                                1/1       Running     0          3m        10.130.2.6      infranode1.f062.internal
+openshift-infra                     hawkular-cassandra-1-v7svv                 1/1       Running     0          7m        10.128.0.3      master3.f062.internal
+openshift-infra                     hawkular-metrics-jt5b9                     1/1       Running     0          7m        10.129.2.5      infranode2.f062.internal
+openshift-infra                     hawkular-metrics-schema-mt775              0/1       Completed   0          8m        10.129.2.4      infranode2.f062.internal
+openshift-infra                     heapster-ww5lr                             1/1       Running     0          7m        10.129.0.5      master2.f062.internal
+openshift-logging                   logging-curator-1-rk98c                    1/1       Running     0          5m        10.128.2.2      node2.f062.internal
+openshift-logging                   logging-es-data-master-1ptuekvq-1-deploy   1/1       Running     0          5m        10.128.0.5      master3.f062.internal
+openshift-logging                   logging-es-data-master-1ptuekvq-1-dns66    0/2       Pending     0          4m        <none>          <none>
+openshift-logging                   logging-fluentd-2b7mv                      1/1       Running     0          5m        10.128.2.3      node2.f062.internal
+openshift-logging                   logging-fluentd-2pd82                      1/1       Running     0          5m        10.130.2.5      infranode1.f062.internal
+openshift-logging                   logging-fluentd-bsbjj                      1/1       Running     0          5m        10.130.0.4      master1.f062.internal
+openshift-logging                   logging-fluentd-cg9rs                      1/1       Running     0          5m        10.131.2.3      node3.f062.internal
+openshift-logging                   logging-fluentd-cqpt6                      1/1       Running     0          5m        10.128.0.4      master3.f062.internal
+openshift-logging                   logging-fluentd-qjwkr                      1/1       Running     0          5m        10.129.0.6      master2.f062.internal
+openshift-logging                   logging-fluentd-rwhd6                      1/1       Running     0          5m        10.129.2.6      infranode2.f062.internal
+openshift-logging                   logging-fluentd-sq5b6                      1/1       Running     0          5m        10.131.0.3      node1.f062.internal
+openshift-logging                   logging-kibana-1-f79lb                     2/2       Running     0          5m        10.130.2.4      infranode1.f062.internal
+openshift-metrics                   prometheus-0                               0/6       Pending     0          4m        <none>          <none>
+openshift-metrics                   prometheus-node-exporter-98n9k             1/1       Running     0          4m        192.199.0.40    infranode1.f062.internal
+openshift-metrics                   prometheus-node-exporter-9kgqf             1/1       Running     0          4m        192.199.0.220   master3.f062.internal
+openshift-metrics                   prometheus-node-exporter-9vpjc             1/1       Running     0          4m        192.199.0.105   master2.f062.internal
+openshift-metrics                   prometheus-node-exporter-crcwq             1/1       Running     0          4m        192.199.0.189   master1.f062.internal
+openshift-metrics                   prometheus-node-exporter-h49rr             1/1       Running     0          4m        192.199.0.138   infranode2.f062.internal
+openshift-metrics                   prometheus-node-exporter-tftwh             1/1       Running     0          4m        192.199.0.61    node2.f062.internal
+openshift-metrics                   prometheus-node-exporter-zhrbg             1/1       Running     0          4m        192.199.0.77    node1.f062.internal
+openshift-metrics                   prometheus-node-exporter-zqltm             1/1       Running     0          4m        192.199.0.94    node3.f062.internal
+openshift-node                      sync-8vn8q                                 1/1       Running     0          12m       192.199.0.105   master2.f062.internal
+openshift-node                      sync-frgls                                 1/1       Running     0          11m       192.199.0.40    infranode1.f062.internal
+openshift-node                      sync-hldpx                                 1/1       Running     0          11m       192.199.0.138   infranode2.f062.internal
+openshift-node                      sync-jgn6j                                 1/1       Running     0          11m       192.199.0.61    node2.f062.internal
+openshift-node                      sync-mp2dn                                 1/1       Running     0          11m       192.199.0.94    node3.f062.internal
+openshift-node                      sync-nbr9q                                 1/1       Running     0          12m       192.199.0.189   master1.f062.internal
+openshift-node                      sync-xxjsl                                 1/1       Running     0          12m       192.199.0.220   master3.f062.internal
+openshift-node                      sync-zfnkm                                 1/1       Running     0          11m       192.199.0.77    node1.f062.internal
+openshift-sdn                       ovs-6mkxk                                  1/1       Running     0          11m       192.199.0.77    node1.f062.internal
+openshift-sdn                       ovs-74k8m                                  1/1       Running     0          12m       192.199.0.105   master2.f062.internal
+openshift-sdn                       ovs-8rm52                                  1/1       Running     0          11m       192.199.0.40    infranode1.f062.internal
+openshift-sdn                       ovs-hcp2r                                  1/1       Running     0          12m       192.199.0.189   master1.f062.internal
+openshift-sdn                       ovs-qhrcj                                  1/1       Running     0          11m       192.199.0.138   infranode2.f062.internal
+openshift-sdn                       ovs-sx4t7                                  1/1       Running     0          12m       192.199.0.220   master3.f062.internal
+openshift-sdn                       ovs-zgsxg                                  1/1       Running     0          11m       192.199.0.61    node2.f062.internal
+openshift-sdn                       ovs-zh9ln                                  1/1       Running     0          11m       192.199.0.94    node3.f062.internal
+openshift-sdn                       sdn-4c58q                                  1/1       Running     0          12m       192.199.0.220   master3.f062.internal
+openshift-sdn                       sdn-68kgk                                  1/1       Running     0          12m       192.199.0.105   master2.f062.internal
+openshift-sdn                       sdn-7vh5l                                  1/1       Running     0          11m       192.199.0.77    node1.f062.internal
+openshift-sdn                       sdn-grr8g                                  1/1       Running     0          11m       192.199.0.61    node2.f062.internal
+openshift-sdn                       sdn-pv47r                                  1/1       Running     0          11m       192.199.0.138   infranode2.f062.internal
+openshift-sdn                       sdn-tdbg7                                  1/1       Running     0          11m       192.199.0.40    infranode1.f062.internal
+openshift-sdn                       sdn-vprhs                                  1/1       Running     0          11m       192.199.0.94    node3.f062.internal
+openshift-sdn                       sdn-xd6ks                                  1/1       Running     0          12m       192.199.0.189   master1.f062.internal
+openshift-template-service-broker   apiserver-8ffkw                            1/1       Running     0          3m        10.128.0.8      master3.f062.internal
+openshift-template-service-broker   apiserver-kcqdt                            1/1       Running     0          3m        10.130.0.7      master1.f062.internal
+openshift-template-service-broker   apiserver-s4x9n                            1/1       Running     0          3m        10.129.0.9      master2.f062.internal
+openshift-web-console               webconsole-7f944b7c85-5xmtr                1/1       Running     2          10m       10.130.0.3      master1.f062.internal
+openshift-web-console               webconsole-7f944b7c85-89qxf                1/1       Running     2          10m       10.129.0.3      master2.f062.internal
+openshift-web-console               webconsole-7f944b7c85-h8c5n                1/1       Running     2          10m       10.128.0.2      master3.f062.internal
+----
+
+=== 创建 PV
+
+[source, text]
+.*1. 创建 pv.sh*
+----
+cat << EOF > pv.sh
+#!/usr/bin/sh
+
+mkdir -p /srv/nfs/user-vols/pv{1..200}
+
+for pvnum in {1..50} ; do
+echo "/srv/nfs/user-vols/pv${pvnum} *(rw,root_squash)" >> /etc/exports.d/openshift-uservols.exports
+chown -R nfsnobody.nfsnobody  /srv/nfs
+chmod -R 777 /srv/nfs
+done
+
+systemctl restart nfs-server
+EOF
+----
+
+[source, text]
+.*2. 拷贝 pv.sh 到 NFS 服务器*
+----
+# ansible support1.f062.internal -m copy -a 'src=./pv.sh dest=~/pv.sh owner=root group=root mode=0744'
+----
+
+[source, text]
+.*3. 在 NFS 服务器上执行 pv.sh*
+----
+# ansible support1.f062.internal -m shell -a '~/pv.sh'
+----
+
+[source, text]
+.*4. 创建 pvs.sh，内容如下*
+----
+#!/usr/bin/sh
+
+export GUID=`hostname|awk -F. '{print $2}'`
+
+export volsize="5Gi"
+mkdir /root/pvs
+for volume in pv{1..25} ; do
+cat << EOF > /root/pvs/${volume}
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "${volume}"
+  },
+  "spec": {
+    "capacity": {
+        "storage": "${volsize}"
+    },
+    "accessModes": [ "ReadWriteOnce" ],
+    "nfs": {
+        "path": "/srv/nfs/user-vols/${volume}",
+        "server": "support1.${GUID}.internal"
+    },
+    "persistentVolumeReclaimPolicy": "Recycle"
+  }
+}
+EOF
+echo "Created def file for ${volume}";
+done;
+
+# 10Gi
+export volsize="10Gi"
+for volume in pv{26..50} ; do
+cat << EOF > /root/pvs/${volume}
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "${volume}"
+  },
+  "spec": {
+    "capacity": {
+        "storage": "${volsize}"
+    },
+    "accessModes": [ "ReadWriteMany" ],
+    "nfs": {
+        "path": "/srv/nfs/user-vols/${volume}",
+        "server": "support1.${GUID}.internal"
+    },
+    "persistentVolumeReclaimPolicy": "Retain"
+  }
+}
+EOF
+echo "Created def file for ${volume}";
+done;
+----
+
+[source, text]
+.*5. 执行 pvs.sh 创建 PV*
+----
+# chmod +x pvs.sh && ./pvs.sh
+# cat /root/pvs/* | oc create -f -
+----
+
+[source, text]
+.*6. 查看 ReadWriteOnce PV 配置*
+----
+# cat /root/pvs/pv1
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "pv1"
+  },
+  "spec": {
+    "capacity": {
+        "storage": "5Gi"
+    },
+    "accessModes": [ "ReadWriteOnce" ],
+    "nfs": {
+        "path": "/srv/nfs/user-vols/pv1",
+        "server": "support1.f062.internal"
+    },
+    "persistentVolumeReclaimPolicy": "Recycle"
+  }
+}
+----
+
+[source, text]
+.*7. 查看 ReadWriteMany PV 配置*
+----
+# cat /root/pvs/pv28
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "pv28"
+  },
+  "spec": {
+    "capacity": {
+        "storage": "10Gi"
+    },
+    "accessModes": [ "ReadWriteMany" ],
+    "nfs": {
+        "path": "/srv/nfs/user-vols/pv28",
+        "server": "support1.f062.internal"
+    },
+    "persistentVolumeReclaimPolicy": "Retain"
+  }
+}
+----
+
+=== 冒烟测试
+
+本部分测试 OpenShift 高级部署环境，确保集群运行正常，PV 可以正常工作，镜像可以 S2I 生成并推送到镜像仓库，应用可以正常运行，路由可以路由外部请求。
+
+使用 `nodejs-mongo-persistent` 模版可以创建一个应用，使用 MongoDB 保存数据且需要挂载存储。
+
+[source, text]
+.*1. 创建一个新工程*
+----
+# oc new-project smoke-test
+----
+
+[source, text]
+.*2. 创建 nodejs 应用*
+----
+# oc new-app nodejs-mongo-persistent
+----
+
+[source, text]
+.*3. 查看 PV 挂载情况*
+----
+# oc get pv | grep mongodb
+pv1               5Gi        RWO            Recycle          Bound       smoke-test/mongodb                                             15m
+----
+
+[source, text]
+.*4. 查看路由*
+----
+# oc get routes
+NAME                      HOST/PORT                                                          PATH      SERVICES                  PORT      TERMINATION   WILDCARD
+nodejs-mongo-persistent   nodejs-mongo-persistent-smoke-test.apps.f062.example.opentlc.com             nodejs-mongo-persistent   <all>                   None
+----
+
+[source, text]
+.*5. 外部访问服务测试*
+----
+$ curl http://nodejs-mongo-persistent-smoke-test.apps.f062.example.opentlc.com
+----
+
+NOTE: 打开浏览器，访问 http://nodejs-mongo-persistent-smoke-test.apps.f062.example.opentlc.com 可以测试应用。
+
+[source, text]
+.*6. 删除测试工程*
+----
+$ oc delete project smoke-test
+----
+
