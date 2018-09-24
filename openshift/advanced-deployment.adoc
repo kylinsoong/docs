@@ -1,14 +1,14 @@
 = OPENSHIFT 高级部署
 :toc: manual
 
-== OpenShift 高可用架构
+== 高可用部署
+
+=== 高可用架构
 
 image:img/ocp-ha-arch.jpg[]
 
 * 负载均衡可以用任何负载均衡方案
 * 多个 Master 节点，多个 etcd 节点，多个计算节点
-
-== OpenShift 高可用部署
 
 === 环境准备
 
@@ -144,7 +144,7 @@ NOTE: 本部分只有在需要卸载 OpenShift 环境时使用
 === 高可用安装验证
 
 [source, text]
-.*输出当前用户
+.*输出当前用户*
 ----
 # oc whoami 
 system:admin
@@ -445,10 +445,254 @@ $ oc delete project smoke-test
 
 == 网络
 
-=== openshift-ovs-multitenant
+=== 为什么需要网络
+
+为什么 OpenShift/Kubernetes 需要网络？应为默认 Docker 采用虚拟桥接设备，一个主机上的所有容器都连接到虚拟桥接设备，一个主机上面的所有容器之间可以通信，但不同主机上容器不能直接通信，不同主机上的容器通信需要端口映射等配置，所以为了方便不同主机上的容器通信，Kubernetes 引入网络的概念，*OpenShift/Kubernetes 的网络是为了灵活控制不同主机上容器之间的通信*。网络也称软件定义网络，Software-Defined Networking (SDN)。
+
+Container Network Interface(CNI) 接口定义了配置网络接口的描述和标准，
+
+image:img/ocp-net-plugin.png[]
+
+OpenShift 提供一系列实现了 CNI 的网络网络插件，OpenShift OVS 为默认插件，OVS 又有三种模式：ovs-subnet，ovs-multitenant，ovs-networkpolicy，安装过程中可通过如下 Ansible 变量进行配置
 
 [source, text]
-.*安装 OpenShift 时添加 Ansible Inventory 变量，配置网络为 openshift-ovs-multitenant*
+----
+os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+----
+
+.*OpenShift SDN OVS 插件*
+|===
+|名称 |是否默认 |说明
+
+|ovs-subnet
+|是
+|定义了一个扁平的网络，任意一个 Pod 可以通任意 Pod 或 Service 通信
+
+|ovs-multitenant
+|否
+|定义了一层抽象网络隔离，一个 Project 中处于一个虚拟网络中，且有唯一的 VNID，不同 Project 中的 Pod 不能和其它 Project 中的 Pod 或 Service 通信。
+
+|ovs-networkpolicy
+|否
+|允许通过 NetworkPolicy 对象定义自己的网络隔离策略
+
+|===
+
+=== 内置服务发现和内部负载均衡
+
+OpenShift/Kubernetes 在网络应用层提出 `Service` 的概念是一个非常好的设计（相比较传统中间件架构），一个 `Service` 包括一组运行的容器，或是位于一组容器之上的一个抽象，而 `Service` 的最重要的两个标准化特性是：
+
+* 内部负载均衡(internal load-balancing) 
+* 内置服务发现 - Service 会定义一个 `Selector: app=hello-openshift,deploymentconfig=hello-openshift`，当应用容器中的标签(`Labels`)能和 Service 的 `Selector` 匹配时，内置服务发现起作用，将应用容器添加到服务 
+
+image:img/ocp-svc-discover-load-balancing.png[]
+
+容器化应用通常以 `Pod` 封装，`Service` 和 `Pod` 除了 `Name`, `Namespace`, `Selector`, `Labels` 等属性外，还有以下重要属性：
+
+* `IP`
+* `Port`
+* `Endpoints`
+* `Session Affinity`
+
+本部分围绕以上 `Service` 和 `Pod` 的属性去说明 OpenShift 网络应用层的内置服务发现和内部负载均衡。
+
+==== I - 创建测试工程
+
+[source, text]
+.*1. 创建工程并部署应用*
+----
+# oc new-project servicelayer
+
+# oc new-app openshift/hello-openshift:v1.1.1.1
+----
+
+[source, text]
+.*2. 扩展 `hello-openshift` 为 4 个运行实例*
+----
+# oc scale dc/hello-openshift --replicas=4
+deploymentconfig.apps.openshift.io "hello-openshift" scaled
+----
+
+[source, text]
+.*3. 查看 4 个实例正常运行*
+----
+# oc get pods -o wide
+NAME                      READY     STATUS    RESTARTS   AGE       IP            NODE
+hello-openshift-1-46q9h   1/1       Running   0          2m        10.128.2.11   node2.f062.internal
+hello-openshift-1-5kptl   1/1       Running   0          56s       10.128.2.12   node2.f062.internal
+hello-openshift-1-jqvhj   1/1       Running   0          56s       10.131.0.12   node1.f062.internal
+hello-openshift-1-nk8w6   1/1       Running   0          56s       10.131.2.12   node3.f062.internal
+----
+
+==== II - Round-Robin
+
+OpenShift 中默认创建的服务负载均衡策略是 Round-Robin。
+
+[source, text]
+.*1. 查看服务明细*
+----
+# oc describe svc hello-openshift
+Name:              hello-openshift
+Namespace:         servicelayer
+Labels:            app=hello-openshift
+Annotations:       openshift.io/generated-by=OpenShiftNewApp
+Selector:          app=hello-openshift,deploymentconfig=hello-openshift
+Type:              ClusterIP
+IP:                172.30.37.237
+Port:              8080-tcp  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         10.128.2.11:8080,10.128.2.12:8080,10.131.0.12:8080 + 1 more...
+Port:              8888-tcp  8888/TCP
+TargetPort:        8888/TCP
+Endpoints:         10.128.2.11:8888,10.128.2.12:8888,10.131.0.12:8888 + 1 more...
+Session Affinity:  None
+Events:            <none>
+----
+
+NOTE: `hello-openshift` 的 IP 为 `172.30.37.237`，`Type` 为 `ClusterIP`，`Session Affinity` 为 `None`。
+
+[source, text]
+.*2. `ssh` 到 master1*
+----
+# ssh master1.f062.internal
+$ sudo -i
+# oc project servicelayer
+----
+
+[source, text]
+.*3. 查看 hello-openshift 服务 8080 端口 iptables 规则*
+----
+# iptables-save | grep servicelayer/hello-openshift | grep 8080
+-A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.128.2.11:8080
+-A KUBE-SEP-7JAYOUKDEDIW6LF6 -s 10.131.0.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-7JAYOUKDEDIW6LF6 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.131.0.12:8080
+-A KUBE-SEP-SCPXWX5WPAPOOM2W -s 10.131.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-SCPXWX5WPAPOOM2W -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.131.2.12:8080
+-A KUBE-SEP-TSDFXFOXWPPSIHKV -s 10.128.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-TSDFXFOXWPPSIHKV -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.128.2.12:8080
+-A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
+----
+
+[source, text]
+.*4. hello-openshift 服务路径是一个目的地匹配规则，跳转到另一个 iptables 规则 `KUBE-SVC-BXIL3WE3EN2EVZ7N`*
+----
+-A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
+----
+
+[source, text]
+.*5. 有四个 `KUBE-SVC-BXIL3WE3EN2EVZ7N` 规则，通过随机的方式进行挑转*
+----
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
+----
+
+[source, text]
+.*6. 寻找 `KUBE-SEP-5ALW7DB4ASV2H75B` 下一跳，规则链中 `DNAT` 将请求转向相关 Pod*
+----
+-A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.128.2.11:8080
+----
+
+==== III - Session Affinity
+
+[source, text]
+.*1. 编辑 `hello-openshift` 服务*
+----
+# oc edit svc hello-openshift
+----
+
+[source, text]
+.*2. 修改 sessionAffinity 为 `ClientIP`*
+----
+sessionAffinity: ClientIP
+----
+
+[source, text]
+.*3. 查看服务明细*
+----
+# oc describe svc hello-openshift
+Name:              hello-openshift
+Namespace:         servicelayer
+Labels:            app=hello-openshift
+Annotations:       openshift.io/generated-by=OpenShiftNewApp
+Selector:          app=hello-openshift,deploymentconfig=hello-openshift
+Type:              ClusterIP
+IP:                172.30.37.237
+Port:              8080-tcp  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         10.128.2.11:8080,10.128.2.12:8080,10.131.0.12:8080 + 1 more...
+Port:              8888-tcp  8888/TCP
+TargetPort:        8888/TCP
+Endpoints:         10.128.2.11:8888,10.128.2.12:8888,10.131.0.12:8888 + 1 more...
+Session Affinity:  ClientIP
+Events:            <none>
+----
+
+[source, text]
+.*4. 查看 hello-openshift 服务 8080 端口 iptables 规则*
+----
+# iptables-save | grep servicelayer/hello-openshift | grep 8080
+-A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.128.2.11:8080
+-A KUBE-SEP-7JAYOUKDEDIW6LF6 -s 10.131.0.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-7JAYOUKDEDIW6LF6 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-7JAYOUKDEDIW6LF6 --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.131.0.12:8080
+-A KUBE-SEP-SCPXWX5WPAPOOM2W -s 10.131.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-SCPXWX5WPAPOOM2W -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-SCPXWX5WPAPOOM2W --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.131.2.12:8080
+-A KUBE-SEP-TSDFXFOXWPPSIHKV -s 10.128.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-TSDFXFOXWPPSIHKV -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-TSDFXFOXWPPSIHKV --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.128.2.12:8080
+-A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -j KUBE-SEP-5ALW7DB4ASV2H75B
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-TSDFXFOXWPPSIHKV --mask 255.255.255.255 --rsource -j KUBE-SEP-TSDFXFOXWPPSIHKV
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-7JAYOUKDEDIW6LF6 --mask 255.255.255.255 --rsource -j KUBE-SEP-7JAYOUKDEDIW6LF6
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-SCPXWX5WPAPOOM2W --mask 255.255.255.255 --rsource -j KUBE-SEP-SCPXWX5WPAPOOM2W
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
+----
+
+[source, text]
+.*5. 查看第一跳 SVC 的规则*
+----
+-A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
+----
+
+[source, text]
+.*6. 查看第二跳规则链*
+----
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -j KUBE-SEP-5ALW7DB4ASV2H75B
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-TSDFXFOXWPPSIHKV --mask 255.255.255.255 --rsource -j KUBE-SEP-TSDFXFOXWPPSIHKV
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-7JAYOUKDEDIW6LF6 --mask 255.255.255.255 --rsource -j KUBE-SEP-7JAYOUKDEDIW6LF6
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-SCPXWX5WPAPOOM2W --mask 255.255.255.255 --rsource -j KUBE-SEP-SCPXWX5WPAPOOM2W
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
+-A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
+----
+
+和 `Round-Robin` 相比，第二调多了 `-m recent --rcheck --seconds 10800` 相关规则，在一端时间内粘性转向同一个规则。
+
+[source, text]
+.*7. 查看第三跳，规则链中 `DNAT` 将请求转向相关 Pod*
+----
+-A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
+-A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.128.2.11:8080
+----
+
+=== OVS Multitenant
+
+安装 OpenShift 时添加配置如下 Ansible Inventory 变量，配置网络为 `openshift-ovs-multitenant`:
+
+[source, text]
 ----
 os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 ----
@@ -614,196 +858,11 @@ sh-4.2$ curl http://10.131.2.7:8080 -m 1
 Hello OpenShift!
 ----
 
-=== Service 层负载均衡策略
+=== OVS Networkpolicy
 
-==== I - 创建测试工程
-
-[source, text]
-.*1. 创建工程并部署应用*
-----
-# oc new-project servicelayer
-
-# oc new-app openshift/hello-openshift:v1.1.1.1
-----
+安装 OpenShift 时添加如下 Ansible Inventory 变量，配置网络为 `openshift-ovs-networkpolicy`
 
 [source, text]
-.*2. 扩展 `hello-openshift` 为 4 个运行实例*
 ----
-# oc scale dc/hello-openshift --replicas=4
-deploymentconfig.apps.openshift.io "hello-openshift" scaled
+os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
 ----
-
-[source, text]
-.*3. 查看 4 个实例正常运行*
-----
-# oc get pods -o wide
-NAME                      READY     STATUS    RESTARTS   AGE       IP            NODE
-hello-openshift-1-46q9h   1/1       Running   0          2m        10.128.2.11   node2.f062.internal
-hello-openshift-1-5kptl   1/1       Running   0          56s       10.128.2.12   node2.f062.internal
-hello-openshift-1-jqvhj   1/1       Running   0          56s       10.131.0.12   node1.f062.internal
-hello-openshift-1-nk8w6   1/1       Running   0          56s       10.131.2.12   node3.f062.internal
-----
-
-==== II - Round-Robin
-
-OpenShift 中默认创建的服务负载均衡策略是 Round-Robin。
-
-[source, text]
-.*1. 查看服务明细*
-----
-# oc describe svc hello-openshift 
-Name:              hello-openshift
-Namespace:         servicelayer
-Labels:            app=hello-openshift
-Annotations:       openshift.io/generated-by=OpenShiftNewApp
-Selector:          app=hello-openshift,deploymentconfig=hello-openshift
-Type:              ClusterIP
-IP:                172.30.37.237
-Port:              8080-tcp  8080/TCP
-TargetPort:        8080/TCP
-Endpoints:         10.128.2.11:8080,10.128.2.12:8080,10.131.0.12:8080 + 1 more...
-Port:              8888-tcp  8888/TCP
-TargetPort:        8888/TCP
-Endpoints:         10.128.2.11:8888,10.128.2.12:8888,10.131.0.12:8888 + 1 more...
-Session Affinity:  None
-Events:            <none>
-----
-
-NOTE: `hello-openshift` 的 IP 为 `172.30.37.237`，`Type` 为 `ClusterIP`，`Session Affinity` 为 `None`。
-
-[source, text]
-.*2. `ssh` 到 master1*
-----
-# ssh master1.f062.internal
-$ sudo -i
-# oc project servicelayer
-----
-
-[source, text]
-.*3. 查看 hello-openshift 服务 8080 端口 iptables 规则*
-----
-# iptables-save | grep servicelayer/hello-openshift | grep 8080
--A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.128.2.11:8080
--A KUBE-SEP-7JAYOUKDEDIW6LF6 -s 10.131.0.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-7JAYOUKDEDIW6LF6 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.131.0.12:8080
--A KUBE-SEP-SCPXWX5WPAPOOM2W -s 10.131.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-SCPXWX5WPAPOOM2W -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.131.2.12:8080
--A KUBE-SEP-TSDFXFOXWPPSIHKV -s 10.128.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-TSDFXFOXWPPSIHKV -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.128.2.12:8080
--A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
-----
-
-[source, text]
-.*4. hello-openshift 服务路径是一个目的地匹配规则，跳转到另一个 iptables 规则 `KUBE-SVC-BXIL3WE3EN2EVZ7N`*
-----
--A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
-----
-
-[source, text]
-.*5. 有四个 `KUBE-SVC-BXIL3WE3EN2EVZ7N` 规则，通过随机的方式进行挑转*
----- 
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
-----
-
-[source, text]
-.*6. 寻找 `KUBE-SEP-5ALW7DB4ASV2H75B` 下一跳，规则链中 `DNAT` 将请求转向相关 Pod*
----- 
--A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m tcp -j DNAT --to-destination 10.128.2.11:8080
-----
-
-==== III - Session Affinity
-
-[source, text]
-.*1. 编辑 `hello-openshift` 服务*
-----
-# oc edit svc hello-openshift
-----
-
-[source, text]
-.*2. 修改 sessionAffinity 为 `ClientIP`*
-----
-sessionAffinity: ClientIP
-----
-
-[source, text]
-.*3. 查看服务明细*
-----
-# oc describe svc hello-openshift 
-Name:              hello-openshift
-Namespace:         servicelayer
-Labels:            app=hello-openshift
-Annotations:       openshift.io/generated-by=OpenShiftNewApp
-Selector:          app=hello-openshift,deploymentconfig=hello-openshift
-Type:              ClusterIP
-IP:                172.30.37.237
-Port:              8080-tcp  8080/TCP
-TargetPort:        8080/TCP
-Endpoints:         10.128.2.11:8080,10.128.2.12:8080,10.131.0.12:8080 + 1 more...
-Port:              8888-tcp  8888/TCP
-TargetPort:        8888/TCP
-Endpoints:         10.128.2.11:8888,10.128.2.12:8888,10.131.0.12:8888 + 1 more...
-Session Affinity:  ClientIP
-Events:            <none>
-----
-
-[source, text]
-.*4. 查看 hello-openshift 服务 8080 端口 iptables 规则*
-----
-# iptables-save | grep servicelayer/hello-openshift | grep 8080
--A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.128.2.11:8080
--A KUBE-SEP-7JAYOUKDEDIW6LF6 -s 10.131.0.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-7JAYOUKDEDIW6LF6 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-7JAYOUKDEDIW6LF6 --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.131.0.12:8080
--A KUBE-SEP-SCPXWX5WPAPOOM2W -s 10.131.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-SCPXWX5WPAPOOM2W -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-SCPXWX5WPAPOOM2W --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.131.2.12:8080
--A KUBE-SEP-TSDFXFOXWPPSIHKV -s 10.128.2.12/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-TSDFXFOXWPPSIHKV -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-TSDFXFOXWPPSIHKV --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.128.2.12:8080
--A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -j KUBE-SEP-5ALW7DB4ASV2H75B
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-TSDFXFOXWPPSIHKV --mask 255.255.255.255 --rsource -j KUBE-SEP-TSDFXFOXWPPSIHKV
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-7JAYOUKDEDIW6LF6 --mask 255.255.255.255 --rsource -j KUBE-SEP-7JAYOUKDEDIW6LF6
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-SCPXWX5WPAPOOM2W --mask 255.255.255.255 --rsource -j KUBE-SEP-SCPXWX5WPAPOOM2W
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
-----
-
-[source, text]
-.*5. 查看第一跳 SVC 的规则*
-----
--A KUBE-SERVICES -d 172.30.37.237/32 -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp cluster IP" -m tcp --dport 8080 -j KUBE-SVC-BXIL3WE3EN2EVZ7N
-----
-
-[source, text]
-.*6. 查看第二跳规则链*
----- 
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -j KUBE-SEP-5ALW7DB4ASV2H75B
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-TSDFXFOXWPPSIHKV --mask 255.255.255.255 --rsource -j KUBE-SEP-TSDFXFOXWPPSIHKV
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-7JAYOUKDEDIW6LF6 --mask 255.255.255.255 --rsource -j KUBE-SEP-7JAYOUKDEDIW6LF6
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --rcheck --seconds 10800 --reap --name KUBE-SEP-SCPXWX5WPAPOOM2W --mask 255.255.255.255 --rsource -j KUBE-SEP-SCPXWX5WPAPOOM2W
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.25000000000 -j KUBE-SEP-5ALW7DB4ASV2H75B
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-TSDFXFOXWPPSIHKV
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-7JAYOUKDEDIW6LF6
--A KUBE-SVC-BXIL3WE3EN2EVZ7N -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-SEP-SCPXWX5WPAPOOM2W
-----
-
-和 `Round-Robin` 相比，第二调多了 `-m recent --rcheck --seconds 10800` 相关规则，在一端时间内粘性转向同一个规则。
-
-[source, text]
-.*7. 查看第三跳，规则链中 `DNAT` 将请求转向相关 Pod*
-----
--A KUBE-SEP-5ALW7DB4ASV2H75B -s 10.128.2.11/32 -m comment --comment "servicelayer/hello-openshift:8080-tcp" -j KUBE-MARK-MASQ
--A KUBE-SEP-5ALW7DB4ASV2H75B -p tcp -m comment --comment "servicelayer/hello-openshift:8080-tcp" -m recent --set --name KUBE-SEP-5ALW7DB4ASV2H75B --mask 255.255.255.255 --rsource -m tcp -j DNAT --to-destination 10.128.2.11:8080
-----
-
-
