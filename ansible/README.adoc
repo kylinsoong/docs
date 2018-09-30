@@ -1,1 +1,96 @@
 = Ansible
+:toc: manual
+
+== 什么是 Ansible
+
+Ansible 是一款开源自动化平台，它是一款简单自动化语言，能够在 Ansible Playbook 中完美地描述 IT 基础架构。它同时提供了一个自动化引擎用来执行 Asible Playbook。
+
+Ansible 具有多个重要的优点:
+
+* *跨平台支持* - Ansible 提供 Linux、Windows、UNIX 和网络设备的无代理支持，适用于物理、虚拟、云和容器环境。
+* *用户可读的自动化* - Ansible Playbook 采用 YAML 文本文件编写，易于阅读，有助于确保所有人都能理解它们的用途。
+* *完美描述应用* - 可以通过 Ansible Playbook 进行每一种更改，并描述和记录应用环境的每一个方面。
+* *轻松管理版本控制* - Ansible Playbook 和项目是纯文本。它们可以视作源代码，放在您的现有版本控制系统中。
+* *支持动态清单* - 可以从外部来源动态更新 Ansible 管理的计算机的列表，随时获取所有受管服务器的当前正确列表，不受基础架构或位置的影响。
+* *编排可与其他系统轻松集成* - 能够利用环境中现有的 HP SA、Puppet、Jenkins、红帽卫星和其他系统，并且集成到您的 Ansible 工作流中。
+
+Ansible 是第一款可以在整个 IT 范围读取和编写的自动化语言。它也是唯一能够从头至尾自动化应用生命周期和持续交付管道的自动化引擎。
+
+image:img/devops-language-diagram.png[]
+
+Ansible 方式:
+
+* *简单高效* - 越简单越好。Ansible 的设计宗旨是工具易用，自动化易写易读。您应利用这一特点在创建自动化时追求简单化。
+* *专为易读性优化* - Ansible 自动化语言围绕简单易读的声明性文本文件来构建。正确编写的 Ansible Playbook 可以清楚地记录您的工作流自动化。
+* *声明式思维* - Ansible 是一种要求状态引擎。它通过表达您希望系统处于何种状态来解决如何自动化 IT 部署的问题。Ansible 的目标是通过仅执行必要的更改，使您的系统处于所需的状态。试图将 Ansible 视为脚本语言并非正确的做法。
+
+== 安装
+
+Ansible 易于安装。Ansible 软件只需要安装到要运行它的一个（或多个）控制节点上。由 Ansible 管理的主机不需要安装 Ansible。这种安装涉及相对较少的步骤，其要求也最少。
+
+控制节点应当是 Linux 或 UNIX 系统。不支持将 Microsoft Windows 用作控制节点，但 Windows 系统可以是受管主机。
+
+[source, bash]
+.*安装 1/3 - 安装 Python(本步骤是可选择的)*
+----
+sudo yum install -y python
+----
+
+[source, bash]
+.*安装 2/3 - 安装 Ansible*
+----
+sudo yum install -y ansible
+----
+
+[source, bash]
+.*安装 3/3 - 安装验证*
+----
+ansible --version
+----
+
+== Ansible 部署
+
+=== Inventory 编写
+
+Inventory 即清单，一个 清单定义 Ansible 将要管理的一系列主机。这些主机也可以分配到 组中，以便进行集中管理。组可以包含子组，主机也可以是多个组的成员。清单还可以设置应用到它所定义的主机和组的变量。
+
+可以通过两种方式定义主机清单：
+
+* 静态主机清单，可以通过文本文件来定义。
+* 动态主机清单，可以根据需要利用外部信息提供程序通过脚本或其他程序来生成。
+
+[source, text]
+.*1. 静态清单示例*
+----
+[webservers]
+web1.example.com
+web2.example.com
+
+[dbservers]
+db1.example.com
+db2.example.com
+
+[allservers:children]
+webservers
+dbservers
+----
+
+[source, text]
+.*2. 清单测试*
+----
+$ ansible allservers --list-hosts
+  hosts (4):
+    web1.example.com
+    web2.example.com
+    db1.example.com
+    db2.example.com
+----
+
+清单文件可以覆盖 `/etc/ansible/hosts` 文件，也可以在允许时通过 `--inventory PATHNAME` 或 `-i PATHNAME` 选项在命令行中指定清单文件的位置，其中 PATHNAME 是所需清单文件的路径。
+
+[source, text]
+----
+ansible -i Inventory
+----
+
+NOTE: 更多关于 Ansible 清单，参照 https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html[链接]。

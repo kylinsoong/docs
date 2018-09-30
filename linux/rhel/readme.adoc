@@ -1,1 +1,1 @@
-= Red Hat Enterprise Linux 安装
+= Linux 安装

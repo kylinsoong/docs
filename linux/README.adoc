@@ -1,8 +1,9 @@
-= Linux
+= IT Infrastructure
 :toc: manual
 
 == 术语表
 
+.*术语表*
 |===
 |术语 |全称 |中文 |说明
 
@@ -49,7 +50,12 @@
 |SAN
 |Storage Area Network
 |存储区域网络
-|一种计算机网络用来接入统一的，块级别存储。
+|一种计算机网络用来接入统一的，块级别存储，例如 FibreChannel, iSCSI, AoE
+
+|NAS
+|Network Attached Storage
+|网络链接存储设备
+|用于数据存储的技术名称, 例如 NFS, SMB, AFS
 
 |NIC
 |Network Interface Controller
@@ -85,6 +91,105 @@ brw-rw----. 1 root disk        8,    17 Aug 28 21:51 sdb1
 https://en.wikipedia.org/wiki/Device_file[Linux Device file]
 
 https://en.wikipedia.org/wiki/Udev[udev]
+
+== 数据恢复 & 备份
+
+=== 什么是数据恢复
+
+Data recovery is the process of trying to restore data after an unexpected event that results in data loss or corruption. 
+
+数据恢复是当不可遇知的事件导致数据丢失或破坏后，恢复数据的办法或流程。
+
+NOTE: Data recovery software, which can analyze failed hard disks or flash drives and try to locate and extract data files.
+
+*Data backup*: The best way to be prepared for a data-loss event is to have a well-thought out disaster plan and procedure in place. Disaster plans should involve making regular backups of any and all critical data that's necessary for your ongoing business processes. This includes things like customer data, system databases, system configs and financial data. 
+
+A *post-mortem* is a way for you to document any problems you discovered along the way, and most importantly, the ways you fixed them so you can make sure they don't happen again. 
+
+NOTE: https://about.gitlab.com/2017/02/01/gitlab-dot-com-database-incident[Gitlab 数据恢复]
+
+.*本地和远程备份*
+[cols="2,5a,5a"]
+|===
+|地点 |描述 |说明
+
+|Onsite Backup(本地备份)
+|
+image:img/onsite-backup.png[]
+|
+* 优点
+** Data is physically nearby
+** Low bandwidth needs
+* 缺点
+** Data loss due to damage at location
+
+|Offsite Backup(远程备份)
+|
+image:img/off-site-storage.png[]
+|
+* 优点
+** Data is safer in multiple locations
+* 缺点
+** Needs security and encryption
+** Needs large amounts of bandwidth
+|===
+
+
+.*数据备份工具*
+|===
+|名称 |说明 |链接
+
+|Rsync
+|very commonly used， It's a file transfer utility that's designed to efficiently transfer and synchronize files between locations or computers.
+|https://wiki.archlinux.org/index.php/rsync#As_a_backup_utility[Rsync as a backup utility]
+
+|Backup and Restore
+|a file based version where files are backed up to a zip archive, entire disk saved block by block to a file. 
+|https://support.microsoft.com/en-us/help/17127/windows-back-up-restore[Microsoft Backup and Restore]
+
+|Time Machine
+|supports restoring an entire system from backup or individual files
+|https://support.apple.com/en-us/HT201250[Apple Time Machine]
+
+|===
+
+=== DR 计划
+
+A *disaster recovery plan* is a collection of documented procedures and plans on how to react and handle an emergency or disaster scenario, from the operational perspective.
+
+.*DR 计划两种路径*
+[cols="5a,5a,5a"]
+|===
+|Preventive measures |Detection measures |Corrective or recovery measures
+
+|Preventative measures cover any procedures or systems in place that will proactively minimize the impact of a disaster. This includes:
+
+* regular backups
+* redundant systems
+
+|Meant to alert you and your team that a disaster has occurred that can impact operations. 
+
+|Those enacted after disaster has occurred
+|===
+
+*设计一个 DR 计划*
+
+* [*] *Perform Risk Assessment* - A risk assessment allows you to prioritize certain aspects of the organizations that are more at risk if there's an unforeseen event.
+* [*] *Determine Backup and Recovery Systems*
+* [*] *Determine Detection & Alert Measures & Test Systems* - Detect and alert you to service outages or abnormal environmental conditions
+* [*] *Determine Recovery Measures* - Corrective or recovery measures include actions that are taken to restore normal operations and to recover from an incident or outage.
+
+=== 灾难纪录
+
+We create a post-mortem after an incident, an outage, or some event when something goes wrong, or at the end of a project to analyze how it went.
+
+*灾难纪录包括内容：*
+
+* [x] What the incident was?
+* [x] How long it lasted?
+* [x] What the impact was? 
+* [x] How it was fixed?
+
 
 == 有用链接
 

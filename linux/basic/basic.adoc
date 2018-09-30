@@ -1,4 +1,4 @@
-= Basic Linux Admin Commands
+= Linux 基本命令
 :toc: manual
 
 == man
