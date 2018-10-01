@@ -48,7 +48,7 @@ sudo yum install -y ansible
 ansible --version
 ----
 
-== Ansible 部署
+== 部署
 
 === Inventory 编写
 
@@ -94,3 +94,262 @@ ansible -i Inventory
 ----
 
 NOTE: 更多关于 Ansible 清单，参照 https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html[链接]。
+
+=== 配置文件
+
+.*Ansible 配置文件 & 优先级*
+|===
+|文件路径 |说明 |优先级
+
+|$ANSIBLE_CONFIG
+|使用 $ANSIBLE_CONFIG 变量指定配置文件路径，优先级最高
+|4
+
+|./ansible.cfg
+|放置与执行 ansible 命令的目录
+|3
+
+|~/.ansible.cfg
+|当前用户主目录下
+|2
+
+|/etc/ansible/ansible.cfg
+|全局配置文件路径
+|1
+|===
+
+NOTE: 优先级高的配置文件或覆盖优先级低的配置。
+
+[source, text]
+.*ansible --version 输出配置的位置*
+----
+$ ansible --version
+ansible 2.3.1.0
+  config file = /etc/ansible/ansible.cfg
+...
+----
+
+[source, text]
+.*执行 Ansible 命令时使用 -v 选项输出配置的位置*
+----
+$ ansible servers --list-hosts -v
+Using /etc/ansible/ansible.cfg as config file
+...
+----
+
+.*Ansible 配置文件中的配置分组*
+[cols="2,2,5a"]
+|===
+|位置 |说明 |示例
+
+|[defaults]
+|配置文件中的大部分设置分组
+|
+[source, text]
+----
+[defaults]
+#清单位置
+inventory = ./inventory
+
+#连接设置
+remote_user = root
+ask_pass = true
+----
+
+|[privilege_escalation]
+|包含的设置用于定义如何对受管主机执行需要特权升级的操作。
+|
+[source, text]
+----
+[privilege_escalation]
+become = true
+become_method = sudo
+become_user = root
+become_ask_pass = false
+----
+
+|[paramiko_connection]、[ssh_connection]、[accelerate]
+|包含的设置用于优化与受管主机的连接
+|
+
+|[selinux]
+|包含的设置用于定义如何配置 SELinux 交互
+|
+|===
+
+.*Ansible 配置项*
+|===
+|配置项 |说明 |命令行选项
+
+|inventory
+|Ansible 清单的位置
+|-i
+
+|remote_user
+|用于建立与受管主机的连接的用户帐户
+|-u
+
+|ask_pass
+|提示输入以远程用户身份连接时要使用的密码
+|
+
+|become
+|为受管主机上的操作启用或禁用特权升级
+|--become、-b
+
+|become_method
+|要在受管主机上使用的特权升级方法
+|--become-method
+
+|become_user
+|在受管主机上升级特权的用户帐户
+|--become-user
+
+|become_ask_pass
+|定义受管主机上的特权升级是否提示输入密码
+|--ask-become-pass、 -K
+|===
+
+=== 运行临时命令
+
+什么是运行临时命令？临时命令是简单的一行式操作，无需编写 playbook 即可运行的命令。它们对快速测试和更改很有用处。例如，您可以使用临时命令确保一组服务器上的 /etc/hosts 文件中存在某一特定的行。您可以使用另一个临时命令在许多不同的计算机上高效重启一项服务，或者确保特定的软件包为最新版本。您还可以将它用于在一个或多个主机上运行任意命令，从而运行某一程序或收集信息。
+
+[source, text]
+.*运行临时命令范式*
+----
+ansible host-pattern -m module [-a 'module arguments'] [-i inventory]
+----
+
+* `host-pattern` - 用于指定应在其上运行临时命令的受管主机。它可以是清单中的特定受管主机或主机组。
+* `-m` -  Ansible 应在目标主机上运行的 模块的名称取为参数。模块是为了实施您的任务而执行的小程序。
+* `-a` - 以带引号字符串形式取这些参数的列表。
+* `-i` - 指定要使用的其他清单位置，取代当前 Ansible 配置文件中的默认位置。
+
+[source, text]
+.*ansible-doc -l 列出所有模块*
+----
+$ ansible-doc -l
+----
+
+[source, text]
+.*ansible-doc NAME 查看模块文档*
+----
+$ ansible-doc ping
+----
+
+.*常见临时命令示例*
+[cols="2,5a"]
+|===
+|名称 |示例
+
+|ping
+|
+[source, text]
+----
+$ ansible all -m ping
+servera.lab.example.com | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+----
+
+|创建用户
+|
+[source, text]
+----
+$ ansible -m user -a 'name=newbie uid=4000 state=present' \
+> servera.lab.example.com
+servera.lab.example.com | SUCCESS => {
+    "changed": true,
+    "comment": "",
+    "createhome": true,
+    "group": 4000,
+    "home": "/home/newbie",
+    "name": "newbie",
+    "shell": "/bin/bash",
+    "state": "present",
+    "system": false,
+    "uid": 4000
+}
+----
+
+|使用 command 模块运行命令
+|
+[source, text]
+----
+$ ansible mymanagedhosts -m command -a /usr/bin/hostname -o
+host1.lab.example.com | SUCCESS | rc=0 >> (stdout) host1.lab.example.com
+host2.lab.example.com | SUCCESS | rc=0 >> (stdout) host2.lab.example.com
+----
+
+=== 动态清单
+
+Ansible 支持通过 动态清单脚本在每当 Ansible 执行时从这些类型的来源检索当前的信息，使清单能够实时得到更新。这些脚本是可以执行的程序，能够从一些外部来源收集信息，并以 JSON 格式输出清单。
+
+动态清单脚本的使用方式与静态清单文本文件一样。清单的位置可以直接在当前的 ansible.cfg 文件中指定，或者通过 -i 选项指定。如果清单文件可以执行，它将被视为动态清单程序，Ansible 则将尝试运行它来生成清单。如果文件不可执行，它将被视为静态清单。
+
+NOTE: https://github.com/ansible/ansible/tree/devel/contrib/inventory 中有大量现有的动态清单脚本，包括对私有云平台、公共云平台、虚拟化平台、PaaS 平台等管理。
+|===
+
+== Playbooks
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
+[source, text]
+.*1*
+----
+
+----
+
