@@ -56,4 +56,8 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |2018-09-13
 |微服务及红帽多产品集成实践
 
+|1.2
+|2018-10-14
+|敏捷集成
+
 |===
