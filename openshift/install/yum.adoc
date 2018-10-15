@@ -144,7 +144,7 @@ systemctl restart iptables.service
 
 
 [source, bash]
-.*1 - 在任意 Linux 节点上添加如下配置*
+.*1 - 在任意 Linux 节点上添加如下 YUM 配置*
 ----
 cat << EOF > /etc/yum.repos.d/ocp.repo
 [rhel-7-server-rpms]
@@ -159,27 +159,21 @@ enabled = 1
 gpgcheck = 0
 name = rhel-7-server-extras-rpms
 
-[rhel-7-server-ose-3.10-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.10-rpms
+[rhel-7-server-ose-3.11-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.11-rpms
 enabled = 1
 gpgcheck = 0
-name = rhel-7-server-ose-3.10-rpms
+name = rhel-7-server-ose-3.11-rpms
 
-[rhel-7-fast-datapath-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms
+[rhel-7-server-ansible-2.6-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.6-rpms
 enabled = 1
 gpgcheck = 0
-name = rhel-7-fast-datapath-rpms
-
-[rhel-7-server-ansible-2.4-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-server-ansible-2.4-rpms
+name = rhel-7-server-ansible-2.6-rpms
 EOF
 ----
 
-执行输出如下命令测试 YUM 源配置
+link:pre-files/ocp-3.10.repo[ocp-3.10.repo]
 
 [source, bash]
 .*2 - 执行输出如下命令测试 YUM 源配置*

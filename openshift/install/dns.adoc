@@ -11,13 +11,13 @@ OCP 运行依赖 DNS 服务主要体现在两个方面：
 
 [source, bash]
 ----
-master.example.com    A   192.168.122.101
-infra.example.com     A   192.168.122.102
-nfs.example.com       A   192.168.122.103
-node1.example.com     A   192.168.122.105
-node2.example.com     A   192.168.122.106
+master.example.com    A   10.66.208.101
+infra.example.com     A   10.66.208.102
+nfs.example.com       A   10.66.208.103
+node1.example.com     A   10.66.208.105
+node2.example.com     A   10.66.208.106
 
-*.apps.example.com. 300 IN  A 192.168.122.102
+*.apps.example.com. 300 IN  A 10.66.208.102
 ---- 
 
 NOTE: 应用服务 A 记录 IP 地址位 router IP。
@@ -38,11 +38,12 @@ dnsmasq-2.76-5.el7.x86_64
 ----
 # cat /etc/dnsmasq.d/openshift-cluster.conf
 local=/example.com/
-address=/.apps.example.com/192.168.122.102
-address=/master.example.com/192.168.122.101
-address=/infra.example.com/192.168.122.102
-address=/nfs.example.com/192.168.122.103
-address=/node1.example.com/192.168.122.105
+address=/.apps.example.com/10.66.208.102
+address=/master.example.com/10.66.208.101
+address=/infra.example.com/10.66.208.102
+address=/nfs.example.com/10.66.208.105
+address=/node1.example.com/10.66.208.103
+address=/node2.example.com/10.66.208.104
 address=/registry.example.com/192.168.5.106
 ----
 
@@ -62,15 +63,15 @@ address=/registry.example.com/192.168.5.106
 .*5. 测试*
 ----
 # for i in master infra nfs node1 ; do dig $i.example.com @192.168.5.106 +short ; done
-192.168.122.101
-192.168.122.102
-192.168.122.103
-192.168.122.105
+10.66.208.101
+10.66.208.102
+10.66.208.103
+10.66.208.105
 
 # for i in test xyz ttt ; do dig $i.apps.example.com @192.168.5.106 +short ; done
-192.168.122.102
-192.168.122.102
-192.168.122.102
+10.66.208.102
+10.66.208.102
+10.66.208.102
 ----
 
 NOTE: 192.168.5.106 为 DNS 服务器 IP 地址。

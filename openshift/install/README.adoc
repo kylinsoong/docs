@@ -17,47 +17,42 @@ image:img/openshift-install-arch.png[]
 
 == 安装架构说明
 
-如下表所示，OpenShift 安装需要 5 台服务器，
+如下表所示，OpenShift 安装需要 6 台服务器，
 
 [cols="2,2,5a"]
 |===
 |ip 地址 |域名 |说明
 
-|192.168.122.101
+|10.66.208.101
 |master.example.com
 |管理节点
 
-|192.168.122.102
+|10.66.208.102
 |infra.example.com
 |基础设施节点（内部镜像仓库、日志、监控）
 
-|192.168.122.103
-|nfs.example.com
-|NFS 服务器
-
-|192.168.122.105
+|10.66.208.103
 |node1.example.com
 |计算节点
 
-|192.168.122.106
+|10.66.208.104
 |node2.example.com
 |计算节点
 
-|10.66.192.104
-|yum.example.com registry.example.com
+|10.66.208.105
+|nfs.example.com
+|NFS 服务器
+
+|10.66.208.106
+|support.example.com
 |
 * 公共镜像仓库
 * yum 源服务器
 * DNS 服务器
-
-|10.66.192.100
-|workstation.example.com
-|
-* 操作控制节点 - 执行 ansible 脚本
 |===
 
 [source, text]
-.*5 台服务器都安装的是 Linux 操作系统*
+.*6 台服务器都安装的是 Linux 操作系统*
 ----
 # cat /etc/redhat-release 
 Red Hat Enterprise Linux Server release 7.5 (Maipo)
@@ -70,40 +65,48 @@ Red Hat Enterprise Linux Server release 7.5 (Maipo)
 [source, bash]
 ----
 hostnamectl set-hostname master.example.com
-nmcli connection modify eth0 ipv4.addresses 192.168.122.101/24
-nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.addresses 10.66.208.101/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
 nmcli connection modify eth0 ipv4.method manual
 nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
 
 hostnamectl set-hostname infra.example.com
-nmcli connection modify eth0 ipv4.addresses 192.168.122.102/24
-nmcli connection modify eth0 ipv4.gateway 192.168.122.1
-nmcli connection modify eth0 ipv4.method manual
-nmcli connection modify eth0 connection.autoconnect yes
-nmcli connection reload
-nmcli connection up eth0
-
-hostnamectl set-hostname nfs.example.com
-nmcli connection modify eth0 ipv4.addresses 192.168.122.103/24
-nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.addresses 10.66.208.102/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
 nmcli connection modify eth0 ipv4.method manual
 nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
 
 hostnamectl set-hostname node1.example.com
-nmcli connection modify eth0 ipv4.addresses 192.168.122.105/24
-nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.addresses 10.66.208.103/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
 nmcli connection modify eth0 ipv4.method manual
 nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload
 nmcli connection up eth0
 
 hostnamectl set-hostname node2.example.com
-nmcli connection modify eth0 ipv4.addresses 192.168.122.106/24
-nmcli connection modify eth0 ipv4.gateway 192.168.122.1
+nmcli connection modify eth0 ipv4.addresses 10.66.208.104/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+
+hostnamectl set-hostname nfs.example.com
+nmcli connection modify eth0 ipv4.addresses 10.66.208.105/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+
+hostnamectl set-hostname support.example.com
+nmcli connection modify eth0 ipv4.addresses 10.66.208.106/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
 nmcli connection modify eth0 ipv4.method manual
 nmcli connection modify eth0 connection.autoconnect yes
 nmcli connection reload

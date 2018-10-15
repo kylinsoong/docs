@@ -1,7 +1,7 @@
 = Summary
 
 . link:README.adoc[INTRODUCTION]
-. link:linux/README.adoc[CLOUD INFRA]
+. link:linux/README.adoc[INFRA]
 .. link:linux/rhel/readme.adoc[安装]
 ... link:linux/rhel/pre-install.adoc[安装 DVD 制作]
 ... link:linux/rhel/install-img-usb.adoc[生成 USB 介质]

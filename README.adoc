@@ -48,16 +48,16 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |===
 |版本 |时间 |Notes
 
-|1.0
-|2018-08-27
-|基本 OpenShift 安装(3.10.14)，基本 Linux 基础，APPDEV 相关内容
+|1.2
+|2018-10-14
+|敏捷集成
 
 |1.1
 |2018-09-13
 |微服务及红帽多产品集成实践
 
-|1.2
-|2018-10-14
-|敏捷集成
+|1.0
+|2018-08-27
+|基本 OpenShift 安装(3.10.14)，基本 Linux 基础，APPDEV 相关内容
 
 |===
