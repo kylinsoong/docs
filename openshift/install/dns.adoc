@@ -13,9 +13,10 @@ OCP 运行依赖 DNS 服务主要体现在两个方面：
 ----
 master.example.com    A   10.66.208.101
 infra.example.com     A   10.66.208.102
-nfs.example.com       A   10.66.208.103
-node1.example.com     A   10.66.208.105
-node2.example.com     A   10.66.208.106
+node1.example.com     A   10.66.208.103
+node2.example.com     A   10.66.208.104
+nfs.example.com       A   10.66.208.105
+registry.example.com     A   10.66.208.106
 
 *.apps.example.com. 300 IN  A 10.66.208.102
 ---- 
@@ -41,16 +42,18 @@ local=/example.com/
 address=/.apps.example.com/10.66.208.102
 address=/master.example.com/10.66.208.101
 address=/infra.example.com/10.66.208.102
-address=/nfs.example.com/10.66.208.105
 address=/node1.example.com/10.66.208.103
 address=/node2.example.com/10.66.208.104
-address=/registry.example.com/192.168.5.106
+address=/nfs.example.com/10.66.208.105
+address=/registry.example.com/10.66.208.106
 ----
 
 [source, text]
 .*3. 配置 forward/upstream，是 OCP 环境能够解析外部域名*
 ----
-//TODO--
+# cat /etc/dnsmasq.d/origin-upstream-dns.conf 
+server=10.72.17.5
+server=8.8.8.8
 ----
 
 [source, text]
@@ -62,18 +65,25 @@ address=/registry.example.com/192.168.5.106
 [source, text]
 .*5. 测试*
 ----
-# for i in master infra nfs node1 ; do dig $i.example.com @192.168.5.106 +short ; done
+# for i in master infra node1 node2 nfs registry ; do dig $i.example.com @10.66.208.106 +short ; done
 10.66.208.101
 10.66.208.102
 10.66.208.103
+10.66.208.104
 10.66.208.105
+10.66.208.106
 
-# for i in test xyz ttt ; do dig $i.apps.example.com @192.168.5.106 +short ; done
+# for i in bar foo test xyz ; do dig $i.apps.example.com @10.66.208.106 +short ; done
 10.66.208.102
 10.66.208.102
 10.66.208.102
+10.66.208.102
+
+# dig github.com @10.66.208.106 +short
+192.30.253.113
+192.30.253.112
 ----
 
-NOTE: 192.168.5.106 为 DNS 服务器 IP 地址。
+NOTE: 10.66.208.106 为 DNS 服务器 IP 地址。
 
 == unbound

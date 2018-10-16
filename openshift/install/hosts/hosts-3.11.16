@@ -9,7 +9,7 @@ nfs
 ansible_ssh_user=root
 
 openshift_deployment_type=openshift-enterprise
-openshift_release=v3.10
+openshift_release=v3.11
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 openshift_disable_check=docker_storage,memory_availability,disk_availability
 

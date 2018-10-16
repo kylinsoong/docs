@@ -63,6 +63,224 @@ os_firewall_use_firewalld=True
 
 本部分提供两种安装方式：Ansible 执行前续安装，及 Bash 执行前续安装。
 
+== Bash 执行前续安装
+
+=== 控制节点静态域名配置
+
+[source, text]
+.*Master 上配置 hosts 内容如下*
+----
+echo "10.66.208.101 master.example.com master" >> /etc/hosts
+echo "10.66.208.102 infra.example.com infra" >> /etc/hosts
+echo "10.66.208.103 node1.example.com node1" >> /etc/hosts
+echo "10.66.208.104 node2.example.com node2" >> /etc/hosts
+echo "10.66.208.105 nfs.example.com nfs" >> /etc/hosts
+echo "10.66.208.106 yum.example.com yum" >> /etc/hosts
+echo "10.66.208.106 registry.example.com registry" >> /etc/hosts
+----
+
+=== Master 到其它节点互信
+
+[source, text]
+.*1. 生成 SSH 所需之秘钥。命令如下，应答输入请直接输入回车*
+----
+# ssh-keygen
+----
+
+[source, text]
+.*2. 配置到各节点免密登录*
+----
+# for i in master infra nfs node1 node2 registry; do ssh-copy-id $i.example.com; done;
+----
+
+[source, text]
+.*3. 免密登录验证*
+----
+# for i in master infra nfs node1 node2 registry; do ssh $i.example.com 'date'; done
+Mon Oct 15 20:41:54 CST 2018
+Mon Oct 15 20:41:31 CST 2018
+Mon Oct 15 20:41:55 CST 2018
+Mon Oct 15 20:42:50 CST 2018
+Mon Oct 15 20:42:49 CST 2018
+Tue Oct 16 04:42:48 CST 2018
+----
+
+=== 所有节点 hosts 文件拷贝
+
+[source, text]
+----
+# for i in infra node1 node2 nfs ; do scp /etc/hosts root@$i.example.com:/etc/hosts ; done
+----
+
+=== 所有节点 yum 源配置
+
+[source, text]
+.*1. 控制节点创建 ocp.repo*
+----
+cat << EOF > /etc/yum.repos.d/ocp.repo
+[rhel-7-server-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-rpms
+
+[rhel-7-server-extras-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-extras-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-extras-rpms
+
+[rhel-7-server-ose-3.11-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.11-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ose-3.11-rpms
+
+[rhel-7-server-ansible-2.6-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.6-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ansible-2.6-rpms
+EOF
+----
+
+[source, text]
+.*2. 确保所有用户有可读权限*
+----
+# chmod a+x ocp.repo
+----
+
+[source, text]
+.*3. 所有节点 yum 源配置*
+----
+# for i in infra node1 node2 nfs ; do scp /etc/yum.repos.d/ocp.repo root@$i.example.com:/etc/yum.repos.d/ ; done
+----
+
+[source, text]
+.*4. 测试 yum 源配置*
+----
+# for i in master infra node1 node2 ; do ssh $i.example.com 'yum list | grep openshift-ansible' ; done
+openshift-ansible.noarch             3.11.16-1.git.0.4ac6f81.el7
+openshift-ansible-docs.noarch        3.11.16-1.git.0.4ac6f81.el7
+openshift-ansible-playbooks.noarch   3.11.16-1.git.0.4ac6f81.el7
+openshift-ansible-roles.noarch       3.11.16-1.git.0.4ac6f81.el7
+...
+----
+
+=== SELinux 设定
+
+[source, text]
+.*查看 SELinux 设定*
+----
+# for in in master infra node1 node2 ; do ssh $i.example.com 'getenforce' ; done
+Enforcing
+Enforcing
+Enforcing
+Enforcing
+----
+
+=== 安装软件包
+
+[source, text]
+.*1. yum 更新*
+----
+# for i in master infra node1 node2 nfs ; do ssh $i.example.com 'yum update -y' ; done
+----
+
+[source, text]
+.*2. 安装基本包*
+----
+# for i in master infra node1 node2 nfs ; do ssh $i.example.com 'yum -y install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct vim tree; echo' ; done
+----
+
+[source, text]
+.*3. Master 上安装 openshift-ansible*
+----
+# ssh master.example.com 'yum -y install openshift-ansible'
+----
+
+[source, text]
+.*4. 重起所有节点*
+----
+# for i in infra node1 node2 nfs master ; do ssh $i.example.com 'reboot' ; done
+----
+
+=== DNS 配置
+
+[source, text]
+.*1. 所有节点配置 DNS*
+----
+# for i in master infra node1 node2 nfs ; do ssh $i.example.com 'nmcli connection modify eth0 ipv4.dns 10.66.208.106' ; done
+----
+
+[source, text]
+.*2. 测试 DNS*
+----
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig master.example.com  +short' ; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig infra.example.com +short' ; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig nfs.example.com +short' ; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig node1.example.com  +short' ; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig node2.example.com  +short' ; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig registry.example.com +short' ; done
+
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig test.apps.example.com  +short' ; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'dig xyz.apps.example.com  +short' ; done
+----
+
+=== 安装 Docker
+
+[source, text]
+.*1. 安装*
+----
+# for i in master infra node1 node2 ; do ssh $i.example.com 'yum -y install docker'; done
+----
+
+[source, text]
+.*2. 配置 Docker Storage(可选)*
+----
+
+----
+
+[source, text]
+.*3. 启动*
+----
+# for i in master infra node1 node2; do ssh $i.example.com 'systemctl enable docker ; systemctl start docker'; done
+----
+
+[source, text]
+.*4. 启动验证*
+----
+# for i in master infra node1 node2 ; do ssh $i.example.com 'systemctl status docker'; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'systemctl is-active docker'; done
+----
+
+=== Docker 证书配置
+
+[source, text]
+.*1. 拷贝证书*
+----
+# for i in master infra node1 node2; do scp example.com.crt root@$i.example.com:/etc/pki/ca-trust/source/anchors/ ; done
+----
+
+[source, text]
+.*2. 更新信任自签名证书*
+----
+# for i in master infra node1 node2 ; do ssh $i.example.com 'update-ca-trust extract'; done
+----
+
+[source, text]
+.*3. 重起 Docker*
+----
+# for i in master infra node1 node2 ; do ssh $i.example.com 'systemctl restart docker ; systemctl is-active docker'; done
+# for i in master infra node1 node2 ; do ssh $i.example.com 'systemctl is-enabled docker'; done
+----
+
+[source, text]
+.*4. 镜像下载测试*
+----
+# for i in master infra node1 node2; do ssh $i.example.com 'docker pull registry.example.com/rhscl/php-56-rhel7:latest'; done
+----
+
 == Ansible 执行前续安装
 
 本部分是在操作控制节点上进行。
@@ -121,7 +339,7 @@ for i in master infra nfs node1 node2; do ssh-copy-id $i; done;
 * link:pre-files/conf/ocp_rsa.pub[pre-files/conf/ocp_rsa.pub] - SSH 免密公钥
 * link:pre-files/conf/docker-storage-setup[pre-files/conf/docker-storage-setup] - docker 存储配置文件
 * link:pre-files/conf/openshift-cluster.conf[pre-files/conf/openshift-cluster.conf] - dnsmasq 配置文件
-* link:pre-files/conf/example.com.crt[pre-files/conf/example.com.crt] 
+* link:pre-files/conf/example.com.crt[pre-files/conf/example.com.crt]
 
 如上文件目录结构为:
 
@@ -133,208 +351,6 @@ image:img/ocp-pre-files.png[]
 ----
 ansible-playbook -i inventory prepare_install.yml
 ----
-
-== Bash 执行前续安装
-
-=== 控制节点静态域名配置
-
-[source, text]
-.*Master 上配置 hosts 内容如下*
-----
-echo "10.66.208.101 master.example.com master" >> /etc/hosts
-echo "10.66.208.102 infra.example.com infra" >> /etc/hosts
-echo "10.66.208.103 node1.example.com node1" >> /etc/hosts
-echo "10.66.208.104 node2.example.com node2" >> /etc/hosts
-echo "10.66.208.105 nfs.example.com nfs" >> /etc/hosts
-echo "10.66.208.106 yum.example.com yum" >> /etc/hosts
-echo "10.66.208.106 registry.example.com registry" >> /etc/hosts
-----
-
-=== Master 到其它节点互信
-
-[source, text]
-.*1. 生成 SSH 所需之秘钥。命令如下，应答输入请直接输入回车*
-----
-# ssh-keygen
-----
-
-[source, text]
-.*2. 配置到各节点免密登录*
-----
-# for i in master infra nfs node1 node2 registry; do ssh-copy-id $i.example.com; done;
-----
-
-[source, text]
-.*3. 免密登录验证*
-----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'date'; done
-----
-
-=== 所有节点 hosts 文件拷贝
-
-[source, text]
-----
-# for i in master infra nfs node1 ; do scp /etc/hosts root@$i.example.com:/etc/hosts ; done
-----
-
-=== 所有节点 yum 源配置
-
-[source, text]
-.*1. 控制节点创建 ocp.repo*
-----
-cat << EOF > ocp.repo
-[rhel-7-server-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-server-rpms
-
-[rhel-7-server-extras-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-extras-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-server-extras-rpms
-
-[rhel-7-server-ose-3.10-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.10-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-server-ose-3.10-rpms
-
-[rhel-7-fast-datapath-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-fast-datapath-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-fast-datapath-rpms
-
-[rhel-7-server-ansible-2.4-rpms]
-baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.4-rpms
-enabled = 1
-gpgcheck = 0
-name = rhel-7-server-ansible-2.4-rpms
-EOF
-----
-
-[source, text]
-.*2. 确保所有用户有可读权限*
-----
-# chmod a+x ocp.repo
-----
-
-[source, text]
-.*3. 所有节点 yum 源配置*
-----
-# for i in master infra node1 nfs ; do scp ocp.repo root@$i.example.com:/etc/yum.repos.d/ ; done
-----
-
-[source, text]
-.*4. 测试 yum 源配置*
-----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'yum list | grep openshift-ansible ; echo' ; done
-----
-
-=== 安装软件包
-
-[source, text]
-.*1. yum 更新*
-----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'yum update -y' ; done
-----
-
-[source, text]
-.*2. 安装基本包*
-----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'yum -y install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct vim tree; echo' ; done
-----
-
-[source, text]
-.*3. Master 上安装 openshift-ansible*
-----
-# ssh master.example.com 'yum -y install openshift-ansible'
-----
-
-[source, text]
-.*4. 重起所有节点*
-----
-# for i in infra node1 nfs master ; do ssh $i.example.com 'reboot' ; done
-----
-
-=== DNS 配置
-
-[source, text]
-.*1. 所有节点配置 DNS*
-----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'nmcli connection modify eth0 ipv4.dns 10.66.192.47' ; done
-----
-
-[source, text]
-.*2. 测试 DNS*
-----
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig master.example.com @10.66.192.47 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig infra.example.com @10.66.192.47 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig nfs.example.com @10.66.192.47 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig node1.example.com @10.66.192.47 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig registry.example.com @10.66.192.47 +short' ; done
-
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig test.apps.example.com @10.66.192.47 +short' ; done
-# for i in master infra node1 nfs ; do ssh $i.example.com 'dig xyz.apps.example.com @10.66.192.47 +short' ; done
-----
-
-=== 安装 Docker
-
-[source, text]
-.*1. 安装*
-----
-# for i in master infra node1 ; do ssh $i.example.com 'yum -y install docker'; done
-----
-
-[source, text]
-.*2. 配置 Docker Storage(可选)*
-----
-
-----
-
-[source, text]
-.*3. 启动*
-----
-# for i in master infra node1 ; do ssh $i.example.com 'systemctl enable docker'; done
-# for i in master infra node1 ; do ssh $i.example.com 'systemctl start docker'; done
-----
-
-[source, text]
-.*4. 启动验证*
-----
-# for i in master infra node1 ; do ssh $i.example.com 'systemctl status docker'; done
-# for i in master infra node1 ; do ssh $i.example.com 'systemctl is-active docker'; done
-----
-
-=== Docker 证书配置
-
-[source, text]
-.*1. 拷贝证书*
-----
-# for i in master infra node1 ; do scp example.com.crt root@$i.example.com:/etc/pki/ca-trust/source/anchors/ ; done
-----
-
-[source, text]
-.*2. 更新信任自签名证书*
-----
-# for i in master infra node1 ; do ssh $i.example.com 'update-ca-trust extract'; done
-----
-
-[source, text]
-.*3. 重起 Docker*
-----
-# for i in master infra node1 ; do ssh $i.example.com 'systemctl restart docker ; systemctl is-active docker'; done
-# for i in master infra node1 ; do ssh $i.example.com 'systemctl is-enabled docker'; don
-----
-
-[source, text]
-.*4. 镜像下载测试*
-----
-# for i in master infra node1 ; do ssh $i.example.com 'docker pull registry.example.com/rhscl/php-56-rhel7:latest'; done
-----
-
 
 == Ansible hosts 文件编辑
 
