@@ -1,12 +1,204 @@
 = 安装
 :toc: manual
 
+== Inventory
+
+Ansible inventory 文件描述了有关集群中主机的详细信息以及 OpenShift 安装过程的详细配置。OpenShift 安装 playbooks 会读取该 inventory 文件，以了解在何处以及如何在一组主机上安装 OpenShift。 
+
+本部分说明如何在 Master 节点编辑 `/etc/ansible/hosts`，主要通过变量控制安装。
+
+=== 集群变量
+
+|===
+|名称 |作用域 |描述
+
+|ansible_ssh_user
+|General
+|Ansible SSH 登录用户，默认 `root`，且需要免密登录。
+
+|debug_level
+|General
+|Ansible 输出日志级别，可能的值 0, 2, 4, 6, 8，默认 2，输出 INFO 日志，4 为 DEBUG 日志
+
+|openshift_clock_enabled
+|General
+|是否开启网络时钟 NTP，默认值 `true`
+
+|openshift_master_cluster_method
+|General
+|部署多个 Master 时定义 HA 的方法，支持 `native` 方法
+
+|openshift_master_identity_providers
+|General
+|配置认证提供者，
+
+|openshift_hosted_registry_cert_expire_days
+|General
+|默认自动生成的证书过期时间
+
+|os_firewall_use_firewalld
+|General
+|3.9 及以后的版本安装推荐使用 firewalld，设定为 `true` 默认使用 firewalld，而不是直接使用 iptables。
+
+|openshift_router_selector
+|General
+|设定部署 router Pod 的节点
+
+|openshift_registry_selector
+|General
+|设定部署 Registry Pod 的节点
+
+|openshift_template_service_broker_namespaces
+|General
+|Enables the template service broker by specifying one or more namespaces whose templates will be served by the broker.
+
+|openshift_master_bootstrap_auto_approve
+|General
+|Enables TLS bootstrapping auto approval, which allows nodes to automatically join the cluster when provided a bootstrap credential. 默认值为 `false`。
+
+|template_service_broker_selector
+|General
+|设定部署 Service Broker Pod 的节点
+
+|osm_default_node_selector
+|General
+|设定默认应用 Pod 部署的计算节点
+
+|openshift_docker_insecure_registries
+|General
+|设定一个非安全 Docker 仓库，Ansible 运行会将其配置到 Docker。
+
+|openshift_image_tag
+|General
+|设定一个全局镜像 TAG
+
+|openshift_pkg_version
+|General
+|设定一个全局的 RPM 包版本号
+
+|openshift_master_default_subdomain
+|Networking
+|设定路由使用的子域名地址
+
+|os_sdn_network_plugin_name
+|Networking
+|设定默认网络插件名称，默认 `redhat/openshift-ovs-subnet`
+
+|osm_cluster_network_cidr
+|Networking
+|This variable overrides the SDN cluster network CIDR block. This is the network from which pod IPs are assigned. Specify a private block that does not conflict with existing network blocks in your infrastructure to which pods, nodes, or the master might require access.
+
+|openshift_portal_net
+|Networking
+|配置子网的范围，默认 `172.30.0.0/16`
+
+|openshift_use_openshift_sdn
+|Networking
+|设定为 `false` 使 OpenShift SDN 插件失效
+|===
+
+[source, bash]
+.*示例 - 全局集群变量*
+----
+ansible_ssh_user=root
+debug_level=2
+openshift_clock_enabled=true
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+
+openshift_hosted_registry_cert_expire_days=3650
+os_firewall_use_firewalld=true
+
+openshift_router_selector='node-role.kubernetes.io/infra=true'
+openshift_registry_selector='node-role.kubernetes.io/infra=true'
+template_service_broker_selector='node-role.kubernetes.io/infra=true'
+osm_default_node_selector='node-role.kubernetes.io/compute=true'
+
+openshift_template_service_broker_namespaces=['openshift','tsb']
+
+openshift_docker_insecure_registries="registry.example.com"
+
+openshift_metrics_hawkular_hostname=hawkular-metrics.apps.example.com
+
+openshift_image_tag=v3.11.16
+----
+
+[source, bash]
+.*示例 - 网络变量*
+----
+openshift_master_default_subdomain=apps.example.com
+
+os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
+#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+#os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+
+osm_cluster_network_cidr=10.244.0.0/16
+openshift_portal_net=172.30.0.0/16
+----
+
+=== 部署类型
+
+[source, bash]
+.*确保部署类型为 openshift-enterprise*
+----
+openshift_deployment_type=openshift-enterprise
+----
+
+=== HOST 主机变量
+
+[source, bash]
+.*2 - Web Console 控制*
+----
+openshift_web_console_install=true
+openshift_web_console_prefix=registry.example.com/openshift3/ose-
+openshift_web_console_version=v3.10.14
+----
+
+[source, bash]
+.*4 - 安装 Standalone Registry，忽略 WebConsole 等其它*
+----
+deployment_subtype=registry
+----
+
+=== 示例
+
+|===
+|Inventory | 说明
+
+|link:hosts/hosts-3.11.16[hosts-3.11.16]
+|OpenShift 3.11.16
+
+|link:hosts/hosts-3.10.45[hosts-3.10.45]
+|OpenShift 3.10.45
+
+|link:hosts/hosts-3.10.14[hosts-3.10.14]
+|OpenShift 3.10.14
+
+|link:hosts/hosts-3.9.30[hosts-3.9.30]
+|OpenShift 3.9.30
+
+|link:hosts/hosts-3.9.25[hosts-3.9.25]
+|OpenShift 3.9.25
+
+|link:hosts/hosts-3.9.14[hosts-3.9.14]
+|OpenShift 3.9.14
+
+|link:hosts/hosts-3.6[hosts-3.6]
+|OpenShift 3.6
+|===
+
+
 == 安装
 
 [source, text]
-.*Master 上执行 ansible 脚本*
+.*1. Master 上执行 prerequisites 验证*
 ----
-# ansible-playbook -i hosts-3.10.14 /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+# ansible-playbook -i hosts-3.11.16 /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+----
+
+[source, text]
+.*2. Master 上执行 ansible 脚本*
+----
+# ansible-playbook -i hosts-3.11.16 /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 ----
 
 == 安装成功验证
