@@ -143,7 +143,27 @@ openshift_portal_net=172.30.0.0/16
 openshift_deployment_type=openshift-enterprise
 ----
 
-=== HOST 主机变量
+=== 外部镜像仓库位置
+
+[source, bash]
+.*如果不使用默认红帽提供的镜像仓库 registry.redhat.io，而使用一个外部镜像仓库，需要定义如下变量*
+----
+oreg_url=registry.example.com/openshift3/ose-${component}:${version}
+openshift_examples_modify_imagestreams=true
+#oreg_auth_user=admin
+#oreg_auth_password=admin
+----
+
+=== 内部镜像仓库路径
+
+[source, bash]
+.*为了允许用户向内部镜像仓库推送/拉取镜像，需要添加如下配置*
+----
+openshift_hosted_registry_routehost=registry.apps.example.com
+openshift_hosted_registry_routetermination=reencrypt
+openshift_hosted_registry_routecertificates= "{'certfile': '/etc/crts/com-example-cert.pem', 'keyfile': '/etc/crts/com-example-privkey.pem', 'cafile': '/etc/crts/com-example-chain.pem'}"
+----
+
 
 [source, bash]
 .*2 - Web Console 控制*
