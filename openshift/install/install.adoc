@@ -164,25 +164,22 @@ openshift_hosted_registry_routetermination=reencrypt
 openshift_hosted_registry_routecertificates= "{'certfile': '/etc/crts/com-example-cert.pem', 'keyfile': '/etc/crts/com-example-privkey.pem', 'cafile': '/etc/crts/com-example-chain.pem'}"
 ----
 
+=== Web Console
 
 [source, bash]
-.*2 - Web Console 控制*
 ----
 openshift_web_console_install=true
 openshift_web_console_prefix=registry.example.com/openshift3/ose-
-openshift_web_console_version=v3.10.14
-----
-
-[source, bash]
-.*4 - 安装 Standalone Registry，忽略 WebConsole 等其它*
-----
-deployment_subtype=registry
+openshift_web_console_version=v3.11.16
 ----
 
 === 示例
 
 |===
 |Inventory | 说明
+
+|link:hosts/hosts-3.11.16-2[hosts-3.11.16-2]
+|OpenShift 3.11.16
 
 |link:hosts/hosts-3.11.16[hosts-3.11.16]
 |OpenShift 3.11.16
