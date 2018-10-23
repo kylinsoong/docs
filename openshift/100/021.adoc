@@ -1,3 +1,0 @@
-= PersistentVolumes
-:toc: manual
-:toc-placement: preamble

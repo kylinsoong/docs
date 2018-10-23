@@ -1,3 +1,0 @@
-= Binary Input Builds
-:toc: manual
-:toc-placement: preamble

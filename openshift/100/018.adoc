@@ -1,3 +1,0 @@
-= Jobs
-:toc: manual
-:toc-placement: preamble

@@ -1,3 +1,0 @@
-= Secrets
-:toc: manual
-:toc-placement: preamble

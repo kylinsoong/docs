@@ -1,3 +1,0 @@
-= StatefulSets
-:toc: manual
-:toc-placement: preamble

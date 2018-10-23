@@ -1,3 +1,0 @@
-= Migrating Applications
-:toc: manual
-:toc-placement: preamble

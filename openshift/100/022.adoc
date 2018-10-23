@@ -1,3 +1,0 @@
-= PersistentVolumeClaims
-:toc: manual
-:toc-placement: preamble

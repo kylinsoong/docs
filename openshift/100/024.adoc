@@ -1,5 +1,0 @@
-= Template Creation
-:toc: manual
-:toc-placement: preamble
-
-

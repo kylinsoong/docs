@@ -1,3 +1,0 @@
-= Exposing non HTTP Services
-:toc: manual
-:toc-placement: preamble

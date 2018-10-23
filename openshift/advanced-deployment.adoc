@@ -866,3 +866,56 @@ Hello OpenShift!
 ----
 os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
 ----
+
+==== I - 应用部署
+
+[source, text]
+.*1. 克隆应用*
+----
+# git clone https://github.com/newgoliath/microservices-on-openshift
+# cd microservices-on-openshift/installscripts/
+----
+
+[source, text]
+.*2. 创建 3 个 Project*
+----
+# oc new-project msclient
+# oc new-project msservices
+# oc new-project msinfra
+----
+
+[source, text]
+.*3. 便捷 1.setVariable.sh *
+----
+# cat 1.setVariable.sh 
+export OSE_DOMAIN=apps.example.com
+export OSE_CLIENT_PROJECT=msclient
+export OSE_SERVICES_PROJECT=msservices
+export OSE_INFRA_PROJECT=msinfra
+export FROM_GMAIL=kylinsoong.1214@gmail.com
+export FROM_GMAIL_PASSWORD=XirZVyDjVvodKnMXDGwsw4JJsrzKpTby
+export TWITTER_CONSUMER_KEY=nothign
+export TWITTER_CONSUMER_SECRET=nothing
+export TWITTER_OAUTH_ACCESS_TOKEN=noting 
+export TWITTER_OAUTH_ACCESS_TOKEN_SECRET=nothing
+----
+
+[source, text]
+.*4. 依次执行脚本*
+----
+# source 1.setVariable.sh
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+

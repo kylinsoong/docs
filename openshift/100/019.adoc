@@ -1,4 +1,0 @@
-= ConfigMap
-:toc: manual
-:toc-placement: preamble
-

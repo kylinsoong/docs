@@ -1,3 +1,0 @@
-= DaemonSets
-:toc: manual
-:toc-placement: preamble
