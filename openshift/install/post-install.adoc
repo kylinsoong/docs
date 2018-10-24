@@ -31,12 +31,14 @@ oc adm policy add-role-to-user self-provisioner user01
 oc adm policy add-role-to-user self-provisioner user02
 ----
 
-== OpenShift 重启
+== 重启
  
 [source, bash]
-.*重启 OpenShift 节点*
+.*重启 Master 节点服务*
 ----
-# systemctl restart atomic-openshift-node.service
+# master-restart api
+# master-restart controllers
+# master-restart etcd
 ----
 
 == Gitlab 安装与配置

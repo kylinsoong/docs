@@ -2,6 +2,40 @@
 = Q & A
 :toc: manual
 
+== certificate signed by unknown authority
+
+=== 安装环境
+
+* OpenShift 3.11
+* RHEL 7.5
+
+=== 问题描述
+
+后续安装过程中 import image-stream 或部署镜像时报错：
+
+[source,text]
+----
+Get https://registry.example.com/v2/: x509: certificate signed by unknown authority
+----
+
+=== 原因及解决办法
+
+OpenShift 无法找到自签名的证书，导致此问题，解决办法: 编辑 Master 节点上的 API Server 配置文件 `/etc/origin/node/pods/apiserver.yaml`，添加
+
+[source,text]
+----
+    - mountPath: /etc/pki
+      name: certs
+
+  - hostPath:
+      path: /etc/pki
+    name: certs
+----
+
+类似的修改 `/etc/origin/node/pods/controller.yaml` 同样可以解决在 S2I 过程中 certificate signed by unknown authority 错误。
+
+NOTE: 修改完成后需重起服务: `master-restart ap`, `master-restart controllers`。
+
 == nfs is an unsupported type 
 
 === 安装环境
