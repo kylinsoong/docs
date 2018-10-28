@@ -681,6 +681,146 @@ users.acook.home_dir
 
 ----
 
+== Ansible Tower
+
+Ansible Tower 提供了在企业规模上高效运行和管理 Ansible 的框架，包括管理 playbook 的集中式 Web 界面、基于角色的访问控制 (RBAC)以及集中式日志记录和审计、其 REST API 确保 Tower 与企业的现有工作流和工具集轻松集成。Tower 的 API 和通知功能让 Ansible playbook 与 Jenkins、CloudForms 或红帽卫星等其他工具的关联变得特别简单，从而实现持续集成和部署。它提供了相应的机制，可以实现集中使用和控制计算机凭据及其他机密，而不必将它们公开给 Ansible Tower 最终用户。
+
+=== 架构
+
+Ansible Tower 是一款 Django Web 应用，可在 Linux 服务器上作为企业内自托管解决方案运行，架设于企业的现有 Ansible 基础架构基础上：
+
+image:img/ansible-tower.png[]
+
+* *具有集成式数据库的单一计算机* - 所有 Tower 组件、Web 前端、RESTful API 后端和 PostgreSQL 数据库全部驻留于单一计算机上。这是标准的架构。
+* *具有远程数据库的单一计算机* - Tower Web 前端和 RESTful API 后端安装在单一计算机上，而 PostgreSQL 数据库远程安装在同一网络中的另一台服务器上。远程数据库可以托管在具有 Tower 管理范围外现有 PostgreSQL 实例的服务器上。另一种方案是使 Tower 安装程序在远程服务器上创建 Tower 管理的 PostgreSQL 实例，并为它填充 Tower 数据库。
+* *高可用性多计算机群集* - 较旧版本的 Tower 提供一种主动-被动式冗余 Tower 架构，其包含一个主动节点和一个或多个被动节点。自 Tower 3.1 起，这种架构现已被具有多个主动 tower 节点的主动-主动式高可用性群集取代。
+
+=== 功能
+
+|===
+|条目 |说明
+
+|可视化控制面板
+|Tower Web 界面打开后显示一个控制面板屏幕，其中提供企业的整个 Ansible 环境的概要视图。通过 Tower 控制面板，管理员可以轻松查看主机和清单的当前状态，以及近期作业执行的结果。
+
+|基于角色的访问控制 (RBAC)
+|Tower 利用基于角色的访问控制 (RBAC) 系统，在维护安全性的同时简化用户访问权限管理。它简化了将用户访问权限委派至 Tower 对象（如组织、项目和清单）的过程。
+
+|图形化清单管理
+|用户在 Tower 中可以通过其 Web 界面创建清单组和添加清单主机。清单也可以从外部清单来源更新，如公共云提供商、本地虚拟化环境以及组织的自定义 配置管理数据库 (CMDB)。
+
+|作业调度
+|Tower 为用户提供调度 playbook 执行的功能，并在一次性或以固定间隔重复的基础上从外部数据源更新。这使得日常任务能够以无人值守的方式执行，对于最好在非工作时段执行的备份例程等任务特别有用。
+
+|实时和历史作业状态报告
+|如果 playbook 执行是从 Tower 中发起的，Web 界面中可实时显示 playbook 输出和执行结果。Tower 也提供以前执行的作业和调度的作业运行的结果。
+
+|一键式自动化
+|Ansible 简化了 IT 自动化，而 Tower 则进一步实现了用户自助服务。Tower 的简化 Web 界面与其 RBAC 系统的灵活性相结合，让管理员能够安全地以一键式例程方式委派复杂的任务。
+
+|远程命令执行
+|Tower 通过其远程命令执行功能提供 Ansible 临时命令的按需灵活性。远程命令执行用户权限通过 Tower 的 RBAC 系统实施。
+
+|凭据管理
+|Tower 集中管理用于身份验证目的的凭据，以执行包括如下在内的事务：在受管主机上运行 Ansible play，从动态清单源同步信息，以及从版本控制系统导入 Ansible 项目内容。它会加密提供的密码或密钥，使其不能被 Tower 用户检索到。可以授权用户来使用或替换这些凭据，而不必将它们公开给用户。
+
+|集中式日志记录和审计
+|Tower 上发起的所有 playbook 和远程命令执行都会记录日志。这提供了审计每个作业的执行时间以及执行人的功能。此外，Tower 也提供相应的功能，可以将其日志数据集成到第三方日志聚合解决方案中，如 Splunk 和 Sumologic。
+
+|集成式通知
+|Tower 通知可以用于指示 Tower 作业执行何时成功或失败。通知可以通过许多不同的协议传送，如电子邮件、Slack 和 HipChat 等。
+
+|多 Playbook 工作流
+|复杂的操作通常涉及连续执行多个 playbook。借助 Tower 的多 playbook 工作流，用户可以将多个 playbook 串联在一起，协助执行涉及调配、配置、部署和编排的复杂例程。直观的工作流编辑器也有助于简化多 playbook 工作流的建模。
+
+|系统跟踪
+|Tower 可以配置为定期扫描受管主机并记录其状态。收集的数据可用于审计随时间发生的系统变化。此外，这项功能也可用于比较和探查系统之间的差别。
+
+|RESTful API
+|Tower 的 RESTful API 通过 Tower Web 界面公开每一项 Tower 功能。API 的可浏览格式实现自我记录，并且简化 API 用法信息的查询。
+|===
+
+https://docs.ansible.com/ansible-tower/3.1.1/html/administration[Ansible Tower 管理文档]
+
+=== 安装
+
+.*Ansible Tower 安装需求*
+[cols="2,5a"]
+|===
+|条目 |说明
+
+|操作系统
+|支持操作系统包括：
+
+* Redhat Enterprise Linux 7
+* CentOS 7
+* Ubuntu 14.04 LTS
+* Ubuntu 16.04 LTS 
+
+例如，Ansible Tower 3.1 可安装在 RHEL 7.2 或更高的版本之上，并使用 64 位 x86_64 处理器架构
+
+|Web 浏览器
+|支持的 Mozilla Firefox 或 Google Chrome 版本，以连接 Ansible Tower Web 界面。其他 HTML5 兼容 Web 浏览器或许可行，但没有受到完整测试或支持。
+
+|内存
+|Tower 主机上要求至少 2 GB RAM。建议 4 GB 或以上。
+
+|磁盘存储
+|Tower 要求至少 20 GB 硬盘空间。若要 Ansible Tower 安装成功完成，/var 目录下必须有 10 GB 的可用磁盘空间。
+
+|Ansible
+|Ansible Tower 的安装通过执行运行 Ansible playbook 的 shell 脚本来进行。旧版 Ansible Tower 需要先安装最新稳定版 Ansible 后才能安装，但最新的安装程序会在 Ansible 及其依赖项不存在的情况下自动尝试安装它们。
+
+|SELinux
+|Tower 支持 targeted SELinux 策略，它可以设置为强制模式、许可或禁用。其他 SELinux 策略不受支持。
+
+|受管客户端
+|上述安装要求适用于 Ansible Tower 服务器，不适用于它通过 Ansible 管理的计算机。这些系统应满足通过 Ansible Tower 服务器上安装的 Ansible 版本管理的计算机的常规要求。
+|===
+
+*1. 下载* - http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.el7.tar.gz，http://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz 提供另一种适用于 RHEL 7 的捆绑式安装程序。
+
+[source, text]
+.*2. 解压*
+----
+# tar xzf ansible-tower-setup-bundle-3.1.1-1.el7.tar.gz
+# cd ansible-tower-setup-bundle-3.1.1-1.el7
+----
+
+[source, text]
+.*3. 初始密码，辑 inventory 文件，以设置以下帐户的密码：Ansible Tower admin 帐户 (admin_password)、PostgreSQL 数据库用户帐户 (pg_password) 和 RabbitMQ 消息传递用户帐户 (rabbitmq_password)*
+----
+[tower]
+localhost ansible_connection=local
+
+[database]
+
+[all:vars]
+admin_password='myadminpassword'
+
+pg_host=''
+pg_port=''
+
+pg_database='awx'
+pg_username='awx'
+pg_password='somedatabasepassword'
+
+rabbitmq_port=5672
+rabbitmq_vhost=tower
+rabbitmq_username=tower
+rabbitmq_password='and-a-messaging-password'
+rabbitmq_cookie=cookiemonster
+
+# Needs to be true for fqdns and ip addresses
+rabbitmq_use_long_name=false
+----
+
+[source, text]
+.*4. 执行 setup.sh 脚本来运行 Ansible Tower 安装程序*
+----
+# ./setup.sh
+----
+
 == 示例
 
 |===
