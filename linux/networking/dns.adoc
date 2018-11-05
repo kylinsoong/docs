@@ -46,11 +46,16 @@ NOTE: DNS can technically support up to 127 levels of domain in total for a sing
 === DNS 服务器种类
 
 .*Five primary types of DNS servers*
+[cols="2,5a"]
 |===
 |名称 |说明
 
-|Caching name servers
-|Provided by an ISP or local network. Store domain name lookups for a certain amount of time. Most caching name servers are also recursive name servers.
+|缓存名称服务器(Caching name servers)
+|缓存名称服务器在本地缓存中存储 DNS 查询结果，并且在 TTL 到期后从缓存中删除资源记录。通常设置缓存名称服务器以为本地网络上的客户端执行查询。这降低了 Internet 上的 DNS 流量，从而极大提高了 DNS 名称解析的效率。随着缓存的增加，缓存名称服务器从其本地缓存中回答越来越多的客户端查询，从而提高 DNS 性能。
+
+鉴于 UDP 的无状态性质，DNS 事务很容易被欺骗和篡改。缓存名称服务器过去一直是期望重定向或劫持网络流量的攻击者青睐的目标。这通常通过以下方式来实现：利用 DNS 服务器软件中的漏洞来欺骗 DNS 服务器接受恶意数据并将其填充到其缓存中，也就是通常称为缓存中毒的方法。一旦攻击者成功使 DNS 服务器的缓存中毒，便可利用 DNS 服务器上的缓存名称服务有效破坏众多客户端收到的 DNS 数据，并因此可以重定向或劫持客户端的网络流量。
+
+缓存名称服务器可以极大提高本地网络上的 DNS 性能，同时它们还可以通过执行域名系统安全性扩展 (Domain Name System Security Extensions, DNSSEC) 验证来提高安全性。在缓存名称服务器上启用的 DNSSEC 验证可在将资源记录置于缓存中供客户端使用之前验证资源记录的真实性和完整性，从而防止客户端遭受缓存中毒。
 
 |Recursive name servers
 |Provided by an ISP or local network. Perform full DNS resolution requests.
@@ -357,46 +362,143 @@ Address: 74.125.24.101
 
 == 配置管理 unbound
 
+将 unbound 作为缓存名称服务器进行配置和管理需要若干软件包（包括 bind、dnsmasq 和 unbound），及相关配置，具体步骤如下:
+
+[cols="2,5a"]
+|===
+|步骤 |说明
+
+|1. 安装 unbound
+|以 root 用户安装 unbound 软件包：
+
 [source, text]
-.*安装启动 unbound*
 ----
 # yum install -y unbound
-# systemctl enable unbound.service
+----
+
+|2. 启动并启用 unbound.service
+|
+
+[source, text]
+----
 # systemctl start unbound.service
+# systemctl enable unbound.service
 ----
 
-[source, text]
-.*配置 unbound*
-----
-# vim /etc/unbound/unbound.conf
-----
+|3. 配置要侦听的网络接口
+|默认情况下，unbound 仅侦听 localhost 网络接口。要使 unbound 能够作为缓存名称服务器供远程客户端使用，请使用 `/etc/unbound/unbound.conf` 的 server 子句中的 *interface* 选项来指定要侦听的网络接口。值 `0.0.0.0` 会将 unbound 配置为侦听所有网络接口：
 
 [source, text]
-.*配置检测*
+----
+interface: 0.0.0.0
+----
+
+|4. 配置客户端访问权限
+|默认情况下，unbound 会拒绝来自所有客户端的递归查询。在 `/etc/unbound/unbound.conf` 的 server 子句中，使用 *access-control* 选项指定允许哪些客户端进行递归查询。
+
+[source, text]
+----
+access-control: 172.25.0.0/24 allow
+----
+
+|5. 配置转发
+|在 `/etc/unbound/unbound.conf` 中，创建 forward-zone 子句以指定要将查询转发到的 DNS 服务器。可以使用 *forward-host* 选项按主机名指定 DNS 服务器，或者使用 *forward-addr* 选项按 IP 地址指定。对于缓存名称服务器，通过将 *forward-zone* 指定为 "." 以转发所有查询。
+
+[source, text]
+----
+forward-zone:
+  name: "."
+  forward-addr: 172.25.254.254
+----
+
+|6. 如果需要，可对特定的未签名区域绕过 DNSSEC 验证
+|默认情况下，启用 unbound 以执行 DNSSEC 验证，以验证是否收到了所有 DNS 响应。`/etc/unbound/unbound.conf` 的 server 子句中的 *domain-insecure* 选项可用于指定应跳过 DNSSEC 验证的域。这在处理未签名的内部域时通常是需要的，否则会导致信任链验证失败。
+
+[source, text]
+----
+domain-insecure: example.com
+----
+
+|7. 如果需要，请安装特定签名区域的信任定位符（不含完整信任链）
+|由于并非所有 ccTLD 都实现了 DNSSEC，这些 ccTLD 的子域可以由 DNSSEC 签名，但是仍具有损坏的信任链。可以使用 `/etc/unbound/unbound.conf` 的 server 子句中的 trust-anchor 选项指定区域的信任定位符，从而解决此问题。使用 dig 来获取区域的密钥签名密钥 (KSK) 的 DNSKEY 记录，并输入该记录作为 trust-anchor 选项的值。
+
+[source, text]
+----
+$ dig +dnssec DNSKEY example.com
+----
+
+|8. 保存
+|将更改保存到 `/etc/unbound/unbound.conf`。
+
+|9. 语法检查
+|检查 `/etc/unbound/unbound.conf` 配置文件是否有语法错误。
+
+[source, text]
 ----
 # unbound-checkconf
 ----
 
+|10. 重启
+|重新启动 unbound.service。
+
 [source, text]
-.*重起 unbound*
 ----
 # systemctl restart unbound.service
 ----
 
+|11. 配置防火墙
+|配置防火墙以允许 DNS 流量。
+
 [source, text]
-.*配置防火墙*
 ----
 # firewall-cmd --permanent --add-service=dns
 # firewall-cmd --reload
 ----
 
+|===
+
+=== unbound 基本管理操作
+
+[cols="2,5a"]
+|===
+|步骤 |说明
+
+|转储和加载 unbound 缓存
+|对 DNS 问题进行故障排除时，缓存名称服务器的管理员需要转储缓存数据，如由于陈旧资源记录产生的缓存数据。通过 unbound DNS 服务器，可以通过联合 dump_cache 子命令运行 unbound-control 实用程序来转储缓存。
+
 [source, text]
-.*查看 DNS 缓存*
 ----
 # unbound-control dump_cache
-# unbound-control flush example.com
-# unbound-control flush
 ----
+
+使用 dump_cache 命令执行 unbound-control 以便以文本格式将缓存转储到 stdout。可以将此输出定向到文件以进行存储，也可以在之后使用 unbound-control load_cache 命令重新加载到缓存中（如果需要）。unbound-control load_cache 从 stdin 中读取以填充缓存。
+
+[source, text]
+----
+# unbound-control load_cache < dump.out
+----
+
+|清空 unbound 缓存
+|缓存名称服务器的管理员还需要经常从缓存中清除过期的资源记录。在过期资源记录上的 TTL 到期之前，缓存中的错误和过期资源记录将阻止新的已更正的对应资源记录供客户端使用。管理员可以通过执行带有 flush 子命令的 unbound-control 来强制清除过期记录，而不必等待 TTL 过期。
+
+[source, text]
+----
+# unbound-control flush www.example.com
+----
+
+如果需要从 unbound DNS 服务器的缓存中清除属于某个域的所有资源记录，则可以使用 flush_zone 子命令来执行 unbound-control。
+
+[source, text]
+----
+# unbound-control flush_zone example.com
+----
+
+|使用 dnssec-trigger 更新本地缓存 unbound 配置
+|除了为本地子网提供缓存名称服务，unbound 作为本地缓存名称服务器也很有用，可提供安全的 DNS 名称解析以供在个别系统上本地使用。对于本地缓存名称服务器设置，`/etc/resolv.conf` 中的 nameserver 条目将配置为指向 unbound 正在侦听的本地主机。unbound 配置将 DNS 请求转发到上游名称服务器并验证其响应。
+
+对于运行本地缓存名称服务的 DHCP 系统，如果 DHCP 提供的 DNS 服务器发生更改，则 unbound 的配置中指定的上游名称服务器可能过期。可以利用相同名称的软件包提供的 dnssec-trigger 工具来自动更新 unbound 的配置文件中的转发器设置以指向新的 DNS 服务器。dnssec-trigger 工具与 unbound 组合使用对于漫游客户机上的安全 DNS 名称解析很有用。
+
+|===
 
 == DNS 常见问题
 
