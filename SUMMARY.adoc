@@ -43,6 +43,7 @@
 ... link:linux/svc/postfix.adoc[Email]
 ... link:linux/svc/mariadb.adoc[MariaDB]
 ... link:linux/svc/httpd.adoc[HTTPD]
+... link:linux/svc/zabbix.adoc[Zabbix]
 . link:docker/docker.adoc[DOCKER]
 .. link:docker/svc/svc.adoc[容器化服务]
 ... link:docker/svc/mysql.adoc[mysql]
