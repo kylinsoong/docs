@@ -690,6 +690,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.8.5" data-path="../svc/zabbix.html">
+            
+                <a href="../svc/zabbix.html">
+            
+                    
+                    Zabbix
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -2092,7 +2105,11 @@
 <li><a href="#_nslookup">nslookup</a></li>
 </ul>
 </li>
-<li><a href="#__unbound">&#x914D;&#x7F6E;&#x7BA1;&#x7406; unbound</a></li>
+<li><a href="#__unbound">&#x914D;&#x7F6E;&#x7BA1;&#x7406; unbound</a>
+<ul class="sectlevel2">
+<li><a href="#_unbound">unbound &#x57FA;&#x672C;&#x7BA1;&#x7406;&#x64CD;&#x4F5C;</a></li>
+</ul>
+</li>
 <li><a href="#_dns_3">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
 </ul>
 </div>
@@ -2196,8 +2213,8 @@ DNS can technically support up to 127 levels of domain in total for a single ful
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. <strong>Five primary types of DNS servers</strong></caption>
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
@@ -2207,24 +2224,40 @@ DNS can technically support up to 127 levels of domain in total for a single ful
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Caching name servers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provided by an ISP or local network. Store domain name lookups for a certain amount of time. Most caching name servers are also recursive name servers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;(Caching name servers)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x5728;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x4E2D;&#x5B58;&#x50A8; DNS &#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#xFF0C;&#x5E76;&#x4E14;&#x5728; TTL &#x5230;&#x671F;&#x540E;&#x4ECE;&#x7F13;&#x5B58;&#x4E2D;&#x5220;&#x9664;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x3002;&#x901A;&#x5E38;&#x8BBE;&#x7F6E;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4EE5;&#x4E3A;&#x672C;&#x5730;&#x7F51;&#x7EDC;&#x4E0A;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x6267;&#x884C;&#x67E5;&#x8BE2;&#x3002;&#x8FD9;&#x964D;&#x4F4E;&#x4E86; Internet &#x4E0A;&#x7684; DNS &#x6D41;&#x91CF;&#xFF0C;&#x4ECE;&#x800C;&#x6781;&#x5927;&#x63D0;&#x9AD8;&#x4E86; DNS &#x540D;&#x79F0;&#x89E3;&#x6790;&#x7684;&#x6548;&#x7387;&#x3002;&#x968F;&#x7740;&#x7F13;&#x5B58;&#x7684;&#x589E;&#x52A0;&#xFF0C;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4ECE;&#x5176;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x4E2D;&#x56DE;&#x7B54;&#x8D8A;&#x6765;&#x8D8A;&#x591A;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x67E5;&#x8BE2;&#xFF0C;&#x4ECE;&#x800C;&#x63D0;&#x9AD8; DNS &#x6027;&#x80FD;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x9274;&#x4E8E; UDP &#x7684;&#x65E0;&#x72B6;&#x6001;&#x6027;&#x8D28;&#xFF0C;DNS &#x4E8B;&#x52A1;&#x5F88;&#x5BB9;&#x6613;&#x88AB;&#x6B3A;&#x9A97;&#x548C;&#x7BE1;&#x6539;&#x3002;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x8FC7;&#x53BB;&#x4E00;&#x76F4;&#x662F;&#x671F;&#x671B;&#x91CD;&#x5B9A;&#x5411;&#x6216;&#x52AB;&#x6301;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x7684;&#x653B;&#x51FB;&#x8005;&#x9752;&#x7750;&#x7684;&#x76EE;&#x6807;&#x3002;&#x8FD9;&#x901A;&#x5E38;&#x901A;&#x8FC7;&#x4EE5;&#x4E0B;&#x65B9;&#x5F0F;&#x6765;&#x5B9E;&#x73B0;&#xFF1A;&#x5229;&#x7528; DNS &#x670D;&#x52A1;&#x5668;&#x8F6F;&#x4EF6;&#x4E2D;&#x7684;&#x6F0F;&#x6D1E;&#x6765;&#x6B3A;&#x9A97; DNS &#x670D;&#x52A1;&#x5668;&#x63A5;&#x53D7;&#x6076;&#x610F;&#x6570;&#x636E;&#x5E76;&#x5C06;&#x5176;&#x586B;&#x5145;&#x5230;&#x5176;&#x7F13;&#x5B58;&#x4E2D;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x901A;&#x5E38;&#x79F0;&#x4E3A;&#x7F13;&#x5B58;&#x4E2D;&#x6BD2;&#x7684;&#x65B9;&#x6CD5;&#x3002;&#x4E00;&#x65E6;&#x653B;&#x51FB;&#x8005;&#x6210;&#x529F;&#x4F7F; DNS &#x670D;&#x52A1;&#x5668;&#x7684;&#x7F13;&#x5B58;&#x4E2D;&#x6BD2;&#xFF0C;&#x4FBF;&#x53EF;&#x5229;&#x7528; DNS &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x7684;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x6709;&#x6548;&#x7834;&#x574F;&#x4F17;&#x591A;&#x5BA2;&#x6237;&#x7AEF;&#x6536;&#x5230;&#x7684; DNS &#x6570;&#x636E;&#xFF0C;&#x5E76;&#x56E0;&#x6B64;&#x53EF;&#x4EE5;&#x91CD;&#x5B9A;&#x5411;&#x6216;&#x52AB;&#x6301;&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x53EF;&#x4EE5;&#x6781;&#x5927;&#x63D0;&#x9AD8;&#x672C;&#x5730;&#x7F51;&#x7EDC;&#x4E0A;&#x7684; DNS &#x6027;&#x80FD;&#xFF0C;&#x540C;&#x65F6;&#x5B83;&#x4EEC;&#x8FD8;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6267;&#x884C;&#x57DF;&#x540D;&#x7CFB;&#x7EDF;&#x5B89;&#x5168;&#x6027;&#x6269;&#x5C55; (Domain Name System Security Extensions, DNSSEC) &#x9A8C;&#x8BC1;&#x6765;&#x63D0;&#x9AD8;&#x5B89;&#x5168;&#x6027;&#x3002;&#x5728;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x542F;&#x7528;&#x7684; DNSSEC &#x9A8C;&#x8BC1;&#x53EF;&#x5728;&#x5C06;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x7F6E;&#x4E8E;&#x7F13;&#x5B58;&#x4E2D;&#x4F9B;&#x5BA2;&#x6237;&#x7AEF;&#x4F7F;&#x7528;&#x4E4B;&#x524D;&#x9A8C;&#x8BC1;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x7684;&#x771F;&#x5B9E;&#x6027;&#x548C;&#x5B8C;&#x6574;&#x6027;&#xFF0C;&#x4ECE;&#x800C;&#x9632;&#x6B62;&#x5BA2;&#x6237;&#x7AEF;&#x906D;&#x53D7;&#x7F13;&#x5B58;&#x4E2D;&#x6BD2;&#x3002;</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Recursive name servers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provided by an ISP or local network. Perform full DNS resolution requests.</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Provided by an ISP or local network. Perform full DNS resolution requests.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Root name servers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">13 total root name servers, what are responsible for directing queries toward the appropriate TLD name server.</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>13 total root name servers, what are responsible for directing queries toward the appropriate TLD name server.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TLD name servers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The TLD name servers will respond again with a redirect, this time informing the computer performing the name lookup with what authoritative name server to contact.</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>The TLD name servers will respond again with a redirect, this time informing the computer performing the name lookup with what authoritative name server to contact.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authoritative name servers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authoritative name servers are responsible for the last two parts of any domain name which is the resolution at which a single organization may be responsible for DNS lookups.</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Authoritative name servers are responsible for the last two parts of any domain name which is the resolution at which a single organization may be responsible for DNS lookups.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -2673,46 +2706,203 @@ Address: 74.125.24.101</code></pre>
 <div class="sect1">
 <h2 id="__unbound">&#x914D;&#x7F6E;&#x7BA1;&#x7406; unbound</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>&#x5C06; unbound &#x4F5C;&#x4E3A;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x8FDB;&#x884C;&#x914D;&#x7F6E;&#x548C;&#x7BA1;&#x7406;&#x9700;&#x8981;&#x82E5;&#x5E72;&#x8F6F;&#x4EF6;&#x5305;&#xFF08;&#x5305;&#x62EC; bind&#x3001;dnsmasq &#x548C; unbound&#xFF09;&#xFF0C;&#x53CA;&#x76F8;&#x5173;&#x914D;&#x7F6E;&#xFF0C;&#x5177;&#x4F53;&#x6B65;&#x9AA4;&#x5982;&#x4E0B;:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x6B65;&#x9AA4;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. &#x5B89;&#x88C5; unbound</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x4EE5; root &#x7528;&#x6237;&#x5B89;&#x88C5; unbound &#x8F6F;&#x4EF6;&#x5305;&#xFF1A;</p>
+</div>
 <div class="listingblock">
-<div class="title"><strong>&#x5B89;&#x88C5;&#x542F;&#x52A8; unbound</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># yum install -y unbound
-# systemctl enable unbound.service
-# systemctl start unbound.service</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># yum install -y unbound</code></pre>
 </div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x914D;&#x7F6E; unbound</strong></div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2. &#x542F;&#x52A8;&#x5E76;&#x542F;&#x7528; unbound.service</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># vim /etc/unbound/unbound.conf</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl start unbound.service
+# systemctl enable unbound.service</code></pre>
 </div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3. &#x914D;&#x7F6E;&#x8981;&#x4FA6;&#x542C;&#x7684;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;unbound &#x4EC5;&#x4FA6;&#x542C; localhost &#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x3002;&#x8981;&#x4F7F; unbound &#x80FD;&#x591F;&#x4F5C;&#x4E3A;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4F9B;&#x8FDC;&#x7A0B;&#x5BA2;&#x6237;&#x7AEF;&#x4F7F;&#x7528;&#xFF0C;&#x8BF7;&#x4F7F;&#x7528; <code>/etc/unbound/unbound.conf</code> &#x7684; server &#x5B50;&#x53E5;&#x4E2D;&#x7684; <strong>interface</strong> &#x9009;&#x9879;&#x6765;&#x6307;&#x5B9A;&#x8981;&#x4FA6;&#x542C;&#x7684;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x3002;&#x503C; <code>0.0.0.0</code> &#x4F1A;&#x5C06; unbound &#x914D;&#x7F6E;&#x4E3A;&#x4FA6;&#x542C;&#x6240;&#x6709;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#xFF1A;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x914D;&#x7F6E;&#x68C0;&#x6D4B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">interface: 0.0.0.0</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4. &#x914D;&#x7F6E;&#x5BA2;&#x6237;&#x7AEF;&#x8BBF;&#x95EE;&#x6743;&#x9650;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;unbound &#x4F1A;&#x62D2;&#x7EDD;&#x6765;&#x81EA;&#x6240;&#x6709;&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x9012;&#x5F52;&#x67E5;&#x8BE2;&#x3002;&#x5728; <code>/etc/unbound/unbound.conf</code> &#x7684; server &#x5B50;&#x53E5;&#x4E2D;&#xFF0C;&#x4F7F;&#x7528; <strong>access-control</strong> &#x9009;&#x9879;&#x6307;&#x5B9A;&#x5141;&#x8BB8;&#x54EA;&#x4E9B;&#x5BA2;&#x6237;&#x7AEF;&#x8FDB;&#x884C;&#x9012;&#x5F52;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">access-control: 172.25.0.0/24 allow</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5. &#x914D;&#x7F6E;&#x8F6C;&#x53D1;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x5728; <code>/etc/unbound/unbound.conf</code> &#x4E2D;&#xFF0C;&#x521B;&#x5EFA; forward-zone &#x5B50;&#x53E5;&#x4EE5;&#x6307;&#x5B9A;&#x8981;&#x5C06;&#x67E5;&#x8BE2;&#x8F6C;&#x53D1;&#x5230;&#x7684; DNS &#x670D;&#x52A1;&#x5668;&#x3002;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; <strong>forward-host</strong> &#x9009;&#x9879;&#x6309;&#x4E3B;&#x673A;&#x540D;&#x6307;&#x5B9A; DNS &#x670D;&#x52A1;&#x5668;&#xFF0C;&#x6216;&#x8005;&#x4F7F;&#x7528; <strong>forward-addr</strong> &#x9009;&#x9879;&#x6309; IP &#x5730;&#x5740;&#x6307;&#x5B9A;&#x3002;&#x5BF9;&#x4E8E;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x901A;&#x8FC7;&#x5C06; <strong>forward-zone</strong> &#x6307;&#x5B9A;&#x4E3A; &quot;.&quot; &#x4EE5;&#x8F6C;&#x53D1;&#x6240;&#x6709;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">forward-zone:
+  name: &quot;.&quot;
+  forward-addr: 172.25.254.254</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6. &#x5982;&#x679C;&#x9700;&#x8981;&#xFF0C;&#x53EF;&#x5BF9;&#x7279;&#x5B9A;&#x7684;&#x672A;&#x7B7E;&#x540D;&#x533A;&#x57DF;&#x7ED5;&#x8FC7; DNSSEC &#x9A8C;&#x8BC1;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x542F;&#x7528; unbound &#x4EE5;&#x6267;&#x884C; DNSSEC &#x9A8C;&#x8BC1;&#xFF0C;&#x4EE5;&#x9A8C;&#x8BC1;&#x662F;&#x5426;&#x6536;&#x5230;&#x4E86;&#x6240;&#x6709; DNS &#x54CD;&#x5E94;&#x3002;<code>/etc/unbound/unbound.conf</code> &#x7684; server &#x5B50;&#x53E5;&#x4E2D;&#x7684; <strong>domain-insecure</strong> &#x9009;&#x9879;&#x53EF;&#x7528;&#x4E8E;&#x6307;&#x5B9A;&#x5E94;&#x8DF3;&#x8FC7; DNSSEC &#x9A8C;&#x8BC1;&#x7684;&#x57DF;&#x3002;&#x8FD9;&#x5728;&#x5904;&#x7406;&#x672A;&#x7B7E;&#x540D;&#x7684;&#x5185;&#x90E8;&#x57DF;&#x65F6;&#x901A;&#x5E38;&#x662F;&#x9700;&#x8981;&#x7684;&#xFF0C;&#x5426;&#x5219;&#x4F1A;&#x5BFC;&#x81F4;&#x4FE1;&#x4EFB;&#x94FE;&#x9A8C;&#x8BC1;&#x5931;&#x8D25;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">domain-insecure: example.com</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7. &#x5982;&#x679C;&#x9700;&#x8981;&#xFF0C;&#x8BF7;&#x5B89;&#x88C5;&#x7279;&#x5B9A;&#x7B7E;&#x540D;&#x533A;&#x57DF;&#x7684;&#x4FE1;&#x4EFB;&#x5B9A;&#x4F4D;&#x7B26;&#xFF08;&#x4E0D;&#x542B;&#x5B8C;&#x6574;&#x4FE1;&#x4EFB;&#x94FE;&#xFF09;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x7531;&#x4E8E;&#x5E76;&#x975E;&#x6240;&#x6709; ccTLD &#x90FD;&#x5B9E;&#x73B0;&#x4E86; DNSSEC&#xFF0C;&#x8FD9;&#x4E9B; ccTLD &#x7684;&#x5B50;&#x57DF;&#x53EF;&#x4EE5;&#x7531; DNSSEC &#x7B7E;&#x540D;&#xFF0C;&#x4F46;&#x662F;&#x4ECD;&#x5177;&#x6709;&#x635F;&#x574F;&#x7684;&#x4FE1;&#x4EFB;&#x94FE;&#x3002;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; <code>/etc/unbound/unbound.conf</code> &#x7684; server &#x5B50;&#x53E5;&#x4E2D;&#x7684; trust-anchor &#x9009;&#x9879;&#x6307;&#x5B9A;&#x533A;&#x57DF;&#x7684;&#x4FE1;&#x4EFB;&#x5B9A;&#x4F4D;&#x7B26;&#xFF0C;&#x4ECE;&#x800C;&#x89E3;&#x51B3;&#x6B64;&#x95EE;&#x9898;&#x3002;&#x4F7F;&#x7528; dig &#x6765;&#x83B7;&#x53D6;&#x533A;&#x57DF;&#x7684;&#x5BC6;&#x94A5;&#x7B7E;&#x540D;&#x5BC6;&#x94A5; (KSK) &#x7684; DNSKEY &#x8BB0;&#x5F55;&#xFF0C;&#x5E76;&#x8F93;&#x5165;&#x8BE5;&#x8BB0;&#x5F55;&#x4F5C;&#x4E3A; trust-anchor &#x9009;&#x9879;&#x7684;&#x503C;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ dig +dnssec DNSKEY example.com</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8. &#x4FDD;&#x5B58;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x5C06;&#x66F4;&#x6539;&#x4FDD;&#x5B58;&#x5230; <code>/etc/unbound/unbound.conf</code>&#x3002;</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9. &#x8BED;&#x6CD5;&#x68C0;&#x67E5;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x68C0;&#x67E5; <code>/etc/unbound/unbound.conf</code> &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x662F;&#x5426;&#x6709;&#x8BED;&#x6CD5;&#x9519;&#x8BEF;&#x3002;</p>
+</div>
+<div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># unbound-checkconf</code></pre>
 </div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10. &#x91CD;&#x542F;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x91CD;&#x65B0;&#x542F;&#x52A8; unbound.service&#x3002;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x91CD;&#x8D77; unbound</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># systemctl restart unbound.service</code></pre>
 </div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11. &#x914D;&#x7F6E;&#x9632;&#x706B;&#x5899;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x914D;&#x7F6E;&#x9632;&#x706B;&#x5899;&#x4EE5;&#x5141;&#x8BB8; DNS &#x6D41;&#x91CF;&#x3002;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x914D;&#x7F6E;&#x9632;&#x706B;&#x5899;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"># firewall-cmd --permanent --add-service=dns
 # firewall-cmd --reload</code></pre>
 </div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_unbound">unbound &#x57FA;&#x672C;&#x7BA1;&#x7406;&#x64CD;&#x4F5C;</h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x6B65;&#x9AA4;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8F6C;&#x50A8;&#x548C;&#x52A0;&#x8F7D; unbound &#x7F13;&#x5B58;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x5BF9; DNS &#x95EE;&#x9898;&#x8FDB;&#x884C;&#x6545;&#x969C;&#x6392;&#x9664;&#x65F6;&#xFF0C;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x7684;&#x7BA1;&#x7406;&#x5458;&#x9700;&#x8981;&#x8F6C;&#x50A8;&#x7F13;&#x5B58;&#x6570;&#x636E;&#xFF0C;&#x5982;&#x7531;&#x4E8E;&#x9648;&#x65E7;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x4EA7;&#x751F;&#x7684;&#x7F13;&#x5B58;&#x6570;&#x636E;&#x3002;&#x901A;&#x8FC7; unbound DNS &#x670D;&#x52A1;&#x5668;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x8054;&#x5408; dump_cache &#x5B50;&#x547D;&#x4EE4;&#x8FD0;&#x884C; unbound-control &#x5B9E;&#x7528;&#x7A0B;&#x5E8F;&#x6765;&#x8F6C;&#x50A8;&#x7F13;&#x5B58;&#x3002;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x67E5;&#x770B; DNS &#x7F13;&#x5B58;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># unbound-control dump_cache
-# unbound-control flush example.com
-# unbound-control flush</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># unbound-control dump_cache</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>&#x4F7F;&#x7528; dump_cache &#x547D;&#x4EE4;&#x6267;&#x884C; unbound-control &#x4EE5;&#x4FBF;&#x4EE5;&#x6587;&#x672C;&#x683C;&#x5F0F;&#x5C06;&#x7F13;&#x5B58;&#x8F6C;&#x50A8;&#x5230; stdout&#x3002;&#x53EF;&#x4EE5;&#x5C06;&#x6B64;&#x8F93;&#x51FA;&#x5B9A;&#x5411;&#x5230;&#x6587;&#x4EF6;&#x4EE5;&#x8FDB;&#x884C;&#x5B58;&#x50A8;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x5728;&#x4E4B;&#x540E;&#x4F7F;&#x7528; unbound-control load_cache &#x547D;&#x4EE4;&#x91CD;&#x65B0;&#x52A0;&#x8F7D;&#x5230;&#x7F13;&#x5B58;&#x4E2D;&#xFF08;&#x5982;&#x679C;&#x9700;&#x8981;&#xFF09;&#x3002;unbound-control load_cache &#x4ECE; stdin &#x4E2D;&#x8BFB;&#x53D6;&#x4EE5;&#x586B;&#x5145;&#x7F13;&#x5B58;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># unbound-control load_cache &lt; dump.out</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6E05;&#x7A7A; unbound &#x7F13;&#x5B58;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x7684;&#x7BA1;&#x7406;&#x5458;&#x8FD8;&#x9700;&#x8981;&#x7ECF;&#x5E38;&#x4ECE;&#x7F13;&#x5B58;&#x4E2D;&#x6E05;&#x9664;&#x8FC7;&#x671F;&#x7684;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x3002;&#x5728;&#x8FC7;&#x671F;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x4E0A;&#x7684; TTL &#x5230;&#x671F;&#x4E4B;&#x524D;&#xFF0C;&#x7F13;&#x5B58;&#x4E2D;&#x7684;&#x9519;&#x8BEF;&#x548C;&#x8FC7;&#x671F;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x5C06;&#x963B;&#x6B62;&#x65B0;&#x7684;&#x5DF2;&#x66F4;&#x6B63;&#x7684;&#x5BF9;&#x5E94;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x4F9B;&#x5BA2;&#x6237;&#x7AEF;&#x4F7F;&#x7528;&#x3002;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6267;&#x884C;&#x5E26;&#x6709; flush &#x5B50;&#x547D;&#x4EE4;&#x7684; unbound-control &#x6765;&#x5F3A;&#x5236;&#x6E05;&#x9664;&#x8FC7;&#x671F;&#x8BB0;&#x5F55;&#xFF0C;&#x800C;&#x4E0D;&#x5FC5;&#x7B49;&#x5F85; TTL &#x8FC7;&#x671F;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># unbound-control flush www.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x9700;&#x8981;&#x4ECE; unbound DNS &#x670D;&#x52A1;&#x5668;&#x7684;&#x7F13;&#x5B58;&#x4E2D;&#x6E05;&#x9664;&#x5C5E;&#x4E8E;&#x67D0;&#x4E2A;&#x57DF;&#x7684;&#x6240;&#x6709;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#xFF0C;&#x5219;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; flush_zone &#x5B50;&#x547D;&#x4EE4;&#x6765;&#x6267;&#x884C; unbound-control&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># unbound-control flush_zone example.com</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4F7F;&#x7528; dnssec-trigger &#x66F4;&#x65B0;&#x672C;&#x5730;&#x7F13;&#x5B58; unbound &#x914D;&#x7F6E;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x9664;&#x4E86;&#x4E3A;&#x672C;&#x5730;&#x5B50;&#x7F51;&#x63D0;&#x4F9B;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#xFF0C;unbound &#x4F5C;&#x4E3A;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4E5F;&#x5F88;&#x6709;&#x7528;&#xFF0C;&#x53EF;&#x63D0;&#x4F9B;&#x5B89;&#x5168;&#x7684; DNS &#x540D;&#x79F0;&#x89E3;&#x6790;&#x4EE5;&#x4F9B;&#x5728;&#x4E2A;&#x522B;&#x7CFB;&#x7EDF;&#x4E0A;&#x672C;&#x5730;&#x4F7F;&#x7528;&#x3002;&#x5BF9;&#x4E8E;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x8BBE;&#x7F6E;&#xFF0C;<code>/etc/resolv.conf</code> &#x4E2D;&#x7684; nameserver &#x6761;&#x76EE;&#x5C06;&#x914D;&#x7F6E;&#x4E3A;&#x6307;&#x5411; unbound &#x6B63;&#x5728;&#x4FA6;&#x542C;&#x7684;&#x672C;&#x5730;&#x4E3B;&#x673A;&#x3002;unbound &#x914D;&#x7F6E;&#x5C06; DNS &#x8BF7;&#x6C42;&#x8F6C;&#x53D1;&#x5230;&#x4E0A;&#x6E38;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x5E76;&#x9A8C;&#x8BC1;&#x5176;&#x54CD;&#x5E94;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5BF9;&#x4E8E;&#x8FD0;&#x884C;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x7684; DHCP &#x7CFB;&#x7EDF;&#xFF0C;&#x5982;&#x679C; DHCP &#x63D0;&#x4F9B;&#x7684; DNS &#x670D;&#x52A1;&#x5668;&#x53D1;&#x751F;&#x66F4;&#x6539;&#xFF0C;&#x5219; unbound &#x7684;&#x914D;&#x7F6E;&#x4E2D;&#x6307;&#x5B9A;&#x7684;&#x4E0A;&#x6E38;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x53EF;&#x80FD;&#x8FC7;&#x671F;&#x3002;&#x53EF;&#x4EE5;&#x5229;&#x7528;&#x76F8;&#x540C;&#x540D;&#x79F0;&#x7684;&#x8F6F;&#x4EF6;&#x5305;&#x63D0;&#x4F9B;&#x7684; dnssec-trigger &#x5DE5;&#x5177;&#x6765;&#x81EA;&#x52A8;&#x66F4;&#x65B0; unbound &#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x8F6C;&#x53D1;&#x5668;&#x8BBE;&#x7F6E;&#x4EE5;&#x6307;&#x5411;&#x65B0;&#x7684; DNS &#x670D;&#x52A1;&#x5668;&#x3002;dnssec-trigger &#x5DE5;&#x5177;&#x4E0E; unbound &#x7EC4;&#x5408;&#x4F7F;&#x7528;&#x5BF9;&#x4E8E;&#x6F2B;&#x6E38;&#x5BA2;&#x6237;&#x673A;&#x4E0A;&#x7684;&#x5B89;&#x5168; DNS &#x540D;&#x79F0;&#x89E3;&#x6790;&#x5F88;&#x6709;&#x7528;&#x3002;</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -2775,7 +2965,7 @@ $ dig A example.com</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2018-08-21T02:42:31.322Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-10-23T13:12:46.701Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"TCP","level":"1.2.3.8","depth":3,"path":"linux/networking/tcp.adoc","ref":"linux/networking/tcp.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2018-11-05T14:28:32.851Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-11-08T14:39:14.977Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

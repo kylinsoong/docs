@@ -6,12 +6,12 @@
 [source, text]
 .*1. 准备 yum 源*
 ----
-# rpm -ivh https://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
+# rpm -ivh https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm
 # subscription-manager repos --enable="rhel-7-server-extras-rpms"
 # subscription-manager repos --enable="rhel-7-server-optional-rpms"
 ----
 
-NOTE: 参照 https://www.zabbix.com/documentation/3.4/manual/installation/install_from_packages/rhel_centos[官方安装链接]。
+NOTE: 参照 https://www.zabbix.com/documentation/4.0/manual/installation/install_from_packages/rhel_centos[官方安装链接]。
 
 [source, text]
 .*2. 安装 Zabbix server, Zabbix proxy,  Zabbix frontend*
@@ -35,8 +35,8 @@ MariaDB [(none)]> grant all privileges on zabbix.* to zabbix@localhost identifie
 MariaDB [(none)]> create database zabbixproxy character set utf8 collate utf8_bin;
 MariaDB [(none)]> grant all privileges on zabbixproxy.* to zabbixproxy@localhost identified by 'redhat';
 
-# zcat /usr/share/doc/zabbix-server-mysql-3.4.14/create.sql.gz | mysql -uzabbix -predhat zabbix
-# zcat /usr/share/doc/zabbix-proxy-mysql-3.4.14/schema.sql.gz | mysql -uzabbixproxy -predhat zabbixproxy
+# zcat /usr/share/doc/zabbix-server-mysql-4.0.1/create.sql.gz | mysql -uzabbix -predhat zabbix
+# zcat /usr/share/doc/zabbix-proxy-mysql-4.0.1/schema.sql.gz | mysql -uzabbixproxy -predhat zabbixproxy
 ----
 
 [source, text]
@@ -75,4 +75,46 @@ php_value always_populate_raw_post_data -1
 php_value date.timezone Asia/Shanghai
 ----
 
-*7. 使用  http://your-server-IP/zabbix, 管理员用户 `Admin`/`zabbix` 登录。*
+[source, text]
+.*7. 重起 httpd*
+----
+# systemctl restart httpd
+----
+
+[source, text]
+.*8. 安装配置 Agent*
+----
+# yum install zabbix-agent -y
+# systemctl start zabbix-agent && systemctl enable zabbix-agent
+
+# vim /etc/zabbix/zabbix_agentd.conf
+Server=10.66.208.142
+----
+
+[source, text]
+.*9. Java gateway 配置* 
+----
+# yum install zabbix-java-gateway
+----
+
+NOTE: 详细关于配置 Java gateway 参照 https://www.zabbix.com/documentation/4.0/manual/concepts/java/from_rhel_centos[官方链接]。
+
+*10. 使用  http://your-server-IP/zabbix, 管理员用户 `Admin`/`zabbix` 登录，会定位到 setup 界面，根据提示进行设置。*
+
+image:img/zabbix-setup.png[]
+
+== 基本操作
+
+=== 添加用户
+
+访问 `Administration` → `Users`，点击 `Create user` 开始添加用户。
+
+=== 添加被管理主机
+
+访问 `Configuration` → `Hosts`，点击 `Create host` 开始添加被管理主机。
+
+=== 添加被管理条目
+
+访问 `Configuration` → `Hosts`，在被管理主机列表中点击 `Items`，点击 `Create item` 开始添加被管理条目。
+
+参照 https://www.zabbix.com/documentation/4.0/manual/config/items/itemtypes/zabbix_agent 获取 agent key。
