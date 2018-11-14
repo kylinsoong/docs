@@ -25,8 +25,8 @@ image:img/api-economy.png[]
 [source, bash]
 .*设定环境变量*
 ----
-$ export OCP_WILDCARD_DOMAIN=apps.na39.openshift.opentlc.com
-$ export OCP_PROJECT_PREFIX=ksoong
+$ export OCP_WILDCARD_DOMAIN=apps.example.com
+$ export OCP_PROJECT_PREFIX=api
 $ export ADMIN_PASSWORD=admin
 $ export MASTER_PASSWORD=master
 ----
@@ -113,10 +113,21 @@ zync-database-1-tw4gs             1/1       Running   0          23h
 
 .*2 - 查看容器的镜像*
 
-使用 https://registry-console-default.apps.na39.openshift.opentlc.com/registry 可以查看内部镜像仓库。
+使用 https://registry-console-default.apps.example.com/registry 可以查看内部镜像仓库。
 
 [source, bash]
-.*3 - 查看 Mysql 数据库*
+.*3 - 查看创建的 PVC*
+----
+# oc get pvc
+NAME                    STATUS    VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+backend-redis-storage   Bound     pv10      5Gi        RWO                           26m
+mysql-storage           Bound     pv2       5Gi        RWO                           26m
+system-redis-storage    Bound     pv4       5Gi        RWO                           26m
+system-storage          Bound     pv15      5Gi        RWX                           26m
+----
+
+[source, bash]
+.*4 - 查看 Mysql 数据库*
 ----
 $ oc rsh $(oc get pod | grep mysql | awk '{print $1}')
 $ mysql -uroot system
@@ -124,13 +135,15 @@ mysql> show tables;
 ----
 
 [source, bash]
-.*4 - 登录 3Scale 管理界面，执行如下命令获取登录 URL*
+.*5 - 登录 3Scale 管理界面，执行如下命令获取登录 URL*
 ----
 $ cat /tmp/3scale_amp_provision_details.txt | grep Login
-     Login on https://ksoong-3scale-admin.apps.na39.openshift.opentlc.com as admin/admin
+     Login on https://api-3scale-admin.apps.example.com as admin/admin
 ----
 
-登录 https://ksoong-3scale-admin.apps.na39.openshift.opentlc.com 查看欢迎页面。
+登录 https://api-3scale-admin.apps.example.com 查看欢迎页面。
+
+image:img/3scale-welcome.png[]
 
 == CoolStore 服务
 

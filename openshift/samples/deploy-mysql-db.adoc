@@ -4,25 +4,48 @@
 == NFS 服务器配置
 
 [source, bash]
-.*1 - 创建 NFS exports*
+.*1. 准备脚本 link:files/config-nfs.sh[config-nfs.sh]*
 ----
-mkdir -p /var/export/data/test-mysql
+#!/usr/bin/sh
 
-chown nfsnobody:nfsnobody /var/export/data/test-mysql
+export_dir="/var/export/data/mysqlvol"
+export_file="/etc/exports.d/mysqlvol.exports"
 
-chmod 700 /var/export/data/test-mysql
+if [ -d ${export_dir} ]; then
+  echo "Export directory ${export_dir} already exist."
+else
+  mkdir -p ${export_dir}
+  chown nfsnobody:nfsnobody ${export_dir}
+  chmod 700 ${export_dir}
+  echo "Export directory ${export_dir} created."
+fi
+
+if [ -d ${export_file} ]; then
+  echo "Export file ${export_file} already exist."
+else
+  echo "${export_dir} *(rw,async,all_squash)" > ${export_file}
+  exportfs -a
+fi
 ----
 
 [source, bash]
-.*2 - 编辑 /etc/exports 添加*
+.*2. 执行脚本*
 ----
-/var/export/data/test-mysql *(rw,async,all_squash)
+# ./config-nfs.sh
 ----
 
 [source, bash]
-.*3 - 更新 NFS exports 表*
+.*3. 验证新创建的 /var/export/data/mysqlvol 在 export 列表里面*
 ----
-exportfs -r
+# showmount -e
+...
+/var/export/data/mysqlvol        *
+----
+
+[source, bash]
+.*4. 客户端(计算节点) mount 测试*
+----
+# mount -t nfs nfs.example.com:/var/export/data/mysqlvol /mnt
 ----
 
 == 创建工程

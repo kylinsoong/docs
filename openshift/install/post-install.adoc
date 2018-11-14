@@ -115,3 +115,107 @@ Hello, World! php version is 7.0.27
 $ oc delete project test01
 ----
 
+== PV 设置
+
+[source, text]
+.*1. NFS 服务器创建外挂节点(link:post-files/config-nfs.sh[config-nfs.sh])，并验证*
+----
+# ./config-nfs.sh
+
+# showmount -e | grep pv
+/srv/nfs/user-vols/pv40          *
+/srv/nfs/user-vols/pv39          *
+/srv/nfs/user-vols/pv38          *
+/srv/nfs/user-vols/pv37          *
+/srv/nfs/user-vols/pv36          *
+/srv/nfs/user-vols/pv35          *
+/srv/nfs/user-vols/pv34          *
+/srv/nfs/user-vols/pv33          *
+/srv/nfs/user-vols/pv32          *
+/srv/nfs/user-vols/pv31          *
+/srv/nfs/user-vols/pv30          *
+/srv/nfs/user-vols/pv29          *
+/srv/nfs/user-vols/pv28          *
+/srv/nfs/user-vols/pv27          *
+/srv/nfs/user-vols/pv26          *
+/srv/nfs/user-vols/pv25          *
+/srv/nfs/user-vols/pv24          *
+/srv/nfs/user-vols/pv23          *
+/srv/nfs/user-vols/pv22          *
+/srv/nfs/user-vols/pv21          *
+/srv/nfs/user-vols/pv20          *
+/srv/nfs/user-vols/pv19          *
+/srv/nfs/user-vols/pv18          *
+/srv/nfs/user-vols/pv17          *
+/srv/nfs/user-vols/pv16          *
+/srv/nfs/user-vols/pv15          *
+/srv/nfs/user-vols/pv14          *
+/srv/nfs/user-vols/pv13          *
+/srv/nfs/user-vols/pv12          *
+/srv/nfs/user-vols/pv10          *
+/srv/nfs/user-vols/pv9           *
+/srv/nfs/user-vols/pv8           *
+/srv/nfs/user-vols/pv7           *
+/srv/nfs/user-vols/pv5           *
+/srv/nfs/user-vols/pv4           *
+/srv/nfs/user-vols/pv3           *
+/srv/nfs/user-vols/pv2           *
+/srv/nfs/user-vols/pv1           *
+/srv/nfs/user-vols/pv6           *
+/srv/nfs/user-vols/pv11          *
+----
+
+[source, text]
+.*2. 以 system:admin 用户登录，生成 PV 创建脚本(link:post-files/pvs.sh[pvs.sh])*
+----
+# ./pvs.sh
+# cat /root/pvs/* | oc create -f -
+----
+
+NOTE: 执行此脚本会创建 10 个 5G 大小，ReadWriteOnce PV，10 个 5G 大小，ReadWriteMany PV，10 个 10G 大小，ReadWriteOnce PV，10 个 10G 大小，ReadWriteMany PV。
+
+[source, text]
+.*3. 验证创建成功的 PV*
+----
+# oc get pv | grep pv
+pv1              5Gi        RWO            Recycle          Available                                                                    11m
+pv10             5Gi        RWO            Recycle          Available                                                                    11m
+pv11             5Gi        RWX            Retain           Available                                                                    11m
+pv12             5Gi        RWX            Retain           Available                                                                    11m
+pv13             5Gi        RWX            Retain           Available                                                                    11m
+pv14             5Gi        RWX            Retain           Available                                                                    11m
+pv15             5Gi        RWX            Retain           Available                                                                    11m
+pv16             5Gi        RWX            Retain           Available                                                                    11m
+pv17             5Gi        RWX            Retain           Available                                                                    11m
+pv18             5Gi        RWX            Retain           Available                                                                    11m
+pv19             5Gi        RWX            Retain           Available                                                                    11m
+pv2              5Gi        RWO            Recycle          Available                                                                    11m
+pv20             5Gi        RWX            Retain           Available                                                                    11m
+pv21             10Gi       RWO            Recycle          Available                                                                    11m
+pv22             10Gi       RWO            Recycle          Available                                                                    11m
+pv23             10Gi       RWO            Recycle          Available                                                                    11m
+pv24             10Gi       RWO            Recycle          Available                                                                    11m
+pv25             10Gi       RWO            Recycle          Available                                                                    11m
+pv26             10Gi       RWO            Recycle          Available                                                                    11m
+pv27             10Gi       RWO            Recycle          Available                                                                    11m
+pv28             10Gi       RWO            Recycle          Available                                                                    11m
+pv29             10Gi       RWO            Recycle          Available                                                                    11m
+pv3              5Gi        RWO            Recycle          Available                                                                    11m
+pv30             10Gi       RWO            Recycle          Available                                                                    11m
+pv31             10Gi       RWX            Retain           Available                                                                    11m
+pv32             10Gi       RWX            Retain           Available                                                                    11m
+pv33             10Gi       RWX            Retain           Available                                                                    11m
+pv34             10Gi       RWX            Retain           Available                                                                    11m
+pv35             10Gi       RWX            Retain           Available                                                                    11m
+pv36             10Gi       RWX            Retain           Available                                                                    11m
+pv37             10Gi       RWX            Retain           Available                                                                    11m
+pv38             10Gi       RWX            Retain           Available                                                                    11m
+pv39             10Gi       RWX            Retain           Available                                                                    11m
+pv4              5Gi        RWO            Recycle          Available                                                                    11m
+pv40             10Gi       RWX            Retain           Available                                                                    11m
+pv5              5Gi        RWO            Recycle          Available                                                                    11m
+pv6              5Gi        RWO            Recycle          Available                                                                    11m
+pv7              5Gi        RWO            Recycle          Available                                                                    11m
+pv8              5Gi        RWO            Recycle          Available                                                                    11m
+pv9              5Gi        RWO            Recycle          Available                                                                    11m
+----
