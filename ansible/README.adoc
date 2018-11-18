@@ -681,6 +681,26 @@ users.acook.home_dir
 
 ----
 
+== 示例
+
+|===
+|编号 |说明 |链接
+
+|1
+|配置 httpd 并启用
+|link:files/site.yml[site.yml]
+
+|2
+|多个 play 特权升级，一个 play 中配置 httpd，并确保防火墙运行 http 服务，另一个 play 中测试 http 服务
+|link:files/intranet.yml[intranet.yml]
+
+|3
+|多个 play 特权升级，一个 play 中配置 httpd，并确保防火墙运行 http 服务, http 服务动态 php 应用连接 Mysql 数据库，另一个 play 中测试 http 服务
+|link:files/internet.yml[internet.yml]
+
+|===
+
+
 == Ansible Tower
 
 Ansible Tower 提供了在企业规模上高效运行和管理 Ansible 的框架，包括管理 playbook 的集中式 Web 界面、基于角色的访问控制 (RBAC)以及集中式日志记录和审计、其 REST API 确保 Tower 与企业的现有工作流和工具集轻松集成。Tower 的 API 和通知功能让 Ansible playbook 与 Jenkins、CloudForms 或红帽卫星等其他工具的关联变得特别简单，从而实现持续集成和部署。它提供了相应的机制，可以实现集中使用和控制计算机凭据及其他机密，而不必将它们公开给 Ansible Tower 最终用户。
@@ -778,64 +798,46 @@ https://docs.ansible.com/ansible-tower/3.1.1/html/administration[Ansible Tower �
 |上述安装要求适用于 Ansible Tower 服务器，不适用于它通过 Ansible 管理的计算机。这些系统应满足通过 Ansible Tower 服务器上安装的 Ansible 版本管理的计算机的常规要求。
 |===
 
-*1. 下载* - http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.el7.tar.gz，http://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz 提供另一种适用于 RHEL 7 的捆绑式安装程序。
+[source, text]
+.*1. 设置 yum repos*
+----
+# subscription-manager register --username=<USER> --password=<PASSWORD>
+# subscription-manager attach --pool=<POOLID>
+# subscription-manager repos --enable="rhel-7-server-rpms"
+# subscription-manager repos --enable="rhel-7-server-extras-rpms"
+# subscription-manager repos --enable="rhel-7-server-optional-rpms"
+----
 
 [source, text]
-.*2. 解压*
+.*2. 下载 & 解压*
 ----
-# tar xzf ansible-tower-setup-bundle-3.1.1-1.el7.tar.gz
-# cd ansible-tower-setup-bundle-3.1.1-1.el7
+# tar -xvf ansible-tower-setup-latest.tar.gz
+# cd ansible-tower-setup-3.3.1-1/
 ----
 
 [source, text]
 .*3. 初始密码，辑 inventory 文件，以设置以下帐户的密码：Ansible Tower admin 帐户 (admin_password)、PostgreSQL 数据库用户帐户 (pg_password) 和 RabbitMQ 消息传递用户帐户 (rabbitmq_password)*
 ----
-[tower]
-localhost ansible_connection=local
-
-[database]
-
-[all:vars]
-admin_password='myadminpassword'
-
-pg_host=''
-pg_port=''
-
-pg_database='awx'
-pg_username='awx'
-pg_password='somedatabasepassword'
-
-rabbitmq_port=5672
-rabbitmq_vhost=tower
-rabbitmq_username=tower
-rabbitmq_password='and-a-messaging-password'
-rabbitmq_cookie=cookiemonster
-
-# Needs to be true for fqdns and ip addresses
-rabbitmq_use_long_name=false
+# grep password inventory 
+admin_password='redhat'
+pg_password='redhat'
+rabbitmq_password='redhat'
 ----
 
 [source, text]
 .*4. 执行 setup.sh 脚本来运行 Ansible Tower 安装程序*
 ----
 # ./setup.sh
+...
+PLAY RECAP ***********************************************************************************************************************************************************************************
+localhost                  : ok=139  changed=69   unreachable=0    failed=0   
+
+The setup process completed successfully.
+Setup log saved to /var/log/tower/setup-2018-11-19-05:54:18.log
 ----
 
-== 示例
+*5. 使用 https://HOSTNAME, `admin`/`redhat` 登录 Ansible Tower*
 
-|===
-|编号 |说明 |链接
+image:img/ansible-tower-login.png[]
 
-|1
-|配置 httpd 并启用
-|link:files/site.yml[site.yml]
-
-|2
-|多个 play 特权升级，一个 play 中配置 httpd，并确保防火墙运行 http 服务，另一个 play 中测试 http 服务
-|link:files/intranet.yml[intranet.yml]
-
-|3
-|多个 play 特权升级，一个 play 中配置 httpd，并确保防火墙运行 http 服务, http 服务动态 php 应用连接 Mysql 数据库，另一个 play 中测试 http 服务
-|link:files/internet.yml[internet.yml]
-
-|===
+NOTE: 初次登录页面会重定向到 *TOWER LICENSE* 界面，根据界面提示，下载并安装相应 LICENSE。
