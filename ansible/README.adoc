@@ -705,7 +705,7 @@ users.acook.home_dir
 
 Ansible Tower 提供了在企业规模上高效运行和管理 Ansible 的框架，包括管理 playbook 的集中式 Web 界面、基于角色的访问控制 (RBAC)以及集中式日志记录和审计、其 REST API 确保 Tower 与企业的现有工作流和工具集轻松集成。Tower 的 API 和通知功能让 Ansible playbook 与 Jenkins、CloudForms 或红帽卫星等其他工具的关联变得特别简单，从而实现持续集成和部署。它提供了相应的机制，可以实现集中使用和控制计算机凭据及其他机密，而不必将它们公开给 Ansible Tower 最终用户。
 
-=== 架构
+=== Tower 架构
 
 Ansible Tower 是一款 Django Web 应用，可在 Linux 服务器上作为企业内自托管解决方案运行，架设于企业的现有 Ansible 基础架构基础上：
 
@@ -715,7 +715,7 @@ image:img/ansible-tower.png[]
 * *具有远程数据库的单一计算机* - Tower Web 前端和 RESTful API 后端安装在单一计算机上，而 PostgreSQL 数据库远程安装在同一网络中的另一台服务器上。远程数据库可以托管在具有 Tower 管理范围外现有 PostgreSQL 实例的服务器上。另一种方案是使 Tower 安装程序在远程服务器上创建 Tower 管理的 PostgreSQL 实例，并为它填充 Tower 数据库。
 * *高可用性多计算机群集* - 较旧版本的 Tower 提供一种主动-被动式冗余 Tower 架构，其包含一个主动节点和一个或多个被动节点。自 Tower 3.1 起，这种架构现已被具有多个主动 tower 节点的主动-主动式高可用性群集取代。
 
-=== 功能
+=== 功能说明
 
 |===
 |条目 |说明
@@ -762,7 +762,7 @@ image:img/ansible-tower.png[]
 
 https://docs.ansible.com/ansible-tower/3.1.1/html/administration[Ansible Tower 管理文档]
 
-=== 安装
+=== RHEL 7 上安装 Tower 3.3 
 
 .*Ansible Tower 安装需求*
 [cols="2,5a"]
@@ -777,7 +777,7 @@ https://docs.ansible.com/ansible-tower/3.1.1/html/administration[Ansible Tower �
 * Ubuntu 14.04 LTS
 * Ubuntu 16.04 LTS 
 
-例如，Ansible Tower 3.1 可安装在 RHEL 7.2 或更高的版本之上，并使用 64 位 x86_64 处理器架构
+例如，Ansible Tower 3.3 可安装在 RHEL 7.2 或更高的版本之上，并使用 64 位 x86_64 处理器架构
 
 |Web 浏览器
 |支持的 Mozilla Firefox 或 Google Chrome 版本，以连接 Ansible Tower Web 界面。其他 HTML5 兼容 Web 浏览器或许可行，但没有受到完整测试或支持。
@@ -841,3 +841,36 @@ Setup log saved to /var/log/tower/setup-2018-11-19-05:54:18.log
 image:img/ansible-tower-login.png[]
 
 NOTE: 初次登录页面会重定向到 *TOWER LICENSE* 界面，根据界面提示，下载并安装相应 LICENSE。
+
+=== Tower 中创建 Organizations
+
+* 使用 `admin` 用户登录 Tower web 界面
+* 在左边导航栏选择 *ORGANIZATIONS* 
+* 点击 *+ADD* 按钮开始创建一个新的 Organization
+* 在新弹出窗口的相应输入框输入 NAME，DESCRIPTION，INSTANCE GROUPS 等
+
+image:img/ansible-tower-orgnization.png[]
+
+* 点击 *SAVE* 保存完成 Organization 创建
+
+=== Tower 中创建 Users
+
+* 使用 `admin` 用户登录 Tower web 界面
+* 在左边导航栏选择 `USERS`
+* 点击 *+ADD* 按钮开始创建一个新的 User
+* 在新弹出窗口的相应输入框输入 FIRST NAME，LAST NAME，ORGANIZATION，EMAIL，USERNAME，PASSWORD，USERTYPE 等
+
+image:img/ansible-tower-users.png[]
+
+* 点击 *SAVE* 保存完成 User 创建
+
+=== Tower 中创建 Teams
+
+* 使用 `admin` 用户登录 Tower web 界面
+* 在左边导航栏选择 `Teams` 
+* 点击 *+ADD* 按钮开始创建一个新的 Team
+* 在新弹出窗口的相应输入框输入 NAME，DESCRIPTION，ORGANIZATION 等
+
+image:img/ansible-tower-team.png[]
+
+* 点击 *SAVE* 保存完成 Team 创建
