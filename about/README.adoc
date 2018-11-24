@@ -47,3 +47,137 @@
 * 孤立资源和分散化管理工具的低效配置，导致资源利用率过低，但同时必须不断购买各项资源，储备水平居高不下。
 |===
 
+== 数字化业务模型
+
+=== 四个纬度定义业务模型(Business Model)
+
+业务模型是指一个企业/组织如何 
+
+* *创造(creates)*
+* *交付(delivers)*
+* *获取(captures)*
+* *防护(defends)* 
+
+价值。
+
+.*不同行业业务模型联系*
+|===
+|行业 |create |deliver |capture |defend
+
+|传统手机业务
+|生产的手机能让用户打电话，发短信
+|通过电话自身交付/传递价值
+|手机的销售，电话网络运营商的补贴
+|更新的功能、更大的屏幕、更低的价格，更早的上市
+
+|交通运输业务
+|将人或商品从一个地方运送到另一个地方
+|小汽车、出租车、公共汽车、卡车、火车
+|运输费用
+|扩大经济规模
+
+|advertising business
+|connecting advertisers to potential buyers and exposing them to promotions
+|advertising medium: TV, website, mobile game, radio show, audio ads
+|CPM, CPC, CPA
+|user profiling
+
+|e-commerce business
+|helping consumers make the right decision to buy something online
+|e-commerce website
+|credit card payment, online payment
+| the best selection, the lowest price, a temporal advantage
+|===
+
+=== 什么是数字化业务模型
+
+Digital business models offer a revolutionary perspective that goes beyond adding connectivity, features or marketing channels to exist in products. Digital business models are novel ways to generate demand from new users, new products, new partners and new markets, by practicing techniques first pioneered by Internet companies.
+
+数字商业模式提供了革命性的视角，不仅仅是在产品中添加连接，功能或营销渠道。 数字商业模式是通过互联网公司首创的技术实现新用户，新产品，新合作伙伴和新市场的需求的新方法。
+
+|===
+|示例
+
+|Apple 通过数百万第三方开发者开发的 APP 来实验销售更多的产品(iPhone, iPad, Apple TV, Apple Watch)，APP 越多，潜在的用户越多
+
+|Samsung allows software developers to extend its home hub and sensor products, by connecting them to thousands of other home appliances.
+
+|Amazon 将 Kindle 和他们 e-commerce 业务结合
+|===
+
+Digital business models 增加更多价值：
+
+* 创造更多价值，例如：Apple uses millions of 3rd party apps to generate demand for its iPhones.
+* 交付更多价值，例如：FedEx allows developers to extend its logistics services and tailor them to any e-commerce or corporate website.
+* 获取更多价值，例如：Google 允许其它应用使用 Google 的账户进行登录，从而获取了一些用户及使用信息，提高了他们的广告收入。 
+* 更有效的保护价值，例如：Apple 和 Google 用过数百万的开着者生态系统，打败了 Nokia 和 Blackberry，并阻截了Microsoft，Mozilla 等的挑战。
+
+=== Oral-B 数字化转型案例
+
+.*业务模型*
+|===
+|产品|create |deliver |capture |defend
+
+|传统牙刷
+|改善口腔卫生
+|牙刷
+|购买产品所支付的费用
+|除了品牌、市场、营销渠道，没有其它
+
+|数字化牙刷
+|改善口腔卫生外，提高积极性、自主性、记录使用情况
+|第三方 APP 开发者
+|购买产品所支付的费用，及生态广告等收入
+|更早的获取优势
+|===
+
+https://www.oralb.com.cn/
+
+== 数字化业务案例
+
+=== Apple
+
+|===
+| |create |deliver |capture |defend
+
+|Traditional
+|unique products
+|devices/own apps
+|hardware sales
+|brand
+
+|Digital
+|1.5M apps
+|3rd party apps and accessories
+|hardware sales
+|developer ecosystem
+|===
+
+=== Google
+
+|===
+| |create |deliver |capture |defend
+
+|Traditional
+|mass-market devices
+|devices/own apps
+|ads
+|brand
+
+|Digital
+|3M apps
+|3rd party apps and accessories
+|user intelligence and ads
+|developer ecosystem and app distribution
+|===
+
+
+=== Facebook
+
+
+=== Amazon
+
+=== Xiaomi
+
+
+=== WebChat
