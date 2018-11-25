@@ -174,10 +174,75 @@ https://www.oralb.com.cn/
 
 === Facebook
 
+|===
+| |create |deliver |capture |defend
+
+|Traditional
+|news + social experience
+|FB, Messenger apps
+|ads
+|user reach
+
+|Digital
+|3rd party apps
+|3rd party apps
+|user profiling
+|developer ecosystem
+|===
 
 === Amazon
 
+|===
+| |create |deliver |capture |defend
+
+|Traditional
+|discover + buy goods
+|Amazon online stores
+|e-commerce revenues
+|user reach
+
+|Digital
+|services to "control my life"
+|3rd party apps, Web, Kindle, Echo, Dash
+|user profiling
+|developers + affiliates AWS	
+
+|===
+
 === Xiaomi
 
+|===
+| |create |deliver |capture |defend
+
+|Traditional
+|quality, affordable smartphones
+|online only
+|smartphone revenues
+|"only for fans" flash sales
+
+|Digital
+|every device for the home
+|smartphone apps connected to devices
+|ecosystem device revenues
+|"experience roaming"
+
+|===
 
 === WebChat
+
+|===
+| |create |deliver |capture |defend
+
+|Traditional
+|free messaging, voice calls
+|wechat apps
+|Ads
+|large base of messaging users
+
+|Digital
+|12 million apps
+|wechat apps
+|e-commerce and payment transactions
+|developers and services ecosystem
+
+|===
