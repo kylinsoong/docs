@@ -20,19 +20,56 @@ Get https://registry.example.com/v2/: x509: certificate signed by unknown author
 
 === 原因及解决办法
 
-OpenShift 无法找到自签名的证书，导致此问题，解决办法: 编辑 Master 节点上的 API Server 配置文件 `/etc/origin/node/pods/apiserver.yaml`，添加
+OpenShift 无法找到自签名的证书，导致此问题，解决办法:
 
 [source,text]
+.*编辑 Master 节点上的 API Server 配置文件 `/etc/origin/node/pods/apiserver.yaml`，添加*
 ----
+    volumeMounts:
+    ...
     - mountPath: /etc/pki
       name: certs
-
+    ...
+  volumes:
+  ...
   - hostPath:
       path: /etc/pki
     name: certs
 ----
 
-类似的修改 `/etc/origin/node/pods/controller.yaml` 同样可以解决在 S2I 过程中 certificate signed by unknown authority 错误。
+[source,text]
+.*编辑 Master 节点上的 controller 配置文件 `/etc/origin/node/pods/controller.yaml`，添加*
+----
+    volumeMounts:
+    ...
+    - mountPath: /etc/pki
+      name: certs
+    ...
+  volumes:
+  ...
+  - hostPath:
+      path: /etc/pki
+    name: certs
+----
+
+[source,text]
+.*default 下创建 configmap，并编辑 dc docker-registry*
+----
+# oc create configmap host-ca-trust --from-file=cert.pem=/etc/pki/tls/cert.pem
+# oc edit dc docker-registry -n default
+...
+        volumeMounts:
+        ...
+        - mountPath: /etc/pki/tls/certs
+          name: ca-trust
+        ...
+      volumes:
+        ...
+      - configMap:
+          defaultMode: 420
+          name: host-ca-trust
+        name: ca-trust
+----
 
 NOTE: 修改完成后需重起服务: `master-restart ap`, `master-restart controllers`。
 
