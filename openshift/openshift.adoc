@@ -12,3 +12,150 @@ OpenShift 基于企业级 Linux，Docker 及 Kubernetes，提供了一个适用�
 
 * *多语言的支持* - OpenShift 支持来自厂商的 Java，Node.js，PHP，Perl 和 Ruby 等。还有来自合作伙伴和更大的 Docker 社区的其他产品，MySQL，PostgreSQL，MongoDB数据库等。还支持轻量级中间件产品，如 Apache httpd，Apache Tomcat，JBoss EAP，ActiveMQ 和 Fuse 等。
 
+== 常用命令
+
+[cols="5a,2,2"]
+|===
+|Commands |Notes
+
+|
+----
+oc login <URL> -u <USER> -p <PASSWORD>
+----
+|基本操作
+|命令行远程登录
+
+|
+----
+oc whoami
+----
+|基本操作
+|查看当前用户
+
+|
+----
+oc delete <RESOURCE_TYPE> name
+----
+|基本操作
+|删除某类型资源
+
+|
+----
+oc exec <POD> <COMMAND>
+----
+|基本操作
+|在容器内执行命令
+
+|
+----
+oc rsh <POD>
+----
+|基本操作
+|进入容器内终端
+
+|
+----
+oc get events -n <PROJECT>
+----
+|基本操作
+|获取某 Project 关联的事件
+
+|
+----
+oc logs -f <RESOURCE_TYPE>/<NAME>
+----
+|基本操作
+|实时查看日志
+
+|
+----
+oc rsync <pod>:<pod_dir> <local_dir> -c <container>
+----
+|基本操作
+|向运行的容器拷贝东西
+
+|
+----
+oc port-forward <pod> [<local_port>:]<remote_port>
+----
+|基本操作
+|配置端口转发
+
+|
+----
+oc adm policy who-can <verb> <resource>
+----
+|安全
+|Indicates which users can perform an action on a resource
+
+|
+----
+oc adm policy add-role-to-user <role> <username>
+----
+|安全
+|Binds a given role to specified users
+
+|
+----
+oc adm policy remove-role-from-user <role> <username>
+----
+|安全
+|Removes a given role from specified users
+
+|
+----
+oc adm policy remove-user <username>
+----
+|安全
+|Removes specified users and all of their roles
+
+|
+----
+oc adm policy add-role-to-group <role> <groupname>
+----
+|安全
+|Binds a given role to specified groups
+
+|
+----
+oc adm policy remove-role-from-group <role> <groupname>
+----
+|安全
+|Removes a given role from specified groups
+
+|
+----
+oc adm policy remove-group <groupname>
+----
+|安全
+|Removes specified groups and all of their roles
+
+|
+----
+oc adm policy add-cluster-role-to-user <role> <username>
+----
+|安全
+|Binds a given role to specified users for all projects in the cluster
+
+|
+----
+oc adm policy remove-cluster-role-from-user <role> <username>
+----
+|安全
+|Removes a given role from specified users for all projects in the cluster
+
+|
+----
+oc adm policy add-cluster-role-to-group role groupname
+----
+|安全
+|Binds a given role to specified groups for all projects in the cluster
+
+|
+----
+oc adm policy remove-cluster-role-from-group role groupname
+----
+|安全
+|Removes a given role from specified groups for all projects in the cluster
+
+|===

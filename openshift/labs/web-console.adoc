@@ -1,6 +1,17 @@
-= Using Web Console
+= Web Console
+:toc: manual
 
-In this recipe exercise, we will review the OpenShift Web Console.
+== 目的
+
+熟悉使用 OCP Web Console。
+
+== 环境
+
+* `openshift v3.11.16`/`kubernetes v1.11.0`
+
+== 步骤
+
+=== Application Console
 
 Type in the master public URL provided by your instructor in a browser. Use `<master public URL>:<port>`. You will be directed to an OpenShift login page.
 
@@ -46,3 +57,5 @@ image:img/project_build_configuration.png[]
 5. Select **Images** under **Builds** tab, it shows the list of image streams for the project. Click onto the specific image stream, it shows more details about the image stream.
 
 Click on the **Resources** tab on the left to see that it would display the Quotas and Other Resources, if they exist. We will deal with them in a different lab exercise.
+
+=== Cluster Console
