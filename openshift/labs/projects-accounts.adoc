@@ -20,7 +20,6 @@
 # htpasswd -b /etc/origin/master/htpasswd user2 redhat
 ----
 
-
 === 常规用户移除创建 Project 的能力
 
 [source, text]
@@ -30,8 +29,112 @@ $ oc login https://master.example.com:8443 -u admin -p admin
 ----
 
 [source, text]
-.*2. 移除创建 Project 的能力*
+.*2. 移除所有常规用户的项目创建功能*
 ----
 $ oc adm policy remove-cluster-role-from-group self-provisioner system:authenticated:oauth
+----
+
+=== 常规用户登录创建用户
+
+[source, text]
+.*1. 常规用户 CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u user1 -p redhat
+----
+
+[source, text]
+.*2. 创建项目*
+----
+$ oc new-project lab04
+Error from server (Forbidden): You may not request a new project via this API.
+----
+
+=== 管理员用户登录创建项目
+
+[source, text]
+.*1. 管理员 CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+----
+
+[source, text]
+.*2. 创建项目*
+----
+$ oc new-project lab04-user1
+$ oc new-project lab04-user2
+----
+
+=== 关联用户与项目
+
+[source, text]
+.*1. 添加 user1 作为 lab04-user1 项目的管理员*
+----
+$ oc project lab04-user1
+$ oc policy add-role-to-user admin user1
+----
+
+[source, text]
+.*2. 添加 user2 作为 lab04-user1 项目的开发人员*
+----
+$ oc policy add-role-to-user edit user2
+----
+
+[source, text]
+.*3. 添加 user2 作为 lab04-user2 项目的开发人员*
+----
+$ oc project lab04-user2
+$ oc policy add-role-to-user edit user2
+----
+
+=== 测试各个项目的用户访问权限
+
+[source, text]
+.*1. user1 登录 OCP*
+----
+$ oc login https://master.example.com:8443 -u user1 -p redhat
+$ oc project lab04-user1
+$ oc project lab04-user2
+error: You are not a member of project "lab04-user2".
+----
+
+[source, text]
+.*2. user2 登录 OCP 并创建应用*
+----
+$ oc login https://master.example.com:8443 -u user2 -p redhat
+$ oc project lab04-user2
+$ oc project lab04-user1
+$ oc new-app --name=nginx --docker-image=registry.example.com/rhscl/nginx-112-rhel7:latest
+----
+
+=== 降低特定项目的安全性限制
+
+[source, text]
+.*1. user1 登录 OCP*
+----
+$ oc login https://master.example.com:8443 -u user1 -p redhat
+$ oc project lab04-user1
+----
+
+[source, text]
+.*2. 创建服务帐户*
+----
+$ oc create serviceaccount useroot
+----
+
+[source, text]
+.*3. 管理员 CLI 登录 OCP，将新服务帐户与 anyuid 安全性上下文关联*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+$ oc project lab04-user1
+$ oc adm policy add-scc-to-user anyuid -z useroot
+scc "anyuid" added to: ["system:serviceaccount:lab04-user1:useroot"]
+----
+
+[source, text]
+.*4. user2 登录 OCP，更新负责管理 nginx 部署的部署配置资源*
+----
+$ oc login https://master.example.com:8443 -u user2 -p redhat
+$ oc project lab04-user1
+$ oc patch dc/nginx --patch '{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'
 ----
 

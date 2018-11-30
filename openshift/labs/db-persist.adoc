@@ -1,0 +1,210 @@
+= 持久化数据库存储
+:toc: manual
+
+== 目的
+
+配置 NFS 共享为 OpenShift 节点提供存储,并且配置 OpenShift 持久卷以绑定至数据库 Pod。
+
+== 环境
+
+* `openshift v3.11.16`/`kubernetes v1.11.0`
+
+== 步骤
+
+=== 配置 NFS 共享持久卷
+
+[source, text]
+.*1. 登录到 NFS 服务器*
+----
+# ssh nfs.example.com
+----
+
+[source, text]
+.*2. 创建 config-nfs.sh 脚本，内容如下*
+----
+#!/usr/bin/sh
+
+export_dir="/var/export/dbvol"
+export_file="/etc/exports.d/dbvol.exports"
+
+if [ -d ${export_dir} ]; then
+  echo "Export directory ${export_dir} already exist."
+else
+  mkdir -p ${export_dir}
+  chown nfsnobody:nfsnobody ${export_dir}
+  chmod 700 ${export_dir}
+  echo "Export directory ${export_dir} created."
+fi
+
+if [ -d ${export_file} ]; then
+  echo "Export file ${export_file} already exist."
+else
+  echo "${export_dir} *(rw,async,all_squash)" > ${export_file}
+  exportfs -a
+fi
+----
+
+[source, text]
+.*3. 运行 config-nfs.sh 创建 NFS 共享卷*
+----
+# ./config-nfs.sh
+----
+
+[source, text]
+.*4. 验证*
+----
+# showmount -e
+Export list for nfs.example.com:
+...
+/var/export/dbvol       *
+----
+
+=== 验证 NFS 服务器上的共享卷
+
+[source, text]
+.*1. node1 上验证*
+----
+# ssh node1.example.com
+# mount -t nfs nfs.example.com:/var/export/dbvol /mnt/
+
+# ls -la /mnt/
+total 0
+drwx------.  2 nfsnobody nfsnobody   6 Nov 30 17:38 .
+dr-xr-xr-x. 17 root      root      224 Sep 29 11:53 ..
+
+# mount | grep /mnt
+nfs.example.com:/var/export/dbvol on /mnt type nfs4 (rw,relatime,vers=4.1,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=10.66.208.103,local_lock=none,addr=10.66.208.105)
+
+# umount /mnt/
+----
+
+[source, text]
+.*2. node2 上验证*
+----
+# ssh node2.example.com
+# mount -t nfs nfs.example.com:/var/export/dbvol /mnt/
+
+# ls -la /mnt
+total 0
+drwx------.  2 nfsnobody nfsnobody   6 Nov 30 17:38 .
+dr-xr-xr-x. 17 root      root      224 Sep 29 11:53 ..
+
+# mount | grep /mnt
+nfs.example.com:/var/export/dbvol on /mnt type nfs4 (rw,relatime,vers=4.1,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=10.66.208.104,local_lock=none,addr=10.66.208.105)
+
+# umount /mnt/
+----
+ 
+=== 创建工程
+
+[source, text]
+.*1. CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+----
+
+[source, text]
+.*2. 创建工程*
+----
+$ oc new-project lab06
+----
+
+=== 创建 PV
+
+[source, text]
+.*1. 创建 mysqldb-volume.yml，内容如下*
+----
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysqldb-volume
+spec:
+  capacity:
+    storage: 3Gi
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    path: /var/export/dbvol
+    server: nfs.example.com
+----
+
+[source, text]
+.*2. 执行 mysqldb-volume.yml，创建 PV*
+----
+# oc create -f mysqldb-volume.yml
+----
+
+=== 创建 mysql 应用
+
+[source, text]
+.*1. 创建 mysql 应用*
+----
+# oc new-app --name=mysqldb --docker-image=registry.example.com/rhscl/mysql-57-rhel7:latest -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_ROOT_PASSWORD=redhat -e MYSQL_DATABASE=sample
+----
+
+[source, text]
+.*2. 查看 Volumes*
+----
+# oc describe pod mysqldb | grep -A 2 'Volumes'
+Volumes:
+  default-token-rnsq4:
+    Type:        Secret (a volume populated by a Secret)
+----
+
+[source, text]
+.*3. 修改 DC 配置 Volumes*
+----
+# oc set volume dc/mysqldb --add --overwrite --name=mysqldb-volume-1 -t pvc --claim-name=mysqldb-pvclaim --claim-size=3Gi --claim-mode='ReadWriteMany'
+----
+
+[source, text]
+.*4. 查看 Volumes 及 Claims*
+----
+# oc describe pod mysqldb |grep -E -A 2 'Volumes|ClaimName'
+Volumes:
+  mysqldb-volume-1:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  mysqldb-pvclaim
+    ReadOnly:   false
+  default-token-rnsq4:
+----
+
+[source, text]
+.*5. 查看 PVC*
+----
+# oc get pvc
+NAME              STATUS    VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mysqldb-pvclaim   Bound     mysqldb-volume   3Gi        RWX                           2m
+----
+
+=== 创建测试数据并验证
+
+[source, text]
+.*1. 远程进入容器*
+----
+# oc rsh mysqldb-2-xpq9m
+----
+
+[source, text]
+.*2. 进入数据库终端*
+----
+sh-4.2$ mysql -utest_user -ptest_pass sample
+----
+
+[source, text]
+.*3. 创建表添加数据*
+----
+mysql> create table quote(id integer, msg varchar(250));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into quote values (1, 'TEST1'), (2, 'TEST2');
+----
+
+=== NFS 服务器上验证创建的文件
+
+[source, text]
+.**
+----
+
+----
+

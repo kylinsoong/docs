@@ -16,7 +16,7 @@ OpenShift 基于企业级 Linux，Docker 及 Kubernetes，提供了一个适用�
 
 [cols="5a,2,2"]
 |===
-|Commands |Notes
+|Commands |Type |Notes
 
 |
 ----

@@ -252,3 +252,88 @@ $ oc get pods --selector=app=mysql --output=jsonpath={.items..metadata.name}
 mysql-1-8wwr5
 ----
 
+== 安全
+
+=== 两类安全角色
+
+OpenShift 将用户可以执行的操作定义为两大组别，即项目相关(也称为`本地策略`)和管理相关(也称为`集群策略`)操作。由于两种策略都有许多不同的操作，一些操作被分组在一起，定义为角色。
+
+.*集群相关安全角色*
+|===
+|角色 |描述
+
+|cluster-admin
+|此角色中的所有用户都可管理 OpenShift 集群。
+
+|cluster-status
+|此角色中的所有用户具有集群相关信息的只读访问权限。
+
+|===
+
+[source, text]
+.*集群角色创建删除示例*
+----
+$ oc adm policy add-cluster-role-to-user cluster-admin <USER>
+$ oc adm policy remove-cluster-role-from-user cluster-admin <USER>
+----
+
+.*项目相关安全角色*
+|===
+|角色 |描述
+
+|edit
+|此角色中的用户可以创建、更改和删除项目中的通用应用资源，如服务和部署配置，但无法操作管理资源，如限值范围和配额，也不能管理项目的访问权限。
+
+|basic-user
+|此角色中的用户具有项目的读取访问权限。
+
+|self-provisioner
+|此角色中的用户可以创建新项目。这是集群角色，而非项目角色。
+
+|admin
+|此角色中的用户可以管理项目中的所有资源，例如向其他用户授予项目访问权限。
+|===
+
+[source, text]
+.*项目角色创建示例*
+----
+$ oc adm policy add-role-to-user basic-user <USER> -n <PROJECT>
+----
+
+=== 三种用户类型
+
+OpenShift 中有三种不同类型的用户
+
+|===
+|类型 |描述
+
+|Regular users
+|常规用户类型，例如 `user1`, `user2`, `admin`
+
+|System users
+|系统类型，通常都是在系统资源创建时自动生成，例如 `system:admin`, `system:openshift-registry`, `system:node:node1.example.com`
+
+|Service accounts
+|特殊服务用户类型，例如 `system:serviceaccount:default:deployer`, `system:serviceaccount:foo:builde`
+|===
+
+=== 安全上下文
+
+OpenShift 提供了名为安全性上下文约束 (SCC) 的安全机制,它可以限制对 OpenShift 中的资源的访问，但不会影响基本操作。
+
+[source, text]
+.*获取安全上下文*
+----
+# oc get scc
+NAME               PRIV      CAPS      SELINUX     RUNASUSER          FSGROUP     SUPGROUP    PRIORITY   READONLYROOTFS   VOLUMES
+anyuid             false     []        MustRunAs   RunAsAny           RunAsAny    RunAsAny    10         false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+hostaccess         false     []        MustRunAs   MustRunAsRange     MustRunAs   RunAsAny    <none>     false            [configMap downwardAPI emptyDir hostPath persistentVolumeClaim projected secret]
+hostmount-anyuid   false     []        MustRunAs   RunAsAny           RunAsAny    RunAsAny    <none>     false            [configMap downwardAPI emptyDir hostPath nfs persistentVolumeClaim projected secret]
+hostnetwork        false     []        MustRunAs   MustRunAsRange     MustRunAs   MustRunAs   <none>     false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+node-exporter      false     []        RunAsAny    RunAsAny           RunAsAny    RunAsAny    <none>     false            [*]
+nonroot            false     []        MustRunAs   MustRunAsNonRoot   RunAsAny    RunAsAny    <none>     false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+privileged         true      [*]       RunAsAny    RunAsAny           RunAsAny    RunAsAny    <none>     false            [*]
+restricted         false     []        MustRunAs   MustRunAsRange     MustRunAs   RunAsAny    <none>     false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+----
+
+
