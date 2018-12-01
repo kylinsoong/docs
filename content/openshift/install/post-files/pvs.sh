@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 
-export NFS_SERVER="nfs.cmcc.com"
+export NFS_SERVER="nfs.example.com"
 
 #######################
 # 5Gi - ReadWriteOnce #

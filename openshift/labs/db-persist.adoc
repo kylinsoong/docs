@@ -134,47 +134,123 @@ spec:
 # oc create -f mysqldb-volume.yml
 ----
 
+=== 创建 PVC
+
+[source, text]
+.*1. 创建 mysqldb-claim.yml，内容如下*
+----
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysqldb-test-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
+----
+
+[source, text]
+.*2. 执行 mysqldb-claim.yml，创建 PVC*
+----
+# oc create -f mysqldb-claim.yml
+----
+
+[source, text]
+.*3. 查看创建的 PVC*
+---- 
+# oc get pvc
+NAME                 STATUS    VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mysqldb-test-claim   Bound     mysqldb-volume   3Gi        RWX                           7m
+----
+
 === 创建 mysql 应用
 
 [source, text]
-.*1. 创建 mysql 应用*
+.*1. 创建 mysql.yaml, 内容如下*
 ----
-# oc new-app --name=mysqldb --docker-image=registry.example.com/rhscl/mysql-57-rhel7:latest -e MYSQL_USER=test_user -e MYSQL_PASSWORD=test_pass -e MYSQL_ROOT_PASSWORD=redhat -e MYSQL_DATABASE=sample
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    app: mysql
+  template:
+    metadata:
+      name: mysql
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: registry.example.com/rhscl/mysql-57-rhel7:latest
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: redhat
+          - name: MYSQL_USER
+            value: test_user
+          - name: MYSQL_PASSWORD
+            value: test_pass
+          - name: MYSQL_DATABASE
+            value: test_db
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
+              - name: 'mysql-persistent-storage'
+                mountPath: /var/lib/mysql/data
+      volumes:
+        - name: 'mysql-persistent-storage'
+          persistentVolumeClaim:
+            claimName: 'mysqldb-test-claim'
+strategy:
+  type: Rolling
 ----
 
 [source, text]
-.*2. 查看 Volumes*
+.*2. 创建 mysql 应用*
 ----
-# oc describe pod mysqldb | grep -A 2 'Volumes'
-Volumes:
-  default-token-rnsq4:
-    Type:        Secret (a volume populated by a Secret)
+# oc create -f mysql.yaml
 ----
 
 [source, text]
-.*3. 修改 DC 配置 Volumes*
+.*3. 查看运行的 mysql 容器*
 ----
-# oc set volume dc/mysqldb --add --overwrite --name=mysqldb-volume-1 -t pvc --claim-name=mysqldb-pvclaim --claim-size=3Gi --claim-mode='ReadWriteMany'
-----
-
-[source, text]
-.*4. 查看 Volumes 及 Claims*
-----
-# oc describe pod mysqldb |grep -E -A 2 'Volumes|ClaimName'
-Volumes:
-  mysqldb-volume-1:
-    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-    ClaimName:  mysqldb-pvclaim
-    ReadOnly:   false
-  default-token-rnsq4:
+# oc get pods
+NAME                     READY     STATUS       RESTARTS   AGE
+mysql-1-flkrs            1/1       Running      0          8m
 ----
 
 [source, text]
-.*5. 查看 PVC*
+.*4. 验证 MySQL 服务器已在导出的文件夹中初始化了数据库*
 ----
-# oc get pvc
-NAME              STATUS    VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-mysqldb-pvclaim   Bound     mysqldb-volume   3Gi        RWX                           2m
+# ssh nfs.example.com 'ls -la /var/export/dbvol/'
+total 41040
+drwx------. 6 nfsnobody nfsnobody     4096 Dec  1 21:52 .
+drwxrwxrwx. 4 nfsnobody nfsnobody       30 Nov 30 17:38 ..
+-rw-r-----. 1 nfsnobody nfsnobody       56 Dec  1 21:51 auto.cnf
+-rw-------. 1 nfsnobody nfsnobody     1680 Dec  1 21:51 ca-key.pem
+-rw-r--r--. 1 nfsnobody nfsnobody     1112 Dec  1 21:51 ca.pem
+-rw-r--r--. 1 nfsnobody nfsnobody     1112 Dec  1 21:51 client-cert.pem
+-rw-------. 1 nfsnobody nfsnobody     1680 Dec  1 21:51 client-key.pem
+-rw-r-----. 1 nfsnobody nfsnobody      673 Dec  1 21:52 ib_buffer_pool
+-rw-r-----. 1 nfsnobody nfsnobody 12582912 Dec  1 21:52 ibdata1
+-rw-r-----. 1 nfsnobody nfsnobody  8388608 Dec  1 21:52 ib_logfile0
+-rw-r-----. 1 nfsnobody nfsnobody  8388608 Dec  1 21:51 ib_logfile1
+-rw-r-----. 1 nfsnobody nfsnobody 12582912 Dec  1 21:52 ibtmp1
+drwxr-x---. 2 nfsnobody nfsnobody     4096 Dec  1 21:52 mysql
+-rw-r-----. 1 nfsnobody nfsnobody        2 Dec  1 21:52 mysql-1-flkrs.pid
+-rw-r--r--. 1 nfsnobody nfsnobody        6 Dec  1 21:52 mysql_upgrade_info
+drwxr-x---. 2 nfsnobody nfsnobody     8192 Dec  1 21:52 performance_schema
+-rw-------. 1 nfsnobody nfsnobody     1680 Dec  1 21:51 private_key.pem
+-rw-r--r--. 1 nfsnobody nfsnobody      452 Dec  1 21:51 public_key.pem
+-rw-r--r--. 1 nfsnobody nfsnobody     1112 Dec  1 21:51 server-cert.pem
+-rw-------. 1 nfsnobody nfsnobody     1680 Dec  1 21:51 server-key.pem
+drwxr-x---. 2 nfsnobody nfsnobody     8192 Dec  1 21:52 sys
+drwxr-x---. 2 nfsnobody nfsnobody       20 Dec  1 21:52 test_db
 ----
 
 === 创建测试数据并验证
@@ -182,13 +258,13 @@ mysqldb-pvclaim   Bound     mysqldb-volume   3Gi        RWX                     
 [source, text]
 .*1. 远程进入容器*
 ----
-# oc rsh mysqldb-2-xpq9m
+# oc rsh mysql-1-flkrs
 ----
 
 [source, text]
 .*2. 进入数据库终端*
 ----
-sh-4.2$ mysql -utest_user -ptest_pass sample
+sh-4.2$ mysql -utest_user -ptest_pass test_db
 ----
 
 [source, text]
@@ -200,11 +276,15 @@ Query OK, 0 rows affected (0.06 sec)
 mysql> insert into quote values (1, 'TEST1'), (2, 'TEST2');
 ----
 
-=== NFS 服务器上验证创建的文件
-
 [source, text]
-.**
+.*4. 验证 MySQL 服务器在 test_db 目录中创建了表元数据*
 ----
-
+# ssh nfs.example.com 'ls -la /var/export/dbvol/test_db'
+total 212
+drwxr-x---. 2 nfsnobody nfsnobody    54 Dec  1 22:06 .
+drwx------. 6 nfsnobody nfsnobody  4096 Dec  1 21:52 ..
+-rw-r-----. 1 nfsnobody nfsnobody    65 Dec  1 21:52 db.opt
+-rw-r-----. 1 nfsnobody nfsnobody  8584 Dec  1 22:06 quote.frm
+-rw-r-----. 1 nfsnobody nfsnobody 98304 Dec  1 22:07 quote.ibd
 ----
 

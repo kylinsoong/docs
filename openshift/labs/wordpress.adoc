@@ -1,0 +1,396 @@
+= 部署 Wordpress 到 OpenShift
+:toc: manual
+
+== 目的
+
+* 配置 NFS 共享为 OpenShift 节点提供存储，并且配置 OpenShift 持久卷以绑定至数据库 Pod。
+* 部署 Wordpress 到 OpenShift
+
+== 环境
+
+`openshift v3.11.16`/`kubernetes v1.11.0`
+
+== 步骤
+
+=== 创建工程
+
+[source, text]
+.*1. CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+----
+
+[source, text]
+.*2. 创建工程*
+----
+$ oc new-project lab07
+----
+
+=== NFS 持久化存储配置
+
+[source, text]
+.*1. NFS 服务器上创建两个 NFS exports*
+----
+# mkdir -p /var/export/data/mysql
+# mkdir -p /var/export/data/wp
+
+# chown nfsnobody:nfsnobody /var/export/data/mysql/
+# chown nfsnobody:nfsnobody /var/export/data/wp/
+
+# chmod 700 /var/export/data/mysql/
+# chmod 700 /var/export/data/wp/
+----
+
+[source, text]
+.*2. 创建 /etc/exports.d/wordpressvol.exports 文件，添加如下内容*
+----
+/var/export/data/mysql *(rw,async,all_squash)
+/var/export/data/wp *(rw,async,all_squash)
+----
+
+[source, text]
+.*3. 使 NFS 共享生效*
+----
+# exportfs -a
+----
+
+[source, text]
+.*4. 查看 NFS 共享卷*
+----
+# showmount -e
+Export list for nfs.example.com:
+/var/export/data/wp     *
+/var/export/data/mysql  *
+----
+
+=== 创建 PV
+
+[source, text]
+.*1. 创建 pv-mysql.yaml，添加如下内容*
+----
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-volume
+spec:
+  capacity:
+    storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: nfs.example.com
+    path: /var/export/data/mysql
+----
+
+[source, text]
+.*2. 执行 pv-mysql.yaml，创建 Mysql Volume*
+----
+# oc create -f pv-mysql.yaml
+----
+
+[source, text]
+.*3. 创建 pv-wp.yaml，添加如下内容*
+----
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: wp-volume
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: nfs.example.com
+    path: /var/export/data/wp
+----
+
+[source, text]
+.*4. 执行 pv-wp.yaml，创建 wordpree Volume*
+----
+# oc create -f pv-wp.yaml
+----
+
+[source, text]
+.*5. 查看创建的 PV*
+----
+# oc get pv
+NAME              CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                      STORAGECLASS   REASON    AGE
+mysql-volume      3Gi        RWO            Recycle          Available                                                       3m
+wp-volume         1Gi        RWO,RWX        Recycle          Available                                                       1m
+----
+
+=== 创建 PVC
+
+[source, text]
+.*1. 创建 pvc-mysql.yaml，内容如下*
+----
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim-mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+----
+
+[source, text]
+.*2. 执行 pvc-mysql.yaml，创建 Mysql Claim*
+----
+# oc create -f pvc-mysql.yaml
+----
+
+[source, text]
+.*3. 创建 pvc-wp.yaml, 内容如下*
+----
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim-wp
+spec:
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+----
+
+[source, text]
+.*4. 执行 pvc-wp.yaml，创建 WordPress Claim*
+----
+# oc create -f pvc-wp.yaml
+----
+
+[source, text]
+.*5. 产看创建的 PVC*
+----
+# oc get pvc
+NAME          STATUS    VOLUME         CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim-mysql   Bound     mysql-volume   3Gi        RWO                           3m
+claim-wp      Bound     wp-volume      1Gi        RWO,RWX                       1m
+----
+
+=== 创建 mysql 服务
+
+[source, text]
+.*1. 创建 pod-mysql.yaml，内容如下*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    name: mysql
+spec:
+  containers:
+    - resources:
+        limits :
+          cpu: 0.5
+      image: registry.example.com/rhscl/mysql-57-rhel7:latest
+      name: mysql
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: redhat
+        - name: MYSQL_USER
+          value: wp_user
+        - name: MYSQL_PASSWORD
+          value: wp_pass
+        - name: MYSQL_DATABASE
+          value: wp_db
+      ports:
+        - containerPort: 3306
+          name: mysql
+      volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql/data
+  volumes:
+    - name: mysql-persistent-storage
+      persistentVolumeClaim:
+        claimName: claim-mysql
+----
+
+[source, text]
+.*2. 执行 pod-mysql.yaml，创建 mysql 容器*
+----
+# oc create -f pod-mysql.yaml
+----
+
+[source, text]
+.*3. 创建 svc-mysql.yaml，内容如下*
+----
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: mysql
+  name: mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    name: mysql
+----
+
+[source, text]
+.*4. 执行 svc-mysql.yaml，创建 Mysql 服务*
+----
+# oc create -f svc-mysql.yaml
+----
+
+[source, text]
+.*5. 查看运行的 mysql 服务*
+----
+# oc get pods
+NAME      READY     STATUS    RESTARTS   AGE
+mysql     1/1       Running   0          4m
+----
+
+[source, text]
+.*6. 查看 NFS 端导出的 Mysql 文件*
+----
+# ssh nfs.example.com 'ls -la /var/export/data/mysql'
+total 41040
+drwx------. 6 nfsnobody nfsnobody     4096 Dec  1 23:16 .
+drwxr-xr-x. 4 root      root            29 Dec  1 22:50 ..
+-rw-r-----. 1 nfsnobody nfsnobody       56 Dec  1 23:16 auto.cnf
+-rw-------. 1 nfsnobody nfsnobody     1676 Dec  1 23:16 ca-key.pem
+-rw-r--r--. 1 nfsnobody nfsnobody     1112 Dec  1 23:16 ca.pem
+-rw-r--r--. 1 nfsnobody nfsnobody     1112 Dec  1 23:16 client-cert.pem
+-rw-------. 1 nfsnobody nfsnobody     1676 Dec  1 23:16 client-key.pem
+-rw-r-----. 1 nfsnobody nfsnobody      673 Dec  1 23:16 ib_buffer_pool
+-rw-r-----. 1 nfsnobody nfsnobody 12582912 Dec  1 23:16 ibdata1
+-rw-r-----. 1 nfsnobody nfsnobody  8388608 Dec  1 23:16 ib_logfile0
+-rw-r-----. 1 nfsnobody nfsnobody  8388608 Dec  1 23:16 ib_logfile1
+-rw-r-----. 1 nfsnobody nfsnobody 12582912 Dec  1 23:17 ibtmp1
+drwxr-x---. 2 nfsnobody nfsnobody     4096 Dec  1 23:16 mysql
+-rw-r-----. 1 nfsnobody nfsnobody        2 Dec  1 23:16 mysql.pid
+-rw-r--r--. 1 nfsnobody nfsnobody        6 Dec  1 23:16 mysql_upgrade_info
+drwxr-x---. 2 nfsnobody nfsnobody     8192 Dec  1 23:16 performance_schema
+-rw-------. 1 nfsnobody nfsnobody     1680 Dec  1 23:16 private_key.pem
+-rw-r--r--. 1 nfsnobody nfsnobody      452 Dec  1 23:16 public_key.pem
+-rw-r--r--. 1 nfsnobody nfsnobody     1112 Dec  1 23:16 server-cert.pem
+-rw-------. 1 nfsnobody nfsnobody     1676 Dec  1 23:16 server-key.pem
+drwxr-x---. 2 nfsnobody nfsnobody     8192 Dec  1 23:16 sys
+drwxr-x---. 2 nfsnobody nfsnobody       20 Dec  1 23:16 wp_db
+----
+
+=== 创建 wordpress 服务
+
+[source, text]
+.*1. Registry 上下载 wordpress 镜像，并导入到本地镜像仓库*
+----
+# ssh registry.example.com
+# docker pull wordpress
+# docker tag docker.io/wordpress:latest registry.example.com/wordpress:latest
+# docker push registry.example.com/wordpress:latest
+----
+
+[source, text]
+.*2. 创建 pod-wp.yaml，内容如下*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wordpress
+  labels:
+    name: wordpress
+spec:
+  containers:
+    - image: registry.example.com/wordpress:latest
+      name: wordpress
+      env:
+        - name: WORDPRESS_DB_USER
+          value: wp_user
+        - name: WORDPRESS_DB_PASSWORD
+          value: wp_pass
+        - name: WORDPRESS_DB_NAME
+          value: wp_db
+        - name: WORDPRESS_DB_HOST
+          value: mysql
+      ports:
+        - containerPort: 80
+          name: wordpress
+      volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+  volumes:
+    - name: wordpress-persistent-storage
+      persistentVolumeClaim:
+       claimName: claim-wp
+----
+
+[source, text]
+.*3. 执行 pod-wp.yaml，创建 wordpress 容器*
+----
+# oc create -f pod-wp.yaml
+----
+
+[source, text]
+.*4. 创建 svc-wp.yaml，内容如下*
+----
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: wp
+  name: wp
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    name: wordpress
+----
+
+[source, text]
+.*5. 创建路由使wordpress 外部可见*
+----
+# oc expose svc/wp --hostname=wp.apps.example.com
+----
+
+[source, text]
+.*6. 查看运行的服务*
+----
+# oc get pods
+NAME        READY     STATUS    RESTARTS   AGE
+mysql       1/1       Running   0          22m
+wordpress   1/1       Running   2          5m
+----
+
+[source, text]
+.*7. 查看 NFS 服务器端导出的文件*
+----
+# ssh nfs.example.com 'ls -la /var/export/data/wp'
+total 196
+drwx------.  5 nfsnobody nfsnobody  4096 Dec  1 23:33 .
+drwxr-xr-x.  4 root      root         29 Dec  1 22:50 ..
+-rw-r--r--.  1 nfsnobody nfsnobody   418 Sep 25  2013 index.php
+-rw-r--r--.  1 nfsnobody nfsnobody 19935 Jan  7  2018 license.txt
+-rw-r--r--.  1 nfsnobody nfsnobody  7415 Mar 19  2018 readme.html
+-rw-r--r--.  1 nfsnobody nfsnobody  5458 May  2  2018 wp-activate.php
+drwxr-xr-x.  9 nfsnobody nfsnobody  4096 Aug  3 04:39 wp-admin
+-rw-r--r--.  1 nfsnobody nfsnobody   364 Dec 19  2015 wp-blog-header.php
+-rw-r--r--.  1 nfsnobody nfsnobody  1889 May  3  2018 wp-comments-post.php
+-rw-r--r--.  1 nfsnobody nfsnobody  3144 Dec  1 23:33 wp-config.php
+-rw-r--r--.  1 nfsnobody nfsnobody  2764 Dec  1 23:33 wp-config-sample.php
+drwxr-xr-x.  4 nfsnobody nfsnobody    52 Aug  3 04:39 wp-content
+-rw-r--r--.  1 nfsnobody nfsnobody  3669 Aug 20  2017 wp-cron.php
+drwxr-xr-x. 18 nfsnobody nfsnobody  8192 Aug  3 04:39 wp-includes
+-rw-r--r--.  1 nfsnobody nfsnobody  2422 Nov 21  2016 wp-links-opml.php
+-rw-r--r--.  1 nfsnobody nfsnobody  3306 Aug 22  2017 wp-load.php
+-rw-r--r--.  1 nfsnobody nfsnobody 37794 Jul 16 22:14 wp-login.php
+-rw-r--r--.  1 nfsnobody nfsnobody  8048 Jan 11  2017 wp-mail.php
+-rw-r--r--.  1 nfsnobody nfsnobody 16246 Oct  4  2017 wp-settings.php
+-rw-r--r--.  1 nfsnobody nfsnobody 30091 Apr 30  2018 wp-signup.php
+-rw-r--r--.  1 nfsnobody nfsnobody  4620 Oct 24  2017 wp-trackback.php
+-rw-r--r--.  1 nfsnobody nfsnobody  3065 Sep  1  2016 xmlrpc.php
+----
+

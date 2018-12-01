@@ -48,6 +48,10 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |===
 |版本 |时间 |Notes
 
+|1.6
+|2018-12-01
+|添加 OpenShift Labs
+
 |1.5
 |2018-11-21
 |Ansible 相关更新，API 网关安装相关的更新
