@@ -1,0 +1,95 @@
+= ConfigMap
+
+[source, text]
+.*1 - 创建工程*
+----
+# oc new-project test
+----
+
+[source, text]
+.*2. 准备 redis-config 配置文件*
+----
+# cat redis-config 
+maxmemory 2mb
+maxmemory-policy allkeys-lru
+----
+
+[source, text]
+.*3. 创建 ConfigMap*
+----
+# oc create configmap test-redis-config --from-file=redis-config 
+configmap/test-redis-config created
+----
+
+[source, text]
+.*4. 查看创建的 ConfigMap*
+----
+# oc get configmap test-redis-config -o yaml
+apiVersion: v1
+data:
+  redis-config: |
+    maxmemory 2mb
+    maxmemory-policy allkeys-lru
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2018-12-04T10:34:25Z
+  name: test-redis-config
+  namespace: test
+  resourceVersion: "1900458"
+  selfLink: /api/v1/namespaces/test/configmaps/test-redis-config
+  uid: 2c08ecdc-f7b0-11e8-9a57-001a4a160173
+----
+
+[source, text]
+.*5. 创建 redis-pod.yaml，内容如下*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+  - name: redis
+    image: kubernetes/redis:v1
+    env:
+    - name: MASTER
+      value: "true"
+    ports:
+    - containerPort: 6379
+    resources:
+      limits:
+        cpu: "0.1"
+    volumeMounts:
+    - mountPath: /redis-master-data
+      name: data
+    - mountPath: /redis-master
+      name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: test-redis-config
+        items:
+        - key: redis-config
+          path: redis.conf
+----
+
+[source, text]
+.*6. 创建 Redit Pod*
+----
+# oc apply -f redis-pod.yaml
+----
+
+[source, text]
+.*7. 验证 ConfigMap 配置生效*
+----
+# oc exec -it redis redis-cli
+127.0.0.1:6379> CONFIG GET maxmemory
+1) "maxmemory"
+2) "2097152"
+127.0.0.1:6379> CONFIG GET maxmemory-policy
+1) "maxmemory-policy"
+2) "allkeys-lru"
+----
+
