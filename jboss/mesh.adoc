@@ -83,54 +83,164 @@ Pilot 将控制流量行为的高级路由规则转换为特定于 Envoy 的配�
 NOTE: OpenShift 4.x 版本默认会安装 Istio。
 
 [source, text]
-.*1. 确保管理员用户*
+.*1. 安装 istio operator*
 ----
-# oc whoami
-system:admin
-----
-
-[source, text]
-.*2. 解压安装包*
-----
-# tar -xvf istio-1.0.3-linux.tar.gz
+# oc new-project istio-operator
+# wget https://raw.githubusercontent.com/Maistra/openshift-ansible/maistra-0.5/istio/istio_product_operator_template.yaml
+# oc new-app -f istio_product_operator_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=https://master.example.com:8443
 ----
 
 [source, text]
-.*3. 创建 Custom Resources*
+.*2. 创建 cr.yaml，内容如下*
 ----
-# oc apply -f istio-1.0.3/install/kubernetes/helm/istio/templates/crds.yaml
+apiVersion: "istio.openshift.com/v1alpha1"
+kind: "Installation"
+metadata:
+  name: "istio-installation"
+  namespace: istio-operator
+spec:
+  deployment_type: openshift
+  istio:
+    authentication: true
+    community: false
+    prefix: openshift-istio-tech-preview/
+    version: 0.5.0
+  jaeger:
+    prefix: distributed-tracing-tech-preview/
+    version: 1.8.1
+    elasticsearch_memory: 1Gi
+  kiali:
+    username: username
+    password: password
+    prefix: kiali/
+    version: v0.10.1
+  launcher:
+    openshift:
+      user: admin
+      password: admin
+    github:
+      username: kylinsoong
+      token: token
+    catalog:
+      filter: booster.mission.metadata.istio
+      branch: v71
+      repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git
 ----
 
 [source, text]
-.*4. 安装*
+.*3. 执行 cr.yaml, 部署 istio*
 ----
-# oc apply -f istio-1.0.3/install/kubernetes/istio-demo.yaml
-----
-
-[source, text]
-.*5. 创建服务*
-----
-oc expose svc istio-ingressgateway -n istio-system
-oc expose svc servicegraph -n istio-system
-oc expose svc grafana -n istio-system
-oc expose svc prometheus -n istio-system
-oc expose svc tracing -n istio-system
+# oc create -f cr.yaml
 ----
 
 [source, text]
-.*6. 添加 Istio 到环境变量*
+.*4. 查看安装结果*
 ----
-# export PATH=$PATH:/root/istio/istio-1.0.3/bin/
-# istioctl version
+# oc get pods -n istio-system | grep Running
+elasticsearch-0                               1/1       Running     0          36m
+grafana-6887dd6bd6-nbc2w                      1/1       Running     0          36m
+istio-citadel-6f5df9f74d-qskbq                1/1       Running     0          41m
+istio-egressgateway-84d47b68f6-79jvf          1/1       Running     0          41m
+istio-galley-5b8b5f97dc-vqskl                 1/1       Running     0          41m
+istio-ingressgateway-c85754bbc-7scvk          1/1       Running     1          41m
+istio-pilot-58498f9dc7-ccwmx                  2/2       Running     1          41m
+istio-policy-7686c98fd4-zvcfx                 2/2       Running     0          41m
+istio-sidecar-injector-76596fb695-dt8kx       1/1       Running     0          41m
+istio-telemetry-7489486b79-7vk4m              2/2       Running     0          41m
+jaeger-agent-8vs8s                            1/1       Running     0          34m
+jaeger-agent-f946l                            1/1       Running     0          34m
+jaeger-agent-rrnpt                            1/1       Running     0          34m
+jaeger-collector-647d875799-9zmfg             1/1       Running     0          34m
+jaeger-query-8689dcc6b7-2g5ns                 1/1       Running     0          34m
+kiali-76fdc64bd9-qf8sw                        1/1       Running     0          34m
+prometheus-76db5fddd5-zrxhz                   1/1       Running     0          41m
 ----
 
-== 微服务部署
+== bookinfo 示例
+
+=== 部署
 
 [source, text]
-.**
+.*1. 创建工程*
+----
+# oc new-project bookinfo
 ----
 
+[source, text]
+.*2. 更新安全 SCC*
 ----
+# oc adm policy add-scc-to-user anyuid -z default -n bookinfo
+# oc adm policy add-scc-to-user privileged -z default -n bookinfo
+----
+
+[source, text]
+.*3. 部署 bookinfo 微服务*
+----
+# wget https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo.yaml
+# oc create -f bookinfo.yaml
+----
+
+[source, text]
+.*4. 验证微服务部署*
+----
+# oc get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+details-v1-54b6b58d9c-4rxgh       2/2       Running   0          9m
+productpage-v1-69b749ff4c-56jhl   2/2       Running   0          9m
+ratings-v1-7ffc85d9bf-sgvz9       2/2       Running   0          9m
+reviews-v1-fcd7cc7b6-8b2zq        2/2       Running   0          9m
+reviews-v2-655cc678db-zvfgc       2/2       Running   0          9m
+reviews-v3-645d59bdfd-7jl5c       2/2       Running   0          9m
+----
+
+[source, text]
+.*5. 部署 Gateway*
+----
+# wget https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo-gateway.yaml
+# oc create -f bookinfo-gateway.yaml
+----
+
+[source, text]
+.*6. 查看创建的 Gateway*
+----
+# oc get route -n istio-system istio-ingressgateway
+NAME                   HOST/PORT                                            PATH      SERVICES               PORT      TERMINATION   WILDCARD
+istio-ingressgateway   istio-ingressgateway-istio-system.apps.example.com             istio-ingressgateway   http2                   None
+----
+
+[source, text]
+.*6. 通过网关访问服务*
+----
+# curl -o /dev/null -s -w "%{http_code}\n" http://istio-ingressgateway-istio-system.apps.example.com/productpage
+200
+----
+
+[source, text]
+.*7. 添加 destination rules*
+----
+# curl -o destination-rule-all.yaml https://raw.githubusercontent.com/istio/istio/release-1.0/samples/bookinfo/networking/destination-rule-all.yaml
+# oc apply -f destination-rule-all.yaml
+# oc get destinationrules 
+NAME          AGE
+details       2m
+productpage   2m
+ratings       2m
+reviews       2m
+----
+
+=== Distributed tracing - Jaeger
+
+[source, text]
+.*1. 查看 Jaeger Query URL*
+----
+# oc get route -n istio-system jaeger-query
+NAME           HOST/PORT                                    PATH      SERVICES       PORT           TERMINATION   WILDCARD
+jaeger-query   jaeger-query-istio-system.apps.example.com             jaeger-query   jaeger-query   edge          None
+----
+
+*2. 访问*
+
+通过 https://jaeger-query-istio-system.apps.example.com 访问 Jaeger Query 界面。
 
 [source, text]
 .**

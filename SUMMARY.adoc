@@ -59,6 +59,7 @@
 ... link:openshift/install/pre-install.adoc[前续安装]
 ... link:openshift/install/install.adoc[安装]
 ... link:openshift/install/post-install.adoc[后续安装]
+... link:openshift/install/add-nodes.adoc[节点扩展]
 ... link:openshift/install/qa.adoc[常见问题]
 .. link:openshift/samples/samples.adoc[示例]
 ... link:openshift/samples/rc.adoc[RC]

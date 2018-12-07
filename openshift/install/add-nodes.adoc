@@ -1,0 +1,221 @@
+= 添加节点
+:toc: manual
+
+== 说明
+
+本部分说明如何在现有的机器中添加一个新的计算节点。添加节点之前，OpenShift 共有四个节点，1 个 master，1 个 infra，2 个 nodes，如下命令所示：
+
+[source, text]
+----
+# oc get nodes
+NAME                 STATUS    ROLES     AGE       VERSION
+infra.example.com    Ready     infra     47d       v1.11.0+d4cacc0
+master.example.com   Ready     master    47d       v1.11.0+d4cacc0
+node1.example.com    Ready     compute   47d       v1.11.0+d4cacc0
+node2.example.com    Ready     compute   47d       v1.11.0+d4cacc0
+----
+
+本部分目的是添加一个计算节点，即 node3.example.com。
+
+== 步骤
+
+=== 准备 Hosts
+
+[source, text]
+.*1. 配置静态 IP 及主机名*
+----
+hostnamectl set-hostname node3.example.com
+nmcli connection modify eth0 ipv4.addresses 10.66.208.107/24
+nmcli connection modify eth0 ipv4.gateway 10.66.208.254
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+----
+
+[source, text]
+.*2. 现有节点更新静态域名*
+----
+# for i in master node1 node2 infra ; do ssh $i.example.com 'echo "10.66.208.107 node3.example.com node3" >> /etc/hosts' ; done
+# for i in master node1 node2 infra ; do ssh $i.example.com 'ping node3.example.com -c3' ; done
+----
+
+[source, text]
+.*3. node3 节点配置静态域名*
+----
+# echo "10.66.208.101 master.example.com master" >> /etc/hosts
+# echo "10.66.208.102 infra.example.com infra" >> /etc/hosts
+# echo "10.66.208.103 node1.example.com node1" >> /etc/hosts
+# echo "10.66.208.104 node2.example.com node2" >> /etc/hosts
+# echo "10.66.208.107 node3.example.com node3" >> /etc/hosts
+# echo "10.66.208.105 nfs.example.com nfs" >> /etc/hosts
+# echo "10.66.208.106 yum.example.com yum" >> /etc/hosts
+# echo "10.66.208.106 registry.example.com registry" >> /etc/hosts
+----
+
+[source, text]
+.*4. master 节点配置到 node3 节点互相*
+----
+# ssh-copy-id node3.example.com
+# ssh node3.example.com 'date'
+----
+
+[source, text]
+.*5. node3 配置 yum 源*
+----
+cat << EOF > /etc/yum.repos.d/ocp.repo
+[rhel-7-server-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-rpms
+
+[rhel-7-server-extras-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-extras-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-extras-rpms
+
+[rhel-7-server-ose-3.11-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ose-3.11-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ose-3.11-rpms
+
+[rhel-7-server-ansible-2.6-rpms]
+baseurl = http://yum.example.com/repo/rhel-7-server-ansible-2.6-rpms
+enabled = 1
+gpgcheck = 0
+name = rhel-7-server-ansible-2.6-rpms
+EOF
+----
+
+[source, text]
+.*6. node3 设定 SELinux 为 Enforcing*
+----
+# getenforce
+Enforcing
+----
+
+[source, text]
+.*7. node3 软件包安装*
+----
+# yum update -y
+# yum -y install wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct vim tree
+# reboot
+----
+
+[source, text]
+.*8. DNS 服务器添加 A 地址*
+----
+node3.example.com     A   10.66.208.107
+----
+
+[source, text]
+.*9. node 3 配置  DNS 服务器*
+----
+# nmcli connection modify eth0 ipv4.dns 10.66.208.106
+----
+
+[source, text]
+.*10. node3 上验证 DNS*
+----
+# dig node3.example.com  @10.66.208.106 +short
+10.66.208.107
+# dig test.apps.example.com  @10.66.208.106 +short
+10.66.208.102
+----
+
+[source, text]
+.*11. node3 上安装 docker*
+----
+# yum -y install docker
+----
+
+[source, text]
+.*12. node3 添加自签名证书*
+----
+# scp example.com.crt node3.example.com:/etc/pki/ca-trust/source/anchors/
+----
+
+[source, text]
+.*13. node3 更新信任自签名证书*
+----
+# update-ca-trust extract
+----
+
+[source, text]
+.*14. node3 启用 docker*
+----
+# systemctl enable docker ; systemctl start docker ; systemctl status docker
+----
+
+[source, text]
+.*15. node3 下载镜像测试*
+----
+# docker pull registry.example.com/rhscl/mysql-57-rhel7:latest
+----
+
+=== Ansible Hosts 准备
+
+[source, text]
+.*1. [OSEv3:children] 下添加 new_nodes*
+----
+[OSEv3:children]
+masters
+nodes
+etcd
+nfs
+new_nodes
+----
+
+[source, text]
+.*2. 添加 new_nodes*
+----
+[new_nodes]
+node3.example.com openshift_node_group_name='node-config-compute'
+----
+
+=== 节点扩展
+
+[source, text]
+.*执行 ansible 命令扩展节点*
+----
+# ansible-playbook -i hosts-3.11.16-2 /usr/share/ansible/openshift-ansible/playbooks/openshift-node/scaleup.yml
+
+...
+
+PLAY RECAP ***********************************************************************************************************************************************************************************
+localhost                  : ok=24   changed=0    unreachable=0    failed=0   
+master.example.com         : ok=73   changed=1    unreachable=0    failed=0   
+nfs.example.com            : ok=2    changed=0    unreachable=0    failed=0   
+node3.example.com          : ok=153  changed=78   unreachable=0    failed=0   
+
+
+INSTALLER STATUS *****************************************************************************************************************************************************************************
+Initialization              : Complete (0:01:09)
+Node Bootstrap Preparation  : Complete (0:03:44)
+Node Join                   : Complete (0:00:11)
+----
+
+=== 移除 Ansible Hosts 中 new_nodes 配置
+
+[source, text]
+----
+[new_nodes]
+
+----
+
+== 节点扩展验证
+
+[source, text]
+----
+# oc get nodes
+NAME                 STATUS    ROLES     AGE       VERSION
+infra.example.com    Ready     infra     47d       v1.11.0+d4cacc0
+master.example.com   Ready     master    47d       v1.11.0+d4cacc0
+node1.example.com    Ready     compute   47d       v1.11.0+d4cacc0
+node2.example.com    Ready     compute   47d       v1.11.0+d4cacc0
+node3.example.com    Ready     compute   5m        v1.11.0+d4cacc0
+----
+
