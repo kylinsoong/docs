@@ -1,0 +1,130 @@
+= 应用扩展
+:toc: manual
+
+== 目的
+
+使用部署配置来部署多个 Pod，并以此扩展缩放应用。
+
+== 环境
+
+* `openshift v3.11.16`/`kubernetes v1.11.0`
+
+== 步骤
+
+=== 创建工程
+
+[source, text]
+.*1. CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+----
+
+[source, text]
+.*2. 创建工程*
+----
+$ oc new-project lab08
+----
+
+=== 创建一个新应用，测试缩放
+
+[source, text]
+.*1. 创建一个应用，导出定义到 scaling.yml*
+----
+#  oc new-app -o yaml --name=lab08 -i php:7.0 https://github.com/redhat-china/scaling.git > scaling.yml
+----
+
+[source, text]
+.*2. 编辑 scaling.yml，DeploymentConfig 部分 replicas 设为 3*
+----
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: lab08
+    name: lab08
+  spec:
+    replicas: 3
+----
+
+[source, text]
+.*3. 创建应用*
+----
+# oc create -f scaling.yml 
+imagestream.image.openshift.io/lab08 created
+buildconfig.build.openshift.io/lab08 created
+deploymentconfig.apps.openshift.io/lab08 created
+service/lab08 created
+----
+
+[source, text]
+.*4. 查看创建的 Pod*
+----
+# oc get pods
+NAME            READY     STATUS      RESTARTS   AGE
+lab08-1-build   0/1       Completed   0          1m
+lab08-1-f654z   1/1       Running     0          32s
+lab08-1-n7cgl   1/1       Running     0          32s
+lab08-1-wjgqs   1/1       Running     0          32s
+----
+
+[source, text]
+.*5. 创建路由*
+----
+# oc expose svc lab08 --hostname=lab08.apps.example.com
+----
+
+[source, text]
+.*6. 访问测试*
+----
+# for i in {1..5}; do curl -s http://lab08.apps.example.com ; done
+Server ID: 10.244.4.115
+Server ID: 10.244.8.59
+Server ID: 10.244.8.60
+Server ID: 10.244.4.115
+Server ID: 10.244.8.59
+----
+
+=== 扩展到更多节点
+
+[source, text]  
+.*1. 查看当前 Replicas 数量*
+----
+# oc describe dc lab08 | grep Replicas
+Replicas:	3
+	Replicas:	3 current / 3 desired
+----
+
+[source, text]
+.*3. 扩展到 5 个 Pod*
+----
+# oc scale --replicas=5 dc lab08 
+deploymentconfig.apps.openshift.io/lab08 scaled
+----
+
+[source, text]  
+.*4. 查看当前运行的 Pod*
+----
+# oc get pods 
+NAME            READY     STATUS      RESTARTS   AGE
+lab08-1-build   0/1       Completed   0          11m
+lab08-1-f654z   1/1       Running     0          10m
+lab08-1-lxpj9   1/1       Running     0          1m
+lab08-1-n7cgl   1/1       Running     0          10m
+lab08-1-vdjzn   1/1       Running     0          1m
+lab08-1-wjgqs   1/1       Running     0          10m
+----
+
+[source, text]
+.*5. 访问测试*
+----
+# for i in {1..5}; do curl -s http://lab08.apps.example.com ; done
+Server ID: 10.244.4.115
+Server ID: 10.244.8.59
+Server ID: 10.244.8.60
+Server ID: 10.244.8.61
+Server ID: 10.244.8.62
+----
+
