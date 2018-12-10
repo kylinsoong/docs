@@ -156,7 +156,7 @@ kiali-76fdc64bd9-qf8sw                        1/1       Running     0          3
 prometheus-76db5fddd5-zrxhz                   1/1       Running     0          41m
 ----
 
-== bookinfo 示例
+== bookinfo
 
 === 部署
 
@@ -241,6 +241,77 @@ jaeger-query   jaeger-query-istio-system.apps.example.com             jaeger-que
 *2. 访问*
 
 通过 https://jaeger-query-istio-system.apps.example.com 访问 Jaeger Query 界面。
+
+== Workshop
+
+=== 部署微服务
+
+[source, text]
+.*1. 创建工程*
+----
+# oc new-project istio-tutorial
+----
+
+[source, text]
+.*2. 给 istio-tutorial 添加 privileged SCC*
+----
+# oc adm policy add-scc-to-user privileged -z default -n istio-tutorial
+----
+
+[source, text]
+.*3. 下载源代码*
+----
+# git clone https://github.com/redhat-developer-demos/istio-tutorial
+# cd istio-tutorial
+----
+
+[source, text]
+.*4. Customer 部署*
+----
+# cd customer/java/springboot/
+# oc new-app --name=customer --context-dir=customer/java/springboot -e JAEGER_SERVICE_NAME=customer JAEGER_ENDPOINT=http://jaeger-collector.istio-system.svc:14268/api/traces JAEGER_PROPAGATION=b3 JAEGER_SAMPLER_TYPE=const JAEGER_SAMPLER_PARAM=1 JAVA_OPTIONS='-Xms128m -Xmx256m -Djava.net.preferIPv4Stack=true' fabric8/s2i-java~https://github.com/redhat-developer-demos/istio-tutorial -o yaml  > customer.yml
+# oc apply -f <(istioctl kube-inject -f customer.yml)
+# oc expose service customer
+----
+
+[source, text]
+.*5. Preference 部署*
+----
+# cd preference/java/springboot
+# oc new-app -l app=preference,version=v1 --name=preference-v1 --context-dir=preference/java/springboot -e JAEGER_SERVICE_NAME=preference JAEGER_ENDPOINT=http://jaeger-collector.istio-system.svc:14268/api/traces JAEGER_PROPAGATION=b3 JAEGER_SAMPLER_TYPE=const JAEGER_SAMPLER_PARAM=1 JAVA_OPTIONS='-Xms128m -Xmx256m -Djava.net.preferIPv4Stack=true' fabric8/s2i-java~https://github.com/redhat-developer-demos/istio-tutorial -o yaml  > preference.yml
+# oc apply -f <(istioctl kube-inject -f preference.yml)
+# oc delete svc preference-v1
+# oc create -f ../../kubernetes/Service.yml
+# oc expose service preference
+----
+
+[source, text]
+.*6. Recommendation 部署*
+----
+# cd recommendation/java/vertx/
+# oc new-app -l app=recommendation,version=v1 --name=recommendation-v1 --context-dir=recommendation/java/vertx JAVA_OPTIONS='-Xms128m -Xmx256m -Djava.net.preferIPv4Stack=true' fabric8/s2i-java~https://github.com/redhat-developer-demos/istio-tutorial -o yaml  > recommendation.yml
+# oc apply -f <(istioctl kube-inject -f recommendation.yml)
+# oc delete svc/recommendation-v1
+# oc create -f ../../kubernetes/Service.yml
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
 
 [source, text]
 .**

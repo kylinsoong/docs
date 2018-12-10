@@ -91,7 +91,7 @@
 . link:ansible/README.adoc[ANSIBLE]
 . link:jboss/readme.adoc[APPDEV]
 .. link:jboss/api/readme.adoc[API]
-.. link:jboss/mesh.adoc[Service Mesh]
+.. link:jboss/mesh.adoc[Mesh]
 .. link:jboss/faas/openwhisk.adoc[Serverless]
 .. link:jboss/rhdm/README.adoc[RHDM]
 .. link:jboss/datavirt/datavirt.adoc[JDV]
