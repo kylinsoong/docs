@@ -1,0 +1,335 @@
+= 基本使用
+:toc: manual
+
+== 说明
+
+本部分包括 ansible 基本命令的演示
+
+== Ad Hoc 命令
+
+=== 环境准备
+
+[source, txt]
+.*1. 控制节点安装 Ansible*
+----
+# ansible --version
+ansible 2.7.2
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 2.7.5 (default, Sep 12 2018, 05:31:16) [GCC 4.8.5 20150623 (Red Hat 4.8.5-36)]
+----
+
+[source, txt]
+.*2. 被管节点网络可达*
+----
+# for i in a b ; do ping server$i.example.com -c3; done
+----
+
+=== 创建 Inventory 文件
+
+[source, txt]
+.*1. 创建 hosts-basic-usage 文件，添加如下内容*
+----
+[web]
+servera.example.com
+
+[sql]
+serverb.example.com
+----
+
+[source, txt]
+.*2. 执行 ping 命令，测试 Inventory*
+----
+# ansible -i hosts-basic-usage -m ping all
+servera.example.com | UNREACHABLE! => {
+    "changed": false, 
+    "msg": "Failed to connect to the host via ssh: Warning: Permanently added 'servera.example.com,10.66.208.131' (ECDSA) to the list of known hosts.\r\nAuthentication failed.\r\n", 
+    "unreachable": true
+}
+
+serverb.example.com | UNREACHABLE! => {
+    "changed": false, 
+    "msg": "Failed to connect to the host via ssh: Could not create directory '/root/.ssh'.\r\nHost key verification failed.\r\n", 
+    "unreachable": true
+}
+----
+
+=== 生成 SSH Key，节点互信
+
+[source, txt]
+.*1. 生成 Key*
+----
+# ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:azG6KYPvwdspy/P3ZIFPHMwHMnUgxZFDpl9iMuJiZlA root@rhel7.example.com
+The key's randomart image is:
++---[RSA 2048]----+
+|    E   +=O+.    |
+|   .     O+o     |
+|  .   . + *.o    |
+|   . . . B =     |
+|    = . S =      |
+|   = . . * .     |
+|   .o . o +      |
+|  ..=+ =.o       |
+|   o*B*. ..      |
++----[SHA256]-----+
+----
+
+[source, txt]
+.*2. 拷贝 Key*
+----
+# ssh-copy-id servera.example.com
+# ssh-copy-id serverb.example.com
+----
+
+[source, txt]
+.*3. 执行 ping 命令*
+----
+# ansible -i hosts-basic-usage -m ping all
+serverb.example.com | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+servera.example.com | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+----
+
+=== 收集 Facts
+
+[source, txt]
+----
+# ansible -i hosts-basic-usage web -m setup
+servera.example.com | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.66.208.131"
+        ], 
+        "ansible_all_ipv6_addresses": [
+            "fe80::b7d8:1d0e:aaef:8621", 
+            "fe80::2516:9a52:5095:b38b", 
+            "fe80::1c49:7bbe:c37d:b08d"
+        ], 
+        "ansible_apparmor": {
+            "status": "disabled"
+        }, 
+...
+----
+
+=== 安装包
+
+[source, txt]
+.*1. 安装包*
+----
+# ansible -i hosts-basic-usage web -m yum -a "name=httpd state=present"
+----
+
+[source, txt]
+.*2. 验证安装*
+----
+# ssh servera.example.com 'rpm -qa | grep httpd-[0-9]*'
+httpd-tools-2.4.6-80.el7.x86_64
+httpd-2.4.6-80.el7.x86_64
+----
+
+=== 启动服务
+
+[source, txt]
+.*1. 启动服务*
+----
+# ansible -i hosts-basic-usage web -m service -a "name=httpd state=started"
+----
+
+[source, txt]
+.*2. 验证*
+----
+# ssh servera.example.com 'systemctl status httpd'
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
+   Active: active (running) since Tue 2018-12-11 22:20:59 CST; 36s ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 11593 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/httpd.service
+           ├─11593 /usr/sbin/httpd -DFOREGROUND
+           ├─11595 /usr/sbin/httpd -DFOREGROUND
+           ├─11596 /usr/sbin/httpd -DFOREGROUND
+           ├─11597 /usr/sbin/httpd -DFOREGROUND
+           ├─11598 /usr/sbin/httpd -DFOREGROUND
+           └─11599 /usr/sbin/httpd -DFOREGROUND
+
+Dec 11 22:20:56 servera.example.com systemd[1]: Starting The Apache HTTP Server...
+Dec 11 22:20:57 servera.example.com httpd[11593]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using servera.example.com. Set the 'ServerName' directive globally to suppress this message
+Dec 11 22:20:59 servera.example.com systemd[1]: Started The Apache HTTP Server.
+----
+
+== ansible-playbook
+
+=== 准备 playbook
+
+[source, text]
+.*创建 site.yml，添加如下内容*
+----
+---
+- hosts: web
+  name: Install the web server and start it
+  become: yes
+  vars:
+    httpd_packages:
+      - httpd
+      - mod_wsgi
+    apache_test_message: This is a test message
+    apache_max_keep_alive_requests: 115
+
+  tasks:
+    - name: Install the apache web server
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ httpd_packages }}"
+      notify: restart apache service
+
+    - name: Generate apache's configuration file from jinja2 template
+      template:
+        src: templates/httpd.conf.j2
+        dest: /etc/httpd/conf/httpd.conf
+      notify: restart apache service
+
+    - name: Generate a basic homepage from jinja2 template
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+
+    - name: Start the apache web server
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart apache service
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+----
+
+=== 创建 Jinja2 模版
+
+[source, text]
+.*1. 创建 templates 目录*
+----
+# mkdir templates
+----
+
+[source, text]
+.*2. 创建 httpd.conf.j2 文件，添加如下内容*
+----
+ServerRoot "/etc/httpd"
+Listen 80
+Include conf.modules.d/*.conf
+User apache
+Group apache
+ServerAdmin root@localhost
+<Directory />
+    AllowOverride none
+    Require all denied
+</Directory>
+DocumentRoot "/var/www/html"
+<Directory "/var/www">
+    AllowOverride None
+    Require all granted
+</Directory>
+<Directory "/var/www/html">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+<IfModule dir_module>
+    DirectoryIndex index.html
+</IfModule>
+<Files ".ht*">
+    Require all denied
+</Files>
+ErrorLog "logs/error_log"
+MaxKeepAliveRequests {{ apache_max_keep_alive_requests }}
+LogLevel warn
+<IfModule log_config_module>
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
+    <IfModule logio_module>
+      LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+    </IfModule>
+    CustomLog "logs/access_log" combined
+</IfModule>
+<IfModule alias_module>
+    ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+</IfModule>
+<Directory "/var/www/cgi-bin">
+    AllowOverride None
+    Options None
+    Require all granted
+</Directory>
+<IfModule mime_module>
+    TypesConfig /etc/mime.types
+    AddType application/x-compress .Z
+    AddType application/x-gzip .gz .tgz
+    AddType text/html .shtml
+    AddOutputFilter INCLUDES .shtml
+</IfModule>
+AddDefaultCharset UTF-8
+<IfModule mime_magic_module>
+    MIMEMagicFile conf/magic
+</IfModule>
+EnableSendfile on
+IncludeOptional conf.d/*.conf
+----
+
+[source, text]
+.*3. 创建 index.html.j2 文件，添加如下内容*
+----
+{{ apache_test_message }} {{ ansible_distribution }} {{ ansible_distribution_version }}  <br>
+Current Host: {{ ansible_hostname }} <br>
+Server list: <br>
+{% for host in groups['web'] %}
+{{ host }} <br>
+{% endfor %}
+----
+
+[source, text]
+.*4. 确保文件创建如下*
+----
+templates/
+├── httpd.conf.j2
+└── index.html.j2
+----
+
+=== 执行 Playbook
+
+[source, text]
+.*1. 执行 ansible-playbook*
+----
+# ansible-playbook -i hosts-basic-usage site.yml
+----
+
+[source, text]
+.*2. 测试 Web 服务*
+----
+# curl servera.example.com
+This is a test message RedHat 7.5  <br>
+Current Host: servera <br>
+Server list: <br>
+servera.example.com <br>
+----
+

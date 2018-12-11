@@ -89,6 +89,7 @@
 ... link:openshift/labs/015.adoc[Deploy a SpringBoot Application]
 .. link:openshift/case.adoc[用例]
 . link:ansible/README.adoc[ANSIBLE]
+.. link:ansible/basic-usage.adoc[基本使用]
 . link:jboss/readme.adoc[APPDEV]
 .. link:jboss/api/readme.adoc[API]
 .. link:jboss/mesh.adoc[Mesh]

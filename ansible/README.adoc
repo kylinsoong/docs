@@ -1,7 +1,9 @@
 = Ansible
 :toc: manual
 
-== 什么是 Ansible
+== Ansible Engine
+
+=== 什么是 Ansible
 
 Ansible 是一款开源自动化平台，它是一款简单自动化语言，能够在 Ansible Playbook 中完美地描述 IT 基础架构。它同时提供了一个自动化引擎用来执行 Asible Playbook。
 
@@ -24,7 +26,7 @@ Ansible 方式:
 * *专为易读性优化* - Ansible 自动化语言围绕简单易读的声明性文本文件来构建。正确编写的 Ansible Playbook 可以清楚地记录您的工作流自动化。
 * *声明式思维* - Ansible 是一种要求状态引擎。它通过表达您希望系统处于何种状态来解决如何自动化 IT 部署的问题。Ansible 的目标是通过仅执行必要的更改，使您的系统处于所需的状态。试图将 Ansible 视为脚本语言并非正确的做法。
 
-== 安装
+=== 安装
 
 Ansible 易于安装。Ansible 软件只需要安装到要运行它的一个（或多个）控制节点上。由 Ansible 管理的主机不需要安装 Ansible。这种安装涉及相对较少的步骤，其要求也最少。
 
@@ -48,9 +50,9 @@ sudo yum install -y ansible
 ansible --version
 ----
 
-== 部署
+=== 部署
 
-=== Inventory 编写
+==== Inventory 编写
 
 Inventory 即清单，一个 清单定义 Ansible 将要管理的一系列主机。这些主机也可以分配到 组中，以便进行集中管理。组可以包含子组，主机也可以是多个组的成员。清单还可以设置应用到它所定义的主机和组的变量。
 
@@ -95,7 +97,7 @@ ansible -i Inventory
 
 NOTE: 更多关于 Ansible 清单，参照 https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html[链接]。
 
-=== 配置文件
+==== 配置文件
 
 .*Ansible 配置文件 & 优先级*
 |===
@@ -210,7 +212,7 @@ become_ask_pass = false
 |--ask-become-pass、 -K
 |===
 
-=== 运行临时命令
+==== 运行临时命令
 
 什么是运行临时命令？临时命令是简单的一行式操作，无需编写 playbook 即可运行的命令。它们对快速测试和更改很有用处。例如，您可以使用临时命令确保一组服务器上的 /etc/hosts 文件中存在某一特定的行。您可以使用另一个临时命令在许多不同的计算机上高效重启一项服务，或者确保特定的软件包为最新版本。您还可以将它用于在一个或多个主机上运行任意命令，从而运行某一程序或收集信息。
 
@@ -283,7 +285,7 @@ host2.lab.example.com \| SUCCESS \| rc=0 >> (stdout) host2.lab.example.com
 ----
 |===
 
-=== 动态清单
+==== 动态清单
 
 Ansible 支持通过 动态清单脚本在每当 Ansible 执行时从这些类型的来源检索当前的信息，使清单能够实时得到更新。这些脚本是可以执行的程序，能够从一些外部来源收集信息，并以 JSON 格式输出清单。
 
@@ -291,9 +293,9 @@ Ansible 支持通过 动态清单脚本在每当 Ansible 执行时从这些类�
 
 NOTE: https://github.com/ansible/ansible/tree/devel/contrib/inventory 中有大量现有的动态清单脚本，包括对私有云平台、公共云平台、虚拟化平台、PaaS 平台等管理。
 
-== Playbooks
+=== Playbooks
 
-=== Ansible Playbook Vs 临时命令
+==== Ansible Playbook Vs 临时命令
 
 *运行临时命令* 部分运行 ansible 临时命令，临时命令可以作为一次性命令对一组目标主机运行一项简单的任务。不过，若要真正发挥 Ansible 的力量，需要了解如何使用 playbook 以可轻松重复的方式对一组目标主机执行多项复杂的任务。
 
@@ -331,7 +333,7 @@ NOTE: https://github.com/ansible/ansible/tree/devel/contrib/inventory 中有大�
 |`ansible-playbook -C sample.yml`
 |===
 
-=== 包含多个 play 的 playbook
+==== 包含多个 play 的 playbook
 
 Playbook 是一个 YAML 文件，含有由一个或多个 play 组成的列表。记住一个 play 按顺序列出了要对清单中的选定主机执行的任务。因此，如果一个 playbook 中含有多个 play，每个 play 可以将其任务应用到单独的一组主机。
 
@@ -373,7 +375,7 @@ become_method: sudo
 become_user: privileged_user
 ----
 
-=== Playbook 语法
+==== Playbook 语法
 
 .*Playbook 语法*
 [cols="2,5a"]
@@ -490,9 +492,9 @@ hosts: [servera, serverb, serverc]
 
 |===
 
-== 变量(Variables) & 事实(Facts) & 包含(Inclusions)
+=== 变量(Variables) & 事实(Facts) & 包含(Inclusions)
 
-=== 变量(Variables)
+==== 变量(Variables)
 
 Ansible 支持利用变量存储整个 Ansible 项目的文件中可重复使用的值。这有助于简化项目的创建和维护，并减少错误的发生。
 
@@ -646,16 +648,10 @@ users.acook.home_dir
     - debug: var=install_result
 ----
 
-=== 事实(Facts)
+==== 事实(Facts)
 
 
-=== 包含(Inclusions)
-
-[source, text]
-.*1*
-----
-
-----
+==== 包含(Inclusions)
 
 [source, text]
 .*1*
@@ -681,7 +677,13 @@ users.acook.home_dir
 
 ----
 
-== 示例
+[source, text]
+.*1*
+----
+
+----
+
+=== 示例
 
 |===
 |编号 |说明 |链接
