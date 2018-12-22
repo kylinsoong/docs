@@ -1,0 +1,50 @@
+= 性能调优
+:toc: manual
+
+== 常用命令
+
+[source, text]
+.*1. 查看系统 CPU 总数*
+----
+$ grep -c ^processor /proc/cpuinfo 
+
+$ lscpu
+----
+
+[source, text]
+.*2. 查看网卡信息，主机名*
+----
+$ hostname
+
+$ ip addr show eth0
+----
+
+[source, text]
+.*3. 查看系统上运行的服务*
+----
+# systemctl list-units -t service | awk '$3=="active"'
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----

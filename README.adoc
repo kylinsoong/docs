@@ -50,7 +50,7 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 
 |1.7
 |2018-12-xx
-|OpenShift 节点扩展, Service Mesh Istio 安装
+|OpenShift 节点扩展, Service Mesh Istio 安装, 银行分布式架构
 
 |1.6
 |2018-12-01

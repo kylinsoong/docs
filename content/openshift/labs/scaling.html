@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Using SSL · GitBook</title>
+        <title>扩展应用 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -548,6 +548,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.6.4" data-path="../../linux/security/openssl.html">
+            
+                <a href="../../linux/security/openssl.html">
+            
+                    
+                    OpenSSL
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -705,6 +718,19 @@
     
 
             </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../../linux/perf/">
+            
+                <a href="../../linux/perf/">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
             
         </li>
     
@@ -922,7 +948,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2.7" data-path="../install/qa.html">
+        <li class="chapter " data-level="1.4.2.7" data-path="../install/add-nodes.html">
+            
+                <a href="../install/add-nodes.html">
+            
+                    
+                    节点扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="../install/qa.html">
             
                 <a href="../install/qa.html">
             
@@ -993,12 +1032,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3.4" data-path="../samples/deploy-image-to-docker-registry.html">
+        <li class="chapter " data-level="1.4.3.4" data-path="../samples/configmap.html">
             
-                <a href="../samples/deploy-image-to-docker-registry.html">
+                <a href="../samples/configmap.html">
             
                     
-                    deploy image to docker registry
+                    ConfigMap
             
                 </a>
             
@@ -1168,12 +1207,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.6.8" data-path="008.html">
+        <li class="chapter active" data-level="1.4.6.8" data-path="scaling.html">
             
-                <a href="008.html">
+                <a href="scaling.html">
             
                     
-                    Using SSL
+                    扩展应用
             
                 </a>
             
@@ -1306,6 +1345,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../ansible/basic-usage.html">
+            
+                <a href="../../ansible/basic-usage.html">
+            
+                    
+                    基本使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.6" data-path="../../jboss/readme.html">
@@ -1340,7 +1398,7 @@
                 <a href="../../jboss/mesh.html">
             
                     
-                    Service Mesh
+                    Mesh
             
                 </a>
             
@@ -1498,7 +1556,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.6.6.1" data-path="../../jboss/amq/install.html">
+        <li class="chapter " data-level="1.6.6.1" data-path="../../jboss/amq/streams.html">
+            
+                <a href="../../jboss/amq/streams.html">
+            
+                    
+                    AMQ Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6.2" data-path="../../jboss/amq/install.html">
             
                 <a href="../../jboss/amq/install.html">
             
@@ -1761,7 +1832,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1" data-path="../../solutions/rhte18/redhat-msa.html">
+        <li class="chapter " data-level="1.7.1" data-path="../../solutions/abc-distribute-arch.html">
+            
+                <a href="../../solutions/abc-distribute-arch.html">
+            
+                    
+                    核心银行系统分布式架构转型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../../solutions/rhte18/redhat-msa.html">
             
                 <a href="../../solutions/rhte18/redhat-msa.html">
             
@@ -1774,25 +1858,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.2" data-path="../../solutions/jbds-jdv.html">
+        <li class="chapter " data-level="1.7.3" data-path="../../solutions/jbds-jdv.html">
             
                 <a href="../../solutions/jbds-jdv.html">
             
                     
                     JBDS 创建虚拟数据库操作示例
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.3" data-path="../../solutions/ep-data-solution.html">
-            
-                <a href="../../solutions/ep-data-solution.html">
-            
-                    
-                    企业数据整合案例
             
                 </a>
             
@@ -1880,7 +1951,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Using SSL</a>
+        <a href="../.." >扩展应用</a>
     </h1>
 </div>
 
@@ -1895,183 +1966,163 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="using-ssl-in-your-application">Using SSL in your application</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>In this recipe you will set up your application to encrypt traffic with the OpenShift Wildcard certificate.</p>
-</div>
-</div>
+                                <h1 id="&#x5E94;&#x7528;&#x6269;&#x5C55;">&#x5E94;&#x7528;&#x6269;&#x5C55;</h1>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_create_a_project_or_use_an_existing_project">Create a project or use an existing project</a></li>
-<li><a href="#_view_the_routing_config">View the routing config</a></li>
-<li><a href="#_tls_edge_termination">TLS Edge Termination</a></li>
-<li><a href="#_verify">Verify</a></li>
+<li><a href="#__">&#x76EE;&#x7684;</a></li>
+<li><a href="#___2">&#x73AF;&#x5883;</a></li>
+<li><a href="#___3">&#x6B65;&#x9AA4;</a>
+<ul class="sectlevel2">
+<li><a href="#___4">&#x521B;&#x5EFA;&#x5DE5;&#x7A0B;</a></li>
+<li><a href="#___5">&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0;&#x5E94;&#x7528;&#xFF0C;&#x6D4B;&#x8BD5;&#x7F29;&#x653E;</a></li>
+<li><a href="#___6">&#x6269;&#x5C55;&#x5230;&#x66F4;&#x591A;&#x8282;&#x70B9;</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x76EE;&#x7684;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x4F7F;&#x7528;&#x90E8;&#x7F72;&#x914D;&#x7F6E;&#x6765;&#x90E8;&#x7F72;&#x591A;&#x4E2A; Pod&#xFF0C;&#x5E76;&#x4EE5;&#x6B64;&#x6269;&#x5C55;&#x7F29;&#x653E;&#x5E94;&#x7528;&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x73AF;&#x5883;</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>openshift v3.11.16</code>/<code>kubernetes v1.11.0</code></p>
+</li>
 </ul>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_create_a_project_or_use_an_existing_project">Create a project or use an existing project</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you want to, you can create a new project based on what you have learned in the previous recipe. Since we already have a project we will use it. Run the following command to make sure.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc project ocp-test</code></pre>
-</div>
-</div>
-</div>
 </div>
 <div class="sect1">
-<h2 id="_view_the_routing_config">View the routing config</h2>
+<h2 id="___3">&#x6B65;&#x9AA4;</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>To view the routing config you will need to use the <code>oc get route</code> command</p>
+<div class="sect2">
+<h3 id="___4">&#x521B;&#x5EFA;&#x5DE5;&#x7A0B;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. CLI &#x767B;&#x5F55;&#x5230; OCP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ oc login https://master.example.com:8443 -u admin -p admin</code></pre>
+</div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x5DE5;&#x7A0B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">$ oc get route helloworld -o json
-{
-    <span class="hljs-string">&quot;apiVersion&quot;</span>: <span class="hljs-string">&quot;v1&quot;</span>,
-    <span class="hljs-string">&quot;kind&quot;</span>: <span class="hljs-string">&quot;Route&quot;</span>,
-    <span class="hljs-string">&quot;metadata&quot;</span>: {
-        <span class="hljs-string">&quot;annotations&quot;</span>: {
-            <span class="hljs-string">&quot;openshift.io/host.generated&quot;</span>: <span class="hljs-string">&quot;true&quot;</span>
-        },
-        <span class="hljs-string">&quot;creationTimestamp&quot;</span>: <span class="hljs-string">&quot;2017-07-10T15:30:34Z&quot;</span>,
-        <span class="hljs-string">&quot;labels&quot;</span>: {
-            <span class="hljs-string">&quot;app&quot;</span>: <span class="hljs-string">&quot;helloworld&quot;</span>
-        },
-        <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;helloworld&quot;</span>,
-        <span class="hljs-string">&quot;namespace&quot;</span>: <span class="hljs-string">&quot;ocp-test&quot;</span>,
-        <span class="hljs-string">&quot;resourceVersion&quot;</span>: <span class="hljs-string">&quot;4714374&quot;</span>,
-        <span class="hljs-string">&quot;selfLink&quot;</span>: <span class="hljs-string">&quot;/oapi/v1/namespaces/ocp-test/routes/helloworld&quot;</span>,
-        <span class="hljs-string">&quot;uid&quot;</span>: <span class="hljs-string">&quot;b7355a0f-6584-11e7-bbc1-0682973451aa&quot;</span>
-    },
-    <span class="hljs-string">&quot;spec&quot;</span>: {
-        <span class="hljs-string">&quot;host&quot;</span>: <span class="hljs-string">&quot;helloworld-ocp-test.apps.example.com&quot;</span>,
-        <span class="hljs-string">&quot;port&quot;</span>: {
-            <span class="hljs-string">&quot;targetPort&quot;</span>: <span class="hljs-string">&quot;8080-tcp&quot;</span>
-        },
-        <span class="hljs-string">&quot;to&quot;</span>: {
-            <span class="hljs-string">&quot;kind&quot;</span>: <span class="hljs-string">&quot;Service&quot;</span>,
-            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;helloworld&quot;</span>,
-            <span class="hljs-string">&quot;weight&quot;</span>: <span class="hljs-number">100</span>
-        },
-        <span class="hljs-string">&quot;wildcardPolicy&quot;</span>: <span class="hljs-string">&quot;None&quot;</span>
-    },
-    <span class="hljs-string">&quot;status&quot;</span>: {
-        <span class="hljs-string">&quot;ingress&quot;</span>: [
-            {
-                <span class="hljs-string">&quot;conditions&quot;</span>: [
-                    {
-                        <span class="hljs-string">&quot;lastTransitionTime&quot;</span>: <span class="hljs-string">&quot;2017-07-10T15:30:34Z&quot;</span>,
-                        <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;True&quot;</span>,
-                        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Admitted&quot;</span>
-                    }
-                ],
-                <span class="hljs-string">&quot;host&quot;</span>: <span class="hljs-string">&quot;helloworld-ocp-test.apps.example.com&quot;</span>,
-                <span class="hljs-string">&quot;routerName&quot;</span>: <span class="hljs-string">&quot;router&quot;</span>,
-                <span class="hljs-string">&quot;wildcardPolicy&quot;</span>: <span class="hljs-string">&quot;None&quot;</span>
-            }
-        ]
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note here that the <code>host:</code> is set to the FQDN that your application is running on.</p>
-</div>
-<div class="paragraph">
-<p>Currently the routing component of OpenShift 3 supports ports <code>80</code> and <code>443</code>. When you first create your route, the mapping of <code>80</code> to your pod is done automatically. There are a few things that need to be done in order to get the <code>443</code> mapping to work.</p>
+<pre class="highlight"><code class="language-text" data-lang="text">$ oc new-project lab08</code></pre>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_tls_edge_termination">TLS Edge Termination</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>OpenShift has a wildcard SSL certificate that it can use for any application. We can use this SSL certificate to serve SSL from our application without having to generate a cert of our own (which is sometimes called SSL-offloading).</p>
+<div class="sect2">
+<h3 id="___5">&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0;&#x5E94;&#x7528;&#xFF0C;&#x6D4B;&#x8BD5;&#x7F29;&#x653E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5E94;&#x7528;&#xFF0C;&#x5BFC;&#x51FA;&#x5B9A;&#x4E49;&#x5230; scaling.yml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">#  oc new-app -o yaml --name=lab08 -i php:7.0 https://github.com/redhat-china/scaling.git &gt; scaling.yml</code></pre>
 </div>
-<div class="paragraph">
-<p>Edit your routing configuration:</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x7F16;&#x8F91; scaling.yml&#xFF0C;DeploymentConfig &#x90E8;&#x5206; replicas &#x8BBE;&#x4E3A; 3</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc edit route helloworld</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: lab08
+    name: lab08
+  spec:
+    replicas: 3</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>You are going to add <code>tls: termination: edge</code> right below the <code>host:</code> section. It should look something like this.</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x5E94;&#x7528;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">apiVersion:</span> v1
-<span class="hljs-attr">kind:</span> Route
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  annotations:</span>
-    openshift.io/host.generated: <span class="hljs-string">&quot;true&quot;</span>
-<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-number">2017</span><span class="hljs-bullet">-07</span><span class="hljs-bullet">-10</span>T15:<span class="hljs-number">30</span>:<span class="hljs-number">34</span>Z
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> helloworld
-<span class="hljs-attr">  name:</span> helloworld
-<span class="hljs-attr">  namespace:</span> ocp-test
-<span class="hljs-attr">  resourceVersion:</span> <span class="hljs-string">&quot;4715129&quot;</span>
-<span class="hljs-attr">  selfLink:</span> /oapi/v1/namespaces/ocp-test/routes/helloworld
-<span class="hljs-attr">  uid:</span> b7355a0f<span class="hljs-bullet">-6584</span><span class="hljs-bullet">-11e7</span>-bbc1<span class="hljs-bullet">-0682973451</span>aa
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  host:</span> helloworld-ocp-test.apps.example.com
-<span class="hljs-attr">  port:</span>
-<span class="hljs-attr">    targetPort:</span> <span class="hljs-number">8080</span>-tcp
-<span class="hljs-attr">  tls:</span>
-<span class="hljs-attr">    termination:</span> edge
-<span class="hljs-attr">  to:</span>
-<span class="hljs-attr">    kind:</span> Service
-<span class="hljs-attr">    name:</span> helloworld
-<span class="hljs-attr">    weight:</span> <span class="hljs-number">100</span>
-<span class="hljs-attr">  wildcardPolicy:</span> None
-<span class="hljs-attr">status:</span>
-<span class="hljs-attr">  ingress:</span>
-<span class="hljs-attr">  - conditions:</span>
-<span class="hljs-attr">    - lastTransitionTime:</span> <span class="hljs-number">2017</span><span class="hljs-bullet">-07</span><span class="hljs-bullet">-10</span>T15:<span class="hljs-number">30</span>:<span class="hljs-number">34</span>Z
-<span class="hljs-attr">      status:</span> <span class="hljs-string">&quot;True&quot;</span>
-<span class="hljs-attr">      type:</span> Admitted
-<span class="hljs-attr">    host:</span> helloworld-ocp-test.apps.example.com
-<span class="hljs-attr">    routerName:</span> router
-<span class="hljs-attr">    wildcardPolicy:</span> None</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># oc create -f scaling.yml
+imagestream.image.openshift.io/lab08 created
+buildconfig.build.openshift.io/lab08 created
+deploymentconfig.apps.openshift.io/lab08 created
+service/lab08 created</code></pre>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_verify">Verify</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Verify by visiting your page by using the <code>https://</code> URI</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; Pod</strong></div>
 <div class="content">
-<pre>$ curl https://helloworld-ocp-test.apps.example.com/helloworld/
-curl: (60) Peer&apos;s certificate issuer has been marked as not trusted by the user.
-More details here: https://curl.haxx.se/docs/sslcerts.html
-
-curl performs SSL certificate verification by default, using a &quot;bundle&quot;
- of Certificate Authority (CA) public keys (CA certs). If the default
- bundle file isn&apos;t adequate, you can specify an alternate file
- using the --cacert option.
-If this HTTPS server uses a certificate signed by a CA represented in
- the bundle, the certificate verification probably failed due to a
- problem with the certificate (it might be expired, or the name might
- not match the domain name in the URL).
-If you&apos;d like to turn off curl&apos;s verification of the certificate, use
- the -k (or --insecure) option.</pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># oc get pods
+NAME            READY     STATUS      RESTARTS   AGE
+lab08-1-build   0/1       Completed   0          1m
+lab08-1-f654z   1/1       Running     0          32s
+lab08-1-n7cgl   1/1       Running     0          32s
+lab08-1-wjgqs   1/1       Running     0          32s</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Congratulations!! In this exercise you have learned about service SSL from your application.</p>
+<div class="listingblock">
+<div class="title"><strong>5. &#x521B;&#x5EFA;&#x8DEF;&#x7531;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># oc expose svc lab08 --hostname=lab08.apps.example.com</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in {1..5}; do curl -s http://lab08.apps.example.com ; done
+Server ID: 10.244.4.115
+Server ID: 10.244.8.59
+Server ID: 10.244.8.60
+Server ID: 10.244.4.115
+Server ID: 10.244.8.59</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">&#x6269;&#x5C55;&#x5230;&#x66F4;&#x591A;&#x8282;&#x70B9;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x5F53;&#x524D; Replicas &#x6570;&#x91CF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># oc describe dc lab08 | grep Replicas
+Replicas:	3
+	Replicas:	3 current / 3 desired</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6269;&#x5C55;&#x5230; 5 &#x4E2A; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># oc scale --replicas=5 dc lab08
+deploymentconfig.apps.openshift.io/lab08 scaled</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x5F53;&#x524D;&#x8FD0;&#x884C;&#x7684; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># oc get pods
+NAME            READY     STATUS      RESTARTS   AGE
+lab08-1-build   0/1       Completed   0          11m
+lab08-1-f654z   1/1       Running     0          10m
+lab08-1-lxpj9   1/1       Running     0          1m
+lab08-1-n7cgl   1/1       Running     0          10m
+lab08-1-vdjzn   1/1       Running     0          1m
+lab08-1-wjgqs   1/1       Running     0          10m</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in {1..5}; do curl -s http://lab08.apps.example.com ; done
+Server ID: 10.244.4.115
+Server ID: 10.244.8.59
+Server ID: 10.244.8.60
+Server ID: 10.244.8.61
+Server ID: 10.244.8.62</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -2117,7 +2168,7 @@ If you&apos;d like to turn off curl&apos;s verification of the certificate, use
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Using SSL","level":"1.4.6.8","depth":3,"next":{"title":"Horizontal Auto Scaling","level":"1.4.6.9","depth":3,"path":"openshift/labs/009.adoc","ref":"openshift/labs/009.adoc","articles":[]},"previous":{"title":"部署 wordpress","level":"1.4.6.7","depth":3,"path":"openshift/labs/wordpress.adoc","ref":"openshift/labs/wordpress.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/labs/008.adoc","mtime":"2018-06-01T01:29:20.140Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-12-01T07:52:08.088Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"扩展应用","level":"1.4.6.8","depth":3,"next":{"title":"Horizontal Auto Scaling","level":"1.4.6.9","depth":3,"path":"openshift/labs/009.adoc","ref":"openshift/labs/009.adoc","articles":[]},"previous":{"title":"部署 wordpress","level":"1.4.6.7","depth":3,"path":"openshift/labs/wordpress.adoc","ref":"openshift/labs/wordpress.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"openshift/labs/scaling.adoc","mtime":"2018-12-09T08:53:46.201Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2018-12-22T14:40:49.958Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
