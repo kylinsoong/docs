@@ -116,11 +116,8 @@ systemctl restart docker
 .*1 - 查看下载的镜像明细*
 ----
 # ls -l /opt/images/
-total 18787276
--rw-------. 1 root root 7161034240 Jan  3 16:30 ose-images-apps-latest_20180608.tar.gz
--rw-------. 1 root root 5074610176 Dec 13 15:32 ose-images-core-20180608.tar.gz
--rw-------. 1 root root 4293435392 Dec 13 15:46 ose-images-logging-metrics-20180608.tar.gz
--rw-------. 1 root root 2709085696 Dec 13 16:58 ose-images-tp-v3.9-20180608.tar.gz
+-rw-------. 1 root root 10836630528 Dec 26 03:35 ocp-3.11.16.part1.tar.gz
+-rw-------. 1 root root 11216611840 Dec 26 03:43 ocp-3.11.16.part2.tar.gz
 ----
 
 [source, text]
