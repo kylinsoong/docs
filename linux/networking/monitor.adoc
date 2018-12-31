@@ -357,3 +357,72 @@ reading from file tcp.pcap, link-type EN10MB (Ethernet)
 *Wireshark 分析 tcp.pcap*
 
 image:img/wireshare-tcp.png[]
+
+== TCP Socket 传输
+
+本部分通过 Java Socket API 实现一个 Echo 服务，即
+
+* 服务器端监听在 0.0.0.0:8081 端口
+* 客户端可连接到服务器
+* 服务器等待客户端的 Echo 请求
+* 客户端发送 Echo 请求(Echo 消息的内容从 console 口读取)
+* 服务器端接收到 Echo 请求后，返回 Echo 消息到客户端
+* 客户端读取消息并打印输出
+
+*服务器端编译及运行*
+
+link:files/Server.java[Server.java]
+
+[source, java]
+----
+# javac Server.java 
+# java Server
+----
+
+*客户端编译*
+
+link:files/Client.java[Client.java]
+
+[source, java]
+----
+# javac Client.java
+----
+
+[source, text]
+.*运行tcpdump 开发抓取包*
+----
+# tcpdump -nnv -i eth0 port 8081
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+----
+
+[source, java]
+.*运行客户端，发送消息*
+----
+# java Client 10.66.208.131
+Connecting to host 10.66.208.131 on port 8081.
+Hello World
+server: Hello World
+----
+
+[source, text]
+.*查看 tcpdump 抓取的包*
+----
+06:31:52.593989 IP (tos 0x0, ttl 64, id 13233, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.132.51676 > 10.66.208.131.8081: Flags [S], cksum 0xf0d3 (correct), seq 781672479, win 29200, options [mss 1460,sackOK,TS val 1673352110 ecr 0,nop,wscale 7], length 0
+06:31:52.594038 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.131.8081 > 10.66.208.132.51676: Flags [S.], cksum 0xb5ba (incorrect -> 0x6af1), seq 2603158238, ack 781672480, win 28960, options [mss 1460,sackOK,TS val 1673362684 ecr 1673352110,nop,wscale 7], length 0
+06:31:52.594199 IP (tos 0x0, ttl 64, id 13234, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.51676 > 10.66.208.131.8081: Flags [.], cksum 0x09f9 (correct), ack 1, win 229, options [nop,nop,TS val 1673352110 ecr 1673362684], length 0
+06:31:58.736603 IP (tos 0x0, ttl 64, id 13235, offset 0, flags [DF], proto TCP (6), length 64)
+    10.66.208.132.51676 > 10.66.208.131.8081: Flags [P.], cksum 0xa00d (correct), seq 1:13, ack 1, win 229, options [nop,nop,TS val 1673358253 ecr 1673362684], length 12
+06:31:58.736663 IP (tos 0x0, ttl 64, id 30243, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.131.8081 > 10.66.208.132.51676: Flags [.], cksum 0xb5b2 (incorrect -> 0xd9f0), ack 13, win 227, options [nop,nop,TS val 1673368827 ecr 1673358253], length 0
+06:31:58.736898 IP (tos 0x0, ttl 64, id 30244, offset 0, flags [DF], proto TCP (6), length 64)
+    10.66.208.131.8081 > 10.66.208.132.51676: Flags [P.], cksum 0xb5be (incorrect -> 0x8804), seq 1:13, ack 13, win 227, options [nop,nop,TS val 1673368827 ecr 1673358253], length 12
+06:31:58.737109 IP (tos 0x0, ttl 64, id 13236, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.51676 > 10.66.208.131.8081: Flags [.], cksum 0xd9e2 (correct), ack 13, win 229, options [nop,nop,TS val 1673358253 ecr 1673368827], length 0
+----
+
+*tcpdump -w 参数可以将结果输出到文件，wireshark 查看包*
+
+image:img/wireshark-java-socket.png[]
