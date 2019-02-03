@@ -53,64 +53,256 @@ image:img/ocp-ha-arch.jpg[]
 |===
 
 [source, text]
-.*查看节点 hostname*
+.*1. 查看节点 hostname*
 ----
-# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.f062.internal 'hostname' ; done
-loadbalancer1.f062.internal
-master1.f062.internal
-master2.f062.internal
-master3.f062.internal
-infranode1.f062.internal
-infranode2.f062.internal
-node1.f062.internal
-node2.f062.internal
-node3.f062.internal
-support1.f062.internal
-----
-
-[source, text]
-.*查看各节点的内存*
-----
-# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.f062.internal 'free -g' ; done
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.${GUID}.internal 'hostname' ; done
+loadbalancer1.fc84.internal
+master1.fc84.internal
+master2.fc84.internal
+master3.fc84.internal
+infranode1.fc84.internal
+infranode2.fc84.internal
+node1.fc84.internal
+node2.fc84.internal
+node3.fc84.internal
+support1.fc84.internal
 ----
 
 [source, text]
-.*查看各节点 CPU*
+.*2. 查看各节点的内存*
 ----
-# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.f062.internal 'grep -c ^processor /proc/cpuinfo' ; done
-1
-4
-4
-4
-4
-4
-2
-2
-2
-2
-----
-
-=== 基础架构验证
-
-[source, text]
-.*确保所有节点运行*
-----
-# ansible all -m ping
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.${GUID}.internal 'hostname; cat /proc/meminfo | grep MemTotal' ; done
+loadbalancer1.fc84.internal  -  MemTotal:        1882064 kB
+master1.fc84.                -  MemTotal:        8009180 kB
+master2.fc84.                -  MemTotal:        8009180 kB
+master3.fc84.                -  MemTotal:        8009180 kB
+infranode1.fc84.             -  MemTotal:       16266720 kB
+infranode2.fc84.             -  MemTotal:       16266720 kB
+node1.fc84.                  -  MemTotal:        8009180 kB
+node2.fc84.                  -  MemTotal:        8009180 kB
+node3.fc84.                  -  MemTotal:        8009180 kB
+support1.fc84.               -  MemTotal:        3880412 kB
 ----
 
 [source, text]
-.*查看 docker 运行状态和版本*
+.*3. 查看各节点 CPU*
 ----
-# ansible nodes -m shell -a "systemctl is-active docker"
-# ansible nodes -m shell -a "docker version"
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do ssh ec2-user@$i.${GUID}.internal 'hostname; grep -c ^processor /proc/cpuinfo' ; done
+loadbalancer1.fc84.  -  1
+master1.fc84.        -  2
+master2.fc84.        -  2
+master3.fc84.        -  2
+infranode1.fc84.     -  4
+infranode2.fc84.     -  4
+node1.fc84.          -  2
+node2.fc84.          -  2
+node3.fc84.          -  2
+support1.fc84.       -  2
 ----
 
 [source, text]
-.*查看 NFS*
+.*4. 查看节点 IP 地址*
+----
+# for i in loadbalancer1 master1 master2 master3 infranode1 infranode2 node1 node2 node3 support1 ; do host $i.${GUID}.internal ; done
+loadbalancer1.fc84.internal has address 192.199.0.164
+      master1.fc84.internal has address 192.199.0.76
+      master2.fc84.internal has address 192.199.0.56
+      master3.fc84.internal has address 192.199.0.210
+   infranode1.fc84.internal has address 192.199.0.22
+   infranode2.fc84.internal has address 192.199.0.119
+        node1.fc84.internal has address 192.199.0.14
+        node2.fc84.internal has address 192.199.0.229
+        node3.fc84.internal has address 192.199.0.20
+     support1.fc84.internal has address 192.199.0.117
+----
+
+[source, text]
+.*5. Wildcard DNS 查询*
+----
+# dig anyname.apps.${GUID}.example.opentlc.com +short
+3.0.247.187
+3.1.106.59
+----
+
+[source, text]
+.*6. Master DNS 查询*
+----
+# dig master{1,2,3}.${GUID}.internal +short
+192.199.0.76
+192.199.0.56
+192.199.0.210
+----
+
+[source, text]
+.*7. node 和 infra DNS 查询*
+----
+# dig {infra,}node{1,2,3}.${GUID}.internal +short
+192.199.0.22
+192.199.0.119
+192.199.0.14
+192.199.0.229
+192.199.0.20
+----
+
+[source, text]
+.*8. 查看 master, node yum 配置*
+----
+# ansible masters,nodes -m shell -a"yum repolist"
+ [WARNING]: Consider using yum module rather than running yum
+
+infranode1.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+master1.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+master2.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+infranode2.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+master3.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+node1.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+node3.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+
+node2.fc84.internal | SUCCESS | rc=0 >>
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, versionlock
+repo id                        repo name                                  status
+!rhel-7-fast-datapath-rpms     Red Hat Enterprise Linux 7 Fast Datapath      16
+!rhel-7-server-extras-rpms     Red Hat Enterprise Linux 7 Extras            102
+!rhel-7-server-optional-rpms   Red Hat Enterprise Linux 7 Optional        4,848
+!rhel-7-server-ose-3.7-rpms    Red Hat Enterprise Linux 7 OSE 3.7           522
+!rhel-7-server-rh-common-rpms  Red Hat Enterprise Linux 7 Common             82
+!rhel-7-server-rpms            Red Hat Enterprise Linux 7                 5,163
+repolist: 10,733
+----
+
+[source, text]
+.*9. 查看 NFS 共享卷*
 ----
 # ansible nfs -m shell -a "exportfs"
-support1.f062.internal | SUCCESS | rc=0 >>
+support1.fc84.internal | SUCCESS | rc=0 >>
 /srv/nfs      	<world>
+----
+
+[source, text]
+.*10. 查看节点 docker 状态*
+----
+# ansible nodes -m shell -a "systemctl is-active docker"
+master1.fc84.internal | SUCCESS | rc=0 >>
+active
+
+master2.fc84.internal | SUCCESS | rc=0 >>
+active
+
+master3.fc84.internal | SUCCESS | rc=0 >>
+active
+
+infranode1.fc84.internal | SUCCESS | rc=0 >>
+active
+
+infranode2.fc84.internal | SUCCESS | rc=0 >>
+active
+
+node1.fc84.internal | SUCCESS | rc=0 >>
+active
+
+node3.fc84.internal | SUCCESS | rc=0 >>
+active
+
+node2.fc84.internal | SUCCESS | rc=0 >>
+active
+----
+
+[source, text]
+.*11. 查看节点 docker 是否 enable*
+----
+# ansible nodes -m shell -a "systemctl is-enabled docker"
+master3.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+infranode2.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+master2.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+infranode1.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+master1.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+node1.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+node2.fc84.internal | SUCCESS | rc=0 >>
+enabled
+
+node3.fc84.internal | SUCCESS | rc=0 >>
+enabled
 ----
 
 === 安装
