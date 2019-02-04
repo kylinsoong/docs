@@ -1,0 +1,178 @@
+= 安全
+:toc: manual
+
+== 概述
+
+TODO--
+
+== 认证(Authentication)
+
+和一般系统 AA 体系相同，OpenShift 中认证(Authentication)层用来鉴定访问 OpenShift 请求所关联的用户(Who you are)。而授权(Authorization)层基于关联用户的信息判断请求是否被允许(What you can do)。
+
+image:img/security-authentication-user-authorization.png[]
+
+=== 用户(Users) 和组(Groups)
+
+OpenShift 中的一个用户是一个实体可以发送请求访问 OpenShift 的 API，通过代表一个开发者/管理员和 OpenShift 交互的账户。
+
+一个用户可以关联一个/多个角色，每一个角色代表了一定数量的用户，认证相关的虚拟角色：
+
+.*虚拟角色角色*
+|===
+|虚拟角色 |描述
+
+|system:authenticated
+|所有认证的用户都关联此角色
+
+|system:authenticated:oauth
+|所有通过 OAuth 认证的用户都关联此角色
+
+|system:unauthenticated
+|没有被认证的用户关联此角色
+|===
+
+=== 身份验证类型
+
+OpenShift 默认身份验证均通过 HTPasswdIdentityProvider 模块提供，它依据利用 htpasswd 命令生成的平面文件验证用户名和密码。
+
+OpenShift 容器平台支持的其他身份验证类型有:
+
+* 基础身份验证(远程) - 这是一种通用的后端集成机制,允许用户利用通过远程身份提供程序验证的凭据来登录 OpenShift 容器平台。用户将其用户名和密码发送到 OpenShift 容器平台,后者依据远程服务器验证这些凭据,具体方法是发出服务器对服务器请求并将凭据作为基础身份验证标头来传递。这要求用户在登录过程中将其凭据输入到 OpenShift 容器平台中。
+* 请求标头身份验证 - 用户利用请求标头值(如 X-Remote-User)登录 OpenShift 容器平台。这通常与身份验证代理结合使用,后者验证用户的身份,再通过请求标头值将用户身份提供给 OpenShift 容器平台。
+* Keystone 身份验证 - Keystone 是一种 OpenStack 项目,它提供身份、令牌、目录和策略服务。OpenShift 容器平台与 Keystone 集成,从而利用配置为在内部数据库中存储用户的 OpenStack Keystone v3 服务器实现共享身份验证。在这种配置中,用户可以利用其 Keystone 凭据登录 OpenShift 容器平台。
+* LDAP 身份验证 - 用户利用其 LDAP 凭据登录 OpenShift 容器平台。在身份验证过程中,搜索 LDAP 目录中与提供的用户名匹配的条目。如果找到匹配项,则使用该条目的区分名称 (DN) 和提供的密码尝试简单的绑定。
+* GitHub 身份验证 - GitHub 使用 OAuth,允许与 OpenShift 容器平台集成以利用该 OAuth 身份验证促进令牌交换流。这样,用户可以利用其 GitHub 凭据登录 OpenShift 容器平台。为防止具有 GitHub 用户ID 但没有授权的用户登录 OpenShift 容器平台集群,可以将访问权限限制为特定 GitHub 组织内的用户。
+
+== OpenShift 资源的访问安全加固
+
+Kubernetes 命名空间(namespace) 提供将一组相关的资源分组在一起的机制。在 OpenShift 容器平台中, 项目(Project)是和命名空间(namespace)类似，在命名空间(namespace)的基础上额外添加了一些 Annotation。
+
+Namespace 提供下列功能:
+
+* 使命名的资源能够避免基本的命名冲突
+* 将管理权威委派给受信任的用户
+* 能够限制用户资源消耗
+* 用户和组隔离
+
+Project 在 Namespace 基础上提供了额外功能。Project 提供了一种管理常规用户对资源的访问的机制。通过 Project，一组用户可以组织和管理他们的内容，并与其他群组区隔开来。用户必须从管理员获得 Project 的访问权限。如果被允许创建 Project，用户会自动获得自有 Project 的访问权限。
+
+Project 可以具有独立的名称(Name)、显示名称(Display name)和描述(Description)：
+
+* Name - 必需的 名称是项目的唯一标识符,在使用 CLI 工具或 API 时最常看到。名称的长度上限是 63 个字符。
+* Display Name - 可选的显示名称是项目在 Web 控制台中的显示方式(默认为其名称)。
+* Description - 可选的 描述可以是项目更为详细的说明,它也在 Web 控制台中可见。
+
+以下组件适用于项目:
+
+* 对象(Objects) - Services, Replication Controllers，等。
+* 策略(Policies) - 决定用户可以或不可以在对象上执行哪些操作的规则。  
+* 约束(Constraints) - 各种可以被限制的对象的配额。
+
+=== 两类安全角色
+
+OpenShift 将用户可以执行的操作定义为两大组别，即项目相关(也称为`本地策略`)和管理相关(也称为`集群策略`)操作。由于两种策略都有许多不同的操作，一些操作被分组在一起，定义为角色。
+
+.*集群相关安全角色*
+|===
+|角色 |描述
+
+|cluster-admin
+|此角色中的所有用户都可管理 OpenShift 集群。
+
+|cluster-status
+|此角色中的所有用户具有集群相关信息的只读访问权限。
+
+|===
+
+[source, text]
+.*集群角色创建删除示例*
+----
+$ oc adm policy add-cluster-role-to-user cluster-admin <USER>
+$ oc adm policy remove-cluster-role-from-user cluster-admin <USER>
+----
+
+.*项目相关安全角色*
+|===
+|角色 |描述
+
+|edit
+|此角色中的用户可以创建、更改和删除项目中的通用应用资源，如服务和部署配置，但无法操作管理资源，如限值范围和配额，也不能管理项目的访问权限。
+
+|basic-user
+|此角色中的用户具有项目的读取访问权限。
+
+|self-provisioner
+|此角色中的用户可以创建新项目。这是集群角色，而非项目角色。
+
+|admin
+|此角色中的用户可以管理项目中的所有资源，例如向其他用户授予项目访问权限。
+|===
+
+[source, text]
+.*项目角色创建示例*
+----
+$ oc adm policy add-role-to-user basic-user <USER> -n <PROJECT>
+----
+
+=== 三种用户类型
+
+OpenShift 中有三种不同类型的用户
+
+|===
+|类型 |描述
+
+|Regular users
+|常规用户类型，例如 `user1`, `user2`, `admin`
+
+|System users
+|系统类型，通常都是在系统资源创建时自动生成，例如 `system:admin`, `system:openshift-registry`, `system:node:node1.example.com`
+
+|Service accounts
+|特殊服务用户类型，例如 `system:serviceaccount:default:deployer`, `system:serviceaccount:foo:builder`
+|===
+
+=== 安全上下文
+
+OpenShift 提供了名为安全性上下文约束 (SCC) 的安全机制,它可以限制对 OpenShift 中的资源的访问，但不会影响基本操作。
+
+[source, text]
+.*获取安全上下文*
+----
+# oc get scc
+NAME               PRIV      CAPS      SELINUX     RUNASUSER          FSGROUP     SUPGROUP    PRIORITY   READONLYROOTFS   VOLUMES
+anyuid             false     []        MustRunAs   RunAsAny           RunAsAny    RunAsAny    10         false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+hostaccess         false     []        MustRunAs   MustRunAsRange     MustRunAs   RunAsAny    <none>     false            [configMap downwardAPI emptyDir hostPath persistentVolumeClaim projected secret]
+hostmount-anyuid   false     []        MustRunAs   RunAsAny           RunAsAny    RunAsAny    <none>     false            [configMap downwardAPI emptyDir hostPath nfs persistentVolumeClaim projected secret]
+hostnetwork        false     []        MustRunAs   MustRunAsRange     MustRunAs   MustRunAs   <none>     false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+node-exporter      false     []        RunAsAny    RunAsAny           RunAsAny    RunAsAny    <none>     false            [*]
+nonroot            false     []        MustRunAs   MustRunAsNonRoot   RunAsAny    RunAsAny    <none>     false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+privileged         true      [*]       RunAsAny    RunAsAny           RunAsAny    RunAsAny    <none>     false            [*]
+restricted         false     []        MustRunAs   MustRunAsRange     MustRunAs   RunAsAny    <none>     false            [configMap downwardAPI emptyDir persistentVolumeClaim projected secret]
+----
+
+=== 集群管理
+
+集群管理员可以创建项目，并将项目的管理权限委派给任何用户。在 OpenShift 容器平台中，项目用于分组和隔离相关的对象。管理员可以赋予用户特定项目的访问权限，让他们能够创建自己的项目，还可以授予他们个别项目内的管理权限。
+
+管理员可以应用角色到用户和组，以允许或限制他们创建项目。角色可以在用户首次登录前分配。
+
+如下显示了如何限制或授权用户或组创建新的项目：
+
+[source, text]
+.*1. 限制项目创建*
+----
+$ oc adm policy remove-cluster-role-from-group self-provisioner system:authenticated system:authenticated:oauth
+----
+
+[source, text]
+.*2. 授权创建项目*
+----
+$ oc adm policy add-cluster-role-to-group self-provisioner system:authenticated system:authenticated:oauth
+----
+
+[source, text]
+.**
+----
+
+----
+
