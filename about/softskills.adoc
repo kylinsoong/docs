@@ -1,0 +1,53 @@
+= SKILLS
+:toc: manual
+
+== Business Competencies
+
+|===
+|*NAME* |*DESC/NOTES*
+
+|Aligning a Differentiated Solution
+|How well does your proposed solution aligned with *customer's desired outcome*, providing multiple areas of *high business value* to the customer?
+
+|Building Credibility with Decision Makers
+|How confident are you that you've gained *credibility and trust* with your customer
+
+|Closing
+|How effective are you at *prioritizing and summarizing* the key points, ideas and areas of impact to the customer decision maker?
+
+|Facilitation
+|How *confident* are you in facilitating discovery sessions, PoC, DevOps (etc) to drive specific outcome?
+
+|Focused Business Conversation
+|How confident are you with directing a *business-oriented conversation* with a customer?
+
+|Identifying Business Impact
+|How effective are you in linking XXOO Solution to a *measurable benefit* (3 Wise Men)?
+
+|Mapping Business Need to Value Proposition
+|How confident are you in *articulating* the XXOO Value Proposition to the customer's business challenge
+
+|Questioning and Reversing Conversation
+|How effective are you in using *questioning and reversing techniques* to understand the customer's business challenges
+
+|Software/Solution Demonstration
+|How effective are you in *demonstrating* XXOO technologies/solutions to customer's business challenges
+|===
+
+== Persuading Copartner
+
+|===
+|*NAME* |*DESC/NOTES*
+
+|Exhibiting empathy
+|站在别人的角度考虑问题(should able to see something from someone else's perspective and understanding their feelings). THE ACTION YOU TAKE BY LOOKING AT IT FROM THEIR PERSPECTIVE IS WHAT EMPATHY IS ALL ABOUT.
+
+|Being conscious of your tone
+|Never raise your tone
+
+|Acknowledging the person
+|Ack the person in right time within right pace
+
+|Developing trust
+|为人谋而不忠乎？ 与朋友交而不信乎？ 传不习乎？
+|===

@@ -129,5 +129,6 @@
 .. link:solutions/rhte18/redhat-msa.adoc[微服务及红帽产品集成实践]
 .. link:solutions/jbds-jdv.adoc[JBDS 创建虚拟数据库操作示例]
 .. link:solutions/spark-gs.adoc[Spark Get Start]
-. link:about/README.adoc[TRENDS]
-.. link:about/it-professions.adoc[IT PROFESSIONS]
+. link:about/README.adoc[BUSINESS]
+.. link:about/it-professions.adoc[PROFESSIONS]
+.. link:about/softskills.adoc[SKILLS]

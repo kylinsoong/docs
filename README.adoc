@@ -49,8 +49,8 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |版本 |时间 |Notes
 
 |1.8
-|2019-01-
-|tcpdump and wireshark, 
+|2019-02-14
+|tcpdump and wireshark, add a Soft Skills Pages
 
 |1.7
 |2018-12-23

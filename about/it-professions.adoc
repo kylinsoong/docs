@@ -72,13 +72,6 @@ $ sudo apt-get install firefox
 $ sudo apt-get remove gimp
 ----
 
-== Soft Skills for persuading copartner
-
-* *Exhibiting empathy* - 站在别人的角度考虑问题(should able to see something from someone else's perspective and understanding their feelings). THE ACTION YOU TAKE BY LOOKING AT IT FROM THEIR PERSPECTIVE IS WHAT EMPATHY IS ALL ABOUT.
-* *Being conscious of your tone*
-* *Acknowledging the person*
-* *Developing trust*
-
 == What is The Cloud?
 
 * The cloud is the future.
