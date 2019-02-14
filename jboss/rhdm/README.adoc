@@ -1,3 +1,0 @@
-= 规则管理 
-
-http://ksoong.org/drools-examples/content/[点击查看完整文档]
