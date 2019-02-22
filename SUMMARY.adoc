@@ -86,7 +86,7 @@
 ... link:openshift/labs/010.adoc[Blue-Green Deployments]
 ... link:openshift/labs/011.adoc[SCM Web Hooks]
 ... link:openshift/labs/012.adoc[Rollback Applications]
-... link:openshift/labs/013.adoc[Code Promotion across Environments]
+... link:openshift/labs/deploy-an-operator.adoc[Operator 部署]
 ... link:openshift/labs/014.adoc[JBoss Developer Studio]
 ... link:openshift/labs/015.adoc[Deploy a SpringBoot Application]
 .. link:openshift/case.adoc[用例]

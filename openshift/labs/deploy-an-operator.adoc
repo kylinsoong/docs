@@ -1,0 +1,249 @@
+= Operator 部署
+:toc: manual
+
+== 目的
+
+安装 CoreOS etcd operator 到 OpenShift 集群，通过 operator 创建一个 etcd 集群，并验证 etcd 集群运行正常。
+
+== 环境
+
+* `openshift v3.11.16`/`kubernetes v1.11.0`
+
+== 步骤
+
+=== 创建工程
+
+[source, text]
+.*1. CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+----
+
+[source, text]
+.*2. 创建工程*
+----
+$ oc new-project etcd-operators
+----
+
+=== 获取 etcd Operator 
+
+[source, text]
+.*1. 克隆 etcd-operator*
+----
+$ git clone https://github.com/coreos/etcd-operator.git
+$ cd etcd-operator/
+----
+
+[source, text]
+.*2. 查看相关 template 文件*
+----
+$ cat example/rbac/create_role.sh
+$ cat example/rbac/cluster-role-template.yaml
+$ cat example/rbac/cluster-role-binding-template.yaml
+----
+
+=== 创建 ClusterRole 及 ClusterRoleBinding
+
+[source, text]
+.*1. 使用脚本创建*
+----
+$ ./example/rbac/create_role.sh --namespace=etcd-operators
+Creating role with ROLE_NAME=etcd-operator, NAMESPACE=etcd-operators
+clusterrole "etcd-operator" created
+Creating role binding with ROLE_NAME=etcd-operator, ROLE_BINDING_NAME=etcd-operator, NAMESPACE=etcd-operators
+clusterrolebinding "etcd-operator" created
+----
+
+[source, text]
+.*2. 查看 ClusterRole*
+----
+$ oc describe clusterrole etcd-operator
+Name:		etcd-operator
+Created:	Less than a second ago
+Labels:		<none>
+Annotations:	<none>
+Verbs		Non-Resource URLs	Resource Names	API Groups			Resources
+[*]		[]			[]		[etcd.database.coreos.com]	[etcdbackups etcdclusters etcdrestores]
+[*]		[]			[]		[apiextensions.k8s.io]		[customresourcedefinitions]
+[*]		[]			[]		[]				[endpoints events persistentvolumeclaims pods services]
+[*]		[]			[]		[apps]				[deployments]
+[get]		[]			[]		[]				[secrets]
+----
+
+[source, text]
+.*3. 查看 ClusterRoleBinding*
+----
+$ oc describe clusterrolebinding etcd-operator
+Name:			etcd-operator
+Created:		Less than a second ago
+Labels:			<none>
+Annotations:		<none>
+Role:			/etcd-operator
+Users:			<none>
+Groups:			<none>
+ServiceAccounts:	etcd-operators/default
+Subjects:		<none>
+Verbs			Non-Resource URLs	Resource Names	API Groups			Resources
+[*]			[]			[]		[etcd.database.coreos.com]	[etcdbackups etcdclusters etcdrestores]
+[*]			[]			[]		[apiextensions.k8s.io]		[customresourcedefinitions]
+[*]			[]			[]		[]				[endpoints events persistentvolumeclaims pods services]
+[*]			[]			[]		[apps]				[deployments]
+[get]			[]			[]		[]				[secrets]
+----
+
+=== Operator 部署
+
+[source, text]
+.*1. 开始部署*
+----
+$ oc create -f ./example/deployment.yaml
+----
+
+[source, text]
+.*2. 查看运行 Pod*
+----
+$ oc get pods
+NAME                             READY     STATUS    RESTARTS   AGE
+etcd-operator-6f44498865-56tsh   1/1       Running   0          <invalid>
+----
+
+[source, text]
+.*3. 查看容器运行日志*
+----
+$ oc log etcd-operator-6f44498865-56tsh
+W0222 12:16:23.137000   12868 cmd.go:358] log is DEPRECATED and will be removed in a future version. Use logs instead.
+time="2019-02-22T12:14:52Z" level=info msg="etcd-operator Version: 0.9.3"
+time="2019-02-22T12:14:52Z" level=info msg="Git SHA: 44f2671c"
+time="2019-02-22T12:14:52Z" level=info msg="Go Version: go1.10"
+time="2019-02-22T12:14:52Z" level=info msg="Go OS/Arch: linux/amd64"
+time="2019-02-22T12:14:52Z" level=info msg="Event(v1.ObjectReference{Kind:\"Endpoints\", Namespace:\"etcd-operators\", Name:\"etcd-operator\", UID:\"7d6b5910-369b-11e9-8fd1-001a4a160158\", APIVersion:\"v1\", ResourceVersion:\"2304289\", FieldPath:\"\"}): type: 'Normal' reason: 'LeaderElection' etcd-operator-6f44498865-56tsh became leader"
+----
+
+[source, text]
+.*4. 查看 Custom Resource Definition (CRD)*
+----
+$ oc get crds
+NAME                                    AGE
+alertmanagers.monitoring.coreos.com     11d
+bundlebindings.automationbroker.io      11d
+bundleinstances.automationbroker.io     11d
+bundles.automationbroker.io             11d
+etcdclusters.etcd.database.coreos.com   <invalid>
+prometheuses.monitoring.coreos.com      11d
+prometheusrules.monitoring.coreos.com   11d
+servicemonitors.monitoring.coreos.com   11d
+----
+
+[source, text]
+.*5. 描述 CRD*
+----
+$ oc describe crd etcdclusters.etcd.database.coreos.com
+----
+
+[source, text]
+.*6. 查看 etcdclusters*
+----
+$ oc get etcdclusters
+No resources found.
+----
+
+=== 创建 etcd 集群
+
+[source, text]
+.*1. 开始创建*
+----
+$ oc create -f ./example/example-etcd-cluster.yaml
+etcdcluster "example-etcd-cluster" created
+----
+
+[source, text]
+.*2. 查看创建的容器*
+----
+$ oc get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+etcd-operator-6f44498865-56tsh    1/1       Running   0          <invalid>
+example-etcd-cluster-jpmw5vkf9h   1/1       Running   0          <invalid>
+example-etcd-cluster-m95gh549nl   1/1       Running   0          <invalid>
+example-etcd-cluster-tj7kb79xqq   1/1       Running   0          <invalid>
+----
+
+[source, text]
+.*3. 验证 EtcdCluster 存在*
+----
+$ oc get etcdclusters
+NAME                   AGE
+example-etcd-cluster   <invalid>
+----
+
+[source, text]
+.*4. 查看事件*
+----
+$ oc get events|grep EtcdCluster
+<invalid>   <invalid>    1         example-etcd-cluster-cgcgn                         EtcdCluster                                    Normal    New Member Added    etcd-operator-6f44498865-56tsh   New member example-etcd-cluster-m95gh549nl added to cluster
+<invalid>   <invalid>   1         example-etcd-cluster-rfgvn                         EtcdCluster                                    Normal    New Member Added   etcd-operator-6f44498865-56tsh   New member example-etcd-cluster-jpmw5vkf9h added to cluster
+<invalid>   <invalid>   1         example-etcd-cluster-wmtrq                         EtcdCluster                                    Normal    New Member Added   etcd-operator-6f44498865-56tsh   New member example-etcd-cluster-tj7kb79xqq added to cluster
+----
+
+[source, text]
+.*5. 查看服务*
+----
+$ oc get svc
+NAME                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+example-etcd-cluster          ClusterIP   None            <none>        2379/TCP,2380/TCP   <invalid>
+example-etcd-cluster-client   ClusterIP   172.30.247.80   <none>        2379/TCP            <invalid>
+----
+
+[source, text]
+.*6. 验证集群健康状况*
+----
+# etcdctl --endpoints http://172.30.247.80:2379 cluster-health
+member 5166d1e0c5e0f47c is healthy: got healthy result from http://example-etcd-cluster-tj7kb79xqq.example-etcd-cluster.etcd-operators.svc:2379
+member d59f5accdc0a94f3 is healthy: got healthy result from http://example-etcd-cluster-jpmw5vkf9h.example-etcd-cluster.etcd-operators.svc:2379
+member e86bf4a119e0fc1e is healthy: got healthy result from http://example-etcd-cluster-m95gh549nl.example-etcd-cluster.etcd-operators.svc:2379
+cluster is healthy
+----
+
+[source, text]
+.*7. 测试 etcd*
+----
+# etcdctl --endpoints http://172.30.247.80:2379 set foo 'Hello world!'
+Hello world!
+
+# etcdctl --endpoints http://172.30.247.80:2379 get foo
+Hello world!
+----
+
+=== 删除 EtcdCluster
+
+[source, text]
+.*1. 删除*
+----
+$ oc delete etcdcluster example-etcd-cluster
+etcdcluster "example-etcd-cluster" deleted
+----
+
+[source, text]
+.*2. 查看运行的容器*
+----
+$ oc get pods
+NAME                             READY     STATUS    RESTARTS   AGE
+etcd-operator-6f44498865-56tsh   1/1       Running   0          <invalid>
+----
+
+=== Cleanup
+
+[source, text]
+.*1. 删除所有创建的 Object*
+----
+oc delete -f example/deployment.yaml
+oc delete clusterrole etcd-operator
+oc delete clusterrolebinding etcd-operator
+oc delete crd etcdclusters.etcd.database.coreos.com
+----
+
+[source, text]
+.*2. 删除工程*
+----
+oc delete project etcd-operators
+----
+
