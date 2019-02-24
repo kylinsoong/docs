@@ -1,0 +1,151 @@
+= 水平弹性扩展
+:toc: manual
+
+== 目的
+
+测试 OpenSHift 水平弹性扩展，资源限制。
+
+== 环境
+
+* `openshift v3.11.16`/`kubernetes v1.11.0`
+
+== 步骤
+
+=== 创建工程
+
+[source, text]
+.*1. CLI 登录到 OCP*
+----
+$ oc login https://master.example.com:8443 -u admin -p admin
+----
+
+[source, text]
+.*2. 创建工程*
+----
+$ oc new-project test-hpa
+----
+
+=== 准备测试镜像
+
+本部分使用测试镜像是：https://hub.docker.com/r/openshift/hello-openshift[openshift/hello-openshift]，使用如下命名下载镜像，并打 tag.
+
+[source, text]
+----
+# docker pull openshift/hello-openshift
+# docker tag docker.io/openshift/hello-openshift:latest registry.example.com/openshift/hello-openshift:latest
+# docker push registry.example.com/openshift/hello-openshift:latest
+----
+
+=== 创建应用
+
+[source, text]
+----
+# oc new-app registry.example.com/openshift/hello-openshift:latest -n test-hpa
+# oc expose svc hello-openshift
+----
+
+=== 创建 LimitRange
+
+创建 LimitRange，限制
+
+* Pod 最小 CPU: 10m
+* Pod 最大 CPU: 100m
+* Pod 最小内存: 5Mi
+* Pod 最大内存: 750Mi
+
+* Container 最小 CPU: 10m
+* Container 最大 CPU: 100m
+* Container 最小内存: 5Mi
+* Container 最大内存: 750Mi
+* Container 默认 CPU: 50m
+* Container 默认内存: 100Mi
+
+[source, json]
+.*1. 执行如下命令创建 LimitRange*
+----
+echo '{
+    "kind": "LimitRange",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "limits",
+        "creationTimestamp": null
+    },
+    "spec": {
+        "limits": [
+            {
+                "type": "Pod",
+                "max": {
+                    "cpu": "100m",
+                    "memory": "750Mi"
+                },
+                "min": {
+                    "cpu": "10m",
+                    "memory": "5Mi"
+                }
+            },
+            {
+                "type": "Container",
+                "max": {
+                    "cpu": "100m",
+                    "memory": "750Mi"
+                },
+                "min": {
+                    "cpu": "10m",
+                    "memory": "5Mi"
+                },
+                "default": {
+                    "cpu": "50m",
+                    "memory": "100Mi"
+                }
+            }
+        ]
+    }
+}' | oc create -f - -n test-hpa
+----
+
+[source, text]
+.*2. 查看 LimitRange*
+---- 
+# oc get limitrange
+NAME      CREATED AT
+limits    2019-02-24T20:06:08Z
+----
+
+=== 创建 HPA
+
+[source, text]
+.*1. 创建 HPA*
+----
+# oc autoscale dc/hello-openshift --min 1 --max 5 --cpu-percent=80
+----
+
+[source, text]
+.*2. 查看 HPA*
+----
+# oc get hpa hello-openshift 
+NAME              REFERENCE                          TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+hello-openshift   DeploymentConfig/hello-openshift   <unknown>/80%   1         5         1          55s
+----
+
+=== 测试弹性扩展
+
+[source, text]
+.*1. 重新部署容器应用*
+----
+# oc rollout latest hello-openshift -n test-hpa
+----
+
+[source, text]
+.*2. 多个窗口执行连续访问应用*
+----
+# for time in {1..15000}; do curl http://hello-openshift-test-hpa.apps.example.com; done
+----
+
+[source, text]
+.*3. 查看容器变化*
+----
+# oc get pods
+NAME                      READY     STATUS    RESTARTS   AGE
+hello-openshift-2-p8vt5   1/1       Running   0          3m
+hello-openshift-2-whwg9   1/1       Running   0          9m
+----

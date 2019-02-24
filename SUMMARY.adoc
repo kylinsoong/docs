@@ -82,7 +82,7 @@
 ... link:openshift/labs/db-persist.adoc[持久化数据库存储]
 ... link:openshift/labs/wordpress.adoc[部署 wordpress]
 ... link:openshift/labs/scaling.adoc[扩展应用]
-... link:openshift/labs/009.adoc[Horizontal Auto Scaling]
+... link:openshift/labs/hpa.adoc[弹性扩展]
 ... link:openshift/labs/010.adoc[Blue-Green Deployments]
 ... link:openshift/labs/011.adoc[SCM Web Hooks]
 ... link:openshift/labs/012.adoc[Rollback Applications]
