@@ -96,6 +96,7 @@
 .. link:jboss/api/readme.adoc[API]
 .. link:jboss/mesh.adoc[Mesh]
 .. link:jboss/faas/openwhisk.adoc[Serverless]
+.. link:jboss/coolstore/README.adoc[CoolStore]
 .. link:jboss/rhte18/redhat-msa.adoc[微服务及红帽产品集成实践]
 .. http://ksoong.org/drools-examples/content/[规则引擎]
 .. link:jboss/datavirt/datavirt.adoc[数据虚拟化]
