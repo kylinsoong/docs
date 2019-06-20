@@ -1,0 +1,28 @@
+---
+
+# application configmap
+- include_role:
+    name: openshift_create_configmap
+  vars:
+    configmap_template: application-config.yaml 
+    configmap_name: "{{ application_configmap }}"
+
+# EnMasse truststore
+- name: check if {{ enmasse_truststore_secret }} secret exists
+  shell: "{{ openshift_cli }} get secret {{ enmasse_truststore_secret }} -n {{ ocp_project }}"
+  register: enmasse_truststore_secret_exists
+  ignore_errors: true
+  changed_when: false
+
+- include_role:
+    name: openshift_create_truststore_secret
+  vars:
+    certs_secret: external-certs-messaging
+    certs_project: "{{ project_enmasse }}"
+    truststore: "{{ enmasse_truststore }}"
+    truststore_secret: "{{ enmasse_truststore_secret }}"    
+  when: >
+    ((install_enmasse_truststore_secret is defined and install_enmasse_truststore_secret|bool == true)) and
+    (enmasse_truststore_secret_exists is failed)
+
+- include_tasks: deploy_openshift_artifacts.yml

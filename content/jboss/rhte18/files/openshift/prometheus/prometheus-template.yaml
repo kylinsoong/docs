@@ -1,0 +1,78 @@
+kind: List
+apiVersion: v1
+items:
+- kind: Route
+  apiVersion: v1
+  metadata: 
+    name: prometheus
+    labels:
+      app: prometheus
+  spec:
+    to:
+      kind: Service
+      name: prometheus
+    port:
+      targetPort: 9090
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: prometheus
+    labels:
+      app: prometheus
+  spec:
+    ports:
+    - name: http
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    selector:
+      app: prometheus
+    type: ClusterIP
+- kind: Deployment
+  apiVersion: extensions/v1beta1
+  metadata:
+    name: prometheus
+    labels:
+      app: prometheus
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: prometheus
+    template:
+      metadata:
+        labels:
+          app: prometheus
+      spec:
+        serviceAccountName: prometheus
+        containers:
+        - name: prometheus
+          args:
+          - --storage.tsdb.retention=6h
+          - --config.file=/etc/prometheus/prometheus.yaml
+          image: openshift/prometheus:v2.3.2
+          ports:
+          - containerPort: 9090
+            name: http
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+          - mountPath: /etc/prometheus
+            name: prometheus-config
+          - mountPath: /prometheus
+            name: prometheus-data
+        restartPolicy: Always
+        volumes:
+        - name: prometheus-config
+          configMap:
+            defaultMode: 420
+            name: prometheus
+        - name: prometheus-data
+          emptyDir: {}
+

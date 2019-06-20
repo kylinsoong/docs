@@ -1,0 +1,17 @@
+groups:
+- name: dispatch_service
+  rules:
+  - record: ride:requested:rate5m
+    expr: rate(query_result_ride_per_status{status="1"}[5m])
+  - record: ride:assigned:rate5m
+    expr: rate(query_result_ride_per_status{status="2"}[5m])
+  - record: ride:canceled:rate5m
+    expr: rate(query_result_ride_per_status{status="4"}[5m])
+  - record: ride:started:rate5m
+    expr: rate(query_result_ride_per_status{status="5"}[5m])
+  - record: ride:ended:rate5m
+    expr: rate(query_result_ride_per_status{status="6"}[5m])
+  - record: ride:expired:rate5m
+    expr: rate(query_result_ride_per_status{status="7"}[5m])
+  - record: ride:created:rate5m
+    expr: rate(query_result_ride_created{processname="dispatch-process"}[5m])

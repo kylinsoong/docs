@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="a1epdm10-82-249-131" version="1">
+
+    <description>a1epdm 10.82.249.131 VDB</description>
+
+    <model name="Model-a1epdm10-82-249-131">
+        <source name="oracle-connector" translator-name="translator-oracle" connection-jndi-name="java:/OracleGeol"/>
+    </model>
+
+    <translator name="translator-oracle" type="oracle">
+        <property name="SupportsNativeQueries" value="true"/>
+    </translator>
+
+</vdb>
+

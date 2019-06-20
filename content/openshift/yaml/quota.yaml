@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-resources-time-bound
+spec:
+  hard:
+    pods: "4" 
+    limits.cpu: "2" 
+    limits.memory: "4Gi" 
+    persistentvolumeclaims: "5" 
+    requests.storage: "10Gi" 
+    gold.storageclass.storage.k8s.io/requests.storage: "10Gi" 
+    silver.storageclass.storage.k8s.io/requests.storage: "10Gi" 
+    silver.storageclass.storage.k8s.io/persistentvolumeclaims: "2" 
+    bronze.storageclass.storage.k8s.io/requests.storage: "0" 
+    bronze.storageclass.storage.k8s.io/persistentvolumeclaims: "0" 

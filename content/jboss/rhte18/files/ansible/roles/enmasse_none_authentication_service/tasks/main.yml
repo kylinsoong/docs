@@ -1,0 +1,22 @@
+---
+
+# deploy none-authservice
+- name: check if none-authservice service is deployed
+  shell: "{{ openshift_cli }} get service {{ none_authservice_service_name }} -n {{ ocp_project }}"
+  register: none_authservice_service_deployed
+  ignore_errors: true
+  changed_when: false
+
+- name: deploy none-authservice service
+  shell: "{{ openshift_cli }} apply -f {{ resources_dir }}/none-authservice/service.yaml -n {{ ocp_project }}"
+  when: none_authservice_service_deployed is failed
+
+- name: check if none-authservice deployment is deployed
+  shell: "{{ openshift_cli }} get deployment {{ none_authservice_deployment_name }} -n {{ ocp_project }}"
+  register: none_authservice_deployment_deployed
+  ignore_errors: true
+  changed_when: false
+
+- name: deploy none-authservice deployment
+  shell: "{{ openshift_cli }} apply -f {{ resources_dir }}/none-authservice/deployment.yaml -n {{ ocp_project }}"
+  when: none_authservice_deployment_deployed is failed

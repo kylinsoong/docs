@@ -1,0 +1,2776 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>SELinux · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="firewall.html" />
+    
+    
+    <link rel="prev" href="file-permissions.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    INTRODUCTION
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    INFRA
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../rhel/readme.html">
+            
+                <a href="../rhel/readme.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../rhel/pre-install.html">
+            
+                <a href="../rhel/pre-install.html">
+            
+                    
+                    安装 DVD 制作
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../rhel/install-img-usb.html">
+            
+                <a href="../rhel/install-img-usb.html">
+            
+                    
+                    生成 USB 介质
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../rhel/install.html">
+            
+                <a href="../rhel/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../rhel/kvm.html">
+            
+                <a href="../rhel/kvm.html">
+            
+                    
+                    KVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../basic/basic.html">
+            
+                <a href="../basic/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../basic/local-remote-login.html">
+            
+                <a href="../basic/local-remote-login.html">
+            
+                    
+                    本地及远程登录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../basic/user-group.html">
+            
+                <a href="../basic/user-group.html">
+            
+                    
+                    用户和组
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../basic/packages-update.html">
+            
+                <a href="../basic/packages-update.html">
+            
+                    
+                    软件包的安装与更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../basic/syslog.html">
+            
+                <a href="../basic/syslog.html">
+            
+                    
+                    系统日志
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../basic/ntp.html">
+            
+                <a href="../basic/ntp.html">
+            
+                    
+                    NTP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../basic/ex.html">
+            
+                <a href="../basic/ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../networking/">
+            
+                <a href="../networking/">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../networking/fundamentals.html">
+            
+                <a href="../networking/fundamentals.html">
+            
+                    
+                    网络基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../networking/ifcfg.html">
+            
+                <a href="../networking/ifcfg.html">
+            
+                    
+                    网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../networking/ipv6cfg.html">
+            
+                <a href="../networking/ipv6cfg.html">
+            
+                    
+                    IPv6 网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../networking/netns.html">
+            
+                <a href="../networking/netns.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../networking/teaming.html">
+            
+                <a href="../networking/teaming.html">
+            
+                    
+                    teaming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.6" data-path="../networking/bridge.html">
+            
+                <a href="../networking/bridge.html">
+            
+                    
+                    bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.7" data-path="../networking/dns.html">
+            
+                <a href="../networking/dns.html">
+            
+                    
+                    DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.8" data-path="../networking/monitor.html">
+            
+                <a href="../networking/monitor.html">
+            
+                    
+                    网络监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../fs.html">
+            
+                <a href="../fs.html">
+            
+                    
+                    文件系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../stoarges/readme.html">
+            
+                <a href="../stoarges/readme.html">
+            
+                    
+                    存储
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../stoarges/lvm.html">
+            
+                <a href="../stoarges/lvm.html">
+            
+                    
+                    LVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="../stoarges/nfs.html">
+            
+                <a href="../stoarges/nfs.html">
+            
+                    
+                    NFS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="../stoarges/file-storage.html">
+            
+                <a href="../stoarges/file-storage.html">
+            
+                    
+                    文件存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="../stoarges/block-storage.html">
+            
+                <a href="../stoarges/block-storage.html">
+            
+                    
+                    块存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="file-permissions.html">
+            
+                <a href="file-permissions.html">
+            
+                    
+                    文件权限
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.6.2" data-path="SELinux.html">
+            
+                <a href="SELinux.html">
+            
+                    
+                    SELinux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="firewall.html">
+            
+                <a href="firewall.html">
+            
+                    
+                    防火墙
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="openssl.html">
+            
+                <a href="openssl.html">
+            
+                    
+                    OpenSSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../process/">
+            
+                <a href="../process/">
+            
+                    
+                    进程
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../process/management.html">
+            
+                <a href="../process/management.html">
+            
+                    
+                    进程管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../process/service.html">
+            
+                <a href="../process/service.html">
+            
+                    
+                    服务管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../process/schedule.html">
+            
+                <a href="../process/schedule.html">
+            
+                    
+                    周期性运行进程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../process/bash.html">
+            
+                <a href="../process/bash.html">
+            
+                    
+                    bash
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../svc/">
+            
+                <a href="../svc/">
+            
+                    
+                    常用服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../svc/openssh.html">
+            
+                <a href="../svc/openssh.html">
+            
+                    
+                    OpenSSH
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="../svc/postfix.html">
+            
+                <a href="../svc/postfix.html">
+            
+                    
+                    Email
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="../svc/mariadb.html">
+            
+                <a href="../svc/mariadb.html">
+            
+                    
+                    MariaDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="../svc/httpd.html">
+            
+                <a href="../svc/httpd.html">
+            
+                    
+                    HTTPD
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="../svc/zabbix.html">
+            
+                <a href="../svc/zabbix.html">
+            
+                    
+                    Zabbix
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../perf/">
+            
+                <a href="../perf/">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../docker/docker.html">
+            
+                <a href="../../docker/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../docker/svc/svc.html">
+            
+                <a href="../../docker/svc/svc.html">
+            
+                    
+                    容器化服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../../docker/svc/mysql.html">
+            
+                <a href="../../docker/svc/mysql.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../../docker/svc/httpd.html">
+            
+                <a href="../../docker/svc/httpd.html">
+            
+                    
+                    httpd
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../docker/container.html">
+            
+                <a href="../../docker/container.html">
+            
+                    
+                    容器管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../docker/images.html">
+            
+                <a href="../../docker/images.html">
+            
+                    
+                    容器镜像
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../openshift/openshift.html">
+            
+                <a href="../../openshift/openshift.html">
+            
+                    
+                    OPENSHIFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../openshift/concepts/">
+            
+                <a href="../../openshift/concepts/">
+            
+                    
+                    概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../openshift/install/">
+            
+                <a href="../../openshift/install/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../../openshift/install/yum.html">
+            
+                <a href="../../openshift/install/yum.html">
+            
+                    
+                    本地 yum 源配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="../../openshift/install/docker-dist.html">
+            
+                <a href="../../openshift/install/docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
+            
+                <a href="../../openshift/install/pre-install.html">
+            
+                    
+                    前续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
+            
+                <a href="../../openshift/install/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
+            
+                <a href="../../openshift/install/post-install.html">
+            
+                    
+                    后续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/add-nodes.html">
+            
+                <a href="../../openshift/install/add-nodes.html">
+            
+                    
+                    节点扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="../../openshift/install/qa.html">
+            
+                <a href="../../openshift/install/qa.html">
+            
+                    
+                    常见问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../openshift/advanced-deployment.html">
+            
+                <a href="../../openshift/advanced-deployment.html">
+            
+                    
+                    高级部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../openshift/devops.html">
+            
+                <a href="../../openshift/devops.html">
+            
+                    
+                    DEVOPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../openshift/secure.html">
+            
+                <a href="../../openshift/secure.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../../openshift/samples/samples.html">
+            
+                <a href="../../openshift/samples/samples.html">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.6.1" data-path="../../openshift/samples/rc.html">
+            
+                <a href="../../openshift/samples/rc.html">
+            
+                    
+                    RC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.2" data-path="../../openshift/samples/dc.html">
+            
+                <a href="../../openshift/samples/dc.html">
+            
+                    
+                    DC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.3" data-path="../../openshift/samples/s2i.html">
+            
+                <a href="../../openshift/samples/s2i.html">
+            
+                    
+                    S2I
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.4" data-path="../../openshift/samples/configmap.html">
+            
+                <a href="../../openshift/samples/configmap.html">
+            
+                    
+                    ConfigMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.5" data-path="../../openshift/samples/elastic-spark.html">
+            
+                <a href="../../openshift/samples/elastic-spark.html">
+            
+                    
+                    elasticsearch and spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.6" data-path="../../openshift/samples/vdb-data-svc.html">
+            
+                <a href="../../openshift/samples/vdb-data-svc.html">
+            
+                    
+                    Teiid Data Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../../openshift/labs/">
+            
+                <a href="../../openshift/labs/">
+            
+                    
+                    LABS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.7.1" data-path="../../openshift/labs/sdn.html">
+            
+                <a href="../../openshift/labs/sdn.html">
+            
+                    
+                    Software-Defined Networking
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.2" data-path="../../openshift/labs/edge-route.html">
+            
+                <a href="../../openshift/labs/edge-route.html">
+            
+                    
+                    Route
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.3" data-path="../../openshift/labs/web-console.html">
+            
+                <a href="../../openshift/labs/web-console.html">
+            
+                    
+                    Web Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.4" data-path="../../openshift/labs/projects-accounts.html">
+            
+                <a href="../../openshift/labs/projects-accounts.html">
+            
+                    
+                    项目用户安全管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.5" data-path="../../openshift/labs/secure-secrets.html">
+            
+                <a href="../../openshift/labs/secure-secrets.html">
+            
+                    
+                    数据库连接信息保护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.6" data-path="../../openshift/labs/db-persist.html">
+            
+                <a href="../../openshift/labs/db-persist.html">
+            
+                    
+                    持久化数据库存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.7" data-path="../../openshift/labs/wordpress.html">
+            
+                <a href="../../openshift/labs/wordpress.html">
+            
+                    
+                    部署 wordpress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.8" data-path="../../openshift/labs/scaling.html">
+            
+                <a href="../../openshift/labs/scaling.html">
+            
+                    
+                    扩展应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.9" data-path="../../openshift/labs/hpa.html">
+            
+                <a href="../../openshift/labs/hpa.html">
+            
+                    
+                    弹性扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.10" data-path="../../openshift/labs/010.html">
+            
+                <a href="../../openshift/labs/010.html">
+            
+                    
+                    Blue-Green Deployments
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.11" data-path="../../openshift/labs/011.html">
+            
+                <a href="../../openshift/labs/011.html">
+            
+                    
+                    SCM Web Hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.12" data-path="../../openshift/labs/012.html">
+            
+                <a href="../../openshift/labs/012.html">
+            
+                    
+                    Rollback Applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.13" data-path="../../openshift/labs/deploy-an-operator.html">
+            
+                <a href="../../openshift/labs/deploy-an-operator.html">
+            
+                    
+                    Operator 部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.14" data-path="../../openshift/labs/014.html">
+            
+                <a href="../../openshift/labs/014.html">
+            
+                    
+                    JBoss Developer Studio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.15" data-path="../../openshift/labs/015.html">
+            
+                <a href="../../openshift/labs/015.html">
+            
+                    
+                    Deploy a SpringBoot Application
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../../openshift/case.html">
+            
+                <a href="../../openshift/case.html">
+            
+                    
+                    用例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../ansible/">
+            
+                <a href="../../ansible/">
+            
+                    
+                    ANSIBLE
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../ansible/basic-usage.html">
+            
+                <a href="../../ansible/basic-usage.html">
+            
+                    
+                    基本使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../../jboss/readme.html">
+            
+                <a href="../../jboss/readme.html">
+            
+                    
+                    APPDEV
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../../jboss/api/readme.html">
+            
+                <a href="../../jboss/api/readme.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../../jboss/mesh.html">
+            
+                <a href="../../jboss/mesh.html">
+            
+                    
+                    Mesh
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../../jboss/faas/openwhisk.html">
+            
+                <a href="../../jboss/faas/openwhisk.html">
+            
+                    
+                    Serverless
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../../jboss/coolstore/">
+            
+                <a href="../../jboss/coolstore/">
+            
+                    
+                    CoolStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../../jboss/rhte18/redhat-msa.html">
+            
+                <a href="../../jboss/rhte18/redhat-msa.html">
+            
+                    
+                    微服务及红帽产品集成实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" >
+            
+                <a target="_blank" href="http://ksoong.org/drools-examples/content/">
+            
+                    
+                    规则引擎
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../../jboss/datavirt/datavirt.html">
+            
+                <a href="../../jboss/datavirt/datavirt.html">
+            
+                    
+                    数据虚拟化
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.7.1" data-path="../../jboss/datavirt/software-list.html">
+            
+                <a href="../../jboss/datavirt/software-list.html">
+            
+                    
+                    软件版本号对照表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.2" data-path="../../jboss/datavirt/changelog.html">
+            
+                <a href="../../jboss/datavirt/changelog.html">
+            
+                    
+                    修订记录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.3" data-path="../../jboss/datavirt/download.html">
+            
+                <a href="../../jboss/datavirt/download.html">
+            
+                    
+                    下载
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.4" data-path="../../jboss/datavirt/install.html">
+            
+                <a href="../../jboss/datavirt/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.5" data-path="../../jboss/datavirt/start.html">
+            
+                <a href="../../jboss/datavirt/start.html">
+            
+                    
+                    启动
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.6" data-path="../../jboss/datavirt/deploy-vdbs.html">
+            
+                <a href="../../jboss/datavirt/deploy-vdbs.html">
+            
+                    
+                    部署测试 VDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.7" data-path="../../jboss/datavirt/meta.html">
+            
+                <a href="../../jboss/datavirt/meta.html">
+            
+                    
+                    元数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.8" data-path="../../jboss/datavirt/jbds-jdv.html">
+            
+                <a href="../../jboss/datavirt/jbds-jdv.html">
+            
+                    
+                    JBDS 创建虚拟数据库操作示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="../../jboss/amq/amq.html">
+            
+                <a href="../../jboss/amq/amq.html">
+            
+                    
+                    A-MQ
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.8.1" data-path="../../jboss/amq/streams.html">
+            
+                <a href="../../jboss/amq/streams.html">
+            
+                    
+                    AMQ Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8.2" data-path="../../jboss/amq/install.html">
+            
+                <a href="../../jboss/amq/install.html">
+            
+                    
+                    AMQ 6.3 安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.9" >
+            
+                <a target="_blank" href="http://ksoong.org/agile-integration/">
+            
+                    
+                    敏捷集成
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.10" data-path="../../jboss/bpm/bpm.html">
+            
+                <a href="../../jboss/bpm/bpm.html">
+            
+                    
+                    BPM
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.10.1" data-path="../../jboss/bpm/install.html">
+            
+                <a href="../../jboss/bpm/install.html">
+            
+                    
+                    安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.11" data-path="../../jboss/secure/">
+            
+                <a href="../../jboss/secure/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <a target="_blank" href="https://mongocn.github.io">
+            
+                    
+                    DATA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../../solutions/">
+            
+                <a href="../../solutions/">
+            
+                    
+                    SOLUTIONS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../../solutions/abc-distribute-arch.html">
+            
+                <a href="../../solutions/abc-distribute-arch.html">
+            
+                    
+                    核心银行系统分布式架构转型
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../../about/">
+            
+                <a href="../../about/">
+            
+                    
+                    BUSINESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../../about/it-professions.html">
+            
+                <a href="../../about/it-professions.html">
+            
+                    
+                    PROFESSIONS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../../about/softskills.html">
+            
+                <a href="../../about/softskills.html">
+            
+                    
+                    SKILLS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >SELinux</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="security-enhanced-linux-selinux">Security Enhanced Linux (SELinux)</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</a>
+<ul class="sectlevel2">
+<li><a href="#__selinux">&#x4EC0;&#x4E48;&#x662F; SELinux</a></li>
+<li><a href="#_apache_selinux">Apache &#x670D;&#x52A1;&#x6709;&#x65E0; SELinux &#x4FDD;&#x62A4;&#x5BF9;&#x7167;</a></li>
+<li><a href="#_selinux">SELinux &#x4E0A;&#x4E0B;&#x6587;</a></li>
+<li><a href="#__z_selinux">-Z &#x8BBE;&#x7F6E; SELinux &#x4E0A;&#x4E0B;&#x6587;</a></li>
+<li><a href="#_selinux_2">SELinux &#x4E09;&#x79CD;&#x6A21;&#x5F0F;</a></li>
+<li><a href="#_selinux_3">SELinux &#x5E03;&#x5C14;&#x503C;</a></li>
+</ul>
+</li>
+<li><a href="#__selinux_2">&#x4FEE;&#x6539; SELinux &#x6A21;&#x5F0F;</a>
+<ul class="sectlevel2">
+<li><a href="#__selinux_3">&#x4FEE;&#x6539;&#x5F53;&#x524D;&#x7684; SELinux &#x6A21;&#x5F0F;</a></li>
+<li><a href="#__selinux_4">&#x8BBE;&#x7F6E;&#x9ED8;&#x8BA4; SELinux &#x6A21;&#x5F0F;</a></li>
+<li><a href="#__selinux_5">&#x4FEE;&#x6539; SELinux &#x6A21;&#x5F0F;&#x4E00;&#x822C;&#x6B65;&#x9AA4;</a></li>
+</ul>
+</li>
+<li><a href="#__selinux_6">&#x4FEE;&#x6539; SELinux &#x4E0A;&#x4E0B;&#x6587;</a>
+<ul class="sectlevel2">
+<li><a href="#__selinux_7">&#x521D;&#x59CB; SELinux &#x4E0A;&#x4E0B;&#x6587;</a></li>
+<li><a href="#__selinux_8">&#x4FEE;&#x6539;&#x6587;&#x4EF6;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;</a></li>
+<li><a href="#__selinux_9">&#x5B9A;&#x4E49; SELinux &#x9ED8;&#x8BA4;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x89C4;&#x5219;</a></li>
+<li><a href="#__httpd_web">&#x81EA;&#x5B9A;&#x4E49; httpd web &#x76EE;&#x5F55;</a></li>
+</ul>
+</li>
+<li><a href="#__selinux_10">&#x4FEE;&#x6539; SELinux &#x5E03;&#x5C14;&#x503C;</a>
+<ul class="sectlevel2">
+<li><a href="#_apache">Apache &#x8BBF;&#x95EE;&#x7528;&#x6237;&#x4E3B;&#x76EE;&#x5F55;</a></li>
+</ul>
+</li>
+<li><a href="#_selinux_4">SELinux &#x8FDB;&#x884C;&#x6545;&#x969C;&#x6392;&#x9664;</a>
+<ul class="sectlevel2">
+<li><a href="#_selinux_5">SELinux &#x95EE;&#x9898;&#x8FDB;&#x884C;&#x6545;&#x969C;&#x6392;&#x9664;&#x57FA;&#x672C;&#x6B65;&#x9AA4;</a></li>
+<li><a href="#__selinux_11">&#x67E5;&#x770B; SELinux &#x51B2;&#x7A81;&#x65E5;&#x5FD7;</a></li>
+</ul>
+</li>
+<li><a href="#_selinux_6">SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</a>
+<ul class="sectlevel2">
+<li><a href="#__selinux_12">&#x7BA1;&#x7406; SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</a></li>
+</ul>
+</li>
+<li><a href="#__web_82">&#x914D;&#x7F6E; Web &#x670D;&#x52A1;&#x76D1;&#x542C; 82 &#x7AEF;&#x53E3;</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__selinux">&#x4EC0;&#x4E48;&#x662F; SELinux</h3>
+<div class="paragraph">
+<p>Security Enhanced Linux (SELinux) &#x662F;&#x4E00;&#x4E2A;&#x989D;&#x5916;&#x7684;&#x7CFB;&#x7EDF;&#x5B89;&#x5168;&#x5C42;&#x3002;SELinux &#x7684;&#x4E3B;&#x8981;&#x76EE;&#x6807;&#x662F;&#x9632;&#x6B62;&#x5DF2;&#x906D;&#x6CC4;&#x9732;&#x7684;&#x7CFB;&#x7EDF;&#x670D;&#x52A1;&#x8BBF;&#x95EE;&#x7528;&#x6237;&#x6570;&#x636E;&#x3002;&#x5927;&#x591A;&#x6570; Linux &#x7BA1;&#x7406;&#x5458;&#x90FD;&#x719F;&#x6089;&#x6807;&#x51C6;&#x7684;&#x7528;&#x6237;/&#x7EC4;/&#x5176;&#x4ED6;&#x6743;&#x9650;&#x5B89;&#x5168;&#x6A21;&#x578B;&#x3002;&#x8FD9;&#x79CD;&#x57FA;&#x4E8E;&#x7528;&#x6237;&#x548C;&#x7EC4;&#x7684;&#x6A21;&#x578B;&#x79F0;&#x4E3A;&#x81EA;&#x7531;&#x51B3;&#x5B9A;&#x7684;&#x8BBF;&#x95EE;&#x63A7;&#x5236;&#x3002;SELinux &#x63D0;&#x4F9B;&#x53E6;&#x4E00;&#x5C42;&#x5B89;&#x5168;&#xFF0C;&#x5B83;<strong>&#x57FA;&#x4E8E;&#x5BF9;&#x8C61;&#x5E76;&#x7531;&#x66F4;&#x52A0;&#x590D;&#x6742;&#x7684;&#x89C4;&#x5219;&#x63A7;&#x5236;</strong>&#xFF0C;&#x79F0;&#x4E3A;<strong>&#x5F3A;&#x5236;&#x8BBF;&#x95EE;&#x63A7;&#x5236;</strong>&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apache_selinux">Apache &#x670D;&#x52A1;&#x6709;&#x65E0; SELinux &#x4FDD;&#x62A4;&#x5BF9;&#x7167;</h3>
+<div class="paragraph">
+<div class="title"><strong>&#x6CA1;&#x6709; SELinux &#x4FDD;&#x62A4;&#x7684; Apache &#x670D;&#x52A1;</strong></div>
+<p><span class="image"><img src="img/apache-no-selinux.png" alt="apache no selinux.png"></span></p>
+</div>
+<div class="paragraph">
+<div class="title"><strong>&#x5177;&#x6709; SELinux &#x4FDD;&#x62A4;&#x7684; Apache &#x670D;&#x52A1;</strong></div>
+<p><span class="image"><img src="img/apache-selinux-enforcing.png" alt="apache selinux enforcing.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x8981;&#x5141;&#x8BB8;&#x8FDC;&#x7A0B;&#x533F;&#x540D;&#x8BBF;&#x95EE; Web &#x670D;&#x52A1;&#x5668;&#xFF0C;&#x5FC5;&#x987B;&#x6253;&#x5F00;&#x9632;&#x706B;&#x5899;&#x7AEF;&#x53E3;&#x3002;&#x7136;&#x800C;&#xFF0C;&#x6076;&#x610F;&#x4EBA;&#x5458;&#x5374;&#x6709;&#x673A;&#x4F1A;&#x901A;&#x8FC7;&#x5B89;&#x5168;&#x6F0F;&#x6D1E;&#x4FB5;&#x5165;&#x7CFB;&#x7EDF;&#xFF0C;&#x800C;&#x4E14;&#x5982;&#x679C;&#x4ED6;&#x4EEC;&#x7834;&#x574F; Web &#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;&#xFF0C;&#x8FD8;&#x4F1A;&#x53D6;&#x5F97;&#x5176;&#x6743;&#x9650;&#xFF0C;&#x5373; apache &#x7528;&#x6237;&#x548C; apache &#x7EC4;&#x7684;&#x6743;&#x9650;&#x3002;&#x8BE5;&#x7528;&#x6237;/&#x7EC4;&#x5177;&#x6709;&#x5BF9;&#x6587;&#x6863;&#x6839;&#x76EE;&#x5F55; (/var/www/html) &#x7B49;&#x9879;&#x76EE;&#x7684;&#x8BFB;&#x53D6;&#x6743;&#x9650;&#xFF0C;&#x4EE5;&#x53CA;&#x5BF9; /tmp&#x3001;/var/tmp &#x548C;&#x6240;&#x6709;&#x4EBA;&#x5747;&#x53EF;&#x7F16;&#x5199;&#x7684;&#x4EFB;&#x4F55;&#x5176;&#x4ED6;&#x6587;&#x4EF6;/&#x76EE;&#x5F55;&#x7684;&#x5199;&#x5165;&#x6743;&#x9650;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selinux">SELinux &#x4E0A;&#x4E0B;&#x6587;</h3>
+<div class="paragraph">
+<p>SELinux &#x662F;&#x7528;&#x4E8E;&#x786E;&#x5B9A;&#x54EA;&#x4E2A;&#x8FDB;&#x7A0B;&#x53EF;&#x4EE5;&#x8BBF;&#x95EE;&#x54EA;&#x4E9B;&#x6587;&#x4EF6;&#x3001;&#x76EE;&#x5F55;&#x548C;&#x7AEF;&#x53E3;&#x7684;&#x4E00;&#x7EC4;&#x5B89;&#x5168;&#x89C4;&#x5219;&#x3002;&#x6BCF;&#x4E2A;&#x6587;&#x4EF6;&#x3001;&#x8FDB;&#x7A0B;&#x548C;&#x7AEF;&#x53E3;&#x90FD;&#x5177;&#x6709;&#x7279;&#x522B;&#x7684;&#x5B89;&#x5168;&#x6807;&#x7B7E;&#xFF0C;&#x79F0;&#x4E3A; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x3002;&#x4E0A;&#x4E0B;&#x6587;&#x662F;&#x4E00;&#x4E2A;&#x540D;&#x79F0;&#xFF0C;SELinux &#x7B56;&#x7565;&#x4F7F;&#x7528;&#x5B83;&#x6765;&#x786E;&#x5B9A;&#x67D0;&#x4E2A;&#x8FDB;&#x7A0B;&#x80FD;&#x5426;&#x8BBF;&#x95EE;&#x6587;&#x4EF6;&#x3001;&#x76EE;&#x5F55;&#x6216;&#x7AEF;&#x53E3;&#x3002;&#x9664;&#x975E;&#x663E;&#x5F0F;&#x89C4;&#x5219;&#x6388;&#x4E88;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#xFF0C;&#x5426;&#x5219;&#xFF0C;&#x5728;&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x7B56;&#x7565;&#x4E0D;&#x5141;&#x8BB8;&#x4EFB;&#x4F55;&#x4EA4;&#x4E92;&#x3002;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x5141;&#x8BB8;&#x89C4;&#x5219;&#xFF0C;&#x5219;&#x4E0D;&#x5141;&#x8BB8;&#x8BBF;&#x95EE;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>SELinux &#x6807;&#x7B7E;&#x5177;&#x6709;&#x591A;&#x79CD;&#x4E0A;&#x4E0B;&#x6587;&#xFF1A;&#x7528;&#x6237;&#x3001;&#x89D2;&#x8272;&#x3001;&#x7C7B;&#x578B;&#x548C;&#x654F;&#x611F;&#x5EA6;&#x3002;&#x76EE;&#x6807;&#x7B56;&#x7565;&#xFF08;&#x5373; Red Hat Enterprise Linux &#x4E2D;&#x542F;&#x7528;&#x7684;&#x9ED8;&#x8BA4;&#x7B56;&#x7565;&#xFF09;&#x4F1A;&#x6839;&#x636E;&#x7B2C;&#x4E09;&#x4E2A;&#x4E0A;&#x4E0B;&#x6587;&#xFF08;&#x5373;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#xFF09;&#x6765;&#x5236;&#x5B9A;&#x81EA;&#x5DF1;&#x7684;&#x89C4;&#x5219;&#x3002;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#x540D;&#x79F0;&#x901A;&#x5E38;&#x4EE5; _t &#x7ED3;&#x5C3E;&#x3002;Web &#x670D;&#x52A1;&#x5668;&#x7684;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#x662F; httpd_t&#x3002;&#x901A;&#x5E38;&#x4F4D;&#x4E8E; /var/www/html &#x4E2D;&#x7684;&#x6587;&#x4EF6;&#x548C;&#x76EE;&#x5F55;&#x7684;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#x662F; httpd_sys_content_t&#x3002;&#x901A;&#x5E38;&#x4F4D;&#x4E8E; /tmp &#x548C; /var/tmp &#x4E2D;&#x7684;&#x6587;&#x4EF6;&#x548C;&#x76EE;&#x5F55;&#x7684;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#x662F; tmp_t&#x3002;Web &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x53E3;&#x7684;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#x662F; http_port_t&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5B58;&#x5728;&#x67D0;&#x4E2A;&#x7B56;&#x7565;&#x89C4;&#x5219;&#xFF0C;&#x5176;&#x5141;&#x8BB8; Apache&#xFF08;&#x4F5C;&#x4E3A; httpd_t &#x8FD0;&#x884C;&#x7684; Web &#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;&#xFF09;&#x8BBF;&#x95EE;&#x4E0A;&#x4E0B;&#x6587;&#x901A;&#x5E38;&#x4F4D;&#x4E8E; /var/www/html &#x53CA;&#x5176;&#x4ED6; Web &#x670D;&#x52A1;&#x5668;&#x76EE;&#x5F55; (httpd_sys_content_t) &#x4E2D;&#x7684;&#x6587;&#x4EF6;&#x548C;&#x76EE;&#x5F55;&#x3002;&#x5BF9;&#x4E8E;&#x901A;&#x5E38;&#x4F4D;&#x4E8E; /tmp &#x548C; /var/tmp &#x4E2D;&#x7684;&#x6587;&#x4EF6;&#xFF0C;&#x7B56;&#x7565;&#x4E2D;&#x6CA1;&#x6709;&#x5141;&#x8BB8;&#x89C4;&#x5219;&#xFF0C;&#x56E0;&#x6B64;&#x4E0D;&#x5141;&#x8BB8;&#x8FDB;&#x884C;&#x8BBF;&#x95EE;&#x3002;&#x6709;&#x4E86; SELinux&#xFF0C;&#x6076;&#x610F;&#x7528;&#x6237;&#x5C31;&#x65E0;&#x6CD5;&#x8BBF;&#x95EE; /tmp &#x76EE;&#x5F55;&#x3002;SELinux &#x8FD8;&#x6709;&#x9002;&#x7528;&#x4E8E; NFS &#x548C; CIFS &#x7B49;&#x8FDC;&#x7A0B;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x7684;&#x89C4;&#x5219;&#xFF0C;&#x5C3D;&#x7BA1;&#x8FD9;&#x4E9B;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x4E0A;&#x7684;&#x6240;&#x6709;&#x6587;&#x4EF6;&#x90FD;&#x4F7F;&#x7528;&#x76F8;&#x540C;&#x7684;&#x4E0A;&#x4E0B;&#x6587;&#x6807;&#x7B7E;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__z_selinux">-Z &#x8BBE;&#x7F6E; SELinux &#x4E0A;&#x4E0B;&#x6587;</h3>
+<div class="paragraph">
+<p>&#x8BB8;&#x591A;&#x5904;&#x7406;&#x6587;&#x4EF6;&#x7684;&#x547D;&#x4EE4;&#x5177;&#x6709;&#x4E00;&#x4E2A;&#x7528;&#x4E8E;&#x663E;&#x793A;&#x6216;&#x8BBE;&#x7F6E; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x7684;&#x9009;&#x9879;&#xFF08;&#x901A;&#x5E38;&#x662F;-Z&#xFF09;&#x3002;&#x4F8B;&#x5982;&#xFF0C; ps&#x3001;ls&#x3001;cp &#x548C; mkdir &#x5168;&#x90FD;&#x4F7F;&#x7528; -Z &#x9009;&#x9879;&#x6765;&#x663E;&#x793A;&#x6216;&#x8BBE;&#x7F6E; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ps axZ
+LABEL                             PID TTY      STAT   TIME COMMAND
+system_u:system_r:init_t:s0         1 ?        Ss     0:09 /usr/lib/systemd/...
+system_u:system_r:kernel_t:s0       2 ?        S      0:00 [kthreadd]
+system_u:system_r:kernel_t:s0       3 ?        S      0:00 [ksoftirqd/0]
+[... Output omitted ...]
+# systemctl start httpd
+# ps -ZC httpd
+LABEL                             PID TTY          TIME CMD
+system_u:system_r:httpd_t:s0     1608 ?        00:00:05 httpd
+system_u:system_r:httpd_t:s0     1609 ?        00:00:00 httpd
+[... Output omitted ...]
+# ls -Z /home
+drwx------. root    root    system_u:object_r:lost_found_t:s0 lost+found
+drwx------. student student unconfined_u:object_r:user_home_dir_t:s0 student
+drwx------. visitor visitor unconfined_u:object_r:user_home_dir_t:s0 visitor
+# ls -Z /var/www
+drwxr-xr-x. root root system_u:object_r:httpd_sys_script_exec_t:s0 cgi-bin
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 error
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 html
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 icons</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selinux_2">SELinux &#x4E09;&#x79CD;&#x6A21;&#x5F0F;</h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 55.5555%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x6A21;&#x5F0F;</th>
+<th class="tableblock halign-left valign-top">&#x793A;&#x4F8B;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5F3A;&#x5236;&#x6A21;&#x5F0F;(Enforcing)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="image"><img src="img/apache-selinux-enforcing.png" alt="apache selinux enforcing.png"></span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5728;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x4E2D;&#xFF0C;SELinux &#x4E3B;&#x52A8;&#x62D2;&#x7EDD;&#x8BBF;&#x95EE;&#x5C1D;&#x8BD5;&#x8BFB;&#x53D6;&#x7C7B;&#x578B;&#x4E0A;&#x4E0B;&#x6587;&#x4E3A; tmp_t &#x7684;&#x6587;&#x4EF6;&#x7684; Web &#x670D;&#x52A1;&#x5668;&#x3002;&#x5728;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x4E2D;&#xFF0C;SELinux &#x4E0D;&#x4EC5;&#x8BB0;&#x5F55;&#x800C;&#x4E14;&#x63D0;&#x4F9B;&#x4FDD;&#x62A4;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;(Permissive)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="image"><img src="img/apache-selinux-permissive.png" alt="apache selinux permissive.png"></span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#x901A;&#x5E38;&#x7528;&#x4E8E;&#x5BF9;&#x95EE;&#x9898;&#x8FDB;&#x884C;&#x6545;&#x969C;&#x6392;&#x9664;&#x3002;&#x5728;&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#x4E2D;&#xFF0C;&#x5373;&#x4F7F;&#x6CA1;&#x6709;&#x663E;&#x5F0F;&#x89C4;&#x5219;&#xFF0C;SELinux &#x4E5F;&#x4F1A;&#x5141;&#x8BB8;&#x6240;&#x6709;&#x4EA4;&#x4E92;&#xFF0C;&#x800C;&#x4E14;&#x4F1A;&#x8BB0;&#x5F55;&#x5B83;&#x5728;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x4E2D;&#x62D2;&#x7EDD;&#x7684;&#x90A3;&#x4E9B;&#x4EA4;&#x4E92;&#x3002;&#x53EF;&#x4F7F;&#x7528;&#x6B64;&#x6A21;&#x5F0F;&#x6765;&#x6682;&#x65F6;&#x5141;&#x8BB8;&#x8BBF;&#x95EE; SELinux &#x6B63;&#x5728;&#x9650;&#x5236;&#x7684;&#x5185;&#x5BB9;&#x3002;&#x65E0;&#x9700;&#x91CD;&#x65B0;&#x542F;&#x52A8;&#x5373;&#x53EF;&#x5728;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x548C;&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#x4E4B;&#x95F4;&#x76F8;&#x4E92;&#x8F6C;&#x6362;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7981;&#x7528;&#x6A21;&#x5F0F;&#xFF08;Disabled&#xFF09;</p></td>
+<td class="tableblock halign-left valign-top"><div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7981;&#x7528;&#x6A21;&#x5F0F;&#x4F1A;&#x5B8C;&#x5168;&#x7981;&#x7528; SELinux&#x3002;&#x9700;&#x8981;&#x91CD;&#x65B0;&#x542F;&#x52A8;&#x7CFB;&#x7EDF;&#x624D;&#x80FD;&#x5F7B;&#x5E95;&#x7981;&#x7528; SELinux&#xFF0C;&#x6216;&#x662F;&#x4ECE;&#x7981;&#x7528;&#x6A21;&#x5F0F;&#x8F6C;&#x4E3A;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x6216;&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#x3002;&#x82E5;&#x51FA;&#x4E8E;&#x6545;&#x969C;&#x6392;&#x9664;&#x76EE;&#x7684;&#xFF0C;&#x53EF;&#x4F7F;&#x7528; SELinux &#x6A21;&#x5F0F;&#x6682;&#x65F6;&#x7981;&#x7528; SELinux &#x4FDD;&#x62A4;&#x3002;</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x6700;&#x597D;&#x4F7F;&#x7528;&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x5F7B;&#x5E95;&#x5173;&#x95ED; SELinux&#x3002;&#x539F;&#x56E0;&#x4E4B;&#x4E00;&#x5728;&#x4E8E;&#x5373;&#x4F7F;&#x5728;&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#x4E2D;&#xFF0C;&#x5185;&#x6838;&#x4E5F;&#x5C06;&#x6839;&#x636E;&#x9700;&#x8981;&#x81EA;&#x52A8;&#x7EF4;&#x62A4; SELinux &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6807;&#x7B7E;&#xFF0C;&#x4ECE;&#x800C;&#x907F;&#x514D;&#x4E3A;&#x4E86;&#x542F;&#x7528; SELinux &#x800C;&#x91CD;&#x542F;&#x7CFB;&#x7EDF;&#x65F6;&#xFF0C;&#x91CD;&#x65B0;&#x6807;&#x8BB0;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x6240;&#x5E26;&#x6765;&#x7684;&#x6602;&#x8D35;&#x8D39;&#x7528;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8981;&#x663E;&#x793A;&#x5F53;&#x524D;&#x4F7F;&#x7528;&#x7684;&#x6709;&#x6548; SELinux &#x6A21;&#x5F0F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getenforce
+Enforcing</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selinux_3">SELinux &#x5E03;&#x5C14;&#x503C;</h3>
+<div class="paragraph">
+<p>SELinux &#x5E03;&#x5C14;&#x503C;&#x662F;&#x66F4;&#x6539; SELinux &#x7B56;&#x7565;&#x884C;&#x4E3A;&#x7684;&#x5F00;&#x5173;&#x3002;SELinux &#x5E03;&#x5C14;&#x503C;&#x662F;&#x53EF;&#x4EE5;&#x542F;&#x7528;&#x6216;&#x7981;&#x7528;&#x7684;&#x89C4;&#x5219;&#x3002;&#x5B89;&#x5168;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; SELinux &#x5E03;&#x5C14;&#x503C;&#x6765;&#x6709;&#x9009;&#x62E9;&#x5730;&#x8C03;&#x6574;&#x7B56;&#x7565;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><code>getsebool</code> &#x547D;&#x4EE4;&#x7528;&#x4E8E;&#x663E;&#x793A; SELinux &#x5E03;&#x5C14;&#x503C;&#x53CA;&#x5176;&#x5F53;&#x524D;&#x503C;&#x3002;-a &#x9009;&#x9879;&#x53EF;&#x4F7F;&#x6B64;&#x547D;&#x4EE4;&#x5217;&#x51FA;&#x6240;&#x6709;&#x5E03;&#x5C14;&#x503C;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getsebool -a
+abrt_anon_write --&gt; off
+abrt_handle_event --&gt; off
+abrt_upload_watch_anon_write --&gt; on
+antivirus_can_scan_system --&gt; off
+antivirus_use_jit --&gt; off
+auditadm_exec_content --&gt; on
+authlogin_nsswitch_use_ldap --&gt; off
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__selinux_2">&#x4FEE;&#x6539; SELinux &#x6A21;&#x5F0F;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__selinux_3">&#x4FEE;&#x6539;&#x5F53;&#x524D;&#x7684; SELinux &#x6A21;&#x5F0F;</h3>
+<div class="paragraph">
+<p><code>setenforce</code> &#x547D;&#x4EE4;&#x4FEE;&#x6539;&#x5F53;&#x524D;&#x7684; SELinux &#x6A21;&#x5F0F;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getenforce
+Enforcing
+# setenforce
+usage:  setenforce [ Enforcing | Permissive | 1 | 0 ]
+# setenforce 0
+# getenforce
+Permissive
+# setenforce Enforcing
+# getenforce
+Enforcing</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x6682;&#x65F6;&#x6027;&#x8BBE;&#x7F6E; SELinux &#x6A21;&#x5F0F;&#x7684;&#x53E6;&#x4E00;&#x79CD;&#x505A;&#x6CD5;&#x662F;&#x5728;&#x542F;&#x52A8;&#x65F6;&#x5C06;&#x53C2;&#x6570;&#x4F20;&#x9012;&#x7ED9;&#x5185;&#x6838;&#x3002;&#x4F20;&#x9012;&#x5185;&#x6838;&#x53C2;&#x6570; <strong>enforcing=0</strong> &#x4F1A;&#x4F7F;&#x7CFB;&#x7EDF;&#x5728;&#x542F;&#x52A8;&#x65F6;&#x8FDB;&#x5165;&#x8BB8;&#x53EF;&#x6A21;&#x5F0F;&#x3002;&#x503C; 1 &#x5C06;&#x6307;&#x5B9A;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x3002;&#x53EF;&#x5728;&#x6307;&#x5B9A; <strong>selinux=0</strong> &#x53C2;&#x6570;&#x65F6;&#x7981;&#x7528; SELinux&#x3002;&#x503C; 1 &#x5C06;&#x542F;&#x7528; SELinux&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__selinux_4">&#x8BBE;&#x7F6E;&#x9ED8;&#x8BA4; SELinux &#x6A21;&#x5F0F;</h3>
+<div class="paragraph">
+<p>&#x786E;&#x5B9A;&#x5728;&#x542F;&#x52A8;&#x65F6;&#x4F7F;&#x7528;&#x54EA;&#x79CD; SELinux &#x6A21;&#x5F0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x662F; <code>/etc/selinux/config</code>&#x3002;&#x8BF7;&#x6CE8;&#x610F;&#xFF0C;&#x8BE5;&#x6587;&#x4EF6;&#x5305;&#x542B;&#x4E00;&#x4E9B;&#x6709;&#x7528;&#x7684;&#x6CE8;&#x91CA;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># This file controls the state of SELinux on the system.
+# SELINUX= can take one of these three values:
+#     enforcing - SELinux security policy is enforced.
+#     permissive - SELinux prints warnings instead of enforcing.
+#     disabled - No SELinux policy is loaded.
+SELINUX=enforcing
+# SELINUXTYPE= can take one of these two values:
+#     targeted - Targeted processes are protected,
+#     minimum - Modification of targeted policy. Only selected processes
+#               are protected.
+#     mls - Multi Level Security protection.
+SELINUXTYPE=targeted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x4F7F;&#x7528; <code>/etc/selinux/config</code> &#x66F4;&#x6539;&#x542F;&#x52A8;&#x65F6;&#x7684;&#x9ED8;&#x8BA4; SELinux &#x6A21;&#x5F0F;&#x3002;&#x5728;&#x4E0A;&#x8FF0;&#x793A;&#x4F8B;&#x4E2D;&#xFF0C;&#x5B83;&#x88AB;&#x8BBE;&#x7F6E;&#x4E3A;&#x5F3A;&#x5236;&#x6A21;&#x5F0F;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x4F20;&#x9012; <strong>selinux=</strong> &#x548C;/&#x6216; <strong>enforcing=</strong> &#x5185;&#x6838;&#x53C2;&#x6570;&#x4F1A;&#x8986;&#x76D6;&#x5728;<code>/etc/selinux/config</code> &#x4E2D;&#x6307;&#x5B9A;&#x7684;&#x4EFB;&#x4F55;&#x9ED8;&#x8BA4;&#x503C;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__selinux_5">&#x4FEE;&#x6539; SELinux &#x6A21;&#x5F0F;&#x4E00;&#x822C;&#x6B65;&#x9AA4;</h3>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x67E5;&#x770B;&#x9ED8;&#x8BA4; SELinux &#x7684;&#x6A21;&#x5F0F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getenforce
+Enforcing</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x4FEE;&#x6539;&#x9ED8;&#x8BA4; SELinux &#x7684;&#x6A21;&#x5F0F;&#x4E3A; Permissive&#xFF0C;&#x5E76;&#x91CD;&#x8D77;&#x4F7F;&#x751F;&#x6548;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># vim /etc/sysconfig/selinux
+# grep &apos;^SELINUX&apos; /etc/selinux/config
+SELINUX=permissive
+SELINUXTYPE=targeted
+# reboot</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x67E5;&#x770B; SELinux Permissive &#x6A21;&#x5F0F;&#x662F;&#x5426;&#x751F;&#x6548;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getenforce
+Permissive</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x4FEE;&#x6539;&#x9ED8;&#x8BA4; SELinux &#x6A21;&#x5F0F;&#x4E3A; Enforcing</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># vim /etc/sysconfig/selinux
+# grep &apos;^SELINUX&apos; /etc/selinux/config
+SELINUX=enforcing
+SELINUXTYPE=targeted</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x4FEE;&#x6539;&#x5F53;&#x524D; SELinux &#x6A21;&#x5F0F;&#x4E3A; Enforcing</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># setenforce 1
+# getenforce
+Enforcing</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__selinux_6">&#x4FEE;&#x6539; SELinux &#x4E0A;&#x4E0B;&#x6587;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__selinux_7">&#x521D;&#x59CB; SELinux &#x4E0A;&#x4E0B;&#x6587;</h3>
+<div class="paragraph">
+<p>&#x901A;&#x5E38;&#xFF0C;&#x6587;&#x4EF6;&#x7236;&#x76EE;&#x5F55;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x51B3;&#x5B9A;&#x8BE5;&#x6587;&#x4EF6;&#x7684;&#x521D;&#x59CB; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x3002;&#x7236;&#x76EE;&#x5F55;&#x7684;&#x4E0A;&#x4E0B;&#x6587;&#x4F1A;&#x5206;&#x914D;&#x7ED9;&#x65B0;&#x5EFA;&#x6587;&#x4EF6;&#x3002;&#x8FD9;&#x9002;&#x7528;&#x4E8E; <code>vim</code>&#x3001;<code>cp</code> &#x548C; <code>touch</code> &#x7B49;&#x547D;&#x4EE4;&#x3002;&#x4F46;&#x662F;&#xFF0C;&#x5982;&#x679C;&#x6587;&#x4EF6;&#x662F;&#x5728;&#x5176;&#x4ED6;&#x4F4D;&#x7F6E;&#x521B;&#x5EFA;&#x5E76;&#x4E14;&#x6743;&#x9650;&#x5F97;&#x4EE5;&#x4FDD;&#x7559;&#xFF08;&#x5982;&#x4F7F;&#x7528; <code>mv</code> &#x6216; <code>cp -a</code>&#xFF09;&#xFF0C;&#x90A3;&#x4E48;&#x539F;&#x59CB; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x5C06;&#x4E0D;&#x4F1A;&#x53D1;&#x751F;&#x66F4;&#x6539;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ls -Zd /var/www/html/
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 /var/www/html/
+# touch /var/www/html/index.html
+# ls -Z /var/www/html/index.html
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/index.html</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__selinux_8">&#x4FEE;&#x6539;&#x6587;&#x4EF6;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;</h3>
+<div class="paragraph">
+<p>&#x53EF;&#x4F7F;&#x7528;&#x4E24;&#x4E2A;&#x547D;&#x4EE4;&#x6765;&#x66F4;&#x6539;&#x6587;&#x4EF6;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;&#xFF1A;<code>chcon</code> &#x548C; <code>restorecon</code>&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>chcon</code> &#x547D;&#x4EE4;&#x5C06;&#x6587;&#x4EF6;&#x7684;&#x4E0A;&#x4E0B;&#x6587;&#x66F4;&#x6539;&#x6210;&#x5DF2;&#x6307;&#x5B9A;&#x4E3A;&#x8BE5;&#x547D;&#x4EE4;&#x53C2;&#x6570;&#x7684;&#x4E0A;&#x4E0B;&#x6587;&#x3002;-t &#x9009;&#x9879;&#x7ECF;&#x5E38;&#x53EA;&#x7528;&#x4E8E;&#x6307;&#x5B9A;&#x4E0A;&#x4E0B;&#x6587;&#x7684;&#x7C7B;&#x578B;&#x3002;</p>
+</li>
+<li>
+<p><code>restorecon</code> &#x547D;&#x4EE4;&#x662F;&#x66F4;&#x6539;&#x6587;&#x4EF6;&#x6216;&#x76EE;&#x5F55;&#x7684; SELinux &#x4E0A;&#x4E0B;&#x6587;&#x7684;&#x9996;&#x9009;&#x65B9;&#x6CD5;&#x3002;&#x4E0D;&#x540C;&#x4E8E; <code>chcon</code>&#xFF0C;&#x5728;&#x4F7F;&#x7528;&#x6B64;&#x547D;&#x4EE4;&#x65F6;&#xFF0C;&#x4E0D;&#x4F1A;&#x660E;&#x786E;&#x6307;&#x5B9A;&#x4E0A;&#x4E0B;&#x6587;&#x3002;&#x5B83;&#x4F7F;&#x7528; SELinux &#x7B56;&#x7565;&#x4E2D;&#x7684;&#x89C4;&#x5219;&#x6765;&#x786E;&#x5B9A;&#x5E94;&#x8BE5;&#x662F;&#x54EA;&#x79CD;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># mkdir /virtual
+# ls -Zd /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /virtual/
+
+# chcon -t httpd_sys_content_t /virtual
+# ls -Zd /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:httpd_sys_content_t:s0 /virtual/
+
+# restorecon -v /virtual
+restorecon reset /virtual context unconfined_u:object_r:httpd_sys_content_t:s0-&gt;unconfined_u:object_r:default_t:s0
+# ls -Zd /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /virtual/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__selinux_9">&#x5B9A;&#x4E49; SELinux &#x9ED8;&#x8BA4;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x89C4;&#x5219;</h3>
+<div class="paragraph">
+<p><code>semanage fcontext</code> &#x547D;&#x4EE4;&#x53EF;&#x7528;&#x4E8E;&#x663E;&#x793A;&#x6216;&#x4FEE;&#x6539; SELinux &#x9ED8;&#x8BA4;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x89C4;&#x5219;&#xFF0C;<code>restorecon</code> &#x547D;&#x4EE4;&#x7528;&#x6765;&#x8BBE;&#x7F6E;&#x9ED8;&#x8BA4;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x7684;&#x89C4;&#x5219;&#x3002;&#x5B83;&#x4F7F;&#x7528;&#x6269;&#x5C55;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x6765;&#x6307;&#x5B9A;&#x8DEF;&#x5F84;&#x548C;&#x6587;&#x4EF6;&#x540D;&#x3002;fcontext &#x89C4;&#x5219;&#x4E2D;&#x6700;&#x5E38;&#x7528;&#x7684;&#x6269;&#x5C55;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x662F; (/.*)?&#xFF0C;&#x8FD9;&#x610F;&#x5473;&#x7740;&#xFF1A;&#x201C;&#xFF08;&#x53EF;&#x9009;&#xFF09;&#x5339;&#x914D; / &#x540E;&#x8DDF;&#x4EFB;&#x610F;&#x6570;&#x91CF;&#x7684;&#x5B57;&#x7B26;&#x201D;&#x3002;&#x5B83;&#x5C06;&#x4F1A;&#x5339;&#x914D;&#x5728;&#x8868;&#x8FBE;&#x5F0F;&#x524D;&#x9762;&#x5217;&#x51FA;&#x7684;&#x76EE;&#x5F55;&#x5E76;&#x9012;&#x5F52;&#x5730;&#x5339;&#x914D;&#x8BE5;&#x76EE;&#x5F55;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x5185;&#x5BB9;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><code>restorecon</code> &#x547D;&#x4EE4;&#x662F; <code>policycoreutil</code> &#x8F6F;&#x4EF6;&#x5305;&#x7684;&#x4E00;&#x90E8;&#x5206;&#xFF1B;<code>semanage</code> &#x662F; <code>policycoreutil-python</code> &#x8F6F;&#x4EF6;&#x5305;&#x7684;&#x4E00;&#x90E8;&#x5206;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>semanage &#x8BBE;&#x5B9A;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># touch /tmp/file1 /tmp/file2
+# ls -Z /tmp/file*
+-rw-r--r--. root root unconfined_u:object_r:user_tmp_t:s0 /tmp/file1
+-rw-r--r--. root root unconfined_u:object_r:user_tmp_t:s0 /tmp/file2
+
+# mv /tmp/file1 /var/www/html/
+# cp /tmp/file2 /var/www/html/
+# ls -Z /var/www/html/file*
+-rw-r--r--. root root unconfined_u:object_r:user_tmp_t:s0 /var/www/html/file1
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file2
+
+# semanage fcontext -l
+# restorecon -Rv /var/www/
+restorecon reset /var/www/html/file1 context unconfined_u:object_r:user_tmp_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0
+# ls -Z /var/www/html/file*
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file1
+-rw-r--r--. root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/file2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>semanage &#x8BBE;&#x5B9A;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># mkdir /virtual
+# touch /virtual/index.html
+# ls -Zd /virtual/
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 /virtual/
+# ls -Z /virtual/
+-rw-r--r--. root root unconfined_u:object_r:default_t:s0 index.html
+
+# semanage fcontext -a -t httpd_sys_content_t &apos;/virtual(/.*)?&apos;
+# restorecon -RFvv /virtual
+restorecon reset /virtual context unconfined_u:object_r:default_t:s0-&gt;system_u:object_r:httpd_sys_content_t:s0
+restorecon reset /virtual/index.html context unconfined_u:object_r:default_t:s0-&gt;system_u:object_r:httpd_sys_content_t:s0
+# ls -Zd /virtual/
+drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 /virtual/
+# ls -Z /virtual/
+-rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 index.html</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__httpd_web">&#x81EA;&#x5B9A;&#x4E49; httpd web &#x76EE;&#x5F55;</h3>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x914D;&#x7F6E; Apache &#x7684;&#x7AD9;&#x70B9;&#x76EE;&#x5F55;&#xFF0C;&#x4E0D;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x7684;&#x6839;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># mkdir /custom
+# echo &apos;This is server0.&apos; &gt; /custom/index.html
+
+# vim /etc/httpd/conf/httpd.conf
+# grep custom /etc/httpd/conf/httpd.conf
+DocumentRoot &quot;/custom&quot;
+&lt;Directory &quot;/custom&quot;&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x542F;&#x52A8; httpd</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl restart httpd</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x8BBF;&#x95EE; <a href="http://localhost/index.html" class="bare" target="_blank">http://localhost/index.html</a></strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl http://localhost/index.html
+&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&apos;t have permission to access /index.html
+on this server.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x5B9A;&#x4E49;&#x4E00;&#x4E2A; SELinux &#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x89C4;&#x5219;&#xFF0C;&#x4EE5;&#x4FBF;&#x5C06; /custom &#x53CA;&#x5176;&#x76EE;&#x5F55;&#x4E2D;&#x6240;&#x6709;&#x6587;&#x4EF6;&#x7684;&#x4E0A;&#x4E0B;&#x6587;&#x7C7B;&#x578B;&#x8BBE;&#x7F6E;&#x4E3A; httpd_sys_content_t</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage fcontext -a -t httpd_sys_content_t &apos;/custom(/.*)?&apos;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x4F7F;&#x7528; restorecon &#x66F4;&#x6539;&#x5B83;&#x4EEC;&#x7684;&#x4E0A;&#x4E0B;&#x6587;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># restorecon -Rv /custom
+restorecon reset /custom context unconfined_u:object_r:default_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0
+restorecon reset /custom/index.html context unconfined_u:object_r:default_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6 - &#x8BBF;&#x95EE; <a href="http://localhost/index.html" class="bare" target="_blank">http://localhost/index.html</a></strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl http://localhost/index.html
+This is server0.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__selinux_10">&#x4FEE;&#x6539; SELinux &#x5E03;&#x5C14;&#x503C;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>SELinux &#x5E03;&#x5C14;&#x503C;&#x662F;&#x66F4;&#x6539; SELinux &#x7B56;&#x7565;&#x884C;&#x4E3A;&#x7684;&#x5F00;&#x5173;&#x3002;SELinux &#x5E03;&#x5C14;&#x503C;&#x662F;&#x53EF;&#x4EE5;&#x542F;&#x7528;&#x6216;&#x7981;&#x7528;&#x7684;&#x89C4;&#x5219;&#x3002;&#x5B89;&#x5168;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; SELinux &#x5E03;&#x5C14;&#x503C;&#x6765;&#x6709;&#x9009;&#x62E9;&#x5730;&#x8C03;&#x6574;&#x7B56;&#x7565;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>selinux-policy-devel &#x8F6F;&#x4EF6;&#x5305;&#x63D0;&#x4F9B;&#x591A;&#x4E2A;&#x624B;&#x518C;&#x9875;&#xFF08;&#x5373; *_selinux(8)&#xFF09;&#xFF0C;&#x53EF;&#x7528;&#x4E8E;&#x89E3;&#x91CA;&#x4E0D;&#x7528;&#x670D;&#x52A1;&#x7684;&#x5E03;&#x5C14;&#x503C;&#x7684;&#x542B;&#x4E49;&#x3002;&#x5982;&#x679C;&#x5DF2;&#x5B89;&#x88C5;&#x6B64;&#x8F6F;&#x4EF6;&#x5305;&#xFF0C;&#x5219; man -k &apos;_selinux&apos; &#x547D;&#x4EE4;&#x4F1A;&#x5217;&#x51FA;&#x8FD9;&#x4E9B;&#x6587;&#x6863;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getsebool</code> &#x547D;&#x4EE4;&#x7528;&#x4E8E;&#x663E;&#x793A; SELinux &#x5E03;&#x5C14;&#x503C;</p>
+</li>
+<li>
+<p><code>setsebool</code> &#x7528;&#x4E8E;&#x4FEE;&#x6539; SELinux &#x5E03;&#x5C14;&#x503C;&#x3002;</p>
+</li>
+<li>
+<p><code>setsebool -P</code> &#x4FEE;&#x6539; SELinux &#x7B56;&#x7565;&#xFF0C;&#x5E76;&#x4F7F;&#x4FEE;&#x6539;&#x6C38;&#x4E45;&#x4FDD;&#x7559;&#x3002;</p>
+</li>
+<li>
+<p><code>semanage boolean -l</code> &#x5C06;&#x663E;&#x793A;&#x5E03;&#x5C14;&#x503C;&#x662F;&#x5426;&#x4E3A;&#x6C38;&#x4E45;&#x503C;&#xFF0C;&#x5E76;&#x63D0;&#x4F9B;&#x8BE5;&#x5E03;&#x5C14;&#x503C;&#x7684;&#x7B80;&#x77ED;&#x63CF;&#x8FF0;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getsebool -a
+
+# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --&gt; off
+# setsebool httpd_enable_homedirs on
+# semanage boolean -l | grep httpd_enable_homedirs
+httpd_enable_homedirs          (on   ,  off)  Allow httpd to enable homedirs
+# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --&gt; on
+
+# setsebool -P httpd_enable_homedirs on
+# semanage boolean -l | grep httpd_enable_homedirs
+httpd_enable_homedirs          (on   ,   on)  Allow httpd to enable homedirs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8981;&#x4EC5;&#x5217;&#x51FA;&#x7ECF;&#x8FC7;&#x672C;&#x5730;&#x4FEE;&#x6539;&#x7684;&#x7684;SELinux&#x5E03;&#x5C14;&#x503C;&#x72B6;&#x6001;&#xFF08;&#x4E0E;&#x7B56;&#x7565;&#x4E2D;&#x9ED8;&#x8BA4;&#x503C;&#x4E0D;&#x540C;&#x7684;&#x4EFB;&#x4F55;&#x8BBE;&#x7F6E;&#xFF09;&#xFF0C;&#x53EF;&#x4F7F;&#x7528;&#x547D;&#x4EE4; <code>semanage boolean -l -C</code>&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage boolean -l -C
+SELinux boolean                State  Default Description
+
+httpd_enable_homedirs          (on   ,   on)  Allow httpd to enable homedirs</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apache">Apache &#x8BBF;&#x95EE;&#x7528;&#x6237;&#x4E3B;&#x76EE;&#x5F55;</h3>
+<div class="paragraph">
+<p>Apache &#x53EF;&#x4EE5;&#x53D1;&#x5E03;&#x5728;&#x7528;&#x6237;&#x4E3B;&#x76EE;&#x5F55;&#x4E2D;&#x6258;&#x7BA1;&#x7684; Web &#x5185;&#x5BB9;&#xFF0C;&#x4F46;&#x662F; SELinux &#x9ED8;&#x8BA4;&#x963B;&#x6B62;&#x6B64;&#x64CD;&#x4F5C;&#x3002;&#x672C;&#x90E8;&#x5206;&#x4E07;&#x5E73;&#x7C73;&#x5C06;&#x5BF9;&#x5141;&#x8BB8; Apache &#x8BBF;&#x95EE;&#x7528;&#x6237;&#x4E3B;&#x76EE;&#x5F55;&#xFF0C;&#x901A;&#x8FC7;&#x4FEE;&#x6539; SELinux &#x5E03;&#x5C14;&#x503C;&#x6765;&#x8FDB;&#x884C;&#x8C03;&#x6574;&#x6216;&#x4FEE;&#x6539;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x542F;&#x7528;&#x5141;&#x8BB8;&#x7528;&#x6237;&#x4ECE;&#x5176;&#x4E3B;&#x76EE;&#x5F55;&#x53D1;&#x5E03; Web &#x5185;&#x5BB9;&#x7684; Apache &#x529F;&#x80FD;&#x3002;&#x7F16;&#x8F91; /etc/httpd/conf.d/userdir.conf &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x5E76;&#x4F7F;&#x7528; UserDir &#x6307;&#x4EE4;&#x66F4;&#x6539;&#x884C;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># vim /etc/httpd/conf.d/userdir.conf
+# grep &apos;^ *UserDir&apos; /etc/httpd/conf.d/userdir.conf
+    UserDir public_html</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x91CD;&#x542F; Apache Web &#x670D;&#x52A1;&#x5668;&#xFF0C;&#x4EE5;&#x4F7F;&#x66F4;&#x6539;&#x751F;&#x6548;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl restart httpd.service &amp;&amp; systemctl status httpd.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x5728; student &#x7528;&#x6237;&#x4E0B;&#xFF0C;&#x521B;&#x5EFA;&#x4E00;&#x4E9B;&#x4F1A;&#x4ECE;&#x7528;&#x6237;&#x4E3B;&#x76EE;&#x5F55;&#x53D1;&#x5E03;&#x7684; Web &#x5185;&#x5BB9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mkdir ~/public_html
+$ echo &apos;This is student content on server0.&apos; &gt; ~/public_html/index.html
+$ chmod 711 ~</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x6D4B;&#x8BD5;&#x8BBF;&#x95EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ curl http://localhost/~student/index.html</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x60A8;&#x5C06;&#x4F1A;&#x5F97;&#x5230;&#x4E00;&#x4E2A;&#x9519;&#x8BEF;&#x6D88;&#x606F;&#xFF0C;&#x63D0;&#x793A;&#x60A8;&#x4E0D;&#x5177;&#x6709;&#x8BBF;&#x95EE;&#x8BE5;&#x6587;&#x4EF6;&#x7684;&#x6743;&#x9650;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x4F7F;&#x7528; getsebool &#x547D;&#x4EE4;&#x67E5;&#x770B;&#x662F;&#x5426;&#x5B58;&#x5728;&#x4EFB;&#x4F55;&#x9650;&#x5236;&#x8BBF;&#x95EE;&#x4E3B;&#x76EE;&#x5F55;&#x7684;&#x5E03;&#x5C14;&#x503C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ getsebool -a | grep home
+httpd_enable_homedirs --&gt; off</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6 - &#x4F7F;&#x7528; setsebool &#x6C38;&#x4E45;&#x542F;&#x7528;&#x5BF9;&#x4E3B;&#x76EE;&#x5F55;&#x7684;&#x8BBF;&#x95EE;&#x6743;&#x9650;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># setsebool -P httpd_enable_homedirs on</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7 - &#x6D4B;&#x8BD5;&#x8BBF;&#x95EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl http://localhost/~student/index.html
+This is student content on server0.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_selinux_4">SELinux &#x8FDB;&#x884C;&#x6545;&#x969C;&#x6392;&#x9664;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_selinux_5">SELinux &#x95EE;&#x9898;&#x8FDB;&#x884C;&#x6545;&#x969C;&#x6392;&#x9664;&#x57FA;&#x672C;&#x6B65;&#x9AA4;</h3>
+<div class="paragraph">
+<p>&#x5F53; SELinux &#x963B;&#x6B62;&#x8BBF;&#x95EE;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x7684;&#x6587;&#x4EF6;&#x65F6;&#xFF0C;&#x5E94;&#x6267;&#x884C;&#x4EC0;&#x4E48;&#x64CD;&#x4F5C;&#xFF1F;&#x5982;&#x679C;&#x53D1;&#x751F;&#x6B64;&#x60C5;&#x51B5;&#xFF0C;&#x5E94;&#x8BE5;&#x91C7;&#x53D6;&#x4E00;&#x7CFB;&#x5217;&#x7684;&#x6B65;&#x9AA4;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x5728;&#x8003;&#x8651;&#x505A;&#x4EFB;&#x4F55;&#x8C03;&#x6574;&#x4E4B;&#x524D;&#xFF0C;&#x5E94;&#x4E86;&#x89E3;&#x5230; SELinux &#x7981;&#x6B62;&#x610F;&#x56FE;&#x8BBF;&#x95EE;&#x7684;&#x8FD9;&#x4E00;&#x505A;&#x6CD5;&#x4E5F;&#x8BB8;&#x975E;&#x5E38;&#x6B63;&#x786E;&#x3002;&#x5F53; Web &#x670D;&#x52A1;&#x5668;&#x5C1D;&#x8BD5;&#x8BBF;&#x95EE; /home &#x4E2D;&#x7684;&#x6587;&#x4EF6;&#x65F6;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x6237;&#x5E76;&#x672A;&#x53D1;&#x5E03; Web &#x5185;&#x5BB9;&#xFF0C;&#x5219;&#x53EF;&#x80FD;&#x8868;&#x660E;&#x670D;&#x52A1;&#x906D;&#x5165;&#x4FB5;&#x3002;&#x5982;&#x679C;&#x5DF2;&#x6388;&#x4E88;&#x8BBF;&#x95EE;&#x6743;&#x9650;&#xFF0C;&#x5219;&#x9700;&#x8981;&#x91C7;&#x53D6;&#x5176;&#x4ED6;&#x6B65;&#x9AA4;&#x6765;&#x89E3;&#x51B3;&#x6B64;&#x95EE;&#x9898;&#x3002;</p>
+</li>
+<li>
+<p>&#x6700;&#x5E38;&#x89C1;&#x7684; SELinux &#x95EE;&#x9898;&#x662F;&#x4F7F;&#x7528;&#x4E0D;&#x6B63;&#x786E;&#x7684;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x3002;&#x6B64;&#x95EE;&#x9898;&#x4F1A;&#x5728;&#x4EE5;&#x4E0B;&#x60C5;&#x51B5;&#x4E2D;&#x53D1;&#x751F;&#xFF1A;&#x5373;&#xFF0C;&#x4F7F;&#x7528;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x4E0A;&#x4E0B;&#x6587;&#x5728;&#x67D0;&#x4E2A;&#x4F4D;&#x7F6E;&#x521B;&#x5EFA;&#x4E86;&#x6587;&#x4EF6;&#xFF0C;&#x800C;&#x8BE5;&#x6587;&#x4EF6;&#x53C8;&#x88AB;&#x79FB;&#x81F3;&#x9884;&#x671F;&#x4F1A;&#x4F7F;&#x7528;&#x5176;&#x4ED6;&#x4E0A;&#x4E0B;&#x6587;&#x7684;&#x5730;&#x65B9;&#x3002;&#x5728;&#x5927;&#x591A;&#x6570;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x8FD0;&#x884C; <strong>restorecon</strong> &#x5C06;&#x4F1A;&#x66F4;&#x6B63;&#x6B64;&#x95EE;&#x9898;&#x3002;&#x4EE5;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x66F4;&#x6B63;&#x95EE;&#x9898;&#x5BF9;&#x7CFB;&#x7EDF;&#x5269;&#x4F59;&#x90E8;&#x5206;&#x7684;&#x5B89;&#x5168;&#x6027;&#x5177;&#x6709;&#x975E;&#x5E38;&#x5C0F;&#x7684;&#x5F71;&#x54CD;&#x3002;</p>
+</li>
+<li>
+<p>&#x5BF9;&#x4E8E;&#x4E25;&#x82DB;&#x9650;&#x5236;&#x6027;&#x8BBF;&#x95EE;&#x7684;&#x53E6;&#x4E00;&#x4E2A;&#x8865;&#x6551;&#x63AA;&#x65BD;&#x53EF;&#x4EE5;&#x662F;&#x8C03;&#x6574;&#x5E03;&#x5C14;&#x503C;&#x3002;&#x4F8B;&#x5982;&#xFF0C;ftpd_anon_write &#x5E03;&#x5C14;&#x503C;&#x63A7;&#x5236;&#x533F;&#x540D; FTP &#x7528;&#x6237;&#x80FD;&#x5426;&#x4E0A;&#x4F20;&#x6587;&#x4EF6;&#x3002;&#x5982;&#x679C;&#x5E0C;&#x671B;&#x5141;&#x8BB8;&#x533F;&#x540D; FTP &#x7528;&#x6237;&#x4E0A;&#x4F20;&#x6587;&#x4EF6;&#x81F3;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x5219;&#x5FC5;&#x987B;&#x542F;&#x7528;&#x6B64;&#x5E03;&#x5C14;&#x503C;&#x3002;&#x8C03;&#x6574;&#x5E03;&#x5C14;&#x503C;&#x65F6;&#x9700;&#x683C;&#x5916;&#x8C28;&#x614E;&#xFF0C;&#x56E0;&#x4E3A;&#x5E03;&#x5C14;&#x503C;&#x4F1A;&#x5BF9;&#x7CFB;&#x7EDF;&#x7684;&#x5B89;&#x5168;&#x6027;&#x9020;&#x6210;&#x5E7F;&#x6CDB;&#x5F71;&#x54CD;&#x3002;</p>
+</li>
+<li>
+<p>SELinux &#x7B56;&#x7565;&#x53EF;&#x80FD;&#x5B58;&#x5728;&#x963B;&#x6B62;&#x5408;&#x6CD5;&#x8BBF;&#x95EE;&#x7684;&#x6F0F;&#x6D1E;&#x3002;&#x7531;&#x4E8E; SELinux &#x6280;&#x672F;&#x5DF2;&#x7ECF;&#x6210;&#x719F;&#xFF0C;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#x6781;&#x5C11;&#x53D1;&#x751F;&#x3002;&#x4E00;&#x65E6;&#x660E;&#x786E;&#x4E86;&#x67D0;&#x4E2A;&#x7B56;&#x7565;&#x6F0F;&#x6D1E;&#xFF0C;&#x8BF7;&#x63D0;&#x4EA4; BUG &#x6C47;&#x62A5;&#x6B64;&#x6F0F;&#x6D1E;&#xFF0C;&#x4EE5;&#x4FBF;&#x95EE;&#x9898;&#x5F97;&#x5230;&#x89E3;&#x51B3;&#x3002;</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__selinux_11">&#x67E5;&#x770B; SELinux &#x51B2;&#x7A81;&#x65E5;&#x5FD7;</h3>
+<div class="paragraph">
+<p>&#x5B89;&#x88C5; <code>setroubleshoot-server</code> &#x5305;&#xFF0C;&#x4EE5;&#x4FBF;&#x5C06; SELinux &#x6D88;&#x606F;&#x53D1;&#x9001;&#x5230; /var/log/messages&#x3002;<code>setroubleshoot-server</code> &#x4FA6;&#x542C; /var/log/audit/audit.log &#x4E2D;&#x7684;&#x5BA1;&#x6838;&#x6D88;&#x606F;&#xFF0C;&#x5E76;&#x53D1;&#x9001;&#x7B80;&#x77ED;&#x6458;&#x8981;&#x5230; /var/log/messages&#x3002; &#x8BE5;&#x6458;&#x8981;&#x5305;&#x62EC; SELinux &#x51B2;&#x7A81;&#x7684;&#x552F;&#x4E00;&#x6807;&#x8BC6;&#x7B26; (UUID)&#xFF0C;&#x53EF;&#x7528;&#x4E8E;&#x6536;&#x96C6;&#x66F4;&#x591A;&#x4FE1;&#x606F;&#x3002;sealert -l UUID &#x53EF;&#x7528;&#x4E8E;&#x751F;&#x6210;&#x7279;&#x5B9A;&#x4E8B;&#x4EF6;&#x7684;&#x62A5;&#x544A;&#x3002; sealert -a /var/log/audit/audit.log &#x7528;&#x4E8E;&#x751F;&#x6210;&#x8BE5;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x4E8B;&#x4EF6;&#x7684;&#x62A5;&#x544A;&#x3002;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_selinux_6">SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>SELinux &#x4E0D;&#x4EC5;&#x4EC5;&#x662F;&#x8FDB;&#x884C;&#x6587;&#x4EF6;&#x548C;&#x8FDB;&#x7A0B;&#x6807;&#x8BB0;&#x3002;SELinux &#x7B56;&#x7565;&#x8FD8;&#x4E25;&#x683C;&#x5B9E;&#x65BD;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x3002;SELinux &#x7528;&#x6765;&#x63A7;&#x5236;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x7684;&#x5176;&#x4E2D;&#x4E00;&#x79CD;&#x65B9;&#x6CD5;&#x662F;&#x6807;&#x8BB0;&#x7F51;&#x7EDC;&#x7AEF;&#x53E3;&#xFF1B;&#x4F8B;&#x5982;&#xFF0C;&#x5728; targeted &#x7B56;&#x7565;&#x4E2D;&#xFF0C;&#x7AEF;&#x53E3; <strong>22/TCP</strong> &#x5177;&#x6709;&#x6807;&#x7B7E; <strong>ssh_port_t</strong> &#x4E0E;&#x5176;&#x76F8;&#x5173;&#x8054;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5F53;&#x67D0;&#x4E2A;&#x8FDB;&#x7A0B;&#x5E0C;&#x671B;&#x4FA6;&#x542C;&#x7AEF;&#x53E3;&#x65F6;&#xFF0C;SELinux &#x5C06;&#x68C0;&#x67E5;&#x662F;&#x5426;&#x5141;&#x8BB8;&#x4E0E;&#x8BE5;&#x8FDB;&#x7A0B;&#xFF08;&#x57DF;&#xFF09;&#x76F8;&#x5173;&#x8054;&#x7684;&#x6807;&#x7B7E;&#x7ED1;&#x5B9A;&#x8BE5;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x3002;&#x8FD9;&#x53EF;&#x4EE5;&#x963B;&#x6B62;&#x6076;&#x610F;&#x670D;&#x52A1;&#x63A7;&#x5236;&#x672C;&#x5E94;&#x7531;&#x5176;&#x4ED6;&#xFF08;&#x5408;&#x6CD5;&#xFF09;&#x7F51;&#x7EDC;&#x670D;&#x52A1;&#x4F7F;&#x7528;&#x7684;&#x7AEF;&#x53E3;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="__selinux_12">&#x7BA1;&#x7406; SELinux &#x7AEF;&#x53E3;&#x6807;&#x8BB0;</h3>
+<div class="paragraph">
+<p>&#x6BCF;&#x5F53;&#x7BA1;&#x7406;&#x5458;&#x51B3;&#x5B9A;&#x5728;&#x975E;&#x6807;&#x51C6;&#x7AEF;&#x53E3;&#x4E0A;&#x8FD0;&#x884C;&#x670D;&#x52A1;&#x65F6;&#xFF0C;SELinux &#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x90FD;&#x5F88;&#x6709;&#x53EF;&#x80FD;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#x3002;&#x5728;&#x67D0;&#x4E9B;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;targeted &#x7B56;&#x7565;&#x5DF2;&#x7ECF;&#x901A;&#x8FC7;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x7684;&#x7C7B;&#x578B;&#x6807;&#x8BB0;&#x4E86;&#x7AEF;&#x53E3;&#xFF1B;&#x4F8B;&#x5982;&#xFF0C;&#x7531;&#x4E8E;&#x7AEF;&#x53E3; 8008/TCP &#x901A;&#x5E38;&#x7528;&#x4E8E; Web &#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#xFF0C;&#x6B64;&#x7AEF;&#x53E3;&#x5DF2;&#x4F7F;&#x7528; http_port_t&#xFF08;Web &#x670D;&#x52A1;&#x5668;&#x7684;&#x9ED8;&#x8BA4;&#x7AEF;&#x53E3;&#x7C7B;&#x578B;&#xFF09;&#x8FDB;&#x884C;&#x6807;&#x8BB0;&#x3002;</p>
+</div>
+<div class="sect3">
+<h4 id="___2">&#x4FA6;&#x542C;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</h4>
+<div class="paragraph">
+<p>&#x8981;&#x83B7;&#x53D6;&#x6240;&#x6709;&#x5F53;&#x524D;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x5206;&#x914D;&#x7684;&#x6982;&#x8FF0;&#xFF0C;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; semanage &#x547D;&#x4EE4;&#x7684; port &#x5B50;&#x547D;&#x4EE4;&#x3002;-l &#x9009;&#x9879;&#x5C06;&#x4EE5;&#x4E0B;&#x5217;&#x5F62;&#x5F0F;&#x5217;&#x51FA;&#x6240;&#x6709;&#x5F53;&#x524D;&#x5206;&#x914D;:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">port_label_t     tcp|udp    comma,separated,list,of,ports</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8981;&#x4EC5;&#x67E5;&#x770B;&#x5BF9;&#x9ED8;&#x8BA4;&#x7B56;&#x7565;&#x7684;&#x672C;&#x5730;&#x66F4;&#x6539;&#xFF0C;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x5728;&#x6B64;&#x547D;&#x4EE4;&#x4E2D;&#x6DFB;&#x52A0; -l &#x9009;&#x9879;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x6240;&#x6709;&#x4FA6;&#x542C;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -l
+SELinux Port Type              Proto    Port Number
+
+afs3_callback_port_t           tcp      7001
+afs3_callback_port_t           udp      7001
+afs_bos_port_t                 udp      7007
+afs_fs_port_t                  tcp      2040
+afs_fs_port_t                  udp      7000, 7005
+afs_ka_port_t                  udp      7004
+....</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x4E2A;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x53EF;&#x80FD;&#x4F1A;&#x5728;&#x8F93;&#x51FA;&#x4E2D;&#x51FA;&#x73B0;&#x4E24;&#x6B21;&#xFF0C;&#x4E00;&#x6B21;&#x662F;&#x9488;&#x5BF9; TCP&#xFF0C;&#x4E00;&#x6B21;&#x662F;&#x9488;&#x5BF9; UDP&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___3">&#x7BA1;&#x7406;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</h4>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x4F7F;&#x7528; semanage &#x6765;&#x5206;&#x914D;&#x65B0;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#xFF0C;&#x5220;&#x9664;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x6216;&#x4FEE;&#x6539;&#x73B0;&#x6709;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x3002;</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EA;&#x80FD;&#x5220;&#x9664;&#x6216;&#x4FEE;&#x6539;&#x672C;&#x5730;&#x4FEE;&#x6539;&#x5185;&#x5BB9;&#x3002;&#x8981;&#x5141;&#x8BB8;&#x67D0;&#x4E2A;&#x670D;&#x52A1;&#x7ED1;&#x5B9A;&#x5230;&#x901A;&#x5E38;&#x4E0E;&#x53E6;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x76F8;&#x5173;&#x8054;&#x7684;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#xFF0C;&#x5FC5;&#x987B;&#x7F16;&#x5199;&#x4E00;&#x4E2A;&#x5C0F;&#x578B;&#x7B56;&#x7565;&#x6A21;&#x5757;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&#x8981;&#x5411;&#x73B0;&#x6709;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#xFF08;&#x7C7B;&#x578B;&#xFF09;&#x4E2D;&#x6DFB;&#x52A0;&#x7AEF;&#x53E3;&#xFF0C;&#x8BF7;&#x4F7F;&#x7528;&#x4EE5;&#x4E0B;&#x8BED;&#x6CD5;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">semanage port -a -t port_label -p tcp|udp PORTNUMBER</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___4">&#x5220;&#x9664;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;</h4>
+<div class="paragraph">
+<p>&#x5220;&#x9664;&#x81EA;&#x5B9A;&#x4E49;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x7684;&#x8BED;&#x6CD5;&#x4E0E;&#x6DFB;&#x52A0;&#x7AEF;&#x53E3;&#x6807;&#x7B7E;&#x7684;&#x8BED;&#x6CD5;&#x76F8;&#x540C;&#xFF0C;&#x4F46;&#x4E0D;&#x662F;&#x4F7F;&#x7528; -a &#x9009;&#x9879;&#xFF08;&#x8868;&#x793A;&#x6DFB;&#x52A0;&#xFF09;&#xFF0C;&#x800C;&#x662F;&#x4F7F;&#x7528; -d &#x9009;&#x9879;&#xFF08;&#x8868;&#x793A;&#x5220;&#x9664;&#xFF09;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;&#x5220;&#x9664;&#x7AEF;&#x53E3; 71/TCP &#x4E0E; gopher_port_t &#x7684;&#x7ED1;&#x5B9A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -d -t gopher_port_t -p tcp 71</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___5">&#x4FEE;&#x6539;&#x7AEF;&#x53E3;&#x7ED1;&#x5B9A;</h4>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x7BA1;&#x7406;&#x5458;&#x610F;&#x5916;&#x4E3A;&#x7AEF;&#x53E3;&#x5206;&#x914D;&#x4E86;&#x9519;&#x8BEF;&#x7C7B;&#x578B;&#xFF0C;&#x6216;&#x8005;&#x8981;&#x6C42;&#x5DF2;&#x66F4;&#x6539;&#xFF0C;&#x5219;&#x53EF;&#x4EE5;&#x4FEE;&#x6539;&#x4E0E;&#x7AEF;&#x53E3;&#x76F8;&#x5173;&#x8054;&#x7684;&#x6807;&#x7B7E;&#x3002;&#x8FD9;&#x79CD;&#x6D41;&#x7A0B;&#x6BD4;&#x5220;&#x9664;&#x65E7;&#x7ED1;&#x5B9A;&#x5E76;&#x6DFB;&#x52A0;&#x65B0;&#x7ED1;&#x5B9A;&#x66F4;&#x9AD8;&#x6548;&#x3002;&#x4FEE;&#x6539;&#x64CD;&#x4F5C;&#x9700;&#x8981; -m &#x9009;&#x9879;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;&#x5C06;&#x7AEF;&#x53E3; 71/TCP &#x4ECE; gopher_port_t &#x4FEE;&#x6539;&#x4E3A; http_port_t&#xFF0C;&#x7BA1;&#x7406;&#x5458;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x4EE5;&#x4E0B;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -m -t http_port_t -p tcp 71</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__web_82">&#x914D;&#x7F6E; Web &#x670D;&#x52A1;&#x76D1;&#x542C; 82 &#x7AEF;&#x53E3;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x9700;&#x6C42;&#x914D;&#x7F6E;  Web &#x670D;&#x52A1;&#x76D1;&#x542C; 82 &#x7AEF;&#x53E3;&#xFF0C;&#x5E76;&#x4E14;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x53EF;&#x4EE5;&#x8BBF;&#x95EE;&#x6B64;&#x670D;&#x52A1;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1 - &#x5B89;&#x88C5;&#x5305;&#x5E76;&#x521D;&#x59CB;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># yum -y install httpd httpd-manual
+# sed -i &apos;/^Listen/s/^.*$/Listen 82/&apos; /etc/httpd/conf/httpd.conf
+#cat &gt; /var/www/html/index.html &lt;&lt; EOF
+Hello
+EOF</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2 - &#x786E;&#x4FDD; SELinux, Firewall &#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># getenforce
+Enforcing
+
+# semanage port -l | grep http_port
+http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+
+# systemctl is-active firewalld.service
+active</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3 - &#x542F;&#x52A8; httpd.service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># systemctl start httpd.service
+Job for httpd.service failed. See &apos;systemctl status httpd.service&apos; and &apos;journalctl -xn&apos; for details.
+
+# systemctl status httpd.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4 - &#x68C0;&#x67E5; SELinux &#x662F;&#x5426;&#x5728;&#x963B;&#x6B62; httpd &#x7ED1;&#x5B9A;&#x5230;&#x7AEF;&#x53E3; 82/TCP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># sealert -a /var/log/audit/audit.log
+100% done&apos;list&apos; object has no attribute &apos;split&apos;
+100% done
+found 1 alerts in /var/log/audit/audit.log
+--------------------------------------------------------------------------------
+
+SELinux is preventing /usr/sbin/httpd from name_bind access on the tcp_socket .
+
+*****  Plugin bind_ports (99.5 confidence) suggests   ************************
+
+If you want to allow /usr/sbin/httpd to bind to network port 82
+Then you need to modify the port type.
+Do
+# semanage port -a -t PORT_TYPE -p tcp 82
+    where PORT_TYPE is one of the following: http_cache_port_t, http_port_t, jboss_management_port_t, jboss_messaging_port_t, ntop_port_t, puppet_port_t.
+
+*****  Plugin catchall (1.49 confidence) suggests   **************************
+
+If you believe that httpd should be allowed name_bind access on the  tcp_socket by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# grep httpd /var/log/audit/audit.log | audit2allow -M mypol
+# semodule -i mypol.pp
+
+
+Additional Information:
+Source Context                system_u:system_r:httpd_t:s0
+Target Context                system_u:object_r:reserved_port_t:s0
+Target Objects                 [ tcp_socket ]
+Source                        httpd
+Source Path                   /usr/sbin/httpd
+Port                          82
+Host                          &lt;Unknown&gt;
+Source RPM Packages           httpd-2.4.6-17.el7.x86_64
+Target RPM Packages
+Policy RPM                    selinux-policy-3.12.1-153.el7.noarch
+Selinux Enabled               True
+Policy Type                   targeted
+Enforcing Mode                Enforcing
+Host Name                     server0.example.com
+Platform                      Linux server0.example.com 3.10.0-123.el7.x86_64 #1
+                              SMP Mon May 5 11:16:57 EDT 2014 x86_64 x86_64
+Alert Count                   1
+First Seen                    2018-08-10 09:08:23 CST
+Last Seen                     2018-08-10 09:08:23 CST
+Local ID                      0f10500c-a1c3-4526-ac7c-0405d4f54463
+
+Raw Audit Messages
+type=AVC msg=audit(1533863303.252:394): avc:  denied  { name_bind } for  pid=1745 comm=&quot;httpd&quot; src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket
+
+
+type=SYSCALL msg=audit(1533863303.252:394): arch=x86_64 syscall=bind success=no exit=EACCES a0=3 a1=7ff87b233cf8 a2=10 a3=7fff9094894c items=0 ppid=1 pid=1745 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm=httpd exe=/usr/sbin/httpd subj=system_u:system_r:httpd_t:s0 key=(null)
+
+Hash: httpd,httpd_t,reserved_port_t,tcp_socket,name_bind</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5 - &#x5C06; SELinux &#x914D;&#x7F6E;&#x4E3A;&#x5141;&#x8BB8; httpd &#x7ED1;&#x5B9A;&#x5230;&#x7AEF;&#x53E3; 82/TCP&#xFF0C;&#x7136;&#x540E;&#x91CD;&#x65B0;&#x542F;&#x52A8; httpd.service &#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># semanage port -a -t http_port_t -p tcp 82
+# systemctl restart httpd.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6 - &#x5728;&#x9632;&#x706B;&#x5899;&#x4E0A;&#x6253;&#x5F00;&#x7AEF;&#x53E3; 82/TCP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># firewall-cmd --permanent --add-port=82/tcp
+# firewall-cmd --reload</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7 - &#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x8FDB;&#x884C;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl http://server0.example.com:82
+Hello</code></pre>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="file-permissions.html" class="navigation navigation-prev " aria-label="Previous page: 文件权限">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="firewall.html" class="navigation navigation-next " aria-label="Next page: 防火墙">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"SELinux","level":"1.2.6.2","depth":3,"next":{"title":"防火墙","level":"1.2.6.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"previous":{"title":"文件权限","level":"1.2.6.1","depth":3,"path":"linux/security/file-permissions.adoc","ref":"linux/security/file-permissions.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/SELinux.adoc","mtime":"2019-03-27T08:41:56.959Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T09:29:16.283Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

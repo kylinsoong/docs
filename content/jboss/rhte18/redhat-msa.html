@@ -1,0 +1,2716 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>微服务及红帽产品集成实践 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="../coolstore/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    INTRODUCTION
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../../linux/">
+            
+                <a href="../../linux/">
+            
+                    
+                    INFRA
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../../linux/rhel/readme.html">
+            
+                <a href="../../linux/rhel/readme.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../../linux/rhel/pre-install.html">
+            
+                <a href="../../linux/rhel/pre-install.html">
+            
+                    
+                    安装 DVD 制作
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../../linux/rhel/install-img-usb.html">
+            
+                <a href="../../linux/rhel/install-img-usb.html">
+            
+                    
+                    生成 USB 介质
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../../linux/rhel/install.html">
+            
+                <a href="../../linux/rhel/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../../linux/rhel/kvm.html">
+            
+                <a href="../../linux/rhel/kvm.html">
+            
+                    
+                    KVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../../linux/basic/basic.html">
+            
+                <a href="../../linux/basic/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../../linux/basic/local-remote-login.html">
+            
+                <a href="../../linux/basic/local-remote-login.html">
+            
+                    
+                    本地及远程登录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../../linux/basic/user-group.html">
+            
+                <a href="../../linux/basic/user-group.html">
+            
+                    
+                    用户和组
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../../linux/basic/packages-update.html">
+            
+                <a href="../../linux/basic/packages-update.html">
+            
+                    
+                    软件包的安装与更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../../linux/basic/syslog.html">
+            
+                <a href="../../linux/basic/syslog.html">
+            
+                    
+                    系统日志
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../../linux/basic/ntp.html">
+            
+                <a href="../../linux/basic/ntp.html">
+            
+                    
+                    NTP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../../linux/basic/ex.html">
+            
+                <a href="../../linux/basic/ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../../linux/networking/">
+            
+                <a href="../../linux/networking/">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../../linux/networking/fundamentals.html">
+            
+                <a href="../../linux/networking/fundamentals.html">
+            
+                    
+                    网络基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../../linux/networking/ifcfg.html">
+            
+                <a href="../../linux/networking/ifcfg.html">
+            
+                    
+                    网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../../linux/networking/ipv6cfg.html">
+            
+                <a href="../../linux/networking/ipv6cfg.html">
+            
+                    
+                    IPv6 网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../../linux/networking/netns.html">
+            
+                <a href="../../linux/networking/netns.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../../linux/networking/teaming.html">
+            
+                <a href="../../linux/networking/teaming.html">
+            
+                    
+                    teaming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.6" data-path="../../linux/networking/bridge.html">
+            
+                <a href="../../linux/networking/bridge.html">
+            
+                    
+                    bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.7" data-path="../../linux/networking/dns.html">
+            
+                <a href="../../linux/networking/dns.html">
+            
+                    
+                    DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.8" data-path="../../linux/networking/monitor.html">
+            
+                <a href="../../linux/networking/monitor.html">
+            
+                    
+                    网络监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../../linux/fs.html">
+            
+                <a href="../../linux/fs.html">
+            
+                    
+                    文件系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../../linux/stoarges/readme.html">
+            
+                <a href="../../linux/stoarges/readme.html">
+            
+                    
+                    存储
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../../linux/stoarges/lvm.html">
+            
+                <a href="../../linux/stoarges/lvm.html">
+            
+                    
+                    LVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="../../linux/stoarges/nfs.html">
+            
+                <a href="../../linux/stoarges/nfs.html">
+            
+                    
+                    NFS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="../../linux/stoarges/file-storage.html">
+            
+                <a href="../../linux/stoarges/file-storage.html">
+            
+                    
+                    文件存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="../../linux/stoarges/block-storage.html">
+            
+                <a href="../../linux/stoarges/block-storage.html">
+            
+                    
+                    块存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../../linux/security/">
+            
+                <a href="../../linux/security/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../../linux/security/file-permissions.html">
+            
+                <a href="../../linux/security/file-permissions.html">
+            
+                    
+                    文件权限
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../../linux/security/SELinux.html">
+            
+                <a href="../../linux/security/SELinux.html">
+            
+                    
+                    SELinux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../../linux/security/firewall.html">
+            
+                <a href="../../linux/security/firewall.html">
+            
+                    
+                    防火墙
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../../linux/security/openssl.html">
+            
+                <a href="../../linux/security/openssl.html">
+            
+                    
+                    OpenSSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../../linux/process/">
+            
+                <a href="../../linux/process/">
+            
+                    
+                    进程
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../../linux/process/management.html">
+            
+                <a href="../../linux/process/management.html">
+            
+                    
+                    进程管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../../linux/process/service.html">
+            
+                <a href="../../linux/process/service.html">
+            
+                    
+                    服务管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../../linux/process/schedule.html">
+            
+                <a href="../../linux/process/schedule.html">
+            
+                    
+                    周期性运行进程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../../linux/process/bash.html">
+            
+                <a href="../../linux/process/bash.html">
+            
+                    
+                    bash
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../../linux/svc/">
+            
+                <a href="../../linux/svc/">
+            
+                    
+                    常用服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../../linux/svc/openssh.html">
+            
+                <a href="../../linux/svc/openssh.html">
+            
+                    
+                    OpenSSH
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="../../linux/svc/postfix.html">
+            
+                <a href="../../linux/svc/postfix.html">
+            
+                    
+                    Email
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="../../linux/svc/mariadb.html">
+            
+                <a href="../../linux/svc/mariadb.html">
+            
+                    
+                    MariaDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="../../linux/svc/httpd.html">
+            
+                <a href="../../linux/svc/httpd.html">
+            
+                    
+                    HTTPD
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="../../linux/svc/zabbix.html">
+            
+                <a href="../../linux/svc/zabbix.html">
+            
+                    
+                    Zabbix
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../../linux/perf/">
+            
+                <a href="../../linux/perf/">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../docker/docker.html">
+            
+                <a href="../../docker/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../docker/svc/svc.html">
+            
+                <a href="../../docker/svc/svc.html">
+            
+                    
+                    容器化服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../../docker/svc/mysql.html">
+            
+                <a href="../../docker/svc/mysql.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../../docker/svc/httpd.html">
+            
+                <a href="../../docker/svc/httpd.html">
+            
+                    
+                    httpd
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../docker/container.html">
+            
+                <a href="../../docker/container.html">
+            
+                    
+                    容器管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../docker/images.html">
+            
+                <a href="../../docker/images.html">
+            
+                    
+                    容器镜像
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../openshift/openshift.html">
+            
+                <a href="../../openshift/openshift.html">
+            
+                    
+                    OPENSHIFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../openshift/concepts/">
+            
+                <a href="../../openshift/concepts/">
+            
+                    
+                    概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../openshift/install/">
+            
+                <a href="../../openshift/install/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../../openshift/install/yum.html">
+            
+                <a href="../../openshift/install/yum.html">
+            
+                    
+                    本地 yum 源配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="../../openshift/install/docker-dist.html">
+            
+                <a href="../../openshift/install/docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
+            
+                <a href="../../openshift/install/pre-install.html">
+            
+                    
+                    前续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
+            
+                <a href="../../openshift/install/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
+            
+                <a href="../../openshift/install/post-install.html">
+            
+                    
+                    后续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/add-nodes.html">
+            
+                <a href="../../openshift/install/add-nodes.html">
+            
+                    
+                    节点扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="../../openshift/install/qa.html">
+            
+                <a href="../../openshift/install/qa.html">
+            
+                    
+                    常见问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../openshift/advanced-deployment.html">
+            
+                <a href="../../openshift/advanced-deployment.html">
+            
+                    
+                    高级部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../openshift/devops.html">
+            
+                <a href="../../openshift/devops.html">
+            
+                    
+                    DEVOPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../openshift/secure.html">
+            
+                <a href="../../openshift/secure.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../../openshift/samples/samples.html">
+            
+                <a href="../../openshift/samples/samples.html">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.6.1" data-path="../../openshift/samples/rc.html">
+            
+                <a href="../../openshift/samples/rc.html">
+            
+                    
+                    RC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.2" data-path="../../openshift/samples/dc.html">
+            
+                <a href="../../openshift/samples/dc.html">
+            
+                    
+                    DC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.3" data-path="../../openshift/samples/s2i.html">
+            
+                <a href="../../openshift/samples/s2i.html">
+            
+                    
+                    S2I
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.4" data-path="../../openshift/samples/configmap.html">
+            
+                <a href="../../openshift/samples/configmap.html">
+            
+                    
+                    ConfigMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.5" data-path="../../openshift/samples/elastic-spark.html">
+            
+                <a href="../../openshift/samples/elastic-spark.html">
+            
+                    
+                    elasticsearch and spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.6" data-path="../../openshift/samples/vdb-data-svc.html">
+            
+                <a href="../../openshift/samples/vdb-data-svc.html">
+            
+                    
+                    Teiid Data Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../../openshift/labs/">
+            
+                <a href="../../openshift/labs/">
+            
+                    
+                    LABS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.7.1" data-path="../../openshift/labs/sdn.html">
+            
+                <a href="../../openshift/labs/sdn.html">
+            
+                    
+                    Software-Defined Networking
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.2" data-path="../../openshift/labs/edge-route.html">
+            
+                <a href="../../openshift/labs/edge-route.html">
+            
+                    
+                    Route
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.3" data-path="../../openshift/labs/web-console.html">
+            
+                <a href="../../openshift/labs/web-console.html">
+            
+                    
+                    Web Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.4" data-path="../../openshift/labs/projects-accounts.html">
+            
+                <a href="../../openshift/labs/projects-accounts.html">
+            
+                    
+                    项目用户安全管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.5" data-path="../../openshift/labs/secure-secrets.html">
+            
+                <a href="../../openshift/labs/secure-secrets.html">
+            
+                    
+                    数据库连接信息保护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.6" data-path="../../openshift/labs/db-persist.html">
+            
+                <a href="../../openshift/labs/db-persist.html">
+            
+                    
+                    持久化数据库存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.7" data-path="../../openshift/labs/wordpress.html">
+            
+                <a href="../../openshift/labs/wordpress.html">
+            
+                    
+                    部署 wordpress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.8" data-path="../../openshift/labs/scaling.html">
+            
+                <a href="../../openshift/labs/scaling.html">
+            
+                    
+                    扩展应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.9" data-path="../../openshift/labs/hpa.html">
+            
+                <a href="../../openshift/labs/hpa.html">
+            
+                    
+                    弹性扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.10" data-path="../../openshift/labs/010.html">
+            
+                <a href="../../openshift/labs/010.html">
+            
+                    
+                    Blue-Green Deployments
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.11" data-path="../../openshift/labs/011.html">
+            
+                <a href="../../openshift/labs/011.html">
+            
+                    
+                    SCM Web Hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.12" data-path="../../openshift/labs/012.html">
+            
+                <a href="../../openshift/labs/012.html">
+            
+                    
+                    Rollback Applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.13" data-path="../../openshift/labs/deploy-an-operator.html">
+            
+                <a href="../../openshift/labs/deploy-an-operator.html">
+            
+                    
+                    Operator 部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.14" data-path="../../openshift/labs/014.html">
+            
+                <a href="../../openshift/labs/014.html">
+            
+                    
+                    JBoss Developer Studio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.15" data-path="../../openshift/labs/015.html">
+            
+                <a href="../../openshift/labs/015.html">
+            
+                    
+                    Deploy a SpringBoot Application
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../../openshift/case.html">
+            
+                <a href="../../openshift/case.html">
+            
+                    
+                    用例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../ansible/">
+            
+                <a href="../../ansible/">
+            
+                    
+                    ANSIBLE
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../ansible/basic-usage.html">
+            
+                <a href="../../ansible/basic-usage.html">
+            
+                    
+                    基本使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../readme.html">
+            
+                <a href="../readme.html">
+            
+                    
+                    APPDEV
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../api/readme.html">
+            
+                <a href="../api/readme.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../mesh.html">
+            
+                <a href="../mesh.html">
+            
+                    
+                    Mesh
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../faas/openwhisk.html">
+            
+                <a href="../faas/openwhisk.html">
+            
+                    
+                    Serverless
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../coolstore/">
+            
+                <a href="../coolstore/">
+            
+                    
+                    CoolStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.6.5" data-path="redhat-msa.html">
+            
+                <a href="redhat-msa.html">
+            
+                    
+                    微服务及红帽产品集成实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" >
+            
+                <a target="_blank" href="http://ksoong.org/drools-examples/content/">
+            
+                    
+                    规则引擎
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../datavirt/datavirt.html">
+            
+                <a href="../datavirt/datavirt.html">
+            
+                    
+                    数据虚拟化
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.7.1" data-path="../datavirt/software-list.html">
+            
+                <a href="../datavirt/software-list.html">
+            
+                    
+                    软件版本号对照表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.2" data-path="../datavirt/changelog.html">
+            
+                <a href="../datavirt/changelog.html">
+            
+                    
+                    修订记录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.3" data-path="../datavirt/download.html">
+            
+                <a href="../datavirt/download.html">
+            
+                    
+                    下载
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.4" data-path="../datavirt/install.html">
+            
+                <a href="../datavirt/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.5" data-path="../datavirt/start.html">
+            
+                <a href="../datavirt/start.html">
+            
+                    
+                    启动
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.6" data-path="../datavirt/deploy-vdbs.html">
+            
+                <a href="../datavirt/deploy-vdbs.html">
+            
+                    
+                    部署测试 VDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.7" data-path="../datavirt/meta.html">
+            
+                <a href="../datavirt/meta.html">
+            
+                    
+                    元数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.8" data-path="../datavirt/jbds-jdv.html">
+            
+                <a href="../datavirt/jbds-jdv.html">
+            
+                    
+                    JBDS 创建虚拟数据库操作示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="../amq/amq.html">
+            
+                <a href="../amq/amq.html">
+            
+                    
+                    A-MQ
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.8.1" data-path="../amq/streams.html">
+            
+                <a href="../amq/streams.html">
+            
+                    
+                    AMQ Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8.2" data-path="../amq/install.html">
+            
+                <a href="../amq/install.html">
+            
+                    
+                    AMQ 6.3 安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.9" >
+            
+                <a target="_blank" href="http://ksoong.org/agile-integration/">
+            
+                    
+                    敏捷集成
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.10" data-path="../bpm/bpm.html">
+            
+                <a href="../bpm/bpm.html">
+            
+                    
+                    BPM
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.10.1" data-path="../bpm/install.html">
+            
+                <a href="../bpm/install.html">
+            
+                    
+                    安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.11" data-path="../secure/">
+            
+                <a href="../secure/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <a target="_blank" href="https://mongocn.github.io">
+            
+                    
+                    DATA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../../solutions/">
+            
+                <a href="../../solutions/">
+            
+                    
+                    SOLUTIONS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../../solutions/abc-distribute-arch.html">
+            
+                <a href="../../solutions/abc-distribute-arch.html">
+            
+                    
+                    核心银行系统分布式架构转型
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../../about/">
+            
+                <a href="../../about/">
+            
+                    
+                    BUSINESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../../about/it-professions.html">
+            
+                <a href="../../about/it-professions.html">
+            
+                    
+                    PROFESSIONS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../../about/softskills.html">
+            
+                <a href="../../about/softskills.html">
+            
+                    
+                    SKILLS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >微服务及红帽产品集成实践</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x5FAE;&#x670D;&#x52A1;&#x53CA;&#x7EA2;&#x5E3D;&#x591A;&#x4EA7;&#x54C1;&#x96C6;&#x6210;&#x5B9E;&#x8DF5;">&#x5FAE;&#x670D;&#x52A1;&#x53CA;&#x7EA2;&#x5E3D;&#x591A;&#x4EA7;&#x54C1;&#x96C6;&#x6210;&#x5B9E;&#x8DF5;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x80CC;&#x666F;&#x8BF4;&#x660E;</a>
+<ul class="sectlevel2">
+<li><a href="#_amq">AMQ &#x5728;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x65B9;&#x9762;&#x7684;&#x80FD;&#x529B;</a></li>
+<li><a href="#___2">&#x6848;&#x4F8B;&#x67B6;&#x6784;</a></li>
+</ul>
+</li>
+<li><a href="#_openshift">OpenShift &#x73AF;&#x5883;&#x51C6;&#x5907;</a></li>
+<li><a href="#__walkthrough">&#x4EE3;&#x7801; Walkthrough</a>
+<ul class="sectlevel2">
+<li><a href="#_dispatch_service">Dispatch service</a></li>
+<li><a href="#_passenger_service">Passenger service</a></li>
+<li><a href="#_driver_service">Driver service</a></li>
+</ul>
+</li>
+<li><a href="#__openshift">&#x90E8;&#x7F72;&#x5230; OpenShift</a>
+<ul class="sectlevel2">
+<li><a href="#_messaging">Messaging</a></li>
+<li><a href="#_gogs">Gogs</a></li>
+<li><a href="#_pgadmin4">pgAdmin4</a></li>
+<li><a href="#_jenkins">Jenkins</a></li>
+<li><a href="#___3">&#x5FAE;&#x670D;&#x52A1;&#x90E8;&#x7F72;</a></li>
+</ul>
+</li>
+<li><a href="#___4">&#x6848;&#x4F8B;&#x8FD0;&#x884C;</a></li>
+<li><a href="#__tracing">&#x5FAE;&#x670D;&#x52A1; Tracing</a>
+<ul class="sectlevel2">
+<li><a href="#__jaeger_openshift">&#x5B89;&#x88C5; Jaeger &#x5230; OpenShift</a></li>
+<li><a href="#__pipleline_tracing_branch">&#x7F16;&#x8F91; Pipleline &#x6307;&#x5411; Tracing &#x5BF9;&#x5E94;&#x7684; Branch</a></li>
+<li><a href="#___5">&#x91CD;&#x65B0;&#x8FD0;&#x884C;&#x6D4B;&#x8BD5;</a></li>
+<li><a href="#__jaeger_ui">&#x67E5;&#x770B; Jaeger UI</a></li>
+</ul>
+</li>
+<li><a href="#___6">&#x5FAE;&#x670D;&#x52A1;&#x76D1;&#x63A7;</a>
+<ul class="sectlevel2">
+<li><a href="#_prometheus">Prometheus &#x67B6;&#x6784;</a></li>
+<li><a href="#__prometheus_openshift">&#x90E8;&#x7F72; Prometheus &#x5230; OpenShift</a></li>
+<li><a href="#__enmasse_broker">&#x76D1;&#x63A7; EnMasse broker</a></li>
+<li><a href="#___7">&#x76D1;&#x63A7;&#x5FAE;&#x670D;&#x52A1;</a></li>
+<li><a href="#__sql">&#x76D1;&#x63A7; SQL</a></li>
+<li><a href="#_grafana">Grafana</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x80CC;&#x666F;&#x8BF4;&#x660E;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://redhat.slides.com/ksoong/06_operational_intelligence" class="bare" target="_blank">https://redhat.slides.com/ksoong/06_operational_intelligence</a> &#x6709;&#x5173;&#x4E8E;&#x6B64;&#x5B9E;&#x8DF5;&#x6848;&#x4F8B;&#x7684;&#x8BE6;&#x7EC6;&#x8BF4;&#x660E;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x603B;&#x7684;&#x6765;&#x8BF4;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x901A;&#x8FC7;&#x793A;&#x4F8B;(Step by Step) &#x7684;&#x65B9;&#x5F0F;&#x6F14;&#x793A;&#x7EA2;&#x5E3D;&#x7684;&#x4EA7;&#x54C1;&#x5982;&#x4F55;&#x5E94;&#x7528;&#x5728;&#x5FAE;&#x670D;&#x52A1;&#x67B6;&#x6784;&#x4E0B;&#x3002;&#x4E09;&#x4E2A;&#x7EAC;&#x5EA6;&#x53BB;&#x8BF4;&#x660E;&#x7EA2;&#x5E3D;&#x5FAE;&#x670D;&#x52A1;&#x591A;&#x4EA7;&#x54C1;&#x96C6;&#x6210;&#x80CC;&#x666F;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><strong>&#x5355;&#x4F53;(Monolith) &#x2192; &#x5FAE;&#x670D;&#x52A1;(Microservices)</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/monolith-to-micrisvc.png" alt="monolith to micrisvc.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x8FD9;&#x79CD;&#x67B6;&#x6784;&#x7684;&#x53D8;&#x8FC1;&#x6709;&#x4E00;&#x5B9A;&#x7684;&#x5FC5;&#x7136;&#x6027;&#xFF0C;&#x4F8B;&#x5982;&#x5FAE;&#x670D;&#x52A1;&#x67B6;&#x6784;&#x5E26;&#x6765;&#x4E86;&#x67B6;&#x6784;&#x7684;&#x7075;&#x6D3B;&#x6027;&#x3001;&#x7CFB;&#x7EDF;&#x7684;&#x5065;&#x58EE;&#x6027;&#x7B49;&#xFF0C;&#x540C;&#x65F6;&#x5FAE;&#x670D;&#x52A1;&#x67B6;&#x6784;&#x9700;&#x8981;&#x5904;&#x7406;&#x4E0D;&#x540C;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x4F8B;&#x5982;&#x590D;&#x6742;&#x5185;&#x90E8;&#x670D;&#x52A1;&#x8C03;&#x8FD0;&#x6A21;&#x5F0F;&#xFF0C;&#x5206;&#x5E03;&#x5F0F;&#x8BBE;&#x8BA1;&#x7B49;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><strong>&#x540C;&#x6B65;&#x901A;&#x4FE1;(Synchronous Communication) &amp; &#x5F02;&#x6B65;&#x901A;&#x4FE1;(Asynchronous Communication)</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/synch-asynch.png" alt="synch asynch.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x540C;&#x6B65;&#x901A;&#x4FE1;&#x548C;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x662F;IT&#x7CFB;&#x7EDF;&#x67B6;&#x6784;&#x8BBE;&#x8BA1;&#x4E2D;&#x6700;&#x5E38;&#x4F7F;&#x7528;&#x7684;&#x6A21;&#x5F0F;&#xFF0C;&#x4E24;&#x79CD;&#x6A21;&#x5F0F;&#x5404;&#x6709;&#x4F18;&#x7F3A;&#x70B9;&#xFF0C;&#x5FAE;&#x670D;&#x52A1;&#x67B6;&#x6784;&#x66F4;&#x9700;&#x8981;&#x5408;&#x7406;&#x7684;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x6A21;&#x5F0F;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><strong>&#x672C;&#x65B9;&#x6848;&#x76EE;&#x7684;&#x8BF4;&#x660E;&#x65B0;&#x67B6;&#x6784;&#x4E0B;&#x7EA2;&#x5E3D;&#x4EA7;&#x54C1;&#x7684;&#x4F7F;&#x7528;&#xFF0C;&#x5177;&#x4F53;&#x4EA7;&#x54C1;&#x5305;&#x62EC;&#xFF1A;</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.openshift.com/products/container-platform" target="_blank">Red Hat OpenShift Container Platform(OCP)</a></p>
+</li>
+<li>
+<p><a href="https://www.redhat.com/en/technologies/jboss-middleware/amq" target="_blank">Red Hat AMQ(AMQ)</a></p>
+</li>
+<li>
+<p><a href="https://www.redhat.com/en/technologies/jboss-middleware/process-automation-manager" target="_blank">Red Hat Process Automation Manager(PAM)</a></p>
+</li>
+<li>
+<p><a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/application-runtimes" target="_blank">Red Hat OpenShift Application Runtimes(RHOAR)</a></p>
+</li>
+<li>
+<p><a href="https://www.redhat.com/en/technologies/jboss-middleware/fuse" target="_blank">Red Hat Fuse(Fuse)</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/products/red-hat-single-sign-on" target="_blank">Red Hat Single Sign-On(SSO)</a></p>
+</li>
+<li>
+<p><a href="https://www.openssl.org" target="_blank">OpenSSL</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_amq">AMQ &#x5728;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x65B9;&#x9762;&#x7684;&#x80FD;&#x529B;</h3>
+<div class="paragraph">
+<p>AMQ 7 &#x662F;&#x4E00;&#x4E2A;&#x8F7B;&#x91CF;&#x7EA7;&#x7684;&#x6D88;&#x606F;&#x5E73;&#x53F0;&#xFF0C;&#x652F;&#x6301;&#x5206;&#x5E03;&#x5F0F;&#x3001;&#x5BB9;&#x5668;&#x5316;&#x8FD0;&#x884C;&#x3001;&#x591A;&#x79CD;&#x5BA2;&#x6237;&#x7AEF;&#x3001;&#x6D88;&#x606F; Stream &#x7B49;&#xFF0C;&#x652F;&#x6301;&#x591A;&#x79CD;&#x534F;&#x8BAE;&#xFF0C;&#x80FD;&#x591F;&#x6709;&#x6548;&#x7684;&#x63D0;&#x4F9B;&#x7CFB;&#x7EDF;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x80FD;&#x529B;&#xFF0C;&#x67B6;&#x6784;&#x793A;&#x4F8B;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/amqp-mqtt.png" alt="amqp mqtt.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>AMQP &#x534F;&#x8BAE;&#x4E3B;&#x8981;&#x4E3B;&#x8981;&#x7528;&#x4E8E;&#x8DE8;&#x5E73;&#x53F0;&#x6D88;&#x606F;&#x901A;&#x4FE1;&#xFF0C;&#x4F8B;&#x5982;&#xFF0C;C &#x8BED;&#x8A00;&#x7684;&#x7CFB;&#x7EDF;&#x548C; Java &#x8BED;&#x8A00;&#x7684;&#x7CFB;&#x7EDF;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; AMQP &#x8FDB;&#x884C;&#x901A;&#x4FE1;&#x3002;&#x8FD9;&#x79CD;&#x901A;&#x4FE1;&#x540C;&#x65F6;&#x662F;&#x5728;&#x5927;&#x89C4;&#x6A21;&#x3001;&#x9AD8;&#x6269;&#x5C55;&#x6027;&#x7684;&#x573A;&#x666F;&#x4E0B;&#x4F7F;&#x7528;&#x3002;</p>
+</li>
+<li>
+<p>MQTT &#x534F;&#x8BAE;&#x662F;&#x76EE;&#x524D;&#x7269;&#x8054;&#x7F51; (IoT) &#x901A;&#x4FE1;&#x7684;&#x6807;&#x51C6;&#x3002;MQTT&#xFF08;&#x6D88;&#x606F;&#x961F;&#x5217;&#x9065;&#x6D4B;&#x4F20;&#x8F93;&#xFF09; &#x662F;&#x57FA;&#x4E8E; TCP/IP &#x534F;&#x8BAE;&#x6808;&#x800C;&#x6784;&#x5EFA;&#xFF0C;&#x662F;&#x4E00;&#x79CD;&#x8F7B;&#x91CF;&#x7EA7;&#x7684;&#x3001;&#x7075;&#x6D3B;&#x7684;&#x7F51;&#x7EDC;&#x534F;&#x8BAE;&#xFF0C;&#x81F4;&#x529B;&#x4E8E;&#x4E3A; IoT &#x63D0;&#x4F9B;&#x6700;&#x4F18;&#x65B9;&#x6848;&#xFF0C;&#x8FD9;&#x4E2A;&#x8F7B;&#x91CF;&#x7EA7;&#x4F53;&#x73B0;&#x5728;&#x53EF;&#x5728;&#x4E25;&#x91CD;&#x53D7;&#x9650;&#x7684;&#x8BBE;&#x5907;&#x786C;&#x4EF6;&#x548C;&#x9AD8;&#x5EF6;&#x8FDF;/&#x5E26;&#x5BBD;&#x6709;&#x9650;&#x7684;&#x7F51;&#x7EDC;&#x4E0A;&#x5B9E;&#x73B0;&#xFF0C;&#x800C;&#x8FD9;&#x4E2A;&#x7075;&#x6D3B;&#x6027;&#x4F7F;&#x5F97;&#x4E3A; IoT &#x8BBE;&#x5907;&#x548C;&#x670D;&#x52A1;&#x7684;&#x591A;&#x6837;&#x5316;&#x5E94;&#x7528;&#x573A;&#x666F;&#x63D0;&#x4F9B;&#x652F;&#x6301;&#x6210;&#x4E3A;&#x53EF;&#x80FD;&#x3002;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x6848;&#x4F8B;&#x67B6;&#x6784;</h3>
+<div class="paragraph">
+<p>Acme &#x516C;&#x53F8;&#x8981;&#x542F;&#x52A8;&#x4E00;&#x4E2A; taxi-hailing &#x9879;&#x76EE;&#xFF0C;&#x91C7;&#x7528;&#x4E86;&#x5FAE;&#x670D;&#x52A1;&#x67B6;&#x6784;&#xFF0C;&#x4F7F;&#x7528;&#x4E86;&#x540C;&#x6B65;&#x548C;&#x5F02;&#x6B65;&#x7684;&#x901A;&#x4FE1;&#x6A21;&#x5F0F;&#xFF0C;&#x4E00;&#x671F;&#x542F;&#x52A8;&#x4E3B;&#x8981;&#x6709;&#x4E09;&#x4E2A;&#x670D;&#x52A1;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/runtime_topology.png" alt="runtime topology.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Passenger service - &#x6D41;&#x7A0B;&#x9A71;&#x52A8;&#x7684;&#x5FAE;&#x670D;&#x52A1;</p>
+</li>
+<li>
+<p>Driver service - &#x5F02;&#x6B65;&#x5F0F;&#x5FAE;&#x670D;&#x52A1;</p>
+</li>
+<li>
+<p>Dispatch service - &#x57FA;&#x4E8E; Spring Boot &#x5FAE;&#x670D;&#x52A1;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x53E6;&#x5916;&#xFF0C;&#x4F7F;&#x7528; DevOps &#x8FDB;&#x884C;&#x5FAE;&#x670D;&#x52A1;&#x5F00;&#x53D1;/&#x8FD0;&#x884C;&#x81EA;&#x52A8;&#x5316;&#xFF0C;Prometheus Grafana&#x3001;Jaeger &#x7B49; Istio &#x7EC4;&#x5EFA;&#x7528;&#x6765;&#x5FAE;&#x670D;&#x52A1;&#x7684;&#x8FFD;&#x8E2A;&#x4E0E;&#x76D1;&#x63A7;&#x3002;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openshift">OpenShift &#x73AF;&#x5883;&#x51C6;&#x5907;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>&#x786E;&#x4FDD; OpenShift &#x8FD0;&#x884C;&#xFF0C;&#x81F3;&#x5C11; 20 GB/8 CPU &#x8D44;&#x6E90;&#xFF0C;oc/kubectl &#x5728;&#x672C;&#x5730;&#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc version
+oc v3.9.40
+kubernetes v1.9.1+a0ce1bc657
+features: Basic-Auth GSSAPI Kerberos SPNEGO
+
+Server https://master.c3de.rhte.opentlc.com:443
+openshift v3.9.40
+kubernetes v1.9.1+a0ce1bc657
+
+$ kubectl version
+Client Version: version.Info{Major:<span class="hljs-string">&quot;1&quot;</span>, Minor:<span class="hljs-string">&quot;9&quot;</span>, GitVersion:<span class="hljs-string">&quot;v1.9.1+a0ce1bc657&quot;</span>, GitCommit:<span class="hljs-string">&quot;a0ce1bc&quot;</span>, GitTreeState:<span class="hljs-string">&quot;clean&quot;</span>, BuildDate:<span class="hljs-string">&quot;2018-07-30T20:12:47Z&quot;</span>, GoVersion:<span class="hljs-string">&quot;go1.9.4&quot;</span>, Compiler:<span class="hljs-string">&quot;gc&quot;</span>, Platform:<span class="hljs-string">&quot;linux/amd64&quot;</span>}
+Server Version: version.Info{Major:<span class="hljs-string">&quot;1&quot;</span>, Minor:<span class="hljs-string">&quot;9&quot;</span>, GitVersion:<span class="hljs-string">&quot;v1.9.1+a0ce1bc657&quot;</span>, GitCommit:<span class="hljs-string">&quot;a0ce1bc&quot;</span>, GitTreeState:<span class="hljs-string">&quot;clean&quot;</span>, BuildDate:<span class="hljs-string">&quot;2018-07-30T20:12:47Z&quot;</span>, GoVersion:<span class="hljs-string">&quot;go1.9.4&quot;</span>, Compiler:<span class="hljs-string">&quot;gc&quot;</span>, Platform:<span class="hljs-string">&quot;linux/amd64&quot;</span>}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+OpenShift &#x5B89;&#x88C5;&#x5305;&#x62EC; oc &#x548C; kubectl&#xFF0C;&#x5982;&#x4E0A;&#x547D;&#x4EE4;&#x8F93;&#x51FA;&#x53EF;&#x4EE5;&#x786E;&#x8BA4; OpenShift &#x662F;&#x8FD0;&#x884C;&#x7684;&#xFF0C;&#x4E14;&#x7248;&#x672C;&#x662F; v3.9.40&#xFF0C;&#x540C;&#x65F6;&#x4E0E;&#x4E4B;&#x5BF9;&#x5E94;&#x7684; Kubernetes &#x7248;&#x672C;&#x662F; v1.9.1&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__walkthrough">&#x4EE3;&#x7801; Walkthrough</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x6848;&#x4F8B;&#x6240;&#x6709;&#x4EE3;&#x7801;&#x4F4D;&#x7F6E;&#xFF1A;https://github.com/gpte-rhte2018-msa-orchestration</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x514B;&#x9686;&#x4EE3;&#x7801;&#x5230;&#x672C;&#x5730;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ git <span class="hljs-built_in">clone</span> https://github.com/gpte-rhte2018-msa-orchestration/installation.git
+$ git <span class="hljs-built_in">clone</span> https://github.com/gpte-rhte2018-msa-orchestration/dispatch-service.git
+$ git <span class="hljs-built_in">clone</span> https://github.com/gpte-rhte2018-msa-orchestration/driver-service.git
+$ git <span class="hljs-built_in">clone</span> https://github.com/gpte-rhte2018-msa-orchestration/passenger-service.git</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dispatch_service">Dispatch service</h3>
+<div class="paragraph">
+<p>Dispatch service &#x4E3B;&#x8981;&#x662F;&#x6D41;&#x7A0B;&#x9A71;&#x52A8;&#x7684;&#x5FAE;&#x670D;&#x52A1;&#xFF0C;&#x6D41;&#x7A0B;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/dispatch-process.png" alt="dispatch process.png"></span></p>
+</div>
+<div class="paragraph">
+<p>BPMN &#x6D41;&#x7A0B;&#x4F7F;&#x7528;&#x4E86;&#x5982;&#x4E0B; Task:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Signal Event</p>
+</li>
+<li>
+<p>Common Task</p>
+</li>
+<li>
+<p>Timer Event</p>
+</li>
+<li>
+<p>Sub-Process</p>
+</li>
+<li>
+<p>Custom WorkItemHandler</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>BPM &#x8FD0;&#x884C;&#x9700;&#x8981;&#x6301;&#x4E45;&#x5316;&#x3001;&#x4E8B;&#x7269;&#x5904;&#x7406;&#xFF0C;&#x6A21;&#x578B;&#x7B49;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>BPM &#x8FD0;&#x884C;&#x6301;&#x4E45;&#x5316;&#x4F7F;&#x7528; postgresql &#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">spring.datasource.username=jboss
+spring.datasource.password=jboss
+spring.datasource.url=jdbc:postgresql://<span class="hljs-variable">${postgresql.host}</span>:5432/rhpam
+
+spring.datasource.dbcp2.default-auto-commit=<span class="hljs-literal">false</span>
+spring.datasource.dbcp2.max-total=5
+spring.datasource.dbcp2.max-idle=5</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x4E8B;&#x7269;&#x5904;&#x7406;&#x4F7F;&#x7528; narayana</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">narayana.transaction-manager-id=1
+narayana.default-timeout=120
+narayana.dbcp.enabled=<span class="hljs-literal">true</span>
+narayana.dbcp.defaultAutoCommit=<span class="hljs-literal">false</span>
+narayana.dbcp.max-total=20</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x6D41;&#x7A0B;&#x4E2D;&#x4F7F;&#x7528;&#x6570;&#x636E;&#x6A21;&#x578B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Entity</span>
+<span class="hljs-meta">@SequenceGenerator</span>(name=<span class="hljs-string">&quot;RideSeq&quot;</span>, sequenceName=<span class="hljs-string">&quot;RIDE_SEQ&quot;</span>)
+<span class="hljs-meta">@Table</span>(name = <span class="hljs-string">&quot;Ride&quot;</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Ride</span> </span>{
+
+    <span class="hljs-meta">@Id</span>
+    <span class="hljs-meta">@GeneratedValue</span>(strategy = GenerationType.AUTO, generator=<span class="hljs-string">&quot;RideSeq&quot;</span>)
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">long</span> id;
+
+    <span class="hljs-keyword">private</span> String rideId;
+
+    <span class="hljs-keyword">private</span> String pickup;
+
+    <span class="hljs-keyword">private</span> String destination;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> status;
+
+    <span class="hljs-keyword">private</span> BigDecimal price;
+
+    <span class="hljs-keyword">private</span> String passengerId;
+
+    <span class="hljs-keyword">private</span> String driverId;
+
+    <span class="hljs-comment">//getter and setters</span>
+    [...]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Dispatch service &#x901A;&#x8FC7; RHOAR(Spring Boot) &#x52A0;&#x8F7D;&#x5D4C;&#x5165;&#x5F0F;&#x8FD0;&#x884C; BPMN</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    <span class="hljs-function"><span class="hljs-keyword">public</span> RuntimeEnvironment <span class="hljs-title">runtimeEnvironment</span><span class="hljs-params">(EntityManagerFactory entityManagerFactory,
+                                                 JtaTransactionManager transactionManager, TransactionalCommandService transactionalCommandService)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+        RuntimeEnvironmentFactoryBean runtimeEnvironmentFactoryBean = <span class="hljs-keyword">new</span> RuntimeEnvironmentFactoryBean();
+        runtimeEnvironmentFactoryBean.setType(RuntimeEnvironmentFactoryBean.TYPE_DEFAULT_KJAR_CL);
+        runtimeEnvironmentFactoryBean.setKbaseName(dispatchProcessKbase);
+        runtimeEnvironmentFactoryBean.setKsessionName(dispatchProcessKsession);
+        runtimeEnvironmentFactoryBean.setEntityManagerFactory(entityManagerFactory);
+        runtimeEnvironmentFactoryBean.setTransactionManager(transactionManager);
+        runtimeEnvironmentFactoryBean.setRegisterableItemsFactory(registerableItemsFactory());
+        Map&lt;String, Object&gt; environmentEntries = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
+        environmentEntries.put(<span class="hljs-string">&quot;ExecutorService&quot;</span>, executorService(entityManagerFactory, transactionalCommandService));
+        runtimeEnvironmentFactoryBean.setEnvironmentEntries(environmentEntries);
+        <span class="hljs-keyword">return</span> (RuntimeEnvironment) runtimeEnvironmentFactoryBean.getObject();
+    }
+
+    <span class="hljs-meta">@Bean</span>(name = <span class="hljs-string">&quot;runtimeManager&quot;</span>)
+    <span class="hljs-meta">@DependsOn</span>(<span class="hljs-string">&quot;springContext&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> RuntimeManager <span class="hljs-title">runtimeManager</span><span class="hljs-params">(EntityManagerFactory entityManagerFactory, JtaTransactionManager transactionManager,
+                                         TransactionalCommandService transactionalCommandService)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+        RuntimeManagerFactoryBean runtimeManagerFactoryBean = <span class="hljs-keyword">new</span> RuntimeManagerFactoryBean();
+        runtimeManagerFactoryBean.setIdentifier(<span class="hljs-string">&quot;spring-rm&quot;</span>);
+        runtimeManagerFactoryBean.setRuntimeEnvironment(runtimeEnvironment(entityManagerFactory,
+                transactionManager, transactionalCommandService));
+        runtimeManagerFactoryBean.setType(<span class="hljs-string">&quot;PER_PROCESS_INSTANCE&quot;</span>);
+        <span class="hljs-keyword">return</span> (RuntimeManager) runtimeManagerFactoryBean.getObject();
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_passenger_service">Passenger service</h3>
+<div class="paragraph">
+<p>Passenger service &#x57FA;&#x4E8E; Spring Boot &#x5B9E;&#x73B0;&#xFF0C;&#x57FA;&#x4E8E; AMQ &#x5B9E;&#x73B0;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x3002;AMQP &#x534F;&#x8BAE;&#x7528;&#x6765;&#x548C; AMQ &#x8FDB;&#x884C;&#x901A;&#x4FE1;&#xFF0C;AMQP Spring Boot &#x76F8;&#x5173;&#x914D;&#x7F6E;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">amqphub.amqp10jms.remote-url=amqps://${amqp.host}:${amqp.port}?${amqp.query}
+amqphub.amqp10jms.username=user
+amqphub.amqp10jms.password=password
+amqphub.amqp10jms.pool.enabled=true
+amqphub.amqp10jms.pool.explicit-producer-cache-size=10
+amqphub.amqp10jms.pool.use-anonymous-producers=false
+
+spring.jms.pub-sub-domain=True
+spring.jms.transacted=True
+spring.jms.subscription-shared=True
+spring.jms.subscription-durable=True
+
+spring.jms.listener.concurrency=20
+spring.jms.listener.max-concurrency=20</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Passenger service &#x6D88;&#x8D39;&#x6D88;&#x606F;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">    @JmsListener(destination = &quot;${listener.destination.driver-assigned}&quot;, subscription= &quot;${listener.subscription.driver-assigned}&quot;)
+    public void processMessage(String messageAsJson) {
+
+        [...]
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_driver_service">Driver service</h3>
+<div class="paragraph">
+<p>Driver service &#x57FA;&#x4E8E; Vert.x &#x5B9E;&#x73B0;&#xFF0C;&#x57FA;&#x4E8E; AMQ &#x5B9E;&#x73B0;&#x5F02;&#x6B65;&#x901A;&#x4FE1;&#x3002;AMQP &#x534F;&#x8BAE;&#x7528;&#x6765;&#x548C; AMQ &#x8FDB;&#x884C;&#x901A;&#x4FE1;&#xFF0C;AMQP bridge &#x7684;&#x5B9E;&#x73B0;&#x662F;&#x5728; ConsumerVerticle &#x7684; start() &#x65B9;&#x6CD5;&#x4E0A;&#x5B9E;&#x73B0;&#x7684;&#xFF0C;&#x5177;&#x4F53;&#x5982;&#x4E0B;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">start</span><span class="hljs-params">(Future&lt;Void&gt; startFuture)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+        AmqpBridgeOptions bridgeOptions = <span class="hljs-keyword">new</span> AmqpBridgeOptions();
+        <span class="hljs-comment">//Handle SSL</span>
+        bridgeOptions.setSsl(config().getBoolean(<span class="hljs-string">&quot;amqp.ssl&quot;</span>));
+        bridgeOptions.setTrustAll(config().getBoolean(<span class="hljs-string">&quot;amqp.ssl.trustall&quot;</span>));
+        bridgeOptions.setHostnameVerificationAlgorithm(!config().getBoolean(<span class="hljs-string">&quot;amqp.ssl.verifyhost&quot;</span>) ? <span class="hljs-string">&quot;&quot;</span> : <span class="hljs-string">&quot;HTTPS&quot;</span>);
+        bridgeOptions.setReplyHandlingSupport(config().getBoolean(<span class="hljs-string">&quot;amqp.replyhandling&quot;</span>));
+        <span class="hljs-comment">// Java Truststore</span>
+        <span class="hljs-keyword">if</span> (!bridgeOptions.isTrustAll()) {
+            JksOptions jksOptions = <span class="hljs-keyword">new</span> JksOptions()
+                    .setPath(config().getString(<span class="hljs-string">&quot;amqp.truststore.path&quot;</span>))
+                    .setPassword(config().getString(<span class="hljs-string">&quot;amqp.truststore.password&quot;</span>));
+            bridgeOptions.setTrustStoreOptions(jksOptions);
+        }
+        <span class="hljs-comment">// Create the bridge</span>
+        bridge = AmqpBridge.create(vertx, bridgeOptions);
+        String host = config().getString(<span class="hljs-string">&quot;amqp.host&quot;</span>);
+        <span class="hljs-keyword">int</span> port = config().getInteger(<span class="hljs-string">&quot;amqp.port&quot;</span>);
+        String username = config().getString(<span class="hljs-string">&quot;amqp.user&quot;</span>, <span class="hljs-string">&quot;anonymous&quot;</span>);
+        String password = config().getString(<span class="hljs-string">&quot;amqp.password&quot;</span>, <span class="hljs-string">&quot;anonymous&quot;</span>);
+        <span class="hljs-comment">//Start the bridge</span>
+        bridge.start(host, port, username, password, ar -&gt; {
+            <span class="hljs-keyword">if</span> (ar.failed()) {
+                log.warn(<span class="hljs-string">&quot;Bridge startup failed&quot;</span>);
+                startFuture.fail(ar.cause());
+            } <span class="hljs-keyword">else</span> {
+                log.info(<span class="hljs-string">&quot;AMQP bridge to &quot;</span> + host + <span class="hljs-string">&quot;:&quot;</span> + port + <span class="hljs-string">&quot; started&quot;</span>);
+                bridgeStarted();
+                startFuture.complete();
+            }
+        });
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__openshift">&#x90E8;&#x7F72;&#x5230; OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x9700;&#x8981;&#x90E8;&#x7F72;&#x6848;&#x4F8B;&#x76F8;&#x5173;&#x7684;&#x6240;&#x6709;&#x6A21;&#x5757;&#xFF0C;&#x5305;&#x62EC;&#x6D88;&#x606F;&#x4E2D;&#x95F4;&#x4EF6;&#x3001;&#x6570;&#x636E;&#x5E93;&#x3001;DevOps &#x5DE5;&#x5177;&#x3001;&#x5FAE;&#x670D;&#x52A1;&#x7B49;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="_messaging">Messaging</h3>
+<div class="paragraph">
+<p>&#x6D88;&#x606F;&#x901A;&#x4FE1;&#x8FD8;&#x9700;&#x8981;&#x8003;&#x91CF; SSO&#x3001;&#x4F20;&#x8F93;&#x52A0;&#x5BC6;&#x7B49;&#xFF0C;Red Hat SSO&#xFF0C;OpenSSL &#x7B49;&#x7EC4;&#x5EFA;&#x4E5F;&#x4F7F;&#x7528;&#x5728;&#x672C;&#x5904;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x4F7F;&#x7528; Ansible &#x90E8;&#x7F72;&#x6D88;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ENMASSE_PRJ=enmasse-82
+$ <span class="hljs-built_in">cd</span> files/ansible/
+$ ansible-playbook playbooks/enmasse.yml <span class="hljs-_">-e</span> project_enmasse=<span class="hljs-variable">$ENMASSE_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 1/4 - 4 &#x4E2A;&#x8FD0;&#x884C;&#x7684; Pods</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get pods
+NAME                                       READY     STATUS    RESTARTS   AGE
+address-space-controller-bb475c559-g658m   1/1       Running   0          3m
+agent-794fdb6f95-hmnsz                     1/1       Running   0          2m
+broker-fd4c858dc-cv8jq                     1/1       Running   0          2m
+none-authservice-76c94b8575-xb6mx          1/1       Running   0          3m</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 2/4 - 2 &#x6761;&#x8DEF;&#x7531;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get routes
+NAME        HOST/PORT                                         PATH      SERVICES    PORT      TERMINATION   WILDCARD
+console     console-enmasse-82.apps.c3de.rhte.opentlc.com               console     https     passthrough   None
+messaging   messaging-enmasse-82.apps.c3de.rhte.opentlc.com             messaging   amqps     passthrough   None</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 3/4 - 4 &#x4E2A;&#x8FD0;&#x884C;&#x7684;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get svc
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+broker             ClusterIP   172.30.14.114    &lt;none&gt;        55671/TCP           4m
+console            ClusterIP   172.30.227.178   &lt;none&gt;        8081/TCP            4m
+messaging          ClusterIP   172.30.86.101    &lt;none&gt;        5672/TCP,5671/TCP   4m
+none-authservice   ClusterIP   172.30.235.189   &lt;none&gt;        5671/TCP            4m</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 4/4 - 10 GB &#x5927;&#x5C0F;&#x7684;&#x6D88;&#x606F;&#x6301;&#x4E45;&#x5316;&#x5B58;&#x50A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get pvc
+NAME          STATUS    VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+broker-data   Bound     vol371    10Gi       RWO                           4m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NOTE&#xFF1A;&#x5982;&#x4E0A;&#x9A8C;&#x8BC1;&#x6B65;&#x9AA4;&#x4E5F;&#x53EF;&#x4EE5;&#x5728;&#x56FE;&#x5F62;&#x5316; UI &#x4E2D;&#x8FDB;&#x884C;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gogs">Gogs</h3>
+<div class="paragraph">
+<p>Gogs &#x5C5E;&#x4E8E; DevOps &#x5DE5;&#x5177;&#x94FE;&#x4E2D;&#x7684;&#x91CD;&#x8981;&#x4E00;&#x73AF;&#xFF0C;&#x7528;&#x6765;&#x5B58;&#x50A8;&#x4EE3;&#x7801;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x4F7F;&#x7528; Ansible &#x90E8;&#x7F72; Gogs</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ TOOLS_PRJ=tools-82
+$ <span class="hljs-built_in">cd</span> files/ansible/
+$ ansible-playbook playbooks/gogs.yml <span class="hljs-_">-e</span> project_tools=<span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 1/3 - 2 &#x4E2A;&#x8FD0;&#x884C;&#x7684; Pods</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get pods
+NAME                      READY     STATUS    RESTARTS   AGE
+gogs-1-cwhnw              1/1       Running   0          1m
+gogs-postgresql-1-9szxc   1/1       Running   0          2m</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 2/3 - 2 &#x4E2A;&#x8FD0;&#x884C;&#x7684;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get svc
+NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+gogs              ClusterIP   172.30.178.96   &lt;none&gt;        3000/TCP   3m
+gogs-postgresql   ClusterIP   172.30.147.34   &lt;none&gt;        5432/TCP   3m</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x9A8C;&#x8BC1; 3/3 - 2 &#x4E2A;&#x6301;&#x4E45;&#x5316;&#x5B58;&#x50A8;&#x5206;&#x522B;&#x5173;&#x8054; Gogs &#x53CA;&#x5176;&#x5BF9;&#x5E94;&#x7684;&#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc get pvc
+NAME                 STATUS    VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+gogs-data            Bound     vol235    10Gi       RWO                           3m
+gogs-postgres-data   Bound     vol5      10Gi       RWO                           3m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NOTE&#xFF1A;&#x5982;&#x4E0A;&#x9A8C;&#x8BC1;&#x6B65;&#x9AA4;&#x4E5F;&#x53EF;&#x4EE5;&#x5728;&#x56FE;&#x5F62;&#x5316; UI &#x4E2D;&#x8FDB;&#x884C;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pgadmin4">pgAdmin4</h3>
+<div class="paragraph">
+<p>pgAdmin4 &#x7528;&#x6765;&#x7BA1;&#x7406; PostgreSQL &#x6570;&#x636E;&#x5E93;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x4F7F;&#x7528; Ansible &#x90E8;&#x7F72; pgAdmin4</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">cd</span> files/ansible/
+$ ansible-playbook playbooks/pgadmin4.yml <span class="hljs-_">-e</span> project_tools=<span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x901A;&#x8FC7;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x83B7;&#x53D6; pgAdmin4 &#x767B;&#x5F55; URL</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;http://<span class="hljs-variable">$(oc get route pgadmin4 -o jsonpath=&apos;{.spec.host}&apos; -n $TOOLS_PRJ)</span>&quot;</span>
+http://pgadmin4-tools-82.apps.c3de.rhte.opentlc.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x4F7F;&#x7528; URL &#x767B;&#x5F55; pgAdmin4&#xFF08;&#x7528;&#x6237;&#x540D;&#xFF1A;<code>admin@example.com</code>&#xFF0C;&#x5BC6;&#x7801;&#xFF1A;<code>admin123</code>&#xFF09;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/pgadmin4.png" alt="pgadmin4.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jenkins">Jenkins</h3>
+<div class="paragraph">
+<p>Jenkins &#x7528;&#x6765; CI/CD &#x7B49;&#x64CD;&#x4F5C;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x4F7F;&#x7528; Ansible &#x90E8;&#x7F72; Jenkins</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">cd</span> files/ansible/
+$ ansible-playbook playbooks/jenkins.yml <span class="hljs-_">-e</span> project_tools=<span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72;&#x6210;&#x529F;&#x901A;&#x8FC7;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x83B7;&#x53D6; Jenkins &#x767B;&#x5F55; URL</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;https://<span class="hljs-variable">$(oc get route jenkins -o jsonpath=&apos;{.spec.host}&apos; -n $TOOLS_PRJ)</span>&quot;</span>
+https://jenkins-tools-82.apps.c3de.rhte.opentlc.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x4F7F;&#x7528;&#x5982;&#x4E0A; URL &#x767B;&#x5F55;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/jenkins-loading-pages.png" alt="jenkins loading pages.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB; <strong>Log in with Openshift</strong> &#x4F1A;&#x5B9A;&#x4F4D;&#x5230; OpenShift &#x767B;&#x5F55;&#x9875;&#x9762;&#xFF0C;SSO &#x767B;&#x5F55;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x5FAE;&#x670D;&#x52A1;&#x90E8;&#x7F72;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x90E8;&#x7F72;&#x4E09;&#x4E2A;&#x5FAE;&#x670D;&#x52A1;&#xFF1A;dispatch service&#x3001;driver service&#x3001;passenger service&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x4F7F;&#x7528; Ansible &#x90E8;&#x7F72;&#x5FAE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ENMASSE_PRJ=services-82
+$ <span class="hljs-built_in">cd</span> files/ansible/
+$ ansible-playbook playbooks/driver_service.yml <span class="hljs-_">-e</span> project_enmasse=<span class="hljs-variable">$ENMASSE_PRJ</span> <span class="hljs-_">-e</span> project_tools=<span class="hljs-variable">$TOOLS_PRJ</span> <span class="hljs-_">-e</span> project_services=<span class="hljs-variable">$SERVICES_PRJ</span>
+$ ansible-playbook playbooks/passenger_service.yml <span class="hljs-_">-e</span> project_enmasse=<span class="hljs-variable">$ENMASSE_PRJ</span> <span class="hljs-_">-e</span> project_tools=<span class="hljs-variable">$TOOLS_PRJ</span> <span class="hljs-_">-e</span> project_services=<span class="hljs-variable">$SERVICES_PRJ</span>
+$ ansible-playbook playbooks/dispatch_service.yml <span class="hljs-_">-e</span> project_enmasse=<span class="hljs-variable">$ENMASSE_PRJ</span> <span class="hljs-_">-e</span> project_tools=<span class="hljs-variable">$TOOLS_PRJ</span> <span class="hljs-_">-e</span> project_services=<span class="hljs-variable">$SERVICES_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x89E6;&#x53D1; pipeline &#x5F00;&#x59CB;&#x81EA;&#x52A8;&#x5316;&#x90E8;&#x7F72;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc start-build driver-service-pipeline -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc start-build passenger-service-pipeline -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc start-build dispatch-service-pipeline -n <span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenShift Console &#x4E2D; DevOps Pipeline &#x5982;&#x4E0B;&#x6240;&#x793A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/devops-pipeline.png" alt="devops pipeline.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x4E0A; pipeline &#x663E;&#x793A;&#x5FAE;&#x670D;&#x52A1;&#x90E8;&#x7F72;&#x6210;&#x529F;&#xFF0C;&#x90E8;&#x7F72;&#x8FC7;&#x7A0B;&#x5305;&#x62EC;&#x4ECE; Git(Gogs) &#x62C9;&#x53D6;&#x4EE3;&#x7801;&#xFF0C;S2I&#xFF0C;&#x6D4B;&#x8BD5;&#x3001;&#x4E0A;&#x7EBF;&#x7B49;&#x3002;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">&#x6848;&#x4F8B;&#x8FD0;&#x884C;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x6848;&#x4F8B;&#x8FD0;&#x884C;&#x4E09;&#x4E2A;&#x670D;&#x52A1;&#x4E4B;&#x95F4;&#x901A;&#x4FE1;&#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/runing-application.png" alt="runing application.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x6D4B;&#x8BD5;&#x8FD0;&#x884C; - &#x901A;&#x8FC7; passenger-service &#x53D1;&#x9001;&#x6D88;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ PASSENGER_SERVICE_URL=$(<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;http://<span class="hljs-variable">$(oc get route passenger-service -o jsonpath=&apos;{.spec.host}&apos; -n $SERVICES_PRJ)</span>&quot;</span>)
+$ curl -X POST -H <span class="hljs-string">&quot;Content-type: application/json&quot;</span> <span class="hljs-_">-d</span> <span class="hljs-string">&apos;{&quot;messages&quot;: 1, &quot;type&quot;: 1}&apos;</span> <span class="hljs-variable">$PASSENGER_SERVICE_URL</span>/simulate
+Sent 1 message(s) with <span class="hljs-built_in">type</span> 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title"><strong>pgAdmin4 &#x67E5;&#x770B;&#x6570;&#x636E;&#x5E93;&#x538B;&#x529B;</strong></div>
+<p><span class="image"><img src="img/db-traffic.png" alt="db traffic.png"></span></p>
+</div>
+<div class="paragraph">
+<div class="title"><strong>&#x67E5;&#x770B; EnMasse console</strong></div>
+<p><span class="image"><img src="img/enMasse-console.png" alt="enMasse console.png"></span></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x6848;&#x4F8B;&#x8FD0;&#x884C;&#x6D4B;&#x8BD5;&#xFF0C;&#x8FD8;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x5176;&#x5B83;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#xFF0C;&#x4F8B;&#x5982;&#x6279;&#x91CF;&#x6DFB;&#x52A0;&#x7B49;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__tracing">&#x5FAE;&#x670D;&#x52A1; Tracing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__jaeger_openshift">&#x5B89;&#x88C5; Jaeger &#x5230; OpenShift</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x5B89;&#x88C5; Jaeger</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">cd</span> files/
+$ oc process <span class="hljs-_">-f</span> openshift/jaeger/jaeger-all-in-one.yaml | oc create <span class="hljs-_">-f</span> - -n <span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x83B7;&#x53D6; jaeger-query URL</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;https://<span class="hljs-variable">$(oc get route jaeger-query -o jsonpath=&apos;{.spec.host}&apos; -n $TOOLS_PRJ)</span>&quot;</span>
+https://jaeger-query-tools-82.apps.c3de.rhte.opentlc.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8BBF;&#x95EE; <a href="https://jaeger-query-tools-82.apps.c3de.rhte.opentlc.com" class="bare" target="_blank">https://jaeger-query-tools-82.apps.c3de.rhte.opentlc.com</a> &#x53EF;&#x4EE5;&#x8FDB;&#x5165;&#x5230; Jaeger UI &#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__pipleline_tracing_branch">&#x7F16;&#x8F91; Pipleline &#x6307;&#x5411; Tracing &#x5BF9;&#x5E94;&#x7684; Branch</h3>
+<div class="paragraph">
+<p>&#x7F16;&#x8F91; Pipleline&#xFF0C;&#x4FEE;&#x6539; Git &#x4EE3;&#x7801;&#x7684; Branch &#x4ECE; <code>master</code> &#x5230; <code>tracing</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
+node (<span class="hljs-string">&apos;maven-with-pvc&apos;</span>) {
+  stage (<span class="hljs-string">&apos;Compile&apos;</span>) {
+    echo <span class="hljs-string">&quot;Starting build&quot;</span>
+    git url: <span class="hljs-string">&quot;${git_url}/${git_repo_app}&quot;</span>, branch: <span class="hljs-string">&quot;tracing&quot;</span>
+    def pom = readMavenPom file: <span class="hljs-string">&apos;pom.xml&apos;</span>
+    version = pom.version
+    groupId = pom.groupId
+    artifactId = pom.artifactId
+    echo <span class="hljs-string">&quot;Building version ${version}&quot;</span>
+    sh <span class="hljs-string">&quot;mvn clean compile -Dcom.redhat.xpaas.repo.redhatga=true&quot;</span>
+  }
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x7F16;&#x8F91;&#x5B8C;&#x6210;&#x540E;&#x91CD;&#x65B0;&#x6267;&#x884C; Build.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x91CD;&#x65B0;&#x8FD0;&#x884C;&#x6D4B;&#x8BD5;</h3>
+<div class="paragraph">
+<p><code>jaegertracing/jaeger-agent</code> &#x955C;&#x50CF;&#x53EF;&#x4EE5;&#x6279;&#x91CF;&#x4EA7;&#x751F;&#x538B;&#x529B;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#xFF0C;&#x90E8;&#x7F72;&#x6B64;&#x955C;&#x50CF;&#xFF0C;&#x8FDB;&#x884C;&#x5E26;&#x538B;&#x529B;&#x6D4B;&#x8BD5;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__jaeger_ui">&#x67E5;&#x770B; Jaeger UI</h3>
+<div class="paragraph">
+<p>&#x91CD;&#x73B0;&#x767B;&#x5F55;&#x67E5;&#x770B; Jaeger UI&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x76F8;&#x5173;&#x7684;&#x7EDF;&#x8BA1;&#x6570;&#x636E;&#xFF0C;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/jeager-tracing.png" alt="jeager tracing.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">&#x5FAE;&#x670D;&#x52A1;&#x76D1;&#x63A7;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prometheus">Prometheus &#x67B6;&#x6784;</h3>
+<div class="paragraph">
+<p>Prometheus &#x67B6;&#x6784;&#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/prometheus-arch.png" alt="prometheus arch.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__prometheus_openshift">&#x90E8;&#x7F72; Prometheus &#x5230; OpenShift</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x90E8;&#x7F72; Prometheus &#x5230; OpenShift</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc create sa prometheus -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc adm policy add-role-to-user view system:serviceaccount:<span class="hljs-variable">$TOOLS_PRJ</span>:prometheus -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc adm policy add-role-to-user view system:serviceaccount:<span class="hljs-variable">$TOOLS_PRJ</span>:prometheus -n <span class="hljs-variable">$ENMASSE_PRJ</span>
+$ oc adm policy add-role-to-user view system:serviceaccount:<span class="hljs-variable">$TOOLS_PRJ</span>:prometheus -n <span class="hljs-variable">$SERVICES_PRJ</span>
+$ oc create configmap prometheus --from-file=openshift/prometheus/prometheus.yaml -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc apply <span class="hljs-_">-f</span> openshift/prometheus/prometheus-template.yaml -n <span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x83B7;&#x53D6; Prometheus URL</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;http://<span class="hljs-variable">$(oc get route prometheus -o jsonpath=&apos;{.spec.host}&apos; -n $TOOLS_PRJ)</span>&quot;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__enmasse_broker">&#x76D1;&#x63A7; EnMasse broker</h3>
+<div class="paragraph">
+<p>&#x67E5;&#x770B; artemis_consumer_count metric&#xFF0C;&#x70B9;&#x51FB; ` Execute` &#x6267;&#x884C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/artemis_consumer_count_metric.png" alt="artemis consumer count metric.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x76D1;&#x63A7;&#x5FAE;&#x670D;&#x52A1;</h3>
+<div class="paragraph">
+<p>&#x67E5;&#x770B;&#x5FAE;&#x670D;&#x52A1; Metric &#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/services-status.png" alt="services status.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__sql">&#x76D1;&#x63A7; SQL</h3>
+<div class="paragraph">
+<p>&#x67E5;&#x770B; SQL metrics &#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/sql-metrics.png" alt="sql metrics.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grafana">Grafana</h3>
+<div class="paragraph">
+<p>The Prometheus UI capabilities to visualize metrics data are quite limited, that&#x2019;s why Prometheus is often used in combination with Grafana to create dashboards.</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x90E8;&#x7F72; Grafana</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ oc create sa grafana -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc create configmap grafana-config --from-file=openshift/grafana/defaults.ini -n <span class="hljs-variable">$TOOLS_PRJ</span>
+$ oc process <span class="hljs-_">-f</span> openshift/grafana/grafana.yaml | oc create <span class="hljs-_">-f</span> - -n <span class="hljs-variable">$TOOLS_PRJ</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B; Grafana &#x8BBF;&#x95EE; URL</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;http://<span class="hljs-variable">$(oc get route grafana -o jsonpath=&apos;{.spec.host}&apos; -n $TOOLS_PRJ)</span>&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8BBF;&#x95EE;&#x67E5;&#x770B;&#x4E00;&#x4E9B;&#x7EDF;&#x8BA1;&#x6570;&#x636E;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/grafana-metricx.png" alt="grafana metricx.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../coolstore/" class="navigation navigation-prev navigation-unique" aria-label="Previous page: CoolStore">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"微服务及红帽产品集成实践","level":"1.6.5","depth":2,"next":{"title":"规则引擎","level":"1.6.6","depth":2,"url":"http://ksoong.org/drools-examples/content/","ref":"http://ksoong.org/drools-examples/content/","articles":[]},"previous":{"title":"CoolStore","level":"1.6.4","depth":2,"path":"jboss/coolstore/README.adoc","ref":"jboss/coolstore/README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"jboss/rhte18/redhat-msa.adoc","mtime":"2019-03-27T08:41:56.922Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T09:29:16.283Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

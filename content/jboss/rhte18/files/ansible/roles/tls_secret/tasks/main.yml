@@ -1,0 +1,31 @@
+---
+
+- name: check if {{ tls_secret_name }} secret exists
+  shell: "{{ openshift_cli }} get secret {{ tls_secret_name }} -n {{ ocp_project }}"
+  register: secret_exists
+  ignore_errors: true
+  changed_when: false
+
+# tls secret
+- name: create '{{ crt_out }}' self-signed certificate
+  block:
+    - shell: openssl genrsa -out {{ ca_key }} 2048
+    - shell: openssl req -new -x509 -days 1100 -key {{ ca_key }} -subj "/O=io.enmasse/CN={{ crt_cn }}" -out {{ ca_crt }}
+    - shell: openssl req -newkey rsa:2048 -nodes -keyout {{ key_out }} -subj "/O=io.enmasse/CN={{ crt_cn }}" -out {{ ca_csr }}
+    - shell: bash -c 'openssl x509 -req -extfile <(printf "{{ crt_cn_alt }}") -days 1100 -in {{ ca_csr }} -CA {{ ca_crt }} -CAkey {{ ca_key }} -CAcreateserial -CAserial {{ ca_serial }} -out {{ crt_out }}'
+  when: >
+    (crt_cn_alt is defined and crt_cn_alt != "") and
+    secret_exists is failed
+
+- name: create '{{ crt_out }}' self-signed certificate
+  shell: openssl req -new -x509 -batch -nodes -days 11000 -out {{ crt_out }} -keyout {{ key_out }} -subj "/O=io.enmasse/CN={{ crt_cn }}"
+  when: >
+    (crt_cn_alt is defined and crt_cn_alt == "") and
+    secret_exists is failed
+  
+- name: create '{{ tls_secret_name }}' tls secret
+  shell: |
+    {{ openshift_cli }} create secret tls {{ tls_secret_name }} -n {{ ocp_project }} \
+    --cert="{{ crt_out }}" --key="{{ key_out }}"
+  when:
+    secret_exists is failed

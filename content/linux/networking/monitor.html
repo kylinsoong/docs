@@ -1,0 +1,2573 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>网络监控 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../fs.html" />
+    
+    
+    <link rel="prev" href="dns.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    INTRODUCTION
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    INFRA
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../rhel/readme.html">
+            
+                <a href="../rhel/readme.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../rhel/pre-install.html">
+            
+                <a href="../rhel/pre-install.html">
+            
+                    
+                    安装 DVD 制作
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../rhel/install-img-usb.html">
+            
+                <a href="../rhel/install-img-usb.html">
+            
+                    
+                    生成 USB 介质
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../rhel/install.html">
+            
+                <a href="../rhel/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../rhel/kvm.html">
+            
+                <a href="../rhel/kvm.html">
+            
+                    
+                    KVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../basic/basic.html">
+            
+                <a href="../basic/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../basic/local-remote-login.html">
+            
+                <a href="../basic/local-remote-login.html">
+            
+                    
+                    本地及远程登录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../basic/user-group.html">
+            
+                <a href="../basic/user-group.html">
+            
+                    
+                    用户和组
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../basic/packages-update.html">
+            
+                <a href="../basic/packages-update.html">
+            
+                    
+                    软件包的安装与更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../basic/syslog.html">
+            
+                <a href="../basic/syslog.html">
+            
+                    
+                    系统日志
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../basic/ntp.html">
+            
+                <a href="../basic/ntp.html">
+            
+                    
+                    NTP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../basic/ex.html">
+            
+                <a href="../basic/ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="fundamentals.html">
+            
+                <a href="fundamentals.html">
+            
+                    
+                    网络基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="ifcfg.html">
+            
+                <a href="ifcfg.html">
+            
+                    
+                    网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="ipv6cfg.html">
+            
+                <a href="ipv6cfg.html">
+            
+                    
+                    IPv6 网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="netns.html">
+            
+                <a href="netns.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="teaming.html">
+            
+                <a href="teaming.html">
+            
+                    
+                    teaming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.6" data-path="bridge.html">
+            
+                <a href="bridge.html">
+            
+                    
+                    bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.7" data-path="dns.html">
+            
+                <a href="dns.html">
+            
+                    
+                    DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3.8" data-path="monitor.html">
+            
+                <a href="monitor.html">
+            
+                    
+                    网络监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../fs.html">
+            
+                <a href="../fs.html">
+            
+                    
+                    文件系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../stoarges/readme.html">
+            
+                <a href="../stoarges/readme.html">
+            
+                    
+                    存储
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../stoarges/lvm.html">
+            
+                <a href="../stoarges/lvm.html">
+            
+                    
+                    LVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="../stoarges/nfs.html">
+            
+                <a href="../stoarges/nfs.html">
+            
+                    
+                    NFS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="../stoarges/file-storage.html">
+            
+                <a href="../stoarges/file-storage.html">
+            
+                    
+                    文件存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="../stoarges/block-storage.html">
+            
+                <a href="../stoarges/block-storage.html">
+            
+                    
+                    块存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../security/">
+            
+                <a href="../security/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../security/file-permissions.html">
+            
+                <a href="../security/file-permissions.html">
+            
+                    
+                    文件权限
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../security/SELinux.html">
+            
+                <a href="../security/SELinux.html">
+            
+                    
+                    SELinux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../security/firewall.html">
+            
+                <a href="../security/firewall.html">
+            
+                    
+                    防火墙
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../security/openssl.html">
+            
+                <a href="../security/openssl.html">
+            
+                    
+                    OpenSSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../process/">
+            
+                <a href="../process/">
+            
+                    
+                    进程
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../process/management.html">
+            
+                <a href="../process/management.html">
+            
+                    
+                    进程管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../process/service.html">
+            
+                <a href="../process/service.html">
+            
+                    
+                    服务管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../process/schedule.html">
+            
+                <a href="../process/schedule.html">
+            
+                    
+                    周期性运行进程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../process/bash.html">
+            
+                <a href="../process/bash.html">
+            
+                    
+                    bash
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../svc/">
+            
+                <a href="../svc/">
+            
+                    
+                    常用服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../svc/openssh.html">
+            
+                <a href="../svc/openssh.html">
+            
+                    
+                    OpenSSH
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="../svc/postfix.html">
+            
+                <a href="../svc/postfix.html">
+            
+                    
+                    Email
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="../svc/mariadb.html">
+            
+                <a href="../svc/mariadb.html">
+            
+                    
+                    MariaDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="../svc/httpd.html">
+            
+                <a href="../svc/httpd.html">
+            
+                    
+                    HTTPD
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="../svc/zabbix.html">
+            
+                <a href="../svc/zabbix.html">
+            
+                    
+                    Zabbix
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../perf/">
+            
+                <a href="../perf/">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../docker/docker.html">
+            
+                <a href="../../docker/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../docker/svc/svc.html">
+            
+                <a href="../../docker/svc/svc.html">
+            
+                    
+                    容器化服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../../docker/svc/mysql.html">
+            
+                <a href="../../docker/svc/mysql.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../../docker/svc/httpd.html">
+            
+                <a href="../../docker/svc/httpd.html">
+            
+                    
+                    httpd
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../docker/container.html">
+            
+                <a href="../../docker/container.html">
+            
+                    
+                    容器管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../docker/images.html">
+            
+                <a href="../../docker/images.html">
+            
+                    
+                    容器镜像
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../openshift/openshift.html">
+            
+                <a href="../../openshift/openshift.html">
+            
+                    
+                    OPENSHIFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../openshift/concepts/">
+            
+                <a href="../../openshift/concepts/">
+            
+                    
+                    概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../openshift/install/">
+            
+                <a href="../../openshift/install/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../../openshift/install/yum.html">
+            
+                <a href="../../openshift/install/yum.html">
+            
+                    
+                    本地 yum 源配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="../../openshift/install/docker-dist.html">
+            
+                <a href="../../openshift/install/docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
+            
+                <a href="../../openshift/install/pre-install.html">
+            
+                    
+                    前续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
+            
+                <a href="../../openshift/install/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
+            
+                <a href="../../openshift/install/post-install.html">
+            
+                    
+                    后续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/add-nodes.html">
+            
+                <a href="../../openshift/install/add-nodes.html">
+            
+                    
+                    节点扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="../../openshift/install/qa.html">
+            
+                <a href="../../openshift/install/qa.html">
+            
+                    
+                    常见问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../openshift/advanced-deployment.html">
+            
+                <a href="../../openshift/advanced-deployment.html">
+            
+                    
+                    高级部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../openshift/devops.html">
+            
+                <a href="../../openshift/devops.html">
+            
+                    
+                    DEVOPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../openshift/secure.html">
+            
+                <a href="../../openshift/secure.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../../openshift/samples/samples.html">
+            
+                <a href="../../openshift/samples/samples.html">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.6.1" data-path="../../openshift/samples/rc.html">
+            
+                <a href="../../openshift/samples/rc.html">
+            
+                    
+                    RC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.2" data-path="../../openshift/samples/dc.html">
+            
+                <a href="../../openshift/samples/dc.html">
+            
+                    
+                    DC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.3" data-path="../../openshift/samples/s2i.html">
+            
+                <a href="../../openshift/samples/s2i.html">
+            
+                    
+                    S2I
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.4" data-path="../../openshift/samples/configmap.html">
+            
+                <a href="../../openshift/samples/configmap.html">
+            
+                    
+                    ConfigMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.5" data-path="../../openshift/samples/elastic-spark.html">
+            
+                <a href="../../openshift/samples/elastic-spark.html">
+            
+                    
+                    elasticsearch and spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.6" data-path="../../openshift/samples/vdb-data-svc.html">
+            
+                <a href="../../openshift/samples/vdb-data-svc.html">
+            
+                    
+                    Teiid Data Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../../openshift/labs/">
+            
+                <a href="../../openshift/labs/">
+            
+                    
+                    LABS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.7.1" data-path="../../openshift/labs/sdn.html">
+            
+                <a href="../../openshift/labs/sdn.html">
+            
+                    
+                    Software-Defined Networking
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.2" data-path="../../openshift/labs/edge-route.html">
+            
+                <a href="../../openshift/labs/edge-route.html">
+            
+                    
+                    Route
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.3" data-path="../../openshift/labs/web-console.html">
+            
+                <a href="../../openshift/labs/web-console.html">
+            
+                    
+                    Web Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.4" data-path="../../openshift/labs/projects-accounts.html">
+            
+                <a href="../../openshift/labs/projects-accounts.html">
+            
+                    
+                    项目用户安全管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.5" data-path="../../openshift/labs/secure-secrets.html">
+            
+                <a href="../../openshift/labs/secure-secrets.html">
+            
+                    
+                    数据库连接信息保护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.6" data-path="../../openshift/labs/db-persist.html">
+            
+                <a href="../../openshift/labs/db-persist.html">
+            
+                    
+                    持久化数据库存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.7" data-path="../../openshift/labs/wordpress.html">
+            
+                <a href="../../openshift/labs/wordpress.html">
+            
+                    
+                    部署 wordpress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.8" data-path="../../openshift/labs/scaling.html">
+            
+                <a href="../../openshift/labs/scaling.html">
+            
+                    
+                    扩展应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.9" data-path="../../openshift/labs/hpa.html">
+            
+                <a href="../../openshift/labs/hpa.html">
+            
+                    
+                    弹性扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.10" data-path="../../openshift/labs/010.html">
+            
+                <a href="../../openshift/labs/010.html">
+            
+                    
+                    Blue-Green Deployments
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.11" data-path="../../openshift/labs/011.html">
+            
+                <a href="../../openshift/labs/011.html">
+            
+                    
+                    SCM Web Hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.12" data-path="../../openshift/labs/012.html">
+            
+                <a href="../../openshift/labs/012.html">
+            
+                    
+                    Rollback Applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.13" data-path="../../openshift/labs/deploy-an-operator.html">
+            
+                <a href="../../openshift/labs/deploy-an-operator.html">
+            
+                    
+                    Operator 部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.14" data-path="../../openshift/labs/014.html">
+            
+                <a href="../../openshift/labs/014.html">
+            
+                    
+                    JBoss Developer Studio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.15" data-path="../../openshift/labs/015.html">
+            
+                <a href="../../openshift/labs/015.html">
+            
+                    
+                    Deploy a SpringBoot Application
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../../openshift/case.html">
+            
+                <a href="../../openshift/case.html">
+            
+                    
+                    用例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../ansible/">
+            
+                <a href="../../ansible/">
+            
+                    
+                    ANSIBLE
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../ansible/basic-usage.html">
+            
+                <a href="../../ansible/basic-usage.html">
+            
+                    
+                    基本使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../../jboss/readme.html">
+            
+                <a href="../../jboss/readme.html">
+            
+                    
+                    APPDEV
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../../jboss/api/readme.html">
+            
+                <a href="../../jboss/api/readme.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../../jboss/mesh.html">
+            
+                <a href="../../jboss/mesh.html">
+            
+                    
+                    Mesh
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../../jboss/faas/openwhisk.html">
+            
+                <a href="../../jboss/faas/openwhisk.html">
+            
+                    
+                    Serverless
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../../jboss/coolstore/">
+            
+                <a href="../../jboss/coolstore/">
+            
+                    
+                    CoolStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../../jboss/rhte18/redhat-msa.html">
+            
+                <a href="../../jboss/rhte18/redhat-msa.html">
+            
+                    
+                    微服务及红帽产品集成实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" >
+            
+                <a target="_blank" href="http://ksoong.org/drools-examples/content/">
+            
+                    
+                    规则引擎
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../../jboss/datavirt/datavirt.html">
+            
+                <a href="../../jboss/datavirt/datavirt.html">
+            
+                    
+                    数据虚拟化
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.7.1" data-path="../../jboss/datavirt/software-list.html">
+            
+                <a href="../../jboss/datavirt/software-list.html">
+            
+                    
+                    软件版本号对照表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.2" data-path="../../jboss/datavirt/changelog.html">
+            
+                <a href="../../jboss/datavirt/changelog.html">
+            
+                    
+                    修订记录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.3" data-path="../../jboss/datavirt/download.html">
+            
+                <a href="../../jboss/datavirt/download.html">
+            
+                    
+                    下载
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.4" data-path="../../jboss/datavirt/install.html">
+            
+                <a href="../../jboss/datavirt/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.5" data-path="../../jboss/datavirt/start.html">
+            
+                <a href="../../jboss/datavirt/start.html">
+            
+                    
+                    启动
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.6" data-path="../../jboss/datavirt/deploy-vdbs.html">
+            
+                <a href="../../jboss/datavirt/deploy-vdbs.html">
+            
+                    
+                    部署测试 VDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.7" data-path="../../jboss/datavirt/meta.html">
+            
+                <a href="../../jboss/datavirt/meta.html">
+            
+                    
+                    元数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.8" data-path="../../jboss/datavirt/jbds-jdv.html">
+            
+                <a href="../../jboss/datavirt/jbds-jdv.html">
+            
+                    
+                    JBDS 创建虚拟数据库操作示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="../../jboss/amq/amq.html">
+            
+                <a href="../../jboss/amq/amq.html">
+            
+                    
+                    A-MQ
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.8.1" data-path="../../jboss/amq/streams.html">
+            
+                <a href="../../jboss/amq/streams.html">
+            
+                    
+                    AMQ Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8.2" data-path="../../jboss/amq/install.html">
+            
+                <a href="../../jboss/amq/install.html">
+            
+                    
+                    AMQ 6.3 安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.9" >
+            
+                <a target="_blank" href="http://ksoong.org/agile-integration/">
+            
+                    
+                    敏捷集成
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.10" data-path="../../jboss/bpm/bpm.html">
+            
+                <a href="../../jboss/bpm/bpm.html">
+            
+                    
+                    BPM
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.10.1" data-path="../../jboss/bpm/install.html">
+            
+                <a href="../../jboss/bpm/install.html">
+            
+                    
+                    安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.11" data-path="../../jboss/secure/">
+            
+                <a href="../../jboss/secure/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <a target="_blank" href="https://mongocn.github.io">
+            
+                    
+                    DATA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../../solutions/">
+            
+                <a href="../../solutions/">
+            
+                    
+                    SOLUTIONS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../../solutions/abc-distribute-arch.html">
+            
+                <a href="../../solutions/abc-distribute-arch.html">
+            
+                    
+                    核心银行系统分布式架构转型
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../../about/">
+            
+                <a href="../../about/">
+            
+                    
+                    BUSINESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../../about/it-professions.html">
+            
+                <a href="../../about/it-professions.html">
+            
+                    
+                    PROFESSIONS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../../about/softskills.html">
+            
+                <a href="../../about/softskills.html">
+            
+                    
+                    SKILLS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >网络监控</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x7F51;&#x7EDC;&#x76D1;&#x63A7;">&#x7F51;&#x7EDC;&#x76D1;&#x63A7;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_tcpdump">tcpdump</a>
+<ul class="sectlevel2">
+<li><a href="#__">&#x547D;&#x4EE4;&#x884C;&#x8BED;&#x6CD5;</a></li>
+<li><a href="#___2">&#x6293;&#x5305;&#x6B65;&#x9AA4;</a></li>
+<li><a href="#_wireshark">Wireshark &#x56FE;&#x5F62;&#x5316;&#x5C55;&#x793A;</a></li>
+</ul>
+</li>
+<li><a href="#_tcpdump_2">tcpdump &#x57FA;&#x672C;&#x4F7F;&#x7528;&#x6848;&#x4F8B;</a>
+<ul class="sectlevel2">
+<li><a href="#___3">&#x57FA;&#x672C;&#x5305;&#x6293;&#x53D6;</a></li>
+<li><a href="#_dns">DNS &#x89E3;&#x6790;&#x5305;&#x7684;&#x6293;&#x53D6;</a></li>
+<li><a href="#_http">HTTP &#x5305;&#x6293;&#x53D6;&#x53CA;&#x5206;&#x6790;</a></li>
+</ul>
+</li>
+<li><a href="#_tcp">TCP &#x8FDE;&#x63A5;&#x5EFA;&#x7ACB;&#x4E0E;&#x65AD;&#x5F00;</a></li>
+<li><a href="#_tcp_socket">TCP Socket &#x4F20;&#x8F93;</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_tcpdump">tcpdump</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__">&#x547D;&#x4EE4;&#x884C;&#x8BED;&#x6CD5;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x57FA;&#x672C;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x53C2;&#x6570;</th>
+<th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verbose</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x5B9A;&#x4E49;&#x65E5;&#x5FD7;&#x8F93;&#x51FA;&#x7EA7;&#x522B;:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-v</code></p>
+</li>
+<li>
+<p><code>-vv</code></p>
+</li>
+<li>
+<p><code>-vvv</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>v</code> &#x8D8A;&#x591A;&#xFF0C;&#x8F93;&#x51FA;&#x7684;&#x65E5;&#x5FD7;&#x8D8A;&#x8BE6;&#x7EC6;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Snaplen</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p><code>-s SIZE</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>RHEL 6 &#x4E4B;&#x540E;&#x7684; tcpdump &#x6293;&#x53D6;&#x6570;&#x636E;&#x5305;&#x65F6;&#x6BCF;&#x4E2A;&#x5305;&#x7684;&#x9ED8;&#x8BA4;&#x6293;&#x53D6;&#x957F;&#x5EA6;&#x4E3A; 65535 &#x5B57;&#x8282;&#xFF0C;&#x800C;&#x65E7;&#x7248;&#x672C;&#xFF08;RHEL5 &#x4E4B;&#x524D;&#xFF09;&#x7684; tcpdump &#x6BCF;&#x4E2A;&#x5305;&#x9ED8;&#x8BA4;&#x6293;&#x53D6;&#x957F;&#x5EA6;&#x4E3A; 68 &#x5B57;&#x8282;&#x3002;&#x4F46;&#x662F;&#x6293;&#x53D6;68&#x5B57;&#x8282;&#x7684;&#x6570;&#x636E;&#x5F80;&#x5F80;&#x4E0D;&#x80FD;&#x6EE1;&#x8DB3;&#x6240;&#x6709;&#x6545;&#x969C;&#x6392;&#x9664;&#x53CA;&#x8BCA;&#x65AD;&#x7684;&#x9700;&#x8981;&#xFF0C;&#x6240;&#x4EE5;&#x5982;&#x679C;&#x60A8;&#x4E0D;&#x786E;&#x5B9A;&#x7CFB;&#x7EDF;&#x7684;&#x9ED8;&#x8BA4;&#x503C;&#xFF0C;&#x8BF7;&#x4EE5; &quot;snaplen&quot; &#x4E3A;&#x5173;&#x952E;&#x5B57;&#x67E5;&#x627E;&#x76F8;&#x5173;&#x4FE1;&#x606F;&#x53C2;&#x8003; tcpdump &#x7684; man &#x624B;&#x518C;&#x3002;&#x5982;&#x679C;&#x60A8;&#x60F3;&#x6293;&#x5230;&#x5B8C;&#x6574;&#x7684;&#x6570;&#x636E;&#x5305;&#x3002;snaplen &#x8BBE;&#x7F6E;&#x4E3A; 0 &#x5219;&#x91C7;&#x7528;&#x9ED8;&#x8BA4;&#x7684;&#x5B57;&#x8282;&#x6570;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x6CE8;&#x610F;&#x5BF9;&#x4E8E; NFS v3, &#x628A; snaplen &#x8BBE;&#x4E3A; 256 &#x5C31;&#x53EF;&#x4EE5;&#x6EE1;&#x8DB3;&#x9700;&#x6C42;&#x3002;&#x4F46;&#x5982;&#x679C;&#x662F;&#x9488;&#x5BF9; READDIR/READDIRPLUS &#x7684;&#x6545;&#x969C;&#x6392;&#x9664;&#xFF0C;&#x60A8;&#x53EF;&#x80FD;&#x9700;&#x8981;&#x8BBE;&#x7F6E; snaplen &#x4E3A; 0&#x3002;&#x5BF9;&#x4E8E; NFS v4, &#x60A8;&#x9700;&#x8981;&#x5C06; snaplen &#x8BBE;&#x4E3A;0&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interface</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p><code>-i INTERFACE</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>INTERFACE &#x5E38;&#x7528;&#x503C;&#x662F; &quot;eth0&quot; &#x6216; &quot;bond0&quot;&#x3002;&#x60A8;&#x4E5F;&#x53EF;&#x4EE5;&#x5C06;&#x5176;&#x8BBE;&#x4E3A; &quot;any&quot; &#x6293;&#x53D6;&#x6240;&#x6709;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x7684;&#x6570;&#x636E;&#x5305;&#xFF0C;&#x4F46;&#x8FD9;&#x4F1A;&#x5BFC;&#x81F4;&#x540C;&#x4E00;&#x6570;&#x636E;&#x5305;&#x88AB;&#x6293;&#x53D6;&#x591A;&#x6B21;&#xFF08;&#x4F8B;&#x5982;&#xFF0C;&#x67D0;&#x7CFB;&#x7EDF;&#x914D;&#x7F6E;&#x4E86; bonding&#xFF0C;&#x5982;&#x679C;&#x7528; &quot;any&quot; &#x7684;&#x8BDD;&#x65E2;&#x53EF;&#x4EE5;&#x6293;&#x5230; master &#x7684;&#x5305;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x6293;&#x5230; slave &#x7684;&#x5305;&#xFF09;&#x3002;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#x4E0B;&#x53CD;&#x800C;&#x4F7F;&#x5F97;&#x6545;&#x969C;&#x6392;&#x9664;/&#x8BCA;&#x65AD;&#x66F4;&#x4E3A;&#x590D;&#x6742;&#xFF0C;&#x56E0;&#x4E3A;&#x5F88;&#x591A;&#x5DE5;&#x5177;&#x4F1A;&#x5C06;&#x591A;&#x4F59;&#x7684;&#x5305;&#x6807;&#x8BB0;&#x4E3A;&#x91CD;&#x53D1;&#x7684;&#x6570;&#x636E;&#x3002;&#x5982;&#x679C;&#x60A8;&#x77E5;&#x9053;&#x6B63;&#x5728;&#x4E0E;&#x4E4B;&#x901A;&#x4FE1;&#x7684;&#x8FDC;&#x7AEF; IP &#x5730;&#x5740;&#xFF0C;&#x90A3;&#x4E48;&#x60A8;&#x5C31;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; <code>ip route get</code> &#x786E;&#x5B9A;&#x4E0E;&#x8FDC;&#x7A0B;&#x901A;&#x4FE1;&#x7684;&#x672C;&#x5730;&#x7F51;&#x5361;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0 -i eth0</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output File Location</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6307;&#x5B9A;&#x65E5;&#x5FD7;&#x8F93;&#x51FA;&#x6587;&#x4EF6;&#x7684;&#x8DEF;&#x5F84;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-w PATH</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0 -i etho -w /tmp/$(hostname)-$(date +<span class="hljs-string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>).pcap</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rolling</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6307;&#x5B9A;&#x5355;&#x4E2A;&#x65E5;&#x5FD7;&#x6587;&#x4EF6;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x65E5;&#x5FD7;&#x6587;&#x4EF6;&#x7684;&#x6570;&#x91CF;&#xFF0C;&#x65E5;&#x5FD7;&#x6587;&#x4EF6;&#x538B;&#x7F29;&#x7684;&#x7B97;&#x6CD5;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-C SIZE -W SIZE -z gzip/bzip2</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0 -i etho -w /tmp/$(hostname)-$(date +<span class="hljs-string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>).pcap -C 10 -W 5 -z gzip</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6307;&#x5B9A;&#x8FC7;&#x6EE4;&#x7684;&#x534F;&#x8BAE;&#xFF0C;&#x652F;&#x6301;&#x4F20;&#x8F93;&#x5C42;&#x534F;&#x8BAE;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>tcp</p>
+</li>
+<li>
+<p>udp</p>
+</li>
+<li>
+<p>icmp</p>
+</li>
+<li>
+<p>arp</p>
+</li>
+<li>
+<p>rarp</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x652F;&#x6301;&#x4E8C;&#x5C42;&#x534F;&#x8BAE;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ipv4</p>
+</li>
+<li>
+<p>ipv6</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B; - TCP IPv4</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0 -i etho -w /tmp/$(hostname)-$(date +<span class="hljs-string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>).pcap -C 10 -W 5 -z gzip ip and tcp</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6307;&#x5B9A;&#x8FC7;&#x6EE4;&#x7684;&#x4E3B;&#x673A;&#x540D;&#xFF0C;&#x53EF;&#x4EE5;&#x662F;&#x672C;&#x5730;&#x4E3B;&#x673A;&#x540D;&#x6216;&#x5730;&#x5740;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x662F;&#x8FDC;&#x7A0B;&#x4E3B;&#x673A;&#x540D;&#x6216;&#x5730;&#x5740;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0 -i etho -w /tmp/$(hostname)-$(date +<span class="hljs-string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>).pcap -C 10 -W 5 -z gzip ip and tcp and dst host example.com</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6307;&#x5B9A;&#x8FC7;&#x6EE4;&#x7684;&#x7AEF;&#x53E3;&#x53F7;&#xFF0C;&#x53EF;&#x4EE5;&#x662F;&#x672C;&#x5730;&#x7AEF;&#x53E3;&#x53F7;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x662F;&#x8FDC;&#x7A0B;&#x7AEF;&#x53E3;&#x53F7;&#xFF0C;&#x591A;&#x4E2A;&#x7AEF;&#x53E3;&#x53F7;&#x7528;&#x5206;&#x53F7;&#x5206;&#x5F00;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nn -v <span class="hljs-_">-s</span> 0 -i etho -w /tmp/$(hostname)-$(date +<span class="hljs-string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>).pcap -C 10 -W 5 -z gzip ip and tcp and dst host example.com and dst port 80 or 443 or 8080 or 8443</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x6293;&#x5305;&#x6B65;&#x9AA4;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x662F;&#x6293;&#x53D6;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x548C;&#x5BA2;&#x6237;&#x7AEF;&#x4E4B;&#x95F4;&#x7F51;&#x7EDC;&#x6D41;&#x91CF;&#x5305;&#x7684;&#x6B65;&#x9AA4;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x786E;&#x5B9A;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x90FD;&#x5B89;&#x88C5;&#x4E86; tcpdump RPM &#x5305;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">yum install tcpdump</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x4EE5; root &#x7528;&#x6237;&#x7684;&#x8EAB;&#x4EFD;&#x5728;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x6267;&#x884C;&#x4EE5;&#x4E0B;&#x547D;&#x4EE4;&#xFF1A;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -n -vv <span class="hljs-_">-s</span> 0 -i {interface} -w /tmp/server.cap host {hostname or IP address of client}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5728; <code>{interface}</code> &#x5904;&#x586B;&#x5165;&#x4E0E;&#x5BA2;&#x6237;&#x7AEF;&#x901A;&#x4FE1;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x3002;&#x5982;&#x679C;&#x60A8;&#x60F3;&#x5217;&#x51FA;&#x6240;&#x6709;&#x53EF;&#x4EE5;&#x7528; tcpdump &#x6293;&#x5305;&#x7684;&#x8BBE;&#x5907;&#xFF0C;&#x8BF7;&#x6267;&#x884C;&#x4EE5;&#x4E0B;&#x547D;&#x4EE4;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -D</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5982;&#x679C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x6709;&#x5F88;&#x591A;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x8BF7;&#x60A8;&#x786E;&#x4FDD;&#x6293;&#x53D6;&#x7684;&#x662F;&#x6B63;&#x786E;&#x63A5;&#x53E3;&#x7684;&#x6D41;&#x91CF;&#x5305;&#x3002;</p>
+</li>
+<li>
+<p>&#x5982;&#x679C;&#x60A8;&#x4F7F;&#x7528;&#x4E86; bonding &#x6216; vlan &#x63A5;&#x53E3;&#xFF0C;&#x8BF7;&#x786E;&#x4FDD;&#x6293;&#x53D6;&#x7684;&#x662F;&#x8BE5;&#x8BBE;&#x5907;&#x7684;&#x6D41;&#x91CF;&#x5305;&#x3002;</p>
+</li>
+<li>
+<p>&#x8BF7;&#x4EE5; root &#x7528;&#x6237;&#x7684;&#x8EAB;&#x4EFD;&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x6267;&#x884C;&#x4EE5;&#x4E0B;&#x547D;&#x4EE4;&#xFF1A;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -n -vv <span class="hljs-_">-s</span> 0 -i {interface} -w /tmp/client.cap host {hostname or IP address of server}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5728; <code>{interface}</code> &#x5904;&#x586B;&#x5165;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x901A;&#x4FE1;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5C3D;&#x53EF;&#x80FD;&#x7684;&#x91CD;&#x73B0;&#x51E0;&#x6B21;&#x9700;&#x8981;&#x6545;&#x969C;&#x6392;&#x9664;&#x7684;&#x95EE;&#x9898;&#x3002;&#x5F53;&#x51FA;&#x73B0;&#x95EE;&#x9898;&#x540E;&#xFF0C;&#x7528; ctrl+c &#x7EC8;&#x6B62; tcpdump &#x547D;&#x4EE4;&#x3002;&#x7136;&#x540E;&#xFF0C;&#x8BF7;&#x60A8;&#x4F7F;&#x7528; tcpdump &#x547D;&#x4EE4;&#x7684; -r &#x53C2;&#x6570;&#x786E;&#x8BA4;&#x662F;&#x5426;&#x5DF2;&#x7ECF;&#x6293;&#x53D6;&#x4E86;&#x9700;&#x8981;&#x7684;&#x6D41;&#x91CF;&#x5305;&#x3002;&#x5982;&#x679C;&#x51C6;&#x786E;&#x5730;&#x6293;&#x53D6;&#x4E86;&#x6D41;&#x91CF;&#x5305;&#xFF0C;&#x8FD9;&#x6761;&#x547D;&#x4EE4;&#x5C06;&#x4F1A;&#x8F93;&#x51FA;&#x4ECE;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x53D1;&#x51FA;&#x7684;&#x5305;&#x3002;&#x4EE5;&#x4E0B;&#x662F;&#x9488;&#x5BF9; NFS getttr &#x7684;&#x8BF7;&#x6C42;&#x548C;&#x54CD;&#x5E94;&#x6293;&#x5305;&#x7684;&#x5B9E;&#x4F8B;&#xFF1A;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -r /tmp/client.cap
+ ...
+09:39:06.272688 IP 192.168.155.74.3337237041 &gt; 192.168.155.2.nfs: 216 getattr fh 0,0/22
+09:39:06.273342 IP 192.168.155.2.nfs &gt; 192.168.155.74.3337237041: reply ok 88 getattr NON 2 ids 0/9 sz 0
+09:39:06.273365 IP 192.168.155.3354014257 &gt; 192.168.155.2.nfs: 220 getattr fh 0,0/22
+09:39:06.273840 IP 192.168.155.2.nfs &gt; 192.168.155.74.3354014257: reply ok 108 getattr NON 2 ids 0/9 sz 0</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5982;&#x679C;&#x9700;&#x8981;&#x8FFD;&#x8E2A;&#x7684;&#x6587;&#x4EF6;&#x5F88;&#x5927;&#xFF08;&#x51E0;&#x767E;MB&#xFF0C;&#x751A;&#x81F3;&#x51E0;GB), &#x8BF7;&#x7528; gzip &#x5DE5;&#x5177;&#x538B;&#x7F29;&#x3002;&#x60A8;&#x4E5F;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x5176;&#x4ED6;&#x538B;&#x7F29;&#x65B9;&#x6CD5;&#xFF0C;&#x4F8B;&#x5982; bzip2 &#xFF0C;&#x4F46;&#x662F;&#x4E00;&#x4E9B;&#x5DE5;&#x5177;&#x4F8B;&#x5982;tshark &#x4E5F;&#x8BB8;&#x4E0D;&#x80FD;&#x8BC6;&#x522B;&#x8FD9;&#x4E9B;&#x6587;&#x4EF6;&#xFF0C;&#x6240;&#x4EE5;&#x5EFA;&#x8BAE;&#x60A8;&#x4F7F;&#x7528; gzip&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># gzip /tmp/client.cap
+# gzip /tmp/server.cap</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_wireshark">Wireshark &#x56FE;&#x5F62;&#x5316;&#x5C55;&#x793A;</h3>
+<div class="paragraph">
+<p>Wireshark &#x53EF;&#x4EE5;&#x7528;&#x6765;&#x56FE;&#x5F62;&#x5316;&#x5C55;&#x793A;&#xFF0C;&#x6216;&#x5206;&#x6790;&#x6293;&#x53D6;&#x7684;&#x5305;&#x3002;Wireshark &#x7684;&#x4F18;&#x70B9;&#x5305;&#x62EC;&#xFF0C;&#x4E0D;&#x540C;&#x7684;&#x5305;&#x5B9A;&#x4E49;&#x4E86;&#x4E0D;&#x540C;&#x7684;&#x989C;&#x8272;&#xFF0C;&#x53EF;&#x4EE5;&#x8BBE;&#x5B9A;&#x4E0D;&#x540C;&#x7684;&#x8FC7;&#x6EE4;&#x6761;&#x4EF6;&#x7B49;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5B89;&#x88C5; Wireshark</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">yum -y install wireshark-gnome</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>&#x56FE;&#x5F62;&#x5316;&#x5C55;&#x793A;&#x5305;&#x793A;&#x4F8B;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/wireshark.png" alt="wireshark.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tcpdump_2">tcpdump &#x57FA;&#x672C;&#x4F7F;&#x7528;&#x6848;&#x4F8B;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___3">&#x57FA;&#x672C;&#x5305;&#x6293;&#x53D6;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nn -v -i eth0
+...
+17:19:39.427523 IP (tos 0x10, ttl 64, id 25697, offset 0, flags [DF], proto TCP (6), length 384)
+    10.66.208.132.22 &gt; 10.72.12.23.45346: Flags [P.], cksum 0xf297 (incorrect -&gt; 0x5fe8), seq 12470020:12470352, ack 8713, win 291, options [nop,nop,TS val 1568450528 ecr 43969034], length 332
+17:19:39.427600 IP (tos 0x10, ttl 56, id 10362, offset 0, flags [DF], proto TCP (6), length 52)
+    10.72.12.23.45346 &gt; 10.66.208.132.22: Flags [.], cksum 0x5d77 (correct), ack 12444156, win 1338, options [nop,nop,TS val 43969034 ecr 1568450521], length 0
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x4E0A;&#x6293;&#x53D6;&#x7684;&#x5305;&#x4E2D;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x7F51;&#x7EDC;&#x4E09;&#x5C42;&#x7684;&#x534F;&#x8BAE;&#xFF0C;&#x6E90;&#x548C;&#x76EE;&#x7684;&#x5730;&#x5740;&#xFF0C;&#x7AEF;&#x53E3;</p>
+</li>
+<li>
+<p>TCP &#x8BE6;&#x7EC6;&#x4FE1;&#x606F;&#xFF0C;&#x5982; flags, sequence, ack, win, options</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dns">DNS &#x89E3;&#x6790;&#x5305;&#x7684;&#x6293;&#x53D6;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#xFF0C;&#x53EA;&#x6293;&#x53D6; DNS &#x89E3;&#x6790;&#x76F8;&#x5173;&#x7684;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nnv -i eth0 host 10.66.208.106 and port 53
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C;&#x4E00;&#x6B21; DNS &#x89E3;&#x6790;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># dig @10.66.208.106 A test.apps.example.com +short
+10.66.208.102</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x6293;&#x53D6;&#x5305;&#x7684;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">22:57:58.748210 IP (tos 0x0, ttl 64, id 57251, offset 0, flags [none], proto UDP (17), length 78)
+    10.66.208.132.38893 &gt; 10.66.208.106.53: 31214+ [1au] A? test.apps.example.com. (50)
+22:57:58.748391 IP (tos 0x0, ttl 64, id 64243, offset 0, flags [DF], proto UDP (17), length 83)
+    10.66.208.106.53 &gt; 10.66.208.132.38893: 31214*$ 1/0/0 test.apps.example.com. A 10.66.208.102 (55)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http">HTTP &#x5305;&#x6293;&#x53D6;&#x53CA;&#x5206;&#x6790;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x76D1;&#x63A7;&#x6293;&#x53D6; 80 &#x7AEF;&#x53E3;&#x6240;&#x6709;&#x5305;&#xFF0C;&#x5E76;&#x5C06;&#x7ED3;&#x679C;&#x4FDD;&#x5B58;&#x5230;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nnv -i eth0 port 80 -w http.pcap
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C; http &#x8BF7;&#x6C42;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># curl example.com
+This is the message from servera.example.com</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x505C;&#x6B62;&#x6293;&#x5305;&#x76D1;&#x63A7;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ls -l http.pcap
+-rw-r--r--. 1 tcpdump tcpdump 1266 Dec 29 23:11 http.pcap</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x4E0A; http.pcap &#x662F;&#x4E00;&#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x6587;&#x4EF6;&#xFF0C;&#x5177;&#x4F53;&#x5185;&#x5BB9;&#x65E0;&#x6CD5;&#x67E5;&#x770B;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#xFF0C;&#x5206;&#x6790; http &#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nnv -r http.pcap
+reading from file http.pcap, link-type EN10MB (Ethernet)
+23:17:21.776068 IP (tos 0x0, ttl 64, id 47181, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.132.58206 &gt; 10.66.208.131.80: Flags [S], cksum 0xb5ba (incorrect -&gt; 0x005f), seq 453287265, win 29200, options [mss 1460,sackOK,TS val 1589912876 ecr 0,nop,wscale 7], length 0
+23:17:21.776339 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.131.80 &gt; 10.66.208.132.58206: Flags [S.], cksum 0x3972 (correct), seq 576059978, ack 453287266, win 28960, options [mss 1460,sackOK,TS val 1589922919 ecr 1589912876,nop,wscale 7], length 0
+23:17:21.776364 IP (tos 0x0, ttl 64, id 47182, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.58206 &gt; 10.66.208.131.80: Flags [.], cksum 0xb5b2 (incorrect -&gt; 0xd878), ack 1, win 229, options [nop,nop,TS val 1589912877 ecr 1589922919], length 0
+23:17:21.776428 IP (tos 0x0, ttl 64, id 47183, offset 0, flags [DF], proto TCP (6), length 127)
+    10.66.208.132.58206 &gt; 10.66.208.131.80: Flags [P.], cksum 0xb5fd (incorrect -&gt; 0xaed3), seq 1:76, ack 1, win 229, options [nop,nop,TS val 1589912877 ecr 1589922919], length 75: HTTP, length: 75
+	GET / HTTP/1.1
+	User-Agent: curl/7.29.0
+	Host: example.com
+	Accept: */*
+
+23:17:21.776585 IP (tos 0x0, ttl 64, id 46627, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.131.80 &gt; 10.66.208.132.58206: Flags [.], cksum 0xd82e (correct), ack 76, win 227, options [nop,nop,TS val 1589922920 ecr 1589912877], length 0
+23:17:21.777855 IP (tos 0x0, ttl 64, id 46628, offset 0, flags [DF], proto TCP (6), length 383)
+    10.66.208.131.80 &gt; 10.66.208.132.58206: Flags [P.], cksum 0xaf8d (correct), seq 1:332, ack 76, win 227, options [nop,nop,TS val 1589922921 ecr 1589912877], length 331: HTTP, length: 331
+	HTTP/1.1 200 OK
+	Date: Sat, 29 Dec 2018 23:21:12 GMT
+	Server: Apache/2.4.6 (Red Hat Enterprise Linux) mod_wsgi/3.4 Python/2.7.5
+	Last-Modified: Sat, 29 Dec 2018 16:05:26 GMT
+	ETag: &quot;2e-57e2b5913ab20&quot;
+	Accept-Ranges: bytes
+	Content-Length: 46
+	Content-Type: text/html; charset=UTF-8
+
+	This is the message from servera.example.com
+23:17:21.777873 IP (tos 0x0, ttl 64, id 47184, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.58206 &gt; 10.66.208.131.80: Flags [.], cksum 0xb5b2 (incorrect -&gt; 0xd6d7), ack 332, win 237, options [nop,nop,TS val 1589912878 ecr 1589922921], length 0
+23:17:21.777985 IP (tos 0x0, ttl 64, id 47185, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.58206 &gt; 10.66.208.131.80: Flags [F.], cksum 0xb5b2 (incorrect -&gt; 0xd6d6), seq 76, ack 332, win 237, options [nop,nop,TS val 1589912878 ecr 1589922921], length 0
+23:17:21.778129 IP (tos 0x0, ttl 64, id 46629, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.131.80 &gt; 10.66.208.132.58206: Flags [F.], cksum 0xd6df (correct), seq 332, ack 77, win 227, options [nop,nop,TS val 1589922921 ecr 1589912878], length 0
+23:17:21.778139 IP (tos 0x0, ttl 64, id 47186, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.58206 &gt; 10.66.208.131.80: Flags [.], cksum 0xb5b2 (incorrect -&gt; 0xd6d5), ack 333, win 237, options [nop,nop,TS val 1589912878 ecr 1589922921], length 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tcp">TCP &#x8FDE;&#x63A5;&#x5EFA;&#x7ACB;&#x4E0E;&#x65AD;&#x5F00;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x7B80;&#x5355;&#x7684; C &#x8BED;&#x8A00; getDatetime &#x5E94;&#x7528;&#xFF0C;&#x901A;&#x8FC7;&#x6293;&#x5305;&#x5206;&#x6790; TCP &#x4E09;&#x6B21;&#x63E1;&#x624B;&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;&#xFF0C;&#x53CA;&#x56DB;&#x6B21;&#x63E1;&#x624B;&#x65AD;&#x5F00;&#x8FDE;&#x63A5;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>getDatetime &#x5E94;&#x7528;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/kylinsoong/C/blob/master/getDatetime/README.adoc" class="bare" target="_blank">https://github.com/kylinsoong/C/blob/master/getDatetime/README.adoc</a></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>tcpdump &#x6293;&#x53D6;&#x5305;&#xFF0C;&#x5E76;&#x5C06;&#x7ED3;&#x679C;&#x4FDD;&#x5B58;&#x5230;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nnv -i eth0 port 5000 -w tcp.pcap</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8FD0;&#x884C;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x8BF7;&#x6C42;&#x670D;&#x52A1;&#x5668;&#x7684;&#x65F6;&#x95F4;&#x7684;&#x65E5;&#x671F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ./client 10.66.208.131
+Sun Dec 30 09:01:57 2018</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>tcpdump &#x5206;&#x6790; tcp.pcap</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nnv -r tcp.pcap
+reading from file tcp.pcap, link-type EN10MB (Ethernet)
+00:58:06.120860 IP (tos 0x0, ttl 64, id 62514, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.132.53666 &gt; 10.66.208.131.5000: Flags [S], cksum 0xb5ba (incorrect -&gt; 0xe577), seq 3940789207, win 29200, options [mss 1460,sackOK,TS val 1595957221 ecr 0,nop,wscale 7], length 0
+00:58:06.121218 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.131.5000 &gt; 10.66.208.132.53666: Flags [S.], cksum 0xd2ff (correct), seq 3416088914, ack 3940789208, win 28960, options [mss 1460,sackOK,TS val 1595967302 ecr 1595957221,nop,wscale 7], length 0
+00:58:06.121233 IP (tos 0x0, ttl 64, id 62515, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.53666 &gt; 10.66.208.131.5000: Flags [.], cksum 0xb5b2 (incorrect -&gt; 0x7206), ack 1, win 229, options [nop,nop,TS val 1595957222 ecr 1595967302], length 0
+00:58:06.122107 IP (tos 0x0, ttl 64, id 58900, offset 0, flags [DF], proto TCP (6), length 78)
+    10.66.208.131.5000 &gt; 10.66.208.132.53666: Flags [P.], cksum 0x6a36 (correct), seq 1:27, ack 1, win 227, options [nop,nop,TS val 1595967303 ecr 1595957222], length 26
+00:58:06.122114 IP (tos 0x0, ttl 64, id 58901, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.131.5000 &gt; 10.66.208.132.53666: Flags [F.], cksum 0x71ec (correct), seq 27, ack 1, win 227, options [nop,nop,TS val 1595967303 ecr 1595957222], length 0
+00:58:06.122132 IP (tos 0x0, ttl 64, id 62516, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.53666 &gt; 10.66.208.131.5000: Flags [.], cksum 0xb5b2 (incorrect -&gt; 0x71eb), ack 27, win 229, options [nop,nop,TS val 1595957222 ecr 1595967303], length 0
+00:58:06.122250 IP (tos 0x0, ttl 64, id 62517, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.53666 &gt; 10.66.208.131.5000: Flags [F.], cksum 0xb5b2 (incorrect -&gt; 0x71e8), seq 1, ack 28, win 229, options [nop,nop,TS val 1595957223 ecr 1595967303], length 0
+00:58:06.122358 IP (tos 0x0, ttl 64, id 58902, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.131.5000 &gt; 10.66.208.132.53666: Flags [.], cksum 0x71e9 (correct), ack 2, win 227, options [nop,nop,TS val 1595967304 ecr 1595957223], length 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;&#x5171;&#x6293;&#x53D6;&#x4E86; 8 &#x4E2A;&#x5305;&#xFF0C;&#x5176;&#x4E2D;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x524D;&#x4E09;&#x4E2A;&#x5305;&#x4E0E; TCP &#x8FDE;&#x63A5;&#x5EFA;&#x7ACB;&#x76F8;&#x5173;</p>
+</li>
+<li>
+<p>&#x7B2C;&#x56DB;&#x4E2A;&#x5305;&#x662F;&#x4ECE;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x63A5;&#x6536;&#x65F6;&#x95F4;&#x548C;&#x65E5;&#x671F;</p>
+</li>
+<li>
+<p>&#x540E;&#x56DB;&#x4E2A;&#x5305;&#x4E0E; TCP &#x8FDE;&#x63A5;&#x65AD;&#x5F00;&#x76F8;&#x5173;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Wireshark &#x5206;&#x6790; tcp.pcap</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/wireshare-tcp.png" alt="wireshare tcp.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tcp_socket">TCP Socket &#x4F20;&#x8F93;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x901A;&#x8FC7; Java Socket API &#x5B9E;&#x73B0;&#x4E00;&#x4E2A; Echo &#x670D;&#x52A1;&#xFF0C;&#x5373;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x76D1;&#x542C;&#x5728; 0.0.0.0:8081 &#x7AEF;&#x53E3;</p>
+</li>
+<li>
+<p>&#x5BA2;&#x6237;&#x7AEF;&#x53EF;&#x8FDE;&#x63A5;&#x5230;&#x670D;&#x52A1;&#x5668;</p>
+</li>
+<li>
+<p>&#x670D;&#x52A1;&#x5668;&#x7B49;&#x5F85;&#x5BA2;&#x6237;&#x7AEF;&#x7684; Echo &#x8BF7;&#x6C42;</p>
+</li>
+<li>
+<p>&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x9001; Echo &#x8BF7;&#x6C42;(Echo &#x6D88;&#x606F;&#x7684;&#x5185;&#x5BB9;&#x4ECE; console &#x53E3;&#x8BFB;&#x53D6;)</p>
+</li>
+<li>
+<p>&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x63A5;&#x6536;&#x5230; Echo &#x8BF7;&#x6C42;&#x540E;&#xFF0C;&#x8FD4;&#x56DE; Echo &#x6D88;&#x606F;&#x5230;&#x5BA2;&#x6237;&#x7AEF;</p>
+</li>
+<li>
+<p>&#x5BA2;&#x6237;&#x7AEF;&#x8BFB;&#x53D6;&#x6D88;&#x606F;&#x5E76;&#x6253;&#x5370;&#x8F93;&#x51FA;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7F16;&#x8BD1;&#x53CA;&#x8FD0;&#x884C;</strong></p>
+</div>
+<div class="paragraph">
+<p><a href="files/Server.java">Server.java</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"># javac Server.java
+# java Server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>&#x5BA2;&#x6237;&#x7AEF;&#x7F16;&#x8BD1;</strong></p>
+</div>
+<div class="paragraph">
+<p><a href="files/Client.java">Client.java</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"># javac Client.java</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8FD0;&#x884C;tcpdump &#x5F00;&#x53D1;&#x6293;&#x53D6;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># tcpdump -nnv -i eth0 port 8081
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8FD0;&#x884C;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x53D1;&#x9001;&#x6D88;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"># java Client 10.66.208.131
+Connecting to host 10.66.208.131 on port 8081.
+Hello World
+server: Hello World</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B; tcpdump &#x6293;&#x53D6;&#x7684;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">06:31:52.593989 IP (tos 0x0, ttl 64, id 13233, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.132.51676 &gt; 10.66.208.131.8081: Flags [S], cksum 0xf0d3 (correct), seq 781672479, win 29200, options [mss 1460,sackOK,TS val 1673352110 ecr 0,nop,wscale 7], length 0
+06:31:52.594038 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    10.66.208.131.8081 &gt; 10.66.208.132.51676: Flags [S.], cksum 0xb5ba (incorrect -&gt; 0x6af1), seq 2603158238, ack 781672480, win 28960, options [mss 1460,sackOK,TS val 1673362684 ecr 1673352110,nop,wscale 7], length 0
+06:31:52.594199 IP (tos 0x0, ttl 64, id 13234, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.51676 &gt; 10.66.208.131.8081: Flags [.], cksum 0x09f9 (correct), ack 1, win 229, options [nop,nop,TS val 1673352110 ecr 1673362684], length 0
+06:31:58.736603 IP (tos 0x0, ttl 64, id 13235, offset 0, flags [DF], proto TCP (6), length 64)
+    10.66.208.132.51676 &gt; 10.66.208.131.8081: Flags [P.], cksum 0xa00d (correct), seq 1:13, ack 1, win 229, options [nop,nop,TS val 1673358253 ecr 1673362684], length 12
+06:31:58.736663 IP (tos 0x0, ttl 64, id 30243, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.131.8081 &gt; 10.66.208.132.51676: Flags [.], cksum 0xb5b2 (incorrect -&gt; 0xd9f0), ack 13, win 227, options [nop,nop,TS val 1673368827 ecr 1673358253], length 0
+06:31:58.736898 IP (tos 0x0, ttl 64, id 30244, offset 0, flags [DF], proto TCP (6), length 64)
+    10.66.208.131.8081 &gt; 10.66.208.132.51676: Flags [P.], cksum 0xb5be (incorrect -&gt; 0x8804), seq 1:13, ack 13, win 227, options [nop,nop,TS val 1673368827 ecr 1673358253], length 12
+06:31:58.737109 IP (tos 0x0, ttl 64, id 13236, offset 0, flags [DF], proto TCP (6), length 52)
+    10.66.208.132.51676 &gt; 10.66.208.131.8081: Flags [.], cksum 0xd9e2 (correct), ack 13, win 229, options [nop,nop,TS val 1673358253 ecr 1673368827], length 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>tcpdump -w &#x53C2;&#x6570;&#x53EF;&#x4EE5;&#x5C06;&#x7ED3;&#x679C;&#x8F93;&#x51FA;&#x5230;&#x6587;&#x4EF6;&#xFF0C;wireshark &#x67E5;&#x770B;&#x5305;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/wireshark-java-socket.png" alt="wireshark java socket.png"></span></p>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="dns.html" class="navigation navigation-prev " aria-label="Previous page: DNS">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../fs.html" class="navigation navigation-next " aria-label="Next page: 文件系统">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"网络监控","level":"1.2.3.8","depth":3,"next":{"title":"文件系统","level":"1.2.4","depth":2,"path":"linux/fs.adoc","ref":"linux/fs.adoc","articles":[]},"previous":{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/monitor.adoc","mtime":"2019-03-27T08:41:56.944Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T09:29:16.283Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

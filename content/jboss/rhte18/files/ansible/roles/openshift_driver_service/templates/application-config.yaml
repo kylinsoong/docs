@@ -1,0 +1,27 @@
+amqp.host: {{ amqp_host }}
+amqp.port: {{ amqp_port }}
+amqp.user: {{ amqp_user }}
+amqp.password: {{ amqp_password }}
+
+amqp.replyhandling: {{ amqp_replyhandling}}
+amqp.ssl: {{ amqp_ssl }}
+amqp.ssl.trustall: {{ amqp_ssl_trustall }}
+amqp.ssl.verifyhost: {{ amqp_ssl_verifyhost }}
+amqp.truststore.path: {{ amqp_truststore_path }}
+amqp.truststore.password: {{ amqp_truststore_password }}
+
+amqp.consumer.driver-command: {{ amqp_consumer_driver_command }}
+amqp.producer.driver-event: {{ amqp_producer_driver_event }}
+amqp.producer.ride-event: {{ amqp_producer_ride_event }}
+
+http.port: {{ http_port }}
+
+# delay before sending a `DriverAssignedEvent` message
+driver.assigned.min.delay: {{ driver_assigned_min_delay }}
+driver.assigned.max.delay: {{ driver_assigned_max_delay }}
+# delay before sending a `RideStartedEvent` message
+ride.started.min.delay: {{ ride_started_min_delay }}
+ride.started.max.delay: {{ ride_started_max_delay }}
+# delay before sending a `RideEndedEvent` message
+ride.ended.min.delay: {{ ride_ended_min_delay }}
+ride.ended.max.delay: {{ ride_ended_max_delay }}

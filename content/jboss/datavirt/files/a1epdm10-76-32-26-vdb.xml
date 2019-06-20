@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="a1epdm10-76-32-26" version="1">
+
+    <description>a1epdm 10.76.32.26 VDB</description>
+
+    <model name="Model-a1epdm10-76-32-26">
+        <source name="oracle-connector" translator-name="translator-oracle" connection-jndi-name="java:/A1_DG_EPDM"/>
+    </model>
+
+    <translator name="translator-oracle" type="oracle">
+        <property name="SupportsNativeQueries" value="true"/>
+    </translator>
+
+</vdb>
+

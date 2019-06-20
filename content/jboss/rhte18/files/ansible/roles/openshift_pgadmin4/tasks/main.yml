@@ -1,0 +1,26 @@
+---
+
+# standard-authservice keycloak credentials
+- name: check if pgadmin4 secret exists
+  shell: "{{ openshift_cli }} get secret {{ pgadmin4_secret }} -n {{ ocp_project }}"
+  register: secret_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: create pgadmin4 secret
+  shell: |
+    {{ openshift_cli }} create secret generic {{ pgadmin4_secret }} \
+    --from-literal=pgadmin4.username={{ pgadmin4_username }} \
+    --from-literal=pgadmin4.password={{ pgadmin4_password }} \
+    -n {{ ocp_project }}
+  when: secret_exists is failed
+
+- name: check if pgadmin4 deployment exists
+  shell: "{{ openshift_cli }} get deployment {{ pgadmin4_deployment_name }} -n {{ ocp_project }}"
+  register: pgadmin4_deployment_deployed
+  ignore_errors: true
+  changed_when: false
+
+- name: deploy pgadmin
+  shell: "{{ openshift_cli }} apply -f {{ resources_dir }}/deployment.yaml -n {{ ocp_project }}"
+  when: pgadmin4_deployment_deployed is failed

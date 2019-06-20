@@ -1,0 +1,85 @@
+kind: List
+apiVersion: v1
+metadata: {}
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: prometheus
+      annotations:
+        prometheus.io/probe: 'true'
+        prometheus.io/path: '/metrics'
+      name: prometheussql
+    spec:
+      clusterIP: None
+      selector:
+        role: prometheussql
+      ports:
+      - name: prometheussql
+        port: 8080
+        targetPort: 8080  
+  - apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+      labels:
+        app: prometheus
+        name: prometheussql
+      name: prometheussql
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: prometheus
+            role: prometheussql
+            name: prometheussql
+        spec:
+          containers:
+          - name: sqlagent
+            image: dbhi/sql-agent
+            livenessProbe:
+              initialDelaySeconds: 10
+              tcpSocket:
+                port: sqlagent
+            ports:
+            - containerPort: 5000
+              name: sqlagent
+              protocol: TCP
+              limits:
+                cpu: 100m
+                memory: 100Mi
+              requests:
+                cpu: 50m
+                memory: 100Mi
+          - name: prometheussql
+            image: dbhi/prometheus-sql
+            args:
+              - '-service'
+              - 'http://localhost:5000'
+              - '-config'
+              - '/config/prometheus-sql.yml'
+              - '-queries'
+              - '/config/queries.yml'
+            livenessProbe:
+              initialDelaySeconds: 10
+              tcpSocket:
+                port: prometheussql
+            ports:
+            - containerPort: 8080
+              name: prometheussql
+              protocol: TCP
+            resources:
+              limits:
+                cpu: 100m
+                memory: 100Mi
+              requests:
+                cpu: 50m
+                memory: 100Mi
+            volumeMounts:
+            - mountPath: /config
+              name: prometheus-sql-config
+          volumes:
+            - name: prometheus-sql-config
+              configMap:
+                name: prometheus-sql-config

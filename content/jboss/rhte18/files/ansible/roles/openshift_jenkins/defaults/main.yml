@@ -1,0 +1,15 @@
+---
+
+jenkins_service_name: jenkins
+
+jenkins_template: "{{ resources_dir }}/jenkins-persistent.yaml"
+
+jenkins_memory_limit: 1Gi
+
+jenkins_maven_slave_configmap_template: "{{ resources_dir }}/jenkins-maven-slave-configmap.yaml"
+jenkins_maven_slave_pvc_template: "{{ resources_dir }}/jenkins-maven-slave-pvc.yaml"
+jenkins_maven_slave_configmap: jenkins-maven-slave
+jenkins_maven_slave_pvc: jenkins-maven-slave-repository
+
+gogs_service: gogs
+gogs_service_port: 3000

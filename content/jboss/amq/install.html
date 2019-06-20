@@ -1,0 +1,2313 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>AMQ 6.3 安装测试 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="streams.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    INTRODUCTION
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../../linux/">
+            
+                <a href="../../linux/">
+            
+                    
+                    INFRA
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../../linux/rhel/readme.html">
+            
+                <a href="../../linux/rhel/readme.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../../linux/rhel/pre-install.html">
+            
+                <a href="../../linux/rhel/pre-install.html">
+            
+                    
+                    安装 DVD 制作
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../../linux/rhel/install-img-usb.html">
+            
+                <a href="../../linux/rhel/install-img-usb.html">
+            
+                    
+                    生成 USB 介质
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../../linux/rhel/install.html">
+            
+                <a href="../../linux/rhel/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../../linux/rhel/kvm.html">
+            
+                <a href="../../linux/rhel/kvm.html">
+            
+                    
+                    KVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../../linux/basic/basic.html">
+            
+                <a href="../../linux/basic/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../../linux/basic/local-remote-login.html">
+            
+                <a href="../../linux/basic/local-remote-login.html">
+            
+                    
+                    本地及远程登录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../../linux/basic/user-group.html">
+            
+                <a href="../../linux/basic/user-group.html">
+            
+                    
+                    用户和组
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../../linux/basic/packages-update.html">
+            
+                <a href="../../linux/basic/packages-update.html">
+            
+                    
+                    软件包的安装与更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../../linux/basic/syslog.html">
+            
+                <a href="../../linux/basic/syslog.html">
+            
+                    
+                    系统日志
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../../linux/basic/ntp.html">
+            
+                <a href="../../linux/basic/ntp.html">
+            
+                    
+                    NTP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../../linux/basic/ex.html">
+            
+                <a href="../../linux/basic/ex.html">
+            
+                    
+                    QA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../../linux/networking/">
+            
+                <a href="../../linux/networking/">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../../linux/networking/fundamentals.html">
+            
+                <a href="../../linux/networking/fundamentals.html">
+            
+                    
+                    网络基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../../linux/networking/ifcfg.html">
+            
+                <a href="../../linux/networking/ifcfg.html">
+            
+                    
+                    网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../../linux/networking/ipv6cfg.html">
+            
+                <a href="../../linux/networking/ipv6cfg.html">
+            
+                    
+                    IPv6 网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../../linux/networking/netns.html">
+            
+                <a href="../../linux/networking/netns.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../../linux/networking/teaming.html">
+            
+                <a href="../../linux/networking/teaming.html">
+            
+                    
+                    teaming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.6" data-path="../../linux/networking/bridge.html">
+            
+                <a href="../../linux/networking/bridge.html">
+            
+                    
+                    bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.7" data-path="../../linux/networking/dns.html">
+            
+                <a href="../../linux/networking/dns.html">
+            
+                    
+                    DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.8" data-path="../../linux/networking/monitor.html">
+            
+                <a href="../../linux/networking/monitor.html">
+            
+                    
+                    网络监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../../linux/fs.html">
+            
+                <a href="../../linux/fs.html">
+            
+                    
+                    文件系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../../linux/stoarges/readme.html">
+            
+                <a href="../../linux/stoarges/readme.html">
+            
+                    
+                    存储
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../../linux/stoarges/lvm.html">
+            
+                <a href="../../linux/stoarges/lvm.html">
+            
+                    
+                    LVM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="../../linux/stoarges/nfs.html">
+            
+                <a href="../../linux/stoarges/nfs.html">
+            
+                    
+                    NFS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="../../linux/stoarges/file-storage.html">
+            
+                <a href="../../linux/stoarges/file-storage.html">
+            
+                    
+                    文件存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="../../linux/stoarges/block-storage.html">
+            
+                <a href="../../linux/stoarges/block-storage.html">
+            
+                    
+                    块存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../../linux/security/">
+            
+                <a href="../../linux/security/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../../linux/security/file-permissions.html">
+            
+                <a href="../../linux/security/file-permissions.html">
+            
+                    
+                    文件权限
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../../linux/security/SELinux.html">
+            
+                <a href="../../linux/security/SELinux.html">
+            
+                    
+                    SELinux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../../linux/security/firewall.html">
+            
+                <a href="../../linux/security/firewall.html">
+            
+                    
+                    防火墙
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../../linux/security/openssl.html">
+            
+                <a href="../../linux/security/openssl.html">
+            
+                    
+                    OpenSSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../../linux/process/">
+            
+                <a href="../../linux/process/">
+            
+                    
+                    进程
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../../linux/process/management.html">
+            
+                <a href="../../linux/process/management.html">
+            
+                    
+                    进程管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../../linux/process/service.html">
+            
+                <a href="../../linux/process/service.html">
+            
+                    
+                    服务管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../../linux/process/schedule.html">
+            
+                <a href="../../linux/process/schedule.html">
+            
+                    
+                    周期性运行进程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../../linux/process/bash.html">
+            
+                <a href="../../linux/process/bash.html">
+            
+                    
+                    bash
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../../linux/svc/">
+            
+                <a href="../../linux/svc/">
+            
+                    
+                    常用服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../../linux/svc/openssh.html">
+            
+                <a href="../../linux/svc/openssh.html">
+            
+                    
+                    OpenSSH
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="../../linux/svc/postfix.html">
+            
+                <a href="../../linux/svc/postfix.html">
+            
+                    
+                    Email
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="../../linux/svc/mariadb.html">
+            
+                <a href="../../linux/svc/mariadb.html">
+            
+                    
+                    MariaDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="../../linux/svc/httpd.html">
+            
+                <a href="../../linux/svc/httpd.html">
+            
+                    
+                    HTTPD
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="../../linux/svc/zabbix.html">
+            
+                <a href="../../linux/svc/zabbix.html">
+            
+                    
+                    Zabbix
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../../linux/perf/">
+            
+                <a href="../../linux/perf/">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../docker/docker.html">
+            
+                <a href="../../docker/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../docker/svc/svc.html">
+            
+                <a href="../../docker/svc/svc.html">
+            
+                    
+                    容器化服务
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../../docker/svc/mysql.html">
+            
+                <a href="../../docker/svc/mysql.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../../docker/svc/httpd.html">
+            
+                <a href="../../docker/svc/httpd.html">
+            
+                    
+                    httpd
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../docker/container.html">
+            
+                <a href="../../docker/container.html">
+            
+                    
+                    容器管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../docker/images.html">
+            
+                <a href="../../docker/images.html">
+            
+                    
+                    容器镜像
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../openshift/openshift.html">
+            
+                <a href="../../openshift/openshift.html">
+            
+                    
+                    OPENSHIFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../openshift/concepts/">
+            
+                <a href="../../openshift/concepts/">
+            
+                    
+                    概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../openshift/install/">
+            
+                <a href="../../openshift/install/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../../openshift/install/yum.html">
+            
+                <a href="../../openshift/install/yum.html">
+            
+                    
+                    本地 yum 源配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="../../openshift/install/docker-dist.html">
+            
+                <a href="../../openshift/install/docker-dist.html">
+            
+                    
+                    本地 docker 镜像仓库配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="../../openshift/install/dns.html">
+            
+                <a href="../../openshift/install/dns.html">
+            
+                    
+                    DNS 服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="../../openshift/install/pre-install.html">
+            
+                <a href="../../openshift/install/pre-install.html">
+            
+                    
+                    前续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="../../openshift/install/install.html">
+            
+                <a href="../../openshift/install/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="../../openshift/install/post-install.html">
+            
+                <a href="../../openshift/install/post-install.html">
+            
+                    
+                    后续安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.7" data-path="../../openshift/install/add-nodes.html">
+            
+                <a href="../../openshift/install/add-nodes.html">
+            
+                    
+                    节点扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="../../openshift/install/qa.html">
+            
+                <a href="../../openshift/install/qa.html">
+            
+                    
+                    常见问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../openshift/advanced-deployment.html">
+            
+                <a href="../../openshift/advanced-deployment.html">
+            
+                    
+                    高级部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../openshift/devops.html">
+            
+                <a href="../../openshift/devops.html">
+            
+                    
+                    DEVOPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../openshift/secure.html">
+            
+                <a href="../../openshift/secure.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../../openshift/samples/samples.html">
+            
+                <a href="../../openshift/samples/samples.html">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.6.1" data-path="../../openshift/samples/rc.html">
+            
+                <a href="../../openshift/samples/rc.html">
+            
+                    
+                    RC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.2" data-path="../../openshift/samples/dc.html">
+            
+                <a href="../../openshift/samples/dc.html">
+            
+                    
+                    DC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.3" data-path="../../openshift/samples/s2i.html">
+            
+                <a href="../../openshift/samples/s2i.html">
+            
+                    
+                    S2I
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.4" data-path="../../openshift/samples/configmap.html">
+            
+                <a href="../../openshift/samples/configmap.html">
+            
+                    
+                    ConfigMap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.5" data-path="../../openshift/samples/elastic-spark.html">
+            
+                <a href="../../openshift/samples/elastic-spark.html">
+            
+                    
+                    elasticsearch and spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.6" data-path="../../openshift/samples/vdb-data-svc.html">
+            
+                <a href="../../openshift/samples/vdb-data-svc.html">
+            
+                    
+                    Teiid Data Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../../openshift/labs/">
+            
+                <a href="../../openshift/labs/">
+            
+                    
+                    LABS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.7.1" data-path="../../openshift/labs/sdn.html">
+            
+                <a href="../../openshift/labs/sdn.html">
+            
+                    
+                    Software-Defined Networking
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.2" data-path="../../openshift/labs/edge-route.html">
+            
+                <a href="../../openshift/labs/edge-route.html">
+            
+                    
+                    Route
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.3" data-path="../../openshift/labs/web-console.html">
+            
+                <a href="../../openshift/labs/web-console.html">
+            
+                    
+                    Web Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.4" data-path="../../openshift/labs/projects-accounts.html">
+            
+                <a href="../../openshift/labs/projects-accounts.html">
+            
+                    
+                    项目用户安全管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.5" data-path="../../openshift/labs/secure-secrets.html">
+            
+                <a href="../../openshift/labs/secure-secrets.html">
+            
+                    
+                    数据库连接信息保护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.6" data-path="../../openshift/labs/db-persist.html">
+            
+                <a href="../../openshift/labs/db-persist.html">
+            
+                    
+                    持久化数据库存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.7" data-path="../../openshift/labs/wordpress.html">
+            
+                <a href="../../openshift/labs/wordpress.html">
+            
+                    
+                    部署 wordpress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.8" data-path="../../openshift/labs/scaling.html">
+            
+                <a href="../../openshift/labs/scaling.html">
+            
+                    
+                    扩展应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.9" data-path="../../openshift/labs/hpa.html">
+            
+                <a href="../../openshift/labs/hpa.html">
+            
+                    
+                    弹性扩展
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.10" data-path="../../openshift/labs/010.html">
+            
+                <a href="../../openshift/labs/010.html">
+            
+                    
+                    Blue-Green Deployments
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.11" data-path="../../openshift/labs/011.html">
+            
+                <a href="../../openshift/labs/011.html">
+            
+                    
+                    SCM Web Hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.12" data-path="../../openshift/labs/012.html">
+            
+                <a href="../../openshift/labs/012.html">
+            
+                    
+                    Rollback Applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.13" data-path="../../openshift/labs/deploy-an-operator.html">
+            
+                <a href="../../openshift/labs/deploy-an-operator.html">
+            
+                    
+                    Operator 部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.14" data-path="../../openshift/labs/014.html">
+            
+                <a href="../../openshift/labs/014.html">
+            
+                    
+                    JBoss Developer Studio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.15" data-path="../../openshift/labs/015.html">
+            
+                <a href="../../openshift/labs/015.html">
+            
+                    
+                    Deploy a SpringBoot Application
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../../openshift/case.html">
+            
+                <a href="../../openshift/case.html">
+            
+                    
+                    用例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../ansible/">
+            
+                <a href="../../ansible/">
+            
+                    
+                    ANSIBLE
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../ansible/basic-usage.html">
+            
+                <a href="../../ansible/basic-usage.html">
+            
+                    
+                    基本使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../readme.html">
+            
+                <a href="../readme.html">
+            
+                    
+                    APPDEV
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../api/readme.html">
+            
+                <a href="../api/readme.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../mesh.html">
+            
+                <a href="../mesh.html">
+            
+                    
+                    Mesh
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../faas/openwhisk.html">
+            
+                <a href="../faas/openwhisk.html">
+            
+                    
+                    Serverless
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../coolstore/">
+            
+                <a href="../coolstore/">
+            
+                    
+                    CoolStore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../rhte18/redhat-msa.html">
+            
+                <a href="../rhte18/redhat-msa.html">
+            
+                    
+                    微服务及红帽产品集成实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" >
+            
+                <a target="_blank" href="http://ksoong.org/drools-examples/content/">
+            
+                    
+                    规则引擎
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../datavirt/datavirt.html">
+            
+                <a href="../datavirt/datavirt.html">
+            
+                    
+                    数据虚拟化
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.7.1" data-path="../datavirt/software-list.html">
+            
+                <a href="../datavirt/software-list.html">
+            
+                    
+                    软件版本号对照表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.2" data-path="../datavirt/changelog.html">
+            
+                <a href="../datavirt/changelog.html">
+            
+                    
+                    修订记录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.3" data-path="../datavirt/download.html">
+            
+                <a href="../datavirt/download.html">
+            
+                    
+                    下载
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.4" data-path="../datavirt/install.html">
+            
+                <a href="../datavirt/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.5" data-path="../datavirt/start.html">
+            
+                <a href="../datavirt/start.html">
+            
+                    
+                    启动
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.6" data-path="../datavirt/deploy-vdbs.html">
+            
+                <a href="../datavirt/deploy-vdbs.html">
+            
+                    
+                    部署测试 VDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.7" data-path="../datavirt/meta.html">
+            
+                <a href="../datavirt/meta.html">
+            
+                    
+                    元数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7.8" data-path="../datavirt/jbds-jdv.html">
+            
+                <a href="../datavirt/jbds-jdv.html">
+            
+                    
+                    JBDS 创建虚拟数据库操作示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="amq.html">
+            
+                <a href="amq.html">
+            
+                    
+                    A-MQ
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.8.1" data-path="streams.html">
+            
+                <a href="streams.html">
+            
+                    
+                    AMQ Streams
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.6.8.2" data-path="install.html">
+            
+                <a href="install.html">
+            
+                    
+                    AMQ 6.3 安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.9" >
+            
+                <a target="_blank" href="http://ksoong.org/agile-integration/">
+            
+                    
+                    敏捷集成
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.10" data-path="../bpm/bpm.html">
+            
+                <a href="../bpm/bpm.html">
+            
+                    
+                    BPM
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.10.1" data-path="../bpm/install.html">
+            
+                <a href="../bpm/install.html">
+            
+                    
+                    安装测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.11" data-path="../secure/">
+            
+                <a href="../secure/">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" >
+            
+                <a target="_blank" href="https://mongocn.github.io">
+            
+                    
+                    DATA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../../solutions/">
+            
+                <a href="../../solutions/">
+            
+                    
+                    SOLUTIONS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../../solutions/abc-distribute-arch.html">
+            
+                <a href="../../solutions/abc-distribute-arch.html">
+            
+                    
+                    核心银行系统分布式架构转型
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../../about/">
+            
+                <a href="../../about/">
+            
+                    
+                    BUSINESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../../about/it-professions.html">
+            
+                <a href="../../about/it-professions.html">
+            
+                    
+                    PROFESSIONS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../../about/softskills.html">
+            
+                <a href="../../about/softskills.html">
+            
+                    
+                    SKILLS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >AMQ 6.3 安装测试</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="jboss-amq-63-&#x5B89;&#x88C5;&#x6D4B;&#x8BD5;">JBoss AMQ 6.3 &#x5B89;&#x88C5;&#x6D4B;&#x8BD5;</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x6587;&#x5305;&#x62EC; JBoss AMQ 6.3 &#x5B89;&#x88C5;&#x6D4B;&#x8BD5;</p>
+</div>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x8F6F;&#x4EF6;&#x4E0B;&#x8F7D;</a></li>
+<li><a href="#___2">&#x5B89;&#x88C5;</a>
+<ul class="sectlevel2">
+<li><a href="#_amq">AMQ &#x8FD0;&#x884C;&#x73AF;&#x5883;&#x8BF4;&#x660E;</a></li>
+<li><a href="#__jboss_amq">&#x5B89;&#x88C5; JBoss AMQ</a></li>
+<li><a href="#__apache_activemq">&#x5B89;&#x88C5; Apache ActiveMQ</a></li>
+</ul>
+</li>
+<li><a href="#_amq_2">AMQ &#x5171;&#x4EAB;&#x5B58;&#x50A8;&#x914D;&#x7F6E;</a></li>
+<li><a href="#_ssl">SSL &#x53CC;&#x5411;&#x52A0;&#x5BC6;&#x8BA4;&#x8BC1;</a>
+<ul class="sectlevel2">
+<li><a href="#___11">&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x914D;&#x7F6E;</a></li>
+<li><a href="#___12">&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">&#x8F6F;&#x4EF6;&#x4E0B;&#x8F7D;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x767B;&#x5F55;  <a href="https://access.redhat.com(&#x9700;&#x8981;&#x7EA2;&#x5E3D;&#x8D26;&#x53F7;)&#xFF0C;&#x8FDB;&#x5165;AMQ" class="bare" target="_blank">https://access.redhat.com(&#x9700;&#x8981;&#x7EA2;&#x5E3D;&#x8D26;&#x53F7;)&#xFF0C;&#x8FDB;&#x5165;AMQ</a> &#x4E0B;&#x8F7D;&#x9875;&#x9762;&#xFF08;https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&amp;product=jboss.amq.broker&amp;version=6.3.0&#xFF09;&#xFF0C;&#x9009;&#x62E9;&#x4E0B;&#x8F7D;
+Red Hat JBoss AMQ 6.3.0&#xFF0C;&#x53EF;&#x6839;&#x636E;&#x9700;&#x6C42;&#x4E0B;&#x8F7D;&#x76F8;&#x5E94;&#x7684;&#x5176;&#x4ED6;&#x7EC4;&#x4EF6;&#x3002;&#x4E0B;&#x8F7D;&#x5B8C;&#x6210;&#x540E;&#x4F1A;&#x6709;&#x5982;&#x4E0B;&#x6587;&#x4EF6;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">jboss-a-mq-6.3.0.redhat-262.zip</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x5B89;&#x88C5;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_amq">AMQ &#x8FD0;&#x884C;&#x73AF;&#x5883;&#x8BF4;&#x660E;</h3>
+<div class="sect3">
+<h4 id="___3">&#x652F;&#x6301;&#x8FD0;&#x884C;&#x7684;&#x5E73;&#x53F0;</h4>
+<div class="paragraph">
+<p>JBoss AMQ 6.3 &#x652F;&#x6301;&#x7684;&#x8FD0;&#x884C;&#x5E73;&#x53F0;&#x5305;&#x62EC;&#xFF1A;Red Hat Enterprise Linux 7&#xFF0C;Red Hat Enterprise Linux 6&#xFF0C;Microsoft Windows Server 2012 &#x7B49;&#xFF0C;&#x8BE6;&#x7EC6;&#x8BF7;&#x53C2;&#x7167; <a href="https://access.redhat.com/articles/310613&#x3002;" class="bare" target="_blank">https://access.redhat.com/articles/310613&#x3002;</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__java">&#x652F;&#x6301;&#x8FD0;&#x884C;&#x7684; Java &#x7248;&#x672C;</h4>
+<div class="paragraph">
+<p>JBoss AMQ 6.3 &#x652F;&#x6301;&#x7684;&#x8FD0;&#x884C; Java &#x7248;&#x672C;&#x5305;&#x62EC; Oracle JDK 1.7.x&#xFF0C;Oracle JDK 1.8.x&#xFF0C;OpenJDK 1.7.x&#xFF0C;OpenJDK 1.8.x &#x7B49;&#xFF0C;&#x8BE6;&#x7EC6;&#x8BF7;&#x53C2;&#x7167; <a href="https://access.redhat.com/articles/310613&#x3002;" class="bare" target="_blank">https://access.redhat.com/articles/310613&#x3002;</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___4">&#x652F;&#x6301;&#x7684;&#x6807;&#x51C6;&#x548C;&#x534F;&#x8BAE;</h4>
+<div class="paragraph">
+<p>JBoss AMQ 6.3 &#x652F;&#x6301;&#x7684;&#x6807;&#x51C6;&#x548C;&#x534F;&#x8BAE;&#x5305;&#x62EC;&#xFF1A;JMS&#xFF0C;AMQP &#x7B49;&#xFF0C;&#x8BE6;&#x7EC6;&#x8BF7;&#x53C2;&#x7167;https://access.redhat.com/articles/375833&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__jboss_amq">&#x5B89;&#x88C5; JBoss AMQ</h3>
+<div class="paragraph">
+<p>&#x89E3;&#x538B;&#x8F6F;&#x4EF6;&#x4E0B;&#x8F7D;&#x90E8;&#x5206;&#x4E0B;&#x8F7D;&#x5B8C;&#x6210;&#x7684; zip &#x5305;&#x5373;&#x5B8C;&#x6210;&#x4E86;&#x5B89;&#x88C5;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ unzip jboss<span class="hljs-_">-a</span>-mq-6.3.0.redhat-262.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5B89;&#x88C5;&#x5B8C;&#x6210;&#x751F;&#x6210; jboss-a-mq-6.3.0.redhat-262 &#x76EE;&#x5F55;&#x5373;&#x4E3A; AMQ &#x7684;&#x4E3B;&#x76EE;&#x5F55;&#x3002;&#x8FDB;&#x5165;AMQ &#x4E3B;&#x76EE;&#x5F55;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-built_in">cd</span> jboss<span class="hljs-_">-a</span>-mq-6.3.0.redhat-262/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8BE5;&#x76EE;&#x5F55;&#x4E0B; etc &#x76EE;&#x5F55;&#x4E2D;&#x4FDD;&#x5B58;&#x8FD9;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;bin &#x76EE;&#x5F55;&#x4E0B;&#x4E3A;&#x542F;&#x52A8;&#x811A;&#x672C;&#xFF0C;extras &#x4E0B;&#x4E3A;&#x548C;&#x793E;&#x533A;&#x7248; ActiveMQ&#x6BD4;&#x8F83;&#x63A5;&#x8FD1;&#x7684; <code>apache-activemq-5.11.0.redhat-630262-bin.zip</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="___5">&#x6DFB;&#x52A0;&#x7528;&#x6237;</h4>
+<div class="paragraph">
+<p>&#x7F16;&#x8F91; etc/users.properties &#x6587;&#x4EF6;&#xFF0C;&#x6DFB;&#x52A0;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">jboss=Abcd1234!,admin,manager,viewer,Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+save=save_activemq@123,admin,manager,viewer,Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser
+cmsfe=cmsfe_activemq@123,admin,manager,viewer,Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x4FDD;&#x5B58;&#x4FEE;&#x6539;&#x5E76;&#x9000;&#x51FA;&#x3002;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_broker">Broker &#x5C5E;&#x6027;&#x914D;&#x7F6E;</h4>
+<div class="paragraph">
+<p>&#x7F16;&#x8F91; etc/activemq.xml &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x5206;&#x522B;&#x4FEE;&#x6539; brokerName &#x4E3A; amq1&#xFF0C;useJmx &#x4E3A; true:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">broker</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://activemq.apache.org/schema/core&quot;</span> <span class="hljs-attr">brokerName</span>=<span class="hljs-string">&quot;amq1&quot;</span> <span class="hljs-attr">dataDirectory</span>=<span class="hljs-string">&quot;${data}&quot;</span> <span class="hljs-attr">useJmx</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___6">&#x4F20;&#x8F93;&#x8FDE;&#x63A5;&#x5668;&#x914D;&#x7F6E;</h4>
+<div class="paragraph">
+<p>&#x7F16;&#x8F91; etc/activemq.xml &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x6DFB;&#x52A0;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;openwire&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;tcp://0.0.0.0:61616?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__amq">&#x542F;&#x52A8; AMQ</h4>
+<div class="paragraph">
+<p>&#x5728; Linux &#x4E0B;&#x542F;&#x52A8;&#x6267;&#x884C;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">./bin/start</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5728; Windows &#x4E0B;&#x542F;&#x52A8;&#x6267;&#x884C;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">bin\start.bat</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___7">&#x5B89;&#x88C5;&#x6D4B;&#x8BD5;</h4>
+<div class="paragraph">
+<p>&#x8BBF;&#x95EE; <a href="http://localhost:8181/" class="bare" target="_blank">http://localhost:8181/</a> &#x767B;&#x5F55; AMQ &#x7BA1;&#x7406;&#x63A7;&#x5236;&#x53F0;, &#x767B;&#x5F55;&#x540E;&#x53EF;&#x4EE5;&#x67E5;&#x770B;&#x4E00;&#x4E9B;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;&#x4FE1;&#x606F;&#x3002;&#x53E6;&#x5916;&#x8FD0;&#x884C; <a href="https://raw.githubusercontent.com/kylinsoong/mom-examples/master/amq/sinopharm/src/main/java/org/jboss/amq/samples/SimplePing.java" target="_blank">SimplePing</a>&#xFF0C;&#x5982;&#x679C;&#x80FD;&#x63A5;&#x6536;&#x5230;&#x8FD4;&#x56DE;&#x5B57;&#x7B26;&#x4E32; &#x201C;PING JBOSS AMQ 6.3 SUCCESS!&#x201D;&#xFF0C;&#x5219;&#x8868;&#x660E;&#x5B89;&#x88C5;&#x6210;&#x529F;&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__apache_activemq">&#x5B89;&#x88C5; Apache ActiveMQ</h3>
+<div class="paragraph">
+<p>&#x89E3;&#x538B;&#x5B89;&#x88C5;&#x5305;&#x5B8C;&#x6210;&#x5B89;&#x88C5;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"> $ unzip apache-activemq-5.11.0.redhat-630260-bin.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5B89;&#x88C5;&#x5B8C;&#x6210;&#x540E;&#x751F;&#x6210;&#x4E86; apache-activemq-5.11.0.redhat-630260 &#x76EE;&#x5F55;&#xFF0C;&#x8FDB;&#x5165;&#x6B64;&#x76EE;&#x5F55;&#x3002;</p>
+</div>
+<div class="sect3">
+<h4 id="___8">&#x914D;&#x7F6E;</h4>
+<div class="listingblock">
+<div class="title"><strong>conf/users.properties</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">admin=admin</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>conf/credentials.properties</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">activemq.username=admin
+activemq.password=admin
+guest.password=password</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>conf/groups.properties</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">admins=admin</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>conf/activemq.xml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">simpleAuthenticationPlugin</span> &gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">users</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">authenticationUser</span> <span class="hljs-attr">username</span>=<span class="hljs-string">&quot;admin&quot;</span> <span class="hljs-attr">password</span>=<span class="hljs-string">&quot;${activemq.password}&quot;</span> <span class="hljs-attr">groups</span>=<span class="hljs-string">&quot;users, admins&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">users</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">simpleAuthenticationPlugin</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>conf/activemq.xml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">destinationPolicy</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">policyMap</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">policyEntries</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">policyEntry</span> <span class="hljs-attr">topic</span>=<span class="hljs-string">&quot;&gt;&quot;</span> <span class="hljs-attr">producerFlowControl</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">memoryLimit</span>=<span class="hljs-string">&quot;100mb&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">pendingMessageLimitStrategy</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">constantPendingMessageLimitStrategy</span> <span class="hljs-attr">limit</span>=<span class="hljs-string">&quot;5000&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">pendingMessageLimitStrategy</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">policyEntry</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">policyEntry</span> <span class="hljs-attr">queue</span>=<span class="hljs-string">&quot;&gt;&quot;</span> <span class="hljs-attr">producerFlowControl</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">memoryLimit</span>=<span class="hljs-string">&quot;100mb&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">policyEntry</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">policyEntries</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">policyMap</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">destinationPolicy</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>conf/activemq.xml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">managementContext</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">managementContext</span> <span class="hljs-attr">createConnector</span>=<span class="hljs-string">&quot;true&quot;</span>  <span class="hljs-attr">connectorPort</span>=<span class="hljs-string">&quot;11099&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;environment&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">map</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;jmx.remote.x.password.file&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;${activemq.conf}/jmx.password&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;jmx.remote.x.access.file&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;${activemq.conf}/jmx.access&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">managementContext</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">managementContext</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>conf/activemq.xml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">systemUsage</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">systemUsage</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">memoryUsage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">memoryUsage</span> <span class="hljs-attr">percentOfJvmHeap</span>=<span class="hljs-string">&quot;70&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">memoryUsage</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">storeUsage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">storeUsage</span> <span class="hljs-attr">limit</span>=<span class="hljs-string">&quot;1 gb&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">storeUsage</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">tempUsage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">tempUsage</span> <span class="hljs-attr">limit</span>=<span class="hljs-string">&quot;2 gb&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">tempUsage</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">systemUsage</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">systemUsage</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>onf/activemq.xml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">transportConnectors</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;openwire&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;tcp://0.0.0.0:61616?maximumConnections=3000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">transportConnectors</span>&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___9">&#x542F;&#x52A8;</h4>
+<div class="paragraph">
+<p>&#x5728; Linux &#x4E0B;&#x542F;&#x52A8;&#x6267;&#x884C;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"> ./bin//activemq start</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5728; Windows &#x4E0B;&#x542F;&#x52A8;&#x6267;&#x884C;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">bin\activemq.bat start</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___10">&#x5B89;&#x88C5;&#x6D4B;&#x8BD5;</h4>
+<div class="paragraph">
+<p>&#x4F7F;&#x7528; <a href="http://localhost:8161/hawtio/login" class="bare" target="_blank">http://localhost:8161/hawtio/login</a> &#x767B;&#x5F55;&#x7BA1;&#x7406;&#x63A7;&#x5236;&#x53F0;&#xFF0C;&#x767B;&#x5F55;&#x7BA1;&#x7406;&#x63A7;&#x5236;&#x53F0;&#x53EF;&#x4EE5;&#x67E5;&#x770B;&#x4E00;&#x4E9B;&#x9ED8;&#x8BA4;&#x7684;&#x914D;&#x7F6E;&#x3002;</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_amq_2">AMQ &#x5171;&#x4EAB;&#x5B58;&#x50A8;&#x914D;&#x7F6E;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">persistenceAdapter</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">kahaDB</span> <span class="hljs-attr">directory</span>=<span class="hljs-string">&quot;/mq&quot;</span> <span class="hljs-attr">lockKeepAlivePeriod</span>=<span class="hljs-string">&quot;2000&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">locker</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">shared-file-locker</span> <span class="hljs-attr">lockAcquireSleepInterval</span>=<span class="hljs-string">&quot;10000&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">locker</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">kahaDB</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">persistenceAdapter</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">systemUsage</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">systemUsage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">memoryUsage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">memoryUsage</span> <span class="hljs-attr">percentOfJvmHeap</span>=<span class="hljs-string">&quot;70&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">memoryUsage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">storeUsage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">storeUsage</span> <span class="hljs-attr">limit</span>=<span class="hljs-string">&quot;30 gb&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">storeUsage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">tempUsage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">tempUsage</span> <span class="hljs-attr">limit</span>=<span class="hljs-string">&quot;10 gb&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">tempUsage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">systemUsage</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">systemUsage</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x57FA;&#x4E8E;&#x5982;&#x4E0A;&#x914D;&#x7F6E;&#xFF0C;AMQ Broker &#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x7684;&#x5185;&#x5B58;&#x4E3A; Heap &#x7684; 70%&#xFF0C;&#x6301;&#x4E45;&#x5316;&#x6D88;&#x606F;&#x5B58;&#x50A8;&#xFF0C;kahaDB &#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x7684;&#x78C1;&#x76D8;&#x5927;&#x5C0F;&#x4E3A; 30 GB&#xFF0C;&#x5904;&#x7406;&#x4E00;&#x4E9B;&#x975E;&#x6301;&#x4E45;&#x5316;&#x6D88;&#x606F;&#x6216; DLQ &#x53CA;&#x5176;&#x5B83;&#x76F8;&#x5173;&#x7684;&#x4E34;&#x65F6;&#x6587;&#x4EF6;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x7684;&#x78C1;&#x76D8;&#x5927;&#x5C0F;&#x4E3A; 10 GB.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ssl">SSL &#x53CC;&#x5411;&#x52A0;&#x5BC6;&#x8BA4;&#x8BC1;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___11">&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">sslContext</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">sslContext</span> <span class="hljs-attr">keyStore</span>=<span class="hljs-string">&quot;file:///path/to/spserver.ks&quot;</span> <span class="hljs-attr">keyStorePassword</span>=<span class="hljs-string">&quot;redhat&quot;</span> <span class="hljs-attr">trustStore</span>=<span class="hljs-string">&quot;file:///path/to/spserver.ts&quot;</span> <span class="hljs-attr">trustStorePassword</span>=<span class="hljs-string">&quot;redhat&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">sslContext</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x6DFB;&#x52A0; ssl &#x52A0;&#x5BC6;&#x4F20;&#x8F93;&#x94FE;&#x63A5;&#x5668;&#x914D;&#x7F6E;&#x5982;&#x4E0B;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;ssl&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;ssl://0.0.0.0:61617?transport.enabledProtocols=TLSv1,TLSv1.1,TLSv1.2&amp;amp;maximumConnections=1000&quot;</span> /&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___12">&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</h3>
+<div class="paragraph">
+<p>SSL &#x5BA2;&#x6237;&#x7AEF;&#x9700;&#x8981;&#x4F7F;&#x7528; ActiveMQSslConnectionFactory&#xFF0C;&#x5177;&#x4F53;&#x521D;&#x59CB;&#x5316;&#x4EE3;&#x7801;&#x5982;&#x4E0B;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">ActiveMQSslConnectionFactory connectionFactory = <span class="hljs-keyword">new</span> ActiveMQSslConnectionFactory();
+connectionFactory.setTrustStore(<span class="hljs-string">&quot;/path/to/spclient.ts&quot;</span>);
+connectionFactory.setTrustStorePassword(<span class="hljs-string">&quot;redhat&quot;</span>);
+connectionFactory.setKeyStore(<span class="hljs-string">&quot;/path/to/spclient.ks&quot;</span>);
+connectionFactory.setKeyStorePassword(<span class="hljs-string">&quot;redhat&quot;</span>);
+connectionFactory.setBrokerURL(<span class="hljs-string">&quot;ssl://localhost:61617&quot;</span>);
+connectionFactory.setUserName(<span class="hljs-string">&quot;admin&quot;</span>);
+connectionFactory.setPassword(<span class="hljs-string">&quot;admin&quot;</span>);
+Connection connection = connectionFactory.createConnection();
+connection.start();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5BF9;&#x5E94; bean &#x7684;&#x914D;&#x7F6E;&#x4E3A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;AMQJMSConnectionFactory&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;org.apache.activemq.ActiveMQSslConnectionFactory&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;trustStore&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;/path/to/spclient.ts&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;trustStorePassword&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;redhat&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;keyStore&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;/path/to/spclient.ks&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;keyStorePassword&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;redhat&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;brokerURL&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;ssl://localhost:61617&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;userName&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;admin&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;admin&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="streams.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: AMQ Streams">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"AMQ 6.3 安装测试","level":"1.6.8.2","depth":3,"next":{"title":"敏捷集成","level":"1.6.9","depth":2,"url":"http://ksoong.org/agile-integration/","ref":"http://ksoong.org/agile-integration/","articles":[]},"previous":{"title":"AMQ Streams","level":"1.6.8.1","depth":3,"path":"jboss/amq/streams.adoc","ref":"jboss/amq/streams.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"jboss/amq/install.adoc","mtime":"2019-03-27T08:41:56.879Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T09:29:16.283Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

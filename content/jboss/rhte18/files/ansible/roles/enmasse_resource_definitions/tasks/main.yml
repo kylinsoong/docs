@@ -1,0 +1,12 @@
+---
+
+# resource definitions
+- name: check if resource definitions exists
+  shell: "{{ openshift_cli }} get configmap resource-definition-router -n {{ ocp_project }}"
+  register: resource_definitions_exist
+  ignore_errors: true
+  changed_when: false
+
+- name: create resource definitions
+  shell: "{{ openshift_cli }} apply -f {{ resource_definitions_template }} -n {{ ocp_project }}"
+  when: resource_definitions_exist is failed
