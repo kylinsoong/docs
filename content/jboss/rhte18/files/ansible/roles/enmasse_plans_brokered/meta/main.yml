@@ -1,4 +1,0 @@
----
-
-dependencies:
-  - role: enmasse_resource_definitions

@@ -1,8 +1,0 @@
----
-
-- name: create addresses
-  include_tasks: create_address.yml
-  with_items:
-    - "{{ address_names }}"
-  loop_control:
-    loop_var: outer_item

@@ -1,4 +1,0 @@
----
-
-dependencies:
-  - role: enmasse_address_controller_sa

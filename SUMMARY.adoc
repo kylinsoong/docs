@@ -115,7 +115,7 @@
 .. link:jboss/bpm/bpm.adoc[BPM]
 ...  link:jboss/bpm/install.adoc[安装测试]
 .. link:jboss/secure/README.adoc[安全]
-. link:data/README.adoc[DATA]
+. https://mongocn.github.io[DATA]
 . link:solutions/README.adoc[SOLUTIONS]
 .. link:solutions/abc-distribute-arch.adoc[核心银行系统分布式架构转型]
 . link:about/README.adoc[BUSINESS]

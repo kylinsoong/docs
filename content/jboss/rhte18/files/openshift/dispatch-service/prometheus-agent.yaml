@@ -1,4 +1,0 @@
----
-lowercaseOutputName: true
-lowercaseOutputLabelNames: true
-blacklistObjectNames: ["Tomcat:*","org.springframework.boot:*","org.springframework.cloud.context.restart:*"]

@@ -1,8 +1,0 @@
-- ride_per_status:
-    sql: >
-        SELECT status, count(id) as cnt FROM ride GROUP BY status
-    data-field: cnt
-- ride_created:
-    sql: >
-        SELECT processname, count(1) as cnt FROM processinstancelog GROUP BY processname
-    data-field: cnt    

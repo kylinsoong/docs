@@ -1,4 +1,0 @@
----
-
-dependencies:
-  - role: tls_secret

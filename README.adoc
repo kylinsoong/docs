@@ -19,7 +19,7 @@ Once your change be merged the content will show on page.
 
 == Test locally
 
-You may need test locally, to make sure the changes are correct, to do this install https://github.com/GitbookIO/gitbook[gitbook], then execute the following commands from the checkout location:
+You may need test locally, to make sure the changes are correct, to do this install https://toolchain.gitbook.com/setup.html[gitbook], then execute the following commands from the checkout location:
 
 [source, bash]
 ----
@@ -31,7 +31,7 @@ Once above commands executes successfully, the http format document can be test 
 
 == Generate html/pdf/epub/mobi
 
-You may locally create rendered forms of the documentation. To do this install https://github.com/GitbookIO/gitbook[gitbook] and https://github.com/GitbookIO/gitbook-convert[gitbook-convert], then execute the following commands from the checkout location:
+You may locally create rendered forms of the documentation. To do this install https://toolchain.gitbook.com/setup.html[gitbook] and https://toolchain.gitbook.com/ebook.html[gitbook-convert], then execute the following commands from the checkout location:
 
 [source, bash]
 ----
@@ -47,6 +47,10 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 
 |===
 |版本 |时间 |Notes
+
+|2.1
+|2019-06-20
+|Add MongoDB module
 
 |2.0
 |2019-03-02

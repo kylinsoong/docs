@@ -1,5 +1,0 @@
-# 11. teiid
-if (outcome != success) of /subsystem=datasources/data-source=ln720:read-resource
-    /subsystem=datasources/data-source=ln720:add(driver-name=teiid, jndi-name="java:/ln720", enabled=true, connection-url="jdbc:teiid:ln720@mm://localhost:31000", user-name=user, password=user)
-    /subsystem=datasources/data-source=ln720:enable()
-end-if

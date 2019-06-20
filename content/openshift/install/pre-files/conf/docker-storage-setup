@@ -1,3 +1,0 @@
-DEVS=/dev/vdb
-VG=docker-vg
-SETUP_LVM_THIN_POOL=yes

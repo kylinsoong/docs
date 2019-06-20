@@ -1,9 +1,0 @@
-# Mysql
-module add --name=com.mysql.jdbc --resources=mysql-connector-java-5.1.35.jar --dependencies=javax.api,javax.transaction.api
-
-
-# Add Mysql Driver
-if (outcome != success) of /subsystem=datasources/jdbc-driver=mysql:read-resource
-    /subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql, driver-module-name=com.mysql.jdbc, driver-class-name=com.mysql.jdbc.Driver, xa-datasource-class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
-end-if
-

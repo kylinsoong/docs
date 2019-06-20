@@ -1,8 +1,0 @@
-127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 
-
-192.168.5.106    registry.example.com  registry  yum.example.com  yum  nfs.example.com nfs
-192.168.122.101  master.example.com  master
-192.168.122.105  node1.example.com  node1
-192.168.122.106  node2.example.com  node2
-

@@ -1,8 +1,0 @@
----
-
-- include_role:
-    name: enmasse_standard_authentication_service_keycloak
-- include_role:
-    name: enmasse_standard_authentication_service_controller
-- include_role:
-    name: enmasse_standard_authentication_service_config
