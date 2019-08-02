@@ -1,0 +1,177 @@
+= LDAP
+:toc: manual
+
+== 什么是 LDAP
+
+LDAP(Lightweight Directory Access Protocol) 代表轻量级目录访问协议，它是一个分层数据库，通常用于存储企业内部有关设备，用户，组权限等的信息。最常见的 LDAP 提供着可能是微软的 Active Directory 和开源的 OpenLDap。
+
+您可以将其视为文档树，即键值对，类似 Windows 的注册表一样。 或者一个包含文件（记录）的目录。需要注意的是，一个级别上可能有多个具有相同名称的记录，例如一个人的记录可能有多个“电话号码”条目。
+
+LDAP 服务器允许您按路径检索记录，它们允许您搜索特定值的部分或全部树。它们还允许您通过对密码进行哈希并将其与存储的哈希值进行比较来验证密码。这意味着您可以使用LDAP进行身份验证 - LDAP 支持 PLAIN文本身份验证（您通过密码发送）以及更复杂的机制认证，PLAIN 文本是最常见的一种方式。
+
+LDAP 中一些主要名词：
+
+|===
+|Field |描述
+
+|dn(distinguished name)
+|This refers to the name that uniquely identifies an entry in the directory.
+
+|dc(domain component)
+|This refers to each component of the domain. For example www.google.com would be written as DC=www,DC=google,DC=com
+
+|ou(organizational unit)
+|This refers to the organizational unit (or sometimes the user group) that the user is part of. If the user is part of more than one group, you may specify as such, e.g., OU= Lawyer,OU= Judge.
+
+|cn(common name)
+|This refers to the individual object (person's name; meeting room; recipe name; job title; etc.) for whom/which you are querying.
+
+|===
+
+== ldapsearch
+
+ldapsearch 是一个常见的命令用来在客户端和 LDAP 服务器进行通信，查看 LDAP 中记录信息，进行简单认证测试，等。
+
+[source, bash]
+.*Linux 上安装 openldap-clients，即可以使用 ldapsearch*
+----
+$ sudo yum install -y openldap-clients
+----
+
+本处运程 LDAP 服务器连接信息如下：
+
+|===
+|名称 |值
+
+|地址
+|openldap.example.com
+
+|端口
+|389/636
+
+|BIND 用户名(DN)
+|MDBRECRUIT\ldap-bind-user
+
+|BIND 密码
+|Ldapb1nduser
+|===
+
+本部分基于此服务器进行。
+
+=== Bind
+
+通常情况下，需要经过安全认证才可以和 LDAP 目录服务交互，客户端认证过程叫做 Bind。ldapsearch 进行 Bind 需要制定三个参数
+
+* `-h` - LDAP 服务器运行地址
+* `-D` - BIND 用户名(DN)
+* `-w` - BIND 密码
+
+[source, bash]
+.*执行一次 Bind*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser'
+# extended LDIF
+#
+# LDAPv3
+# base <> (default) with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# search result
+search: 2
+result: 32 No such object
+text: 0000208D: NameErr: DSID-0310021B, problem 2001 (NO_OBJECT), data 0, best 
+ match of:
+	''
+
+
+# numResponses: 1
+----
+
+=== 查询
+
+一旦 Bind 成功，就可以查询目录树，ldapsearch 查询更多参数
+
+* `-b` - 指定 BASE 路径，空为顶级目录
+* `-s` - 定义怎么样去查询，格式类似 [one level (one), from the top (base)/all sub levels (sub)] [KEY=Value]
+
+[source, bash]
+.*1. 查询整个目录*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser' -b '' -s base 
+----
+
+[source, bash]
+.*2. 查询 MDBRecruit.net 下内容*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser' -b 'DC=mdbrecruit,DC=net' -s sub  "sAMAccountName=mongoadmin"
+----
+
+[source, bash]
+.*3. 查询 MDBRecruit.net 下 CN=Users 的内容*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser' -b 'CN=Users,DC=mdbrecruit,DC=net' -s one  "sAMAccountName=mongoadmin"
+----
+
+[source, bash]
+.*4. 查询 MDBRecruit.net 下 CN=Users 的具体字段*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser' -b 'CN=Users,DC=mdbrecruit,DC=net' -s one  "sAMAccountName=mongoadmin" cn name distinguishedName memberOf
+----
+
+=== TLS 密码加密
+
+上面 Bing 和查询部分密码都是通过明文形式传送的，通常这在实际生产中是不允许的（大多数 LDAP 目录服务不允许明文交互），需要对传输进行加密。
+
+ldapsearch 通过 `-ZZ` 指定 BIND 密码加密传输。
+
+[source, bash]
+.*在上面执行查询的语句中添加 `-ZZ` 会发现查询失败*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser' -b 'CN=Users,DC=mdbrecruit,DC=net' -ZZ -s one  "sAMAccountName=mongoadmin" cn name distinguishedName memberOf
+ldap_start_tls: Connect error (-11)
+	additional info: error:14090086:SSL routines:ssl3_get_server_certificate:certificate verify failed (unable to get local issuer certificate)
+----
+
+上面错误提示，LDAP BIND 过程中不能够找到 LDAP 服务端提供的 CA 证书，OpenLDAP 将证书保存在 `/etc/openldap/certs` 路径。
+
+[source, bash]
+.*拷贝 LDAP 服务端的证书*
+----
+cat << ENDCERT | sudo tee /etc/openldap/certs/ldaptradecraftca.cert
+-----BEGIN CERTIFICATE-----
+MIIDizCCAnOgAwIBAgIQGeApxRe7mK1ATPzIMrZiZjANBgkqhkiG9w0BAQsFADBY
+MRMwEQYKCZImiZPyLGQBGRYDbmV0MRowGAYKCZImiZPyLGQBGRYKbWRicmVjcnVp
+dDElMCMGA1UEAxMcbWRicmVjcnVpdC1UUkFERUNSQUZUTERBUC1DQTAeFw0xOTAx
+MDMxNDExMzZaFw0yNDAxMDMxNDIxMzFaMFgxEzARBgoJkiaJk/IsZAEZFgNuZXQx
+GjAYBgoJkiaJk/IsZAEZFgptZGJyZWNydWl0MSUwIwYDVQQDExxtZGJyZWNydWl0
+LVRSQURFQ1JBRlRMREFQLUNBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAxzSTMND9rqXVqPd05Ll5LUDiyDI1YL852hV3BCy87g3+U+Nhyc9I6KJVBDU4
+ImVNVPc6tUbugKmktOdpjtzcF+nc0Nd+kC2sOyGjc04ist1DXp7XNzqSad/0wW22
+Rf2/lo+fpc/i8IhlPG32rf+ogvYgLJFWNoKwz6MI5CqG1iL8aly6QaGJazR6rjvc
+vif+MddyC7vqYVmx8V5ALR0xhLOQidWPGezXhZj3qpf77w+UoHyzpVNFy6mcaaHN
+530ieGRrhHNnFTxlIroIg8Bcntw5ZoeMOQP6DKcgMMIAZWKXH+3MD23oQbHT5ISJ
+kFlS1nX/AQUggTcj4E7FMjAInQIDAQABo1EwTzALBgNVHQ8EBAMCAYYwDwYDVR0T
+AQH/BAUwAwEB/zAdBgNVHQ4EFgQUQPfHh9lTBOWmrAwipwT2IeuYQXkwEAYJKwYB
+BAGCNxUBBAMCAQAwDQYJKoZIhvcNAQELBQADggEBAIjHEJgXZc8MqBwLzNSatEgS
+h7AivFadQ+3F1LJewh1AR3qMWZ38a2Vh8r+sVSnEZV+kfZMFmfkIUapPxsDKLz7N
+R32Il5ojonh8eiFQnwdRDKnPZkTVT0MbvcAkkBA7MuDpcxPFLQ46ifqDCvwRVvon
+iil/XPwwAhzcmwFRVpmIdh1x5TnZApIpJH1SMxCtQJ1LltSMpReRz4WPpO8ALj54
+o43TmtAnrCziNYva9FI15WNfmMd3Foudpn9lYuaQpAwje6SX6r57x3b7bqvvSrMU
+FIP8uBzqpfS5742/S0gq9hKNqc7eJ39wly3fWS33HQDb5VOAJp1gp+GfMs40EuY=
+-----END CERTIFICATE-----
+ENDCERT
+----
+
+[source, bash]
+.*将证书配置在 /etc/openldap/ldap.conf 文件中*
+----
+$ grep "TLS_CACERT " /etc/openldap/ldap.conf || echo "TLS_CACERT       /etc/openldap/certs/ldaptradecraftca.cert" | sudo tee --append /etc/openldap/ldap.conf
+----
+
+[source, bash]
+.*再次执行查询，发现查询成功*
+----
+$ ldapsearch -h openldap.example.com -D 'MDBRECRUIT\ldap-bind-user' -w 'Ldapb1nduser' -b 'CN=Users,DC=mdbrecruit,DC=net' -ZZ -s one  "sAMAccountName=mongoadmin" cn name distinguishedName memberOf
+----

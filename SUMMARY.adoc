@@ -34,6 +34,7 @@
 ... link:linux/security/SELinux.adoc[SELinux]
 ... link:linux/security/firewall.adoc[防火墙]
 ... link:linux/security/openssl.adoc[OpenSSL]
+... link:linux/security/ldap.adoc[LDAP]
 .. link:linux/process/README.adoc[进程]
 ... link:linux/process/management.adoc[进程管理]
 ... link:linux/process/service.adoc[服务管理]
