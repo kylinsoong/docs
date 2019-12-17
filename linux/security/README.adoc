@@ -12,7 +12,7 @@
 |
 * C(confidentiality) - 数据/信息保密，让不需要看的人不能看到
 * I(integrity) - 数据/信息准确，未被篡改
-* A(availability) - 数据/信息可以被有权限的人看到
+* A(availability) - 数据/信息可被其拥有者容易获取
 
 |Risk
 |突发时间，或恶意攻击造成数据/信息丢失的可能行
