@@ -1,83 +1,121 @@
 = 计算机网络
 :toc: manual
 
-== TCP/IP 五层模型
+== 网络模型
+
+各个组织或企业对网络模型定义有所不同，但目前最常见的定义有一下三种。
+
+=== TCP/IP 五层模型
 
 image:img/layer_terminology.JPG[]
 
-* *Physical* - The physical layer represents the physical devices that interconnect computers, which includes the specifications for the networking cables and the connectors that join devices together along with specifications describing how signals are sent over these connections.
-* *Data Link* - While the physical layer is all about cabling, connectors and sending signals, the data link layer is responsible for defining a common way of interpreting these signals, so network devices can communicate. The most common prototol in this layer is Ethernet, which specifies physical layer attributes, and defines a protocol responsible for getting data to nodes on the same network or link.
-* *Network* - It also called called the Internet layer, which allows different networks to communicate with each other through devices known as routers. While the data link layer is responsible for getting data across a single link, the network layer is responsible for getting data delivered across a collection of networks. The most common protocol used at this layer is known as IP or Internet Protocol.
-* *Transport* -  While the network layer delivers data between two individual nodes, the transport layer sorts out which client and server programs are supposed to get that data. TCP is the most commonly used protocol in the fourth layer. IP is responsible for getting data from one node to another; TCP and UDP is responsible for ensuring that data gets to the right applications running on those nodes.
-* *Application* -  There are lots of different application-specific protocols at this layer, which used to allow you to browse the web or send receive email are some common ones.
+* *物理层* - 物理层表示与计算机互连的物理设备，其中还包括将物理设备连接在一起的网线、光缆、连接器的规范，以及描述如何通过这些连接发送信号的规范。
+* *数据链路层* - 物理层仅仅涉及到的是光缆、连接器和信号发送，数据链路层负责定义解释这些信号的通用方法，以便网络设备可以进行通信。 该层中最常见的协议是以太网（Ethernet），它指定物理层属性，并定义负责同一网络或链路上的节点间传输数据的协议。
+* *网络层* - 也称为 Internet 层，它允许不同的网络之间通过路由器设备相互通信。数据链路层只负责的是同一链路上的数据交互，网络层负责的是跨不同网络的数据交互。网络层最常见的两个协议是 IP 个 Internet。
+* *传输层* - 网络层可以负责两个不同网络中的节点间的数据交互，传输层会理清应该由那个客户端和服务器程序获取这些数据。TCP 是最常见的四层协议，IP 负责将数据从一个节点传输到另一个节点; TCP 和 UDP 负责确保数据被节点上的特定应用获取。
+* *应用层* -  这一层包括很多协议，常见的一些包括是用来允许您浏览网页或发送接收电子邮件等。
 
 .*TCP/IP 5 层模型与包裹投递对应示例*
 image:img/TCPIP-5-layer-models.png[]
 
-1. The physical layer is the delivery truck and the roads.
-2. The data link layer is how the delivery trucks get from one intersection to the next over and over.
-3. The network layer identifies which roads need to be taken to get from address A to address B.
-4. The transport layer ensures that delivery driver knows how to knock on your door to tell you your package has arrived.
-5. The application layer is the contents of the package itself.
+1. 物理层相当于投递快递的卡车和路。
+2. 数据链路层确保投递卡车从一个十字路口到下一个十字路口，并且重复多次。
+3. 网络层确定了地址 A 和地址 B 之间的路。
+4. 传输层确保某个地址上具体的门牌号，以及告诉快速已经送达。
+5. 应用层指包裹的内容本身。
 
 .*TCP/IP 5 层模型与硬件组建对应关系*
 image:img/5layermoles-hardwareComponent.png[]
 
-== OSI 七层模型
+=== TCP/IP 四层模型
 
-详细参照链接 https://en.wikipedia.org/wiki/OSI_model[wiki/OSI_model]。
+image:img/tcp-ip-model.png[TCP/IP]
+
+* 应用层 - 常见的应用层协议有：SSH，HTTPS，NFS/CIFS，SMTP
+* 传输层 - 传输层协议有 TCP 和 UDP，TCP 属于可靠连接传输协议，UDP 无连接数据包传输协议
+* 网络互连层 - 负责将数据从源主机传输到目的主机，任意主机都有一个 IP 地址和子网掩码来确定网络地址，路由器用来连接网络。这一层的协议有 ICMP，`ping` 命令就是基于 ICMP 协议，`ping` 命令发送一个 ICMP ECHO_REQUEST 请
+求包，成功则返回 ICMP ECHO_REPLY 确认。
+* 网络接口层 - 提供连接到物理媒介，如常见的有线以太网（802.3）和无线WLAN（802.11），每一个物理网络设备都有一个物理地址（MAC）用来在网络中唯一标识目的地址。
+
+=== OSI 七层模型
+
+详细参照 https://en.wikipedia.org/wiki/OSI_model[wiki/OSI_model] 了解更多关于 OSI 七层模型。
+
+=== 三种模型对比及对应网络协议
+
+除了 TCP/IP 五层模型外，关于网络模型在业界还有其他表述，最有影响力的表扩：OSI 七层模型和 TCP/IP 四层模型，具体对照如下表：
+
+image:img/network-model.png[]
+
+* OSI 七层模型将 TCP/IP 模型中的应用层细分为三层：应层层、表示层、会话层
+* 相比较 TCP/IP 五层模型，TCP/IP 四层模型将物理层和数据链路层合为一层
+* 网络层也叫 Internet 层或网络互联层，数据链路层也称网络接口层
 
 == 网络设备
 
-=== Cables
+=== 电缆（Cables）
 
-Cables are what connect different devices to each other allowing data to be transmitted over them.
+电缆（Cables）是将不同的设备连接在一起，允许他们相互交换数据。电缆可分为两类:
 
-Cables 可分为两类:
-
-* Copper - Copper cables are the most common form of networking cable. They're made up of multiple pairs of copper wires inside plastic insulator. The most common forms of copper twisted pair cables used in networking are Cat5, Cat5e, and Cat6 cables. These categories have different physical characteristics like the number of twists in the pair of copper wires that result in different usable lengths and transfer rates.
-* Fiber(fiber optic cables) - Fiber cables contain individual optical fibers which are tiny tubes made out of glass about the width of a human hair. These tubes of glass can transport beams of light. Unlike copper, which uses electrical voltages, fiber cables use pulses of light to represent the ones and zeros of the underlying data.
+* 铜缆 - 就是最长见的网线，铜缆是网络电缆的最常见形式，它们由塑料绝缘体内的多对铜线组成。网络中最长见的铜线配对缠绕标准有 Cat5, Cat5e, 和 Cat6。这些类别具有不同的物理特性，例如一对铜线中的绞合数会导致不同的可用长度和传输速率。
+* 光缆 - 光纤电缆包含单个的光纤是由玻璃制成的细管，大约与人的头发宽度相同。这些玻璃管可以传输光束。与使用电压的铜缆不同，光缆使用光脉冲来表示基础数据的 1 和0。
 
 === Hub
 
-A hub is a physical layer device that allows for connections from many computers at once. All the devices connected to a hub will end up talking to all other devices at the same time. It's up to each system connected to the hub to determine if the incoming data was meant for them, or to ignore it if it isn't. This causes a lot of noise on the network and creates what's called a collision domain. A collision domain is a network segment where only one device can communicate at a time. If multiple systems try sending data at the same time, the electrical pulses sent across the cable can interfere with each other. This causes these systems to have to wait for a quiet period before they try sending their data again. It really slows down network communications, and is the primary reason hubs are fairly rare. 
+Hub 是物理层的设备，多台计算机设备可连接到它，允许同一时刻来自不同计算机的连接。
 
-=== Switch
+image:img/network-hub.png[]
 
-A switch is a much more common way of connecting many computers is with a more sophisticated device. A switch is very similar to a hub, since you can connect many devices to it so they can communicate. The difference is that while a hub is a layer 1 or physical layer device, a switch is a level 2 or data link device. This means that a switch can actually inspect the contents of the Ethernet protocol data being sent around the network, determine which system the data is intended for and then only send that data to that one system. This reduces or even completely eliminates the size of collision domains on a network. This also lead to fewer retransmissions and a higher overall throughput.
+All the devices connected to a hub will end up talking to all other devices at the same time. It's up to each system connected to the hub to determine if the incoming data was meant for them, or to ignore it if it isn't. This causes a lot of noise on the network and creates what's called a collision domain. A collision domain is a network segment where only one device can communicate at a time. If multiple systems try sending data at the same time, the electrical pulses sent across the cable can interfere with each other. This causes these systems to have to wait for a quiet period before they try sending their data again. It really slows down network communications, and is the primary reason hubs are fairly rare. 
 
-=== Router
+=== 交换机（Switch）
 
-A router is a device that knows how to forward data between independent networks. While a hub is a layer one device and a switch is a layer two device. A router operates at layer three, a network layer. Just like a switch can inspect Ethernet data to determine where to send things, a router can inspect IP data to determine where to send things. Routers store internal tables containing information about how to route traffic between lots of different networks all over the world. 
+交换机是二层（数据链路层）设备，是目前常见的网络设备，允许多台计算机连接到它，由于是二层的设备，交换机可以识别 Ethernet 协议中的属性来识别特点的计算机，确保数据准确的传输到特定的机器。这极大的减少了网络域冲突，提高了网络传输的吞吐量.
 
-Routers share data with each other via a protocol known as BGP, or Border Gateway Protocol. That lets them learn about the most optimal paths to forward traffic. When you open a web browser and load a web page, the traffic between computers and the web servers could have traveled over dozens of different routers. The Internet is incredibly large and complicated. And routers are global guides for getting traffic to the right places.
+=== 路由器（Router）
+
+Hub 是一层的网络设备，交换机是二层的网络设备，二路由器是三层的网络设备，路由器知道如何在不同的网络之间发送数据。和交换机检测 Ethernet 协议中的属性决定将包发送到什么位置类似，路由器检测 IP 协议中的属性决定将包发送到什么位置。路由器内部有个路由表，包含着将数据路由到世界上不同网络的信息。
+
+不同的路由器之间通过 BGP(Border Gateway Protocol) 协议共享数据，这使数据的发送基于最佳路径。当您打开Web浏览器并加载网页时，计算机和Web服务器之间的流量可能会经过数十个不同的路由器。 互联网异常庞大且复杂。 路由器是将流量吸引到正确位置的全球指南。
 
 == 物理层
 
-=== Moving bits across the wire
+=== 链路上的字节移动
 
-* The physical layer is focus on moving ones and zeros from one end of the link to the next.
-* The physical layer consists of devices and  means of transmitting bits across computer networks.
-* A bit is the smallest representation of data that a computer can understand. It's a one or a zero. These ones and zeros sends across networks at the lowest level are what make up the frames and packets of data that we'll learn about when we cover the other layers.
-* Ones and zeros are sent across those network cables through a process called modulation. Modulation is a way of varying the voltage of this charge moving across the cable. When used for computer networks, this kind of modulation is more specifically known as line coding. It allows devices on either end of a link to understand that an electrical charge in a certain state is a zero, and in another state is a one.
+* 物理层负责将字节流（0 或 1 的字节码串）从链路的一端移动到另一端
+* 物理层是由传输字节码的设备和装置组成
+* 一个比特(bit)代表计算机可以明白的最小数据，它要么是 1，要么是 0。这些在网络链路上发送的 0 或 1 的字节码串是组成数据帧、数据包的最底层元素，这些帧或包是其他网络层的概念。
+*  0 或 1 的字节码串在网络上发送是通过一个叫调节器(Modulation)的程序控制，调节器(Modulation)是一种改变电荷在电缆上移动的电压的方式。当用于计算机网络时，这种调制方式更具体地称为线路编码。它允许链路两端的设备了解某种状态下的电荷为 0，而另一种状态下的电荷为 1。 
 
 image:img/line-coding.png[]
 
-=== Twisted Pair Cabling and Duplexing
+=== 双绞线(Twisted Pair) 双向交流
 
-* A standard cat six cable has eight wires consisting of four twisted pairs inside a single jacket.
-* Duplex communication is the concept that information can flow in both directions across the cable. 
+* 一个标准的 Cat 6 电缆由 8 根铜线，4 对双绞线组成 
+* 双向交流指电缆支持双向传输 信息。
 
 image:img/cat5e-cat6.jpg[] 
 
-https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[Ethernet over twisted pair]
+https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 
-=== Network Ports and Patch Panels
+=== 网络接口和配线架
 
-* A network cable with an RJ-45 plug can connect to an RJ-45 network port. Network ports are generally directly attached to the devices that make up a computer network.
-* Patch panel is a device containing many net ports but it does no other work. It's just a container for the endpoints of many runs of cable.
+* 一根网线通常通过一个 RJ-45 接头连接到一个 RJ-45 网络接口. 网络接口通常与组成计算机网络的设备直接连接，或是设备的一个部分，例如任何一台计算机都会至少有一个网络接口。
+* 配线架是一种包含许多网络端口的设备，但没有其他作用，只是将不同网络线缆连接到一起。 
   
-image:img/rj45.jpg[]
+[cols="2,5a"]
+|===
+|名称 |图示
+
+|RJ-45 插头
+|image:img/rj45.jpg[]
+
+|RJ-45 网络接口
+|image:img/rj45port.png[]
+
+|配线架(Patch Panel)
+|image:img/patch_panel.png[]
+|===
 
 == 数据链路层
 

@@ -5,16 +5,6 @@
 
 本部分包括 Linux 网络基本概念。
 
-=== TCP/IP 四层模型
-
-image:img/tcp-ip-model.png[TCP/IP]
-
-* 应用层 - 常见的应用层协议有：SSH，HTTPS，NFS/CIFS，SMTP
-* 传输层 - 传输层协议有 TCP 和 UDP，TCP 属于可靠连接传输协议，UDP 无连接数据包传输协议
-* 网络互连层 - 负责将数据从源主机传输到目的主机，任意主机都有一个 IP 地址和子网掩码来确定网络地址，路由器用来连接网络。这一层的协议有 ICMP，`ping` 命令就是基于 ICMP 协议，`ping` 命令发送一个 ICMP ECHO_REQUEST 请
-求包，成功则返回 ICMP ECHO_REPLY 确认。
-* 网络接口层 - 提供连接到物理媒介，如常见的有线以太网（802.3）和无线WLAN（802.11），每一个物理网络设备都有一个物理地址（MAC）用来在网络中唯一标识目的地址。
-
 === IPv4 地址
 
 image:img/ipv4address-netmask.png[ipv4address-netmask.png]
