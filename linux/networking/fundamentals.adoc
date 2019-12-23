@@ -121,33 +121,34 @@ https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 
 === Ethernet 和 MAC 地址
 
-* Ethernet is most widely used protocol to send data across individual links.
-* The data link layer is to essentially abstract away the need for any other layers to care about the physical layer and what hardware is in use. 
+* Ethernet 时目前链路层最被广泛使用的协议，用来在单个链路上发送数据，Ethernet 最早在 1980 年提出，1983 成为标准，后续只是基于带宽的增加相应进行过一些微调。
+* 数据链路层实质上是对物理层的一个抽象，使其他层可以不用考虑物理层所使用的硬件或设备，而可以进行发送数据和接受数据的工作，这样确保了不管物理层硬件或设备如何变化，网络层、传输层、应用层都在用同样的方式工作。
+* CSMA/CD(Carrier Sense Multiple Access With Collision Detection)* - CSMA/CD 用于确定通信通道何时畅通以及设备何时自由传输数据，这是为了避免冲突域。CSMA/CD 的工作原理就是检测当前网段上是否有有数据传输，如果没有，则发送数据；如果有，则等待一个随机的时间间隔，然后尝试再次发送数据，CSMA/CD 使用 MAC 地址来确认目的地节点。
+* MAC(Media Access Control) 地址* - MAC 地址是附加到一个网络接口上的全局唯一标识符。它是一个 48 位的二进制数字，由六组二位的十六进制数字构成，例如：`8:00:27:c3:0f:80`。MAC 地址分为两部分, 前三组十六进制数是组织唯一标识，是由 IEEE 组织分配给各个硬件制造商；后三位可以按制造商希望的方式任意分配，分配的条件是确保每个可能的地址只分配一次。
 
-*CSMA/CD(carrier sense multiple access with collision detection)* - CSMA/CD is used to determine when the communications channels are clear and when the device is free to transmit data, this is for avoiding collision domain.
+image:img/mac_addr-strcture.png[]
 
-*MAC address* - A MAC address is a globally unique identifier attached to an individual network interface. It's a 48-bit number normally represented by six groupings of two hexadecimal numbers. 
-
-=== Unicast, Multicast, Broadcast
+=== 单播, 组播, 广播
 
 |===
-|TYPES |MODES |DESC
+|类型 |模式 |说明
 
-|Unicast
-| One-to-One
-|A unicast transmission is always meant for just one receiving address
+|Unicast（单播）
+|一对一
+|Unicast 传输始终意味着只有一个接收地址。MAC 地址中第一组数字的最后一个二进位为 0，则 Ethernet 帧发送到一个地址。
 
-|Multicast
-|One-to-Many
-|A multicast frame is similarly set to all devices on the local network signal. 	
+|Multicast（组播）
+|一对多
+|Multicast 传输发送到多个物理地址。MAC 地址中第一组数字的最后一个二进位为 1，则 Ethernet 帧发送到多个地址。
 
-|Broadcast
-|One-to-All
-|An Ethernet broadcast is sent to every single device on a LAN.
+|Broadcast（广播）
+|一对所有
+|Ethernet 广播发送到 LAN 中的所有地址. MAC 地址的所有位都为 f。
 |===
+
 
 [source, text]
-.*示例 - Unicast MAC Address*
+.*示例 - Unicast MAC 地址*
 ----
 16:91:99:24:68:c9
 b6:fe:ee:92:78:42
@@ -155,7 +156,7 @@ fa:4e:1b:7f:27:7f
 ----
 
 [source, text]
-.*示例 - Multicast MAC Address*
+.*示例 - Multicast MAC 地址*
 ----
 6b:b7:22:a4:a4:cb
 97:20:82:57:fa:e5
@@ -163,61 +164,34 @@ a7:50:c1:30:ca:c1
 ----
 
 [source, text]
-.*示例 - Broadcast MAC Address*
+.*示例 - Broadcast MAC 地址*
 ----
 ff:ff:ff:ff:ff:ff
 ----
 
-=== Ethernet Frame
+=== 以太网(Ethernet)帧结构
 
-An Ethernet frame is a highly structured collection of information presented in a specific order. This way network interfaces at the physical layer can convert a string of bits, travelling across a link into meaningful data or vice versa.
+以太网(Ethernet)帧是按特定顺序显示的高度结构化的信息集合。这样，可以确保将物理层网络接口将传输的二进制串转化为有意义的数据，或将数据转化为二进制串。
 
 image:img/EthernetPacket.png[]
 
 1. The first part of an Ethernet frame is known as the preamble. A preamble is 8 bytes or 64 bits long and can itself be split into two sections. The first seven bytes are a series of alternating ones and zeros. These act partially as a buffer between frames and can also be used by the network interfaces to synchronize internal clocks they use, to regulate the speed at which they send data. This last byte in the preamble is known as the SFD or start frame delimiter. This signals to a receiving device that the preamble is over and that the actual frame contents will now follow. 
-2. Destination MAC address, which is the hardware address of the intended recipient. 
-3. Source MAC address, where the frame originated from.  
-4. EtherType field, which is 16 bits long and used to describe the protocol of the contents of the frame. 
-5. Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long. 
+2. *Destination MAC Address* - 目的地接收地址硬件的物理地址； 
+3. *Source MAC Address* - 以太网帧发送端的物理地址；  
+4. *Type Field* - 16 二进制长度，以太网类型标识字段，包括帧的内容； 
+5. *Payload* - Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long. 
 6. CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.
-
 
 == 网络层
 
-=== IP 地址
+=== IPv4 地址
 
-IP addresses are 32-bit long numbers made up of 4 octets, and each octet is normally described in decimal numbers. 
+image:img/ipv4address-netmask.png[ipv4address-netmask.png]
 
-image:img/ip-address.png[]
-
-=== IP Datagrams and Encapsulation
-
-IP datagram is a highly structured series of fields that are strictly defined. The two primary sections of an IP datagram are the header and the payload.
-
-image:img/ip-datagrams.png[]
-
-* *Version* - The very first field is four bits, and indicates what version of Internet protocol is being used. The most common version of IP is version four or IPv4.
-* *Header Length* - Header Length field  is also a four bit field that declares how long the entire header is. This is almost always 20 bytes in length when dealing with IPv4. In fact, 20 bytes is the minimum length of an IP header. You couldn't fit all the data you need for a properly formatted IP header in any less space.
-* *Service Type* - Service Type field is eight bits can be used to specify details about quality of service or QoS technologies. The important takeaway about QoS is that there are services that allow routers to make decisions about which IP datagram may be more important than others.
-* *Total Length* - Total Length field is a 16 bits filed, It's used for exactly what it sounds like to indicate the total length of the IP datagram it's attached to. The maximum size of a single datagram is the largest number you can represent with 16 bits, which is 65,535.
-* *Identification* - Identification field, is a 16-bit number that's used to group messages together.  If the total amount of data that needs to be sent is larger than what can fit in a single datagram, the IP layer needs to split this data up into many individual packets. When this happens, the identification field is used so that the receiving end understands that every packet with the same value in that field is part of the same transmission.
-* *Flag* - The flag field is used to indicate if a datagram is allowed to be fragmented, or to indicate that the datagram has already been fragmented.
-* *Fragmentation* - which is the process of taking a single IP datagram and splitting it up into several smaller datagrams.
-* *TTL* - TTL field is an 8-bit field that indicates how many router hops a datagram can traverse before it's thrown away.
-* *Protocol* - Protocol field is another 8-bit field that contains data about what transport layer protocol is being used. The most common transport layer protocols are TCP and UDP.
-* *Header Checksum* - Header checksum field is a checksum of the contents of the entire IP datagram header. It functions very much like the Ethernet checksum field we discussed in the last module. Since the TTL field has to be recomputed at every router that a datagram touches, the checksum field necessarily changes, too. 
-* *Source IP address* 
-* *Destination IP address*
-* *IP options* - IP options field  is an optional field and is used to set special characteristics for datagrams primarily used for testing purposes.
-* *Padding* - The IP options field is usually followed by a padding field. Since the IP options field is both optional and variable in length, the padding field is just a series of zeros used to ensure the header is the correct total size.
-
-*IP datagram is the data payload section in Ethernet frame.*
-
-image:img/ip-datagrams-encapsulation.png[]
-
-=== IP Address Classes
-
-IP addresses can be split into two sections, the network ID, and the host ID.
+* IPv4 地址长度为 32 为二进制数，由 4 组十进制数组成，4 组十进制数之间通过圆点点连接
+* IPv4 地址有两部组成：网络部分(Network)和主机部分(Host)，同一子网的所有主机可以不经过路由而连通彼此，同一子网中主机部分唯一。
+* 子网掩码用来区分 Network 和 Host，如上图，10.66.192.36 子网掩码为 255.255.0.0，即前缀是 16，则为 10.66 网段。
+* 广播地址：当主机部分所有为位置为1是就为广播地址，如上两个地址的广播地址分别为 192.168.1.255，10.66.255.255.
 
 [source, text]
 .*示例：IBM IP 地址，9 是 network ID，100.100.100 是 host ID*
@@ -225,23 +199,23 @@ IP addresses can be split into two sections, the network ID, and the host ID.
 9.100.100.100
 ----
 
-The address class system is a way of defining how the global IP address space is split up. There are three primary types of address classes：
+*IPv4 地址被分为一下几个类型（为了更好的管理互联网网络）*
 
 |===
-|Type |描述 |范围 |Max Hosts
+|类型 |描述 |范围 |Max Hosts
 
-|Class A
-|the first octet is used for the network ID, and the last three are used for the host ID
+|A
+|第一个 10 进制数用来做网络 ID，后面三个 10 进制数用来做主机 ID
 |0 - 126
 |16 M
 
-|Class B
-|the first two octets are used for the network ID, and the second two, are used for the host ID
+|B
+|前两个 10 进制数用来做网络 ID，后面二个 10 进制数用来做主机 ID
 |128 - 191
 |64000
 
-|Class C
-|the first three octets are used for the network ID, and only the final octet is used for the host ID
+|C
+|前三个十进制数用来做网络 ID，后面一个十进制数用来做主机 ID
 |192 - 223
 |254
 
@@ -258,12 +232,44 @@ The address class system is a way of defining how the global IP address space is
 
 image:img/ip-address-classes.png[]
 
-NOTE: If the very first bit of an IP address is a zero, it belongs to a class A network, if the first bits are one, zero, it belongs to a class B network. Finally, if the first bits are 110, it belongs to a class C network. 
+NOTE: 如果第一个二进制位为 0，则属于 A 类地址；如果第一个二进制位为 1，则属于 B 类地址；如果开始的二进制位为 110，则属于 C 类地址。
+
+参照 link:https://zh.wikipedia.org/wiki/分类网络[🔗]了解更多关于网络分类
+
+=== IP 数据报文结构
+
+IP 数据报文是由一系列高度结构化的字段严格定义，IP 数据两个主要部分是 header 和 payload。
+
+image:img/ip-datagrams.png[]
+
+* *Version* - 第一个字段长度为 4 个二进制位，代表着 IP 协议的版本。常见的 IP协议版本是 4，即 IPv4。
+* *Header Length* - Header Length 字段长度为 4 个二进制位，代表着整个 header 的长度。如果是 IPv4，则 Header 的长度永远都是 20，事实上，20 个字节是 IP header 的最小长度，你不能在小于 20 自己的空间里合适的描述一个 IP Header。
+* *Service Type* - Service Type 字段长度为 8 个二进制位，用来指定 QoS 技术的详细情况。QoS 的作用是允许路由器作出决策，在一系列 IP 数据报文中，选择出最为重要的一个数据报文。
+* *Total Length* - Total Length 字段长度为 16 个二进制位，用来表示 IP 数据报文的整体长度。单个数据报文的最大长度为 16 个二进制位都为 1，即为 65,535。
+* *Identification* - Identification 字段长度为 16 个二进制位，用来将消息分组在一起，当要发送的数据大于单个数据报文允许的最大值时，则 IP 层需要将原始的大的数据包分割成几个小的数据包，在这种情况下 Identification 字段用来被接收端标识分割后的数据包属于同一个数据包。
+* *Flag* - Flag 字段用来标识数据报文是否允许分段，或者标识数据报文已经分段。
+* *Fragmentation* - 是将一个大的 IP 数据报文分割成多个小的数据报文的进程。
+* *TTL* - TTL 字段的长度为 8 个二进制位，指定一个数据报文在经过多少个路由跳转后丢弃。
+* *Protocol* - Protocol 字段的长度为 8 个二进制位，包含数据标识那个传输层的协议被使用，最常见的传输层协议是 TCP 或 UDP。
+* *Header Checksum* - Header checksum 字段用来对整个 IP 数据报文 header进行校验，它和 Ethernet Checksum 字段类似，通常由于 TTL 字段经过任意一个路由器时都会被修改，Header Checksum 字段相应的也会被修改。
+* *Source IP Address* - 长度为 32 个二进制位，代表着源 IP 地址。 
+* *Destination IP Address* - 长度为 32 个二进制位，代表着目的地 IP 地址。 
+* *Option* - 可选的字段，用来设定一些特定字符，通常用于测试目的。
+* *Padding* - 相当于一个占位符字段，由于 Option 字段时可选的一个变量，长度不定，该字段只是一些 0 串，用来确保 Header 的整体长度。
+
+*网络模型中底层包的 payload 是临近上一层包*
+
+image:img/ip-datagrams-encapsulation.png[]
+
+1. 数据链路层 Ethernet 帧的 Payload 是其上一层网络层 IP 数据报文
+2. 网络层 IP 数据报文的 Payload 是其上一层传输层 TCP 报文或 UDP 报文
+3. 传输层 TCP/UDP 报文的 Payload 是其上一层应用层的 Message
 
 === ARP(Address Resolution Protocol)
 
-* ARP is a protocol used to discover the hardware address of a node with a certain IP address.
-* ARP table is just a list of IP addresses and the MAC addresses associated with them.  ARP table entries generally expire after a short amount of time to ensure changes in the network are accounted for.
+* ARP 时数据链路层的协议。
+* ARP 协议用来通过特定的 IP 地址发现该 IP 地址对应的硬件设备的 MAC 地址。
+* 通常网络设备都有一个 ARP 表，ARP 表中包含着一系列 IP 地址与 MAC 地址对应的条目。ARP 表中条目通常 会在较短的时间后过期，以确保网络设备及时感知到网络的变更。
 
 === Subnet Masks
 

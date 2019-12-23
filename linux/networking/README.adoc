@@ -5,14 +5,6 @@
 
 本部分包括 Linux 网络基本概念。
 
-=== IPv4 地址
-
-image:img/ipv4address-netmask.png[ipv4address-netmask.png]
-
-* IPv4 地址有两部组成：网络部分(Network)和主机部分(Host)，同一子网的所有主机可以不经过路由而连通彼此，同一子网中主机部分唯一。
-* 子网掩码用来区分 Network 和 Host，如上图，10.66.192.36 子网掩码为 255.255.0.0，即前缀是 16，则为 10.66 网段。
-* 广播地址：当主机部分所有为位置为1是就为广播地址，如上两个地址的广播地址分别为 192.168.1.255，10.66.255.255.
-
 === IPv6 地址
 
 image:img/ipv6-addr.png[ipv6-addr.png]

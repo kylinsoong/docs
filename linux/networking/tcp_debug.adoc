@@ -188,6 +188,7 @@ int main() {
 
         buffer[len] = '\0';
         printf("received: '%s'\n", buffer);
+        break;
     }
 
     // close socket

@@ -46,22 +46,41 @@ public class Server {
 ----
 import java.io.* ;
 import java.net.*;
+import java.util.UUID;
 
 public class Client {
 
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 
+        String msg = "Hello World";
+
+        if(args.length > 0) {
+            Integer len = Integer.parseInt(args[0]);
+            System.out.println(len);
+            msg = genrate(len);
+        }
+
         System.out.println("client");
         Socket socketClient = new Socket("192.168.33.201",5555);
 
         DataOutputStream dout = new DataOutputStream(socketClient.getOutputStream());
-        dout.writeUTF("Hello World");
+        dout.writeUTF(msg);
         dout.flush();
         dout.close();
         System.out.println("send message to server");
 
         socketClient.close();
     }
+
+        private static String genrate(int len) {
+                char[] array = new char[len];
+                int pos = 0;
+                while (pos < len) {
+                        array[pos] = UUID.randomUUID().toString().charAt(1);
+                        pos++;
+                }
+                return new String(array);
+        }
 }
 ----
 
