@@ -124,11 +124,11 @@ https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 * Ethernet 时目前链路层最被广泛使用的协议，用来在单个链路上发送数据，Ethernet 最早在 1980 年提出，1983 成为标准，后续只是基于带宽的增加相应进行过一些微调。
 * 数据链路层实质上是对物理层的一个抽象，使其他层可以不用考虑物理层所使用的硬件或设备，而可以进行发送数据和接受数据的工作，这样确保了不管物理层硬件或设备如何变化，网络层、传输层、应用层都在用同样的方式工作。
 * CSMA/CD(Carrier Sense Multiple Access With Collision Detection)* - CSMA/CD 用于确定通信通道何时畅通以及设备何时自由传输数据，这是为了避免冲突域。CSMA/CD 的工作原理就是检测当前网段上是否有有数据传输，如果没有，则发送数据；如果有，则等待一个随机的时间间隔，然后尝试再次发送数据，CSMA/CD 使用 MAC 地址来确认目的地节点。
-* MAC(Media Access Control) 地址* - MAC 地址是附加到一个网络接口上的全局唯一标识符。它是一个 48 位的二进制数字，由六组二位的十六进制数字构成，例如：`8:00:27:c3:0f:80`。MAC 地址分为两部分, 前三组十六进制数是组织唯一标识，是由 IEEE 组织分配给各个硬件制造商；后三位可以按制造商希望的方式任意分配，分配的条件是确保每个可能的地址只分配一次。
+* MAC(Media Access Control) 地址 - MAC 地址是附加到一个网络接口上的全局唯一标识符。它是一个 48 位的二进制数字，由六组二位的十六进制数字构成，例如：`8:00:27:c3:0f:80`。MAC 地址分为两部分, 前三组十六进制数是组织唯一标识，是由 IEEE 组织分配给各个硬件制造商；后三位可以按制造商希望的方式任意分配，分配的条件是确保每个可能的地址只分配一次。
 
 image:img/mac_addr-strcture.png[]
 
-=== 单播, 组播, 广播
+=== 单播, 多播, 广播
 
 |===
 |类型 |模式 |说明
@@ -137,7 +137,7 @@ image:img/mac_addr-strcture.png[]
 |一对一
 |Unicast 传输始终意味着只有一个接收地址。MAC 地址中第一组数字的最后一个二进位为 0，则 Ethernet 帧发送到一个地址。
 
-|Multicast（组播）
+|Multicast（多播）
 |一对多
 |Multicast 传输发送到多个物理地址。MAC 地址中第一组数字的最后一个二进位为 1，则 Ethernet 帧发送到多个地址。
 
@@ -348,68 +348,153 @@ image:img/ip-datagrams-encapsulation.png[]
 2. 网络层 IP 数据报文的 Payload 是其上一层传输层 TCP 报文或 UDP 报文
 3. 传输层 TCP/UDP 报文的 Payload 是其上一层应用层的 Message
 
-=== ARP(Address Resolution Protocol)
+=== ARP
 
-* ARP 协议用来通过特定的 IP 地址发现该 IP 地址对应的硬件设备的 MAC 地址。
+* ARP(Address Resolution Protocol) 协议用来通过特定的 IP 地址发现该 IP 地址对应的硬件设备的 MAC 地址。
 * 通常网络设备都有一个 ARP 表，ARP 表中包含着一系列 IP 地址与 MAC 地址对应的条目。ARP 表中条目通常 会在较短的时间后过期，以确保网络设备及时感知到网络的变更。
+
+==== tcpdump 抓去 ARP 包
+
+客户端和服务器端通信场景，本部分通常 `arp` 名称和 `tcpdump` 命令抓取 ARP 包，并查看 IP 和 MAC 映射列表。
+
+* 客户端主机 client.example.com, IP 为 192.168.33.101
+* 服务端主机 server.example.com, IP 为 192.168.33.201
+
+[source, bash]
+.*1. 客户端删除服务器端记录*
+----
+sudo arp -d server.example.com
+----
+
+[source, bash]
+.*2. 客户端执行 ping 服务器端命令，会触发客户端 向服务器端发送 ARP 包*
+----
+ping 192.168.33.201 -c3
+----
+
+[source, bash]
+.*3. 客户端查看 ARP 表*
+----
+$ arp -e -i eth1
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.33.1             ether   0a:00:27:00:00:05   C                     eth1
+server.example.com       ether   08:00:27:c3:0f:80   C                     eth1
+----
+
+NOTE: 如上说明服务器端 MAC 地址为 `08:00:27:c3:0f:80`。
+
+[source, bash]
+.*4. 服务器端抓包*
+----
+$ sudo tcpdump -vvv -nn -w arp.cap -i eth1 arp
+$ tcpdump -r arp.cap 
+reading from file arp.cap, link-type EN10MB (Ethernet)
+02:09:34.895590 ARP, Request who-has server.example.com tell 192.168.33.101, length 46
+02:09:34.895609 ARP, Reply server.example.com is-at 08:00:27:c3:0f:80 (oui Unknown), length 28
+----
+
+NOTE: 抓包结果可以看到，ARP 请求包中内容比较直接，询问 `server.example.com` 的 MAC 地址，并要求告诉客户端 `192.168.33.101`；服务端的回复也比较直接，告诉了客户端，`server.example.com` 的 MAC 地址为 `08:00:27:c3:0f:80`
+
+[source, bash]
+.*5. 服务器端查看 MAC 地址，验证与上面第 3 步中客户端 ARP 表中以及第 4 步抓包中获取的 MAC 地址是否相同*
+----
+$ ip addr show eth1 | grep ether
+    link/ether 08:00:27:c3:0f:80 brd ff:ff:ff:ff:ff:ff
+----
+
+*6. 详细分析 ARP 请求包*
+
+image:img/arp-request.png[]
+
+* Ethernet 帧的目的地址是一个广播地址 `ff:ff:ff:ff:ff:ff`
+* Ethernet 帧的类型为 ARP，即 Ethernet 帧的数据 Payload 为 ARP 请求包
+* ARP 请求硬件协议为 Ethernet，类型为 IPv4
+* ARP 请求发送者的 IP `192.168.33.101`，目的者的 IP `192.168.33.201`
 
 === 路由
 
-* A router is a network device that forwards traffic depending on the destination address of that traffic.
-* A router is a device that has at least two network interfaces, since it has to be connected to two networks to do its job.
+==== 路由器
 
-.*路由的基本过程：*
-image:img/routing-procedures.png[]
+路由器是网络层设备（三层网络设备），它根据数据包的目的地址转发相应的数据包，将这一数据包的转发过程称为路由。一个路由器设备至少有两个网络接口，因为路由器工作机制至少需要连接连个网络。
+
+==== 路由的基本过程
+
+下图描述了位于不同网络的 PC 通过路由器进行通信。数据包经过路由器转发到目的 PC 的过程就是路由的基本过程，具体包括四个步骤：
+
+image:img/route_work_process.png[]
  
-1. A router receives a packet of data on one of its interfaces.
-2. The router examines the destination IP of this packet.
-3. The router then looks up the destination network of this IP in its routing table.
-4. The router forwards that out though the interface that's closest to the remote network.
+1. 路由器通过它的一个网络接口接收到一个数据包
+2. 路由器检测数据包中目的地的 IP 地址（对源数据链路层以太网帧的头和尾去掉，只保留 IP 数据报文，从 IP 数据报文的头中获取目的地 IP 地址）
+3. 路由器从路由表中查询目的地的 IP 地址
+4. 路由器通过它的一个网络接口将数据包转发出去（修改 2 步骤中的 IP 数据报文，对 IP 数据报文头中的 TTL 字段减一，重新计算 Header Checksum 字段，然后封装一个新的太网帧，添加头和尾）
 
-=== 路由表
+NOTE: 如果数据包传输跨多个网络，则查询路由表或找出最近的一个网络将数据包转发出去，同时每经过一次路由，IP 数据报文的 TTL 字段都会减小 1。
 
-The most basic routing table will have four columns：
+==== 路由表
 
-1. Destination network - this column would contain a row for each network that the router knows about, this is just the definition of the remote network, a network ID, and the net mask.
-2. Next hop - this is the IP address of the next router that should receive data intended for the destination networking question or this could just state the network is directly connected and that there aren't any additional hops needed.
-3. Total hops - this is the crucial part to understand routing and how routing tables work, on any complex network like the Internet, there will be lots of different paths to get from point A to point B.
-4. Interface - the router also has to know which of its interfaces it should for traffic matching the destination network out of. 
+路由表结构比较简单，通常有四个列：
 
-=== 路由协议
+1. Destination - 目的地网络，路由器上已知的所有网络都会存在一行，代表的是目的地的网络，包括网络地址和子网掩码。
+2. Next Hop - 是去往目的网络最近的路由器的 IP 地址；如果去往目的网络不需要经过网络跳转，或者说目的地和路由器在同一个网络，则该字段是目的地的 IP 地址。
+3. Total Hops - 这是了解路由以及路由表如何工作的关键部分，在任何复杂的网络（如Internet）上，从一个点到另一个点都有很多不同的路径。
+4. Interface - 路由器的网络接口，该接口用于将数据包从路由器转发出去
 
-Routing protocols fall into two main categories: interior gateway protocols and exterior gateway protocols.
+[source, bash]
+.*Linux 上 route 命令查看路由信息*
+----
+$ route -nv
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.2.2        0.0.0.0         UG    100    0        0 eth0
+10.0.2.0        0.0.0.0         255.255.255.0   U     100    0        0 eth0
+192.168.33.0    0.0.0.0         255.255.255.0   U     101    0        0 eth1
+----
 
-Interior gateway protocols are further split into two categories: Link state routing protocols and distance-vector protocols.
+[source, bash]
+.*Linux 上 ip route 查看路由信息*
+----
+$ ip route list
+default via 10.0.2.2 dev eth0 proto dhcp metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+192.168.33.0/24 dev eth1 proto kernel scope link src 192.168.33.201 metric 101 
+----
 
-Interior gateway protocols are used by routers to share information within a single autonomous system. In networking terms, an autonomous system is a collection of networks that all fall under the control of a single network operator.
- 
-.*Link state routing protocols Vs distance-vector protocols* 
+==== 路由协议
 
-* Distance vector protocols are an older standard. A router using a distance vector protocol basically just takes its routing table which is a list of every network known to it and how far away these networks are in terms of hops. Then the router sends this list to every neighboring router, which is basically every router directly connected to it. In computer science, a list is known as a vector. This is why a protocol that just sends a list of distances to networks, is known as a distance vector protocol. With a distance vector protocol, routers don't really know that much about the total state of an autonomous system. They just have some information about their immediate neighbors.
-* Link-state protocol, Routers using a link-state protocol take a more sophisticated approach to determining the best path to a network. Linked state protocols got their name because each router advertises the state of the link of each of its interfaces. These interfaces can be connected to other routers or they could be direct connections to networks. The information about each router is propagated to every other router on the autonomous system. This means that every router on the system knows every detail about every other router in the system. 
+路由 协议可以分为两类：IGP(Interior Gateway Protocol 内部网关协议) 和 EGP(Exterior Gateway Protocol 外部网管协议)。IGP 通常是在一个自治系统（Autonomous system, AS，一个，有时是多个实体管辖下的所有 IP 网络和路由器的全体，例如一个企业/组织的内网）内路由器共享信息；与之对应，EGP是自制系统之间路由器共享信息。
 
-.*Distance-vector protocol*
+IGP 协议可以进一步分为两类：
+
+* 链路状态路由协议（Link State Routing Protocol）
+* 距离矢量路由协议（Distance-Vector Protocol）。
+
+[cols="5a,5a"]
+|===
+|距离矢量路由协议 | 链路状态路由协议
+
+|
 image:img/routing-instance-vector-protocol.png[]
-
-.*Link-state protocol*
+|
 image:img/routing-link-state-protocol.png[]
 
-Exterior gateway protocols are used to communicate data between routers representing the edges of an autonomous system.
+|距离矢量路由协议是一个旧的标准。使用距离矢量路由协议的路由器获取其路由表，该路由表包括它已知的每个网络的列表，以及这些网络在跳数方面的距离。 然后路由器将此路由表发送给每个相邻路由器，即是直接与其相连的每个路由器。在计算机科学中，列表称为向量，这就是距离矢量协议的名字由来。 借助距离矢量路由协议，路由器实际上对自治系统的总体状态了解不多，他们只是了解一些与其直接相邻的路由器的信息。
+|链路状态路由协议采用更加复杂的方式来确定网络的最佳路径。链接状态协议之所以得名，是因为每个路由器都会通告其每个接口的链接状态。这些接口可以连接到其他路由器，也可以直接连接到网络。 有关每个路由器的信息将传播到自治系统上的每个其他路由器。这意味着系统上的每个路由器都知道有关系统中其他每个路由器的每个细节。
+|=== 
 
-The IANA or the Internet Assigned Numbers Authority, is a non-profit organization that helps manage things like IP address allocation. Along with managing IP address allocation, the IANA is also responsible for ASN, or Autonomous System Number allocation. ASNs are numbers assigned to individual autonomous systems. Just like IP addresses, ASNs are 32-bit numbers. But, unlike IP addresses, they're normally referred to as just a single decimal number, instead of being split out into readable bits.
- 
-.*Wikipedia Links*
+NOTE: IANA(Internet Assigned Numbers Authority) 是一个非盈利的组织，前面已经知道它负责 IP 地址的分配，除了负责 IP 地址的 分配，该组织还负责 ASN(Autonomous System Number,自治系统编号)的分配，ASN 是分配给各个自治系统的编号，就像 IP 地址，ASN 也是一个 32 位二进制数，但和 IP 地址不同的是 ASN 是一个十进制的数，而不是每八位分成一组。 
+
+*Wikipedia 链接*
 
 * https://en.wikipedia.org/wiki/Routing_Information_Protocol[EIP(Routing Information Protocol)]
 * https://en.wikipedia.org/wiki/Enhanced_Interior_Gateway_Routing_Protocol[EIGRP(Enhanced Interior Gateway Routing Protocol)]
 * https://en.wikipedia.org/wiki/Open_Shortest_Path_First[OSPF(Open Shortest Path First)]
 * https://en.wikipedia.org/wiki/Border_Gateway_Protocol[BGP(Border Gateway Protocol)]
 
-=== Non-Routable Address Space
+==== 不可路由的地址空间
 
-Non-routable address space is basically exactly what it sounds like. They are ranges of IPs set aside for use by anyone that cannot be routed to. Not every computer connected to the internet needs to be able to communicate with every other computer connected to the internet. Non-routable address space allows for nodes on such a network to communicate with each other but no gateway router will attempt to forward traffic to this type of network.
-  
-The primary three ranges of non-routable address space are:
+不可路由的地址空间是一些 IP 范围，可以被任何人使用，但是不能路由。不是每台每台连接到 Internet 的计算机都需要能够与其他连接到 Internet 的计算机进行通信，不可路由的地址为这一需求而定，此类节点构成的网络他们可以相互通信，但没有网关路由器会尝试将流量转发到此类网络。
+
+不可路由的地址空间主要有三个范围：
 
 * 10.0.0.0/8
 * 172.16.0.0/12
