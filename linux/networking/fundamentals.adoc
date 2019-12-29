@@ -7,7 +7,7 @@
 
 === TCP/IP 五层模型
 
-image:img/layer_terminology.JPG[]
+image:img/layer_terminology.png[]
 
 * *物理层* - 物理层表示与计算机互连的物理设备，其中还包括将物理设备连接在一起的网线、光缆、连接器的规范，以及描述如何通过这些连接发送信号的规范。
 * *数据链路层* - 物理层仅仅涉及到的是光缆、连接器和信号发送，数据链路层负责定义解释这些信号的通用方法，以便网络设备可以进行通信。 该层中最常见的协议是以太网（Ethernet），它指定物理层属性，并定义负责同一网络或链路上的节点间传输数据的协议。
@@ -504,45 +504,66 @@ http://www.ietf.org/
 
 == 传输层
 
-The transport layer is responsible for lots of important functions of reliable computer networking. These including:
+计算机网络通信中有两个常见的名词，即端到端(End to End)通信和点到点(Point to Point)通信，下图为常见的网络通信场景，
 
-* Multiplexing traffic
-* Demultiplexing traffic
-* Etablishing long running connections
-* Ensuring data integrity through error checking and data verification.
+image:img/end-to-end-net.png[]
 
-=== Multiplexing & Demultiplexing
+客户端 PC 发送请求到服务器端 Server，而PC 和 Server  位于不同的网络，PC 请求到达 Server 需要经过路由器 R1 和 路由器 R2，那么 在这个场景中发生的点对点通信包括：
 
-* Multiplexing in the transport layer means that nodes on the network have the ability to direct traffic toward many different receiving services.
-* Demultiplexing is the same concept, just at the receiving end, it's taking traffic that's all aimed at the same node and delivering it to the proper receiving service.
+* PC -> R1
+* R1 -> R2
+* R2 -> Server
+
+端到端的通信只有一个，即 PC -> Server。
+
+如前面的内容描述，数据链路层可确保点对点的网络传输可靠，网络层可让数据包在不同的网络之间转发，而网络模型中的传输层负责的是*端到端的可靠网络通信*。为了实现端到端的可靠网络通信，传输层提供了一些重要的方法和功能，具体包括：
+
+* 多路复用发送(Multiplexing Traffic)
+* 多路分解接收(Demultiplexing Traffic)
+* 建立长运行连接
+* 通过错误检查和数据验证来确保数据完整性
+
+=== 多路复用发送 & 多路分解接收
+
+[cols="5a,5a"] 
+|===
+|多路复用发送(Multiplexing Traffic) |多路分解接收(Demultiplexing Traffic)
+
+|
+image:img/transport-multiplexer.png[]
+|
+image:img/transport-demultiplexer.png[]
+
+|消息发送端
+|消息接收端
+
+|发送端可能有多个进程需要发送数据，但是在任意一个时间只有一个传输协议，这种多对一的场景就需要多路复用发送，协议接受消息来自不同的进程，并且更加消息头上的端口号不同来区分，当完成消息头添加后，传输层可以将传输层包传递给网络层。
+|与发送测正好相反，接收测在接收到网络层的数据包后，面对的是一个一对多的场景，这就需要多路分解接收。在经过错误验证和去除消息头后，传输层会通过端口号将消息发送到不同的进程服务 
+|===
+
+NOTE: 传输层多路复用发送和多路分解接收都是基于端口号来完成的，传输层的端口号是一个 16 位字节长度的数字，用来在在计算机网络中不同主机上 的 进程之间的通信。
  
-image:img/multiplexerDemultiplexer.png[]
+=== TCP Segment 结构
 
-NOTE: The transport layer handles multiplexing and demultiplexing through ports.
-
-A *Port* is a 16-bit number that's used to direct traffic to specific services running on a networked computer.
- 
-=== Dissection of a TCP Segment
-
-A TCP segment is made up of a TCP header and a data section.
+一个 TCP Segment 是有 TCP 头和数据部分构成。
 
 image:img/tcp-segment.png[]
 
-* *Destination port* - A destination port is the port of the service the traffic is intended for.
-* *Source port* - A source port is a high numbered port chosen from a special section of ports known as ephemeral ports.
-* *Sequence number* - Sequence number is a 32-bit number that's used to keep track of where in a sequence of TCP segments this one is expected to be.
-* *Acknowledgment number* - The acknowledgment number is the number of the next expected segment.
-* *Data offset field* - Data offset field is a four-bit number that communicates how long the TCP header for this segment is. This is so that the receiving network device understands where the actual data payload begins.
-* *Control flags* - TCP control flags.
-* *TCP window* - TCP window is a 16-bit number, which specifies the range of sequence numbers that might be sent before an acknowledgement is required.
-* *Checksum* - A 16-bit filed, which operates just like the checksum fields at the IP and Ethernet level. Once all of this segment has been ingested by a recipient, the checksum is calculated across the entire segment and is compared with the checksum in the header to make sure that there was no data lost or corrupted along the way.
-* *Urgent* - The Urgent pointer field is used in conjunction with one of the TCP control flags to point out particular segments that might be more important than others.
-* *Options* - Options field is rarely used in the real world, but it's sometimes used for more complicated flow control protocols.
-* *Padding* - Aequence of zeros to ensure that the data payload section begins at the expected location.
+* *Destination port* - 目的地端口，是目的服务所监听的端口，是最终接收TCP Segment 的服务的端口。
+* *Source port* - 源端口，是一个较大的数字，发送 TCP Segment 的客户端从随机端口中随机选择
+* *Sequence number* - 32 位字节长度，用来跟踪 TCP Segment 在传输序列中预期的位置。
+* *Acknowledgment number* - 32 位字节长度，用来确定下一个期望的 TCP Segment。
+* *Header Length* - 长度为 4 个字节，也叫数据偏移字段，它定义了在一个 TCP Segment 中 TCP 头的长度，这也使接收端的网络设备知道真正数据 负载开始的位置。
+* *Control flags* - TCP Segment 控制标签。
+* *TCP window* - 16 字节的数字，指定在需要确认前可能发送的序列号范围。
+* *Checksum* - 长度为 16 个字节，和 IP、Ethernet 中的 Checksum 字段类似，当接收者接收到这个 TCP Segment 后，Checksum 会进行一次计算，计算整个 TCP Segment 的长度，并和改字段定义的长度进行比较，以确保传输的过程中没有数据的丢失或损坏。
+* *Urgent* - 该字段通常与 TCP 控制标签中的某个标签联合使用，来说明某个 Segment 比其他 Segment 重要，或有特定含义。
+* *Options* - 该字段通常比较少用，但有时会用于更复杂的流控制协议。
+* *Padding* - 零序列，以确保数据有效负载部分从预期位置开始。
 
-=== TCP Control Flags
+=== TCP 控制标签
 
-.*6 TCP control flags*
+.*6 种 TCP 控制标签*
 
 |===
 |名称 |描述

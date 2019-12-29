@@ -1,4 +1,4 @@
-= TCP Debug
+= TCP 调试
 :toc: manual
 
 == 说明
@@ -21,42 +21,131 @@
 sudo yum install net-tools
 sudo yum install tcpdump
 sudo yum install wireshark-gnome
+sudo yum install java-1.8.0-openjdk-devel
 ----
 
 === Echo 程序
 
-参照附件 link:#_client_c[client.c] 和 link:#_server_c[server.c]，在服务器端编译和运行 server.c
+Echo 程序是 C 客户端和服务器端通信程序，连接建立后，客户端可发送文本到服务器端，服务器端接收到文本后打印输出并将接收到的文本反发回给客户端。客户端和服务器端程序逻辑如下
+
+image:img/echo_client_server.png[]
+
+1. 服务器端监听到一个端口，等待客户端连接
+2. 客户端建立一个和服务器端的连接
+3. 客户端发送一个消息到服务器端
+4. 服务器端接收到客户端发来的消息，打印输出，并将原消息返回给客户端
+5. 客户端接收到服务器端返回的消息，打印输出
+6. 客户端关闭和服务器端的连接
+7. 服务器继续等待下一个客户端的连接
+
+参照附件 link:#_client_c[client.c] 和 link:#_server_c[server.c] 获取相关程序代码。
 
 [source, bash]
+.*运行步骤*
 ----
+// 编译运行服务器端（需要安装 gcc）
 gcc server.c -o server
-./server 
-----
+./server
 
-在客户端编译运行 client.c
-
-[source, bash]
-----
+//编译运行客户端（需要安装 gc，修改代码中 IP 地址为服务器 IP）
 gcc client.c -o client
-./client 
+./client
+----
+
+=== Sender 程序
+
+Sender 程序是 Java 客户端和服务器端通信程序，连接建立后，客户端可发送文本到服务器端，并且可以指定发送的文本的大小。客户端和服务器端程序逻辑如下：
+
+image:img/sender_client_server.png[]
+
+1. 服务器端监听到一个端口，等待客户端连接
+2. 客户端建立一个和服务器端的连接
+3. 客户端发送一个消息到服务器端
+4. 服务器端接收客户端发送的消息并输出
+5. 客户端关闭和服务器端的连接
+6. 服务器端关闭服务器端 Socket
+
+参照附件 link:#_client_java[Client.java] 和 link:#_server_java[Server.java] 获取相关程序代码。
+
+[source, bash]
+.*运行步骤*
+----
+// 编译运行服务器端（java 开发环境需安装，修改代码中 IP 地址为服务器 IP）
+javac Server.java
+java Server
+
+//编译运行客户端（java 开发环境需安装，修改代码中 IP 地址为服务器 IP）
+javac Client.java
+java Client 1024
+----
+
+== TCP 调试
+
+=== Sender 程序运行抓包分析
+
+[source, bash]
+.*1. 服务器端运行 tcpdump*
+----
+sudo tcpdump -nn -vvv -s 0 -i eth1 -w tcpserver.cap host 192.168.33.101
 ----
 
 [source, bash]
-.*服务器端输出*
+.*2. 客户端运行 tcpdump*
 ----
-echo server
-client connected with ip address: X.X.X.X
-received: 'Hello World!'
+sudo tcpdump -nn -vvv -s 0 -i eth1 -w tcpclient.cap host 192.168.33.201
 ----
 
 [source, bash]
-.*客户端输出*
+.*3. 启动 server*
 ----
-echo client
-received: 'Hello World!'
+javac Server.java
+java Server
 ----
 
-== TCP Debug
+[source, bash]
+.*4. 启动 client*
+----
+javac Client.java
+java Client
+----
+
+[source, bash]
+.*5. 查看 tcpserver.cap*
+----
+$ tcpdump -r tcpserver.cap
+reading from file tcpserver.cap, link-type EN10MB (Ethernet)
+12:17:52.687814 IP 192.168.33.101.57464 > server.example.com.personal-agent: Flags [S], seq 3621100753, win 29200, options [mss 1460,sackOK,TS val 21057940 ecr 0,nop,wscale 7], length 0
+12:17:52.687846 IP server.example.com.personal-agent > 192.168.33.101.57464: Flags [S.], seq 3295967793, ack 3621100754, win 28960, options [mss 1460,sackOK,TS val 11290008 ecr 21057940,nop,wscale 7], length 0
+12:17:52.688103 IP 192.168.33.101.57464 > server.example.com.personal-agent: Flags [.], ack 1, win 229, options [nop,nop,TS val 21057940 ecr 11290008], length 0
+12:17:52.688643 IP 192.168.33.101.57464 > server.example.com.personal-agent: Flags [P.], seq 1:14, ack 1, win 229, options [nop,nop,TS val 21057940 ecr 11290008], length 13
+12:17:52.688658 IP server.example.com.personal-agent > 192.168.33.101.57464: Flags [.], ack 14, win 227, options [nop,nop,TS val 11290009 ecr 21057940], length 0
+12:17:52.688676 IP 192.168.33.101.57464 > server.example.com.personal-agent: Flags [F.], seq 14, ack 1, win 229, options [nop,nop,TS val 21057941 ecr 11290008], length 0
+12:17:52.692155 IP server.example.com.personal-agent > 192.168.33.101.57464: Flags [F.], seq 1, ack 15, win 227, options [nop,nop,TS val 11290012 ecr 21057941], length 0
+12:17:52.692690 IP 192.168.33.101.57464 > server.example.com.personal-agent: Flags [.], ack 2, win 229, options [nop,nop,TS val 21057945 ecr 11290012], length 0
+----
+
+[source, bash]
+.*6. 查看 tcpclient.cap*
+----
+$ tcpdump -r tcpclient.cap
+reading from file tcpclient.cap, link-type EN10MB (Ethernet)
+12:17:52.679155 IP client.example.com.57464 > server.example.com.personal-agent: Flags [S], seq 3621100753, win 29200, options [mss 1460,sackOK,TS val 21057940 ecr 0,nop,wscale 7], length 0
+12:17:52.679512 IP server.example.com.personal-agent > client.example.com.57464: Flags [S.], seq 3295967793, ack 3621100754, win 28960, options [mss 1460,sackOK,TS val 11290008 ecr 21057940,nop,wscale 7], length 0
+12:17:52.679530 IP client.example.com.57464 > server.example.com.personal-agent: Flags [.], ack 1, win 229, options [nop,nop,TS val 21057940 ecr 11290008], length 0
+12:17:52.680008 IP client.example.com.57464 > server.example.com.personal-agent: Flags [P.], seq 1:14, ack 1, win 229, options [nop,nop,TS val 21057940 ecr 11290008], length 13
+12:17:52.680170 IP client.example.com.57464 > server.example.com.personal-agent: Flags [F.], seq 14, ack 1, win 229, options [nop,nop,TS val 21057941 ecr 11290008], length 0
+12:17:52.680310 IP server.example.com.personal-agent > client.example.com.57464: Flags [.], ack 14, win 227, options [nop,nop,TS val 11290009 ecr 21057940], length 0
+12:17:52.683942 IP server.example.com.personal-agent > client.example.com.57464: Flags [F.], seq 1, ack 15, win 227, options [nop,nop,TS val 11290012 ecr 21057941], length 0
+12:17:52.683984 IP client.example.com.57464 > server.example.com.personal-agent: Flags [.], ack 2, win 229, options [nop,nop,TS val 21057945 ecr 11290012], length 0
+----
+
+*7. wireshark 图形化分析*
+
+wireshark 打开上面步骤收集到的 tcpdump 文件如下图
+
+image:img/tcp_open_close_dump.png[]
+
+=== Echo 程序运行抓包分析
 
 [source, bash]
 .*1. 服务器端运行 tcpdump*
@@ -117,10 +206,6 @@ wireshark 打开上面步骤收集到的 tcpdump 文件如下图
 image:img/tcpdump_ui.png[]
 
 接下来我们一次分析不同网络通信层的帧、包等详细结构。
-
-=== TODO
-
-=== TODO
 
 === TODO
 
@@ -291,5 +376,79 @@ int main(int argc, char *argv[])  {
 
     close(listen_sock);
     return 0;
+}
+----
+
+=== Server.java
+
+[source, java]
+.*Server.java*
+----
+import java.io.* ;
+import java.net.*;
+
+public class Server {
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        System.out.println("server");
+
+        InetAddress addr = InetAddress.getByName("192.168.33.201");
+        ServerSocket serversocket = new ServerSocket(5555, 50, addr);
+        Socket socket = serversocket.accept();
+        System.out.println("received client, " + socket.getInetAddress());
+
+        DataInputStream dis = new DataInputStream(socket.getInputStream());
+        String str = (String)dis.readUTF();
+        System.out.println("message= " + str);
+
+        serversocket.close();
+
+    }
+}
+----
+
+=== Client.java
+
+[source, java]
+.*Client.java*
+----
+import java.io.* ;
+import java.net.*;
+import java.util.UUID;
+
+public class Client {
+
+    public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
+
+        String msg = "Hello World";
+
+        if(args.length > 0) {
+            Integer len = Integer.parseInt(args[0]);
+            System.out.println(len);
+            msg = genrate(len);
+        }
+
+        System.out.println("client");
+        Socket socketClient = new Socket("192.168.33.201",5555);
+
+        DataOutputStream dout = new DataOutputStream(socketClient.getOutputStream());
+        dout.writeUTF(msg);
+        dout.flush();
+        dout.close();
+        System.out.println("send message to server");
+
+        socketClient.close();
+    }
+
+        private static String genrate(int len) {
+                char[] array = new char[len];
+                int pos = 0;
+                while (pos < len) {
+                        array[pos] = UUID.randomUUID().toString().charAt(1);
+                        pos++;
+                }
+                return new String(array);
+        }
 }
 ----
