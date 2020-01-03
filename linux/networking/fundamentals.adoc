@@ -103,6 +103,7 @@ https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 * 一根网线通常通过一个 RJ-45 接头连接到一个 RJ-45 网络接口. 网络接口通常与组成计算机网络的设备直接连接，或是设备的一个部分，例如任何一台计算机都会至少有一个网络接口。
 * 配线架是一种包含许多网络端口的设备，但没有其他作用，只是将不同网络线缆连接到一起。 
   
+.*常见网络接口*
 [cols="2,5a"]
 |===
 |名称 |图示
@@ -130,6 +131,7 @@ image:img/mac_addr-strcture.png[]
 
 === 单播, 多播, 广播
 
+.*单播, 多播, 广播*
 |===
 |类型 |模式 |说明
 
@@ -214,6 +216,7 @@ IPv4 地址被分为五个类型（为了更好的管理互联网网络）：A�
 
 image:img/ipv4-classing.png[]
 
+.*IPv4 地址分类*
 |===
 |类型 |描述 |范围 |最大主机数
 
@@ -253,6 +256,7 @@ image:img/ipv4-classing.png[]
 
 子网掩码长度也为 32 位二进制数，通常由 4 组十进制数组成，4 组十进制数之间通过圆点连接，二进制表述，子网掩码由连续的 1 和 连续的 0 构成，通常子网掩码由十进制表述，例如下表为一些子网掩码二进制和十进制示例：
 
+.*子网掩码*
 |===
 |二进制 |十进制
 
@@ -286,6 +290,7 @@ image:img/ip-subnetmask.png[]
 
 CIDR 是描述 IP 地址的一种更加灵活的方法，以斜杠 + 数字来表示掩码长度，这样对子网的划分更加易读。
 
+.*CIRD*
 |===
 |二进制 |十进制 | CIDR
 
@@ -318,10 +323,9 @@ CIDR 是描述 IP 地址的一种更加灵活的方法，以斜杠 + 数字来�
 /20
 |===
 
+=== IPv4 数据报文结构
 
-=== IP 数据报文结构
-
-IP 数据报文是由一系列高度结构化的字段严格定义，IP 数据两个主要部分是 header 和 payload。
+IPv4 数据报文是由一系列高度结构化的字段严格定义，IP 数据两个主要部分是 header 和 payload。
 
 image:img/ip-datagrams.png[]
 
@@ -468,6 +472,7 @@ IGP 协议可以进一步分为两类：
 * 链路状态路由协议（Link State Routing Protocol）
 * 距离矢量路由协议（Distance-Vector Protocol）。
 
+.*路由协议*
 [cols="5a,5a"]
 |===
 |距离矢量路由协议 | 链路状态路由协议
@@ -502,6 +507,83 @@ NOTE: IANA(Internet Assigned Numbers Authority) 是一个非盈利的组织，�
 
 http://www.ietf.org/
 
+=== IPv6 地址
+
+image:img/ipv6-addr.png[ipv6-addr.png]
+
+* *IPv6 地址:* IPv6 地址是一个由 32 个十六进制（128 个二进制）的数字组成，且 32 个十六进制位分为 8 组，每组 4 位。为方便书写，定义了如下规则：
+** 每 4 位小组中的前缀 0 可以省略，例如 `2001:0db8:0000:0010:0000:0000:0000:0001` 简写为 `2001:db8:0:10:0:0:0:1`
+** 一组或多组连续 0 必须以一个 :: 块来合并，例如 `2001:db8:0:10:0:0:0:1` 需写为 `2001:db8:0:10::1`
+** 所有可能出现字母的十六进制位必须使用小写字母 a 到 f
+** 如果在 IPv6 地址后面包括 TCP 或 UDP 网络端口，则需将 IPv6 地址括在方括号中，例如 `[2001:db8:0:10::1]:80`
+* *IPv6 地址有两部组成:* `网络前缀`和`接口 ID`。与 IPv4 不同的是，IPv6 具有一个标准的子网掩码*/64*，用于几乎所有的普通地址。在此情况下，地址的一半是`网络前缀`，另一半是`接口 ID`。这意味着单个子网可以>根据需要容纳任意数量的主机。
+* *子网分配:* 通常，网络提供商将为组织分配一个较短的前缀，如*/48*。这会保留其余网络部分以用于通过这一分配的前缀来指定子网。处理已分配的48位，将保留16位以用于子网（最多 65536 个子网）。同一子网上的任何
+两个子网接口都不能具有相同`接口 ID`，`接口 ID` 可标识子网上的特定接口。
+
+.*IPv6 地址示例：*
+image:img/ipv6-shortern-excercise.png[]
+
+.*IPv6 通用地址表*
+|===
+|地址/网络 |用途 |描述
+
+|::1/128
+|localhost
+|等效于 IPv4 中的 `127.0.0.1/8`, 在 lookback interface 上设置。
+
+|::
+|未指定的地址
+|等效于 IPv4 中的 `0.0.0.0`，对于网络服务，这可能表示其正在侦听所有已配置的 IP 地址。
+
+|::/0
+|IPv6 网络默认路由
+|路由表中的默认路由与此网络匹配；此网络的路由器是在没有更好路由的情况下发送所有流量的位置。
+
+|2000::/3
+|全局单播地址
+|“普通”的 IPv6 地址目前由 IANA 从该空间进行分配。这等同于范围从 `2000::/16` 到 `3fff::/16` 的所有网络。
+
+|fd00::/8
+|唯一本地地址 (RFC 4193)
+|IPv6 没有 RFC 1918 专用地址空间的直接等效对象，尽管这很接近。站点可以使用这些以在组织中自助分配可路由的专用 IP 地址空间，但是这些网络不能在全局 Internet 上使用。站点必须随机从该空间中选择一个 /48，但
+是它可以正常将分配空间划分为 /64 网络
+
+|fe80::/64
+|本地链接地址
+|每个 IPv6 接口自动配置一个本地链接地址，该地址仅在该网络中的本地链接中有效。Link-local unicast addresses allow for local network segment communications and are configured based upon a host's MAC address.
+
+|ff00::/8
+|多播
+|等效于 IPv4 中的 `224.0.0.0/4`，多播用于同时传播到多个主机，并且在 IPv6 中特别重要，因为其没有广播地址。
+|===
+
+=== IPv6 数据报文结构
+
+IPv6 数据报文同样是由一系列高度结构化的字段严格定义，IPv6 数据报文同样主要主要部分是 header 和 payload。
+
+image:img/ipv6-headers.png[]
+
+* *Version* - A 4-bit field that defines what version of IP is in use.
+* *Traffic Class* - An 8-bit field that defines the type of traffic contained within the IP datagram and allows for different classes of traffic to receive different priorities.
+* *Flow Labe* - A 20-bit field that's used in conjunction with the traffic class field for routers to make decisions about the quality of service level for a specific datagram.
+* *Payload Length* - A 16-bit field that defines how long the data payload section of the datagram is.
+* *Next header* - The next header field defines what kind of header is immediately after this current one.
+* *Hop limit* - An 8-bit field that's identical in purpose to the TTL field in an IPv4 header.
+* *Source address* - 128 bits length
+* *Destination address* - 128 bits length
+
+=== IPv6 and IPv4 Harmony
+
+*IPv6 tunnels* - IPv6 tunnels are conceptually pretty simple. They consist of IPv6 tunnels servers on either end of a connection. These IPv6 tunnel servers take incoming IPv6 traffic and encapsulate it within traditional IPv4 datagrams.
+
+*IPv6 tunnel broker* - Companies that provide IPv6 tunneling endpoints for you, so you don't have to introduce additional equipment to your network.
+
+*Links:*
+
+* https://en.wikipedia.org/wiki/6in4[6in4]
+* https://en.wikipedia.org/wiki/Tunnel_Setup_Protocol[TSP(Tunnel Setup Protocol)]
+* https://en.wikipedia.org/wiki/Anything_In_Anything[Anything In Anything]
+
 == 传输层
 
 计算机网络通信中有两个常见的名词，即端到端(End to End)通信和点到点(Point to Point)通信，下图为常见的网络通信场景，
@@ -525,6 +607,7 @@ image:img/end-to-end-net.png[]
 
 === 多路复用发送 & 多路分解接收
 
+.*多路复用发送 & 多路分解接收*
 [cols="5a,5a"] 
 |===
 |多路复用发送(Multiplexing Traffic) |多路分解接收(Demultiplexing Traffic)
@@ -564,118 +647,130 @@ image:img/tcp-segment.png[]
 === TCP 控制标签
 
 .*6 种 TCP 控制标签*
-
 |===
 |名称 |描述
 
 |URG(urgent)
-|A value of one here indicates that the segment is considered urgent and that the urgent pointer field has more data about this.
+|如果此标签值为 1，则表示当前 TCP Segment 特别重要，该标签通常 与 TCP 头中的 *Urgent* 字段一起使用， *Urgent* 字段有更多信息。
 
 |ACK(acknowledge)
-|A value of one in this field means that the acknowledgment number field should be examined.
+|如果此标签值为 1，则表示 *Acknowledgment number* 字段应该被检查。
 
 |PSH(push)
-|the transmitting device wants the receiving device to push currently buffered data to the application on the receiving end as soon as possible. 
+|传输设备想 让接收端设备尽快将缓冲中的数据推送 到应用。
 
 |RST(reset)
-|One of the sides in a TCP connection hasn't been able to properly recover from a series of missing or malformed segments.
+|TCP 连接中的一方无法从一系列丢失或格式错误的段中正确恢复。
 
 |SYN(synchronize)
-|It's used when first establishing a TCP connection and make sure the receiving end knows to examine the sequence number field.
+|初次建立一个 TCP 连接时使用，让接收端知道需要检查 *Sequence number* 字段。 
 
 |FIN(finish)
-|It's hints that the transmitting computer doesn't have any more data to send and the connection can be closed.
+|提示传输计算机端没有更多数据，连接可以关闭。
 |===
 
-=== Three-way Handshake
+=== 三次握手
 
-Three-way Handshake is a abstraction for establishing a TCP connection.
+如下图所示，TCP 连接的建立至少需要交换三个 TCP Segment，三次握手是对 TCP 连接建立的一个抽象。
 
 image:img/tcp-3-hands-handshake.png[]
 
-1. *A sends a TCP segment to B with SYN flag set* (`Let's establish a connection and look at my sequence number field, so we know where this conversation starts.`)
-2. *B then responds with a TCP segment, where both the SYN and ACK flags are set* (`Sure, let's establish a connection and I acknowledge your sequence number.`)
-3. *A responds again with just the ACK flag set* (`I acknowledge your acknowledgement. Let's start sending data.`)
+[source, text]
+----
+// Step One
+A 发送一个 TCP Segment 到 B，主要包括一个 SYN 标签，告诉 B 客户端 A 的初始序列号为 J。（让我们开始建立连接吧，我的序列号为 J，这样我们会知道我们交流开始的位置）
+A sends a TCP segment to B with SYN flag set (`Let's establish a connection and look at my sequence number field, so we know where this conversation starts.`)
 
-A handshake is a way for two devices to ensure that they're speaking the same protocol and will be able to understand each other.
+// Step Two
+B 回复一个 TCP Segment 到 A，包括两个标签 SYN 和 ACK，告诉 A 服务器端（B）的初始序列号为 K，同时确认 A 服务器（B）确认客户端 A 的序列号（ACK 的值为 J + 1）
+B then responds with a TCP segment, where both the SYN and ACK flags are set(`Sure, let's establish a connection and I acknowledge your sequence number.`)
 
-TCP connection is operating in full duplex.  Each segment sent in either direction should be responded to by TCP segment with the ACK field set. This way, the other side always knows what has been received.
+// Step Three
+A 回复一个 TCP Segment 到 B，主要包括一个 ACK 标签，告诉服务器端 B 客户端 A 确认服务端的序列号（ACK 的值为 K + 1）。 
+A responds again with just the ACK flag set* (`I acknowledge your acknowledgement. Let's start sending data.`)
+----
 
-=== Four-way Handshake
+一次握手是两个设备确保他们所使用同一个协议，并且能够彼此相互理解。
 
-Four-way Handshake is a abstraction for closing a TCP connection.
+TCP 连接是一个多路复用的模式，每一个 TCP Segment 的发送都会有一个 TCP Segment 的回复（ACK 标签），这样发送端就知道接收端接收到相应的片段。
+
+=== 四次握手
+
+TCP 建立一个连接需要三次 TCP Segment 交换，而终止一个连接需要四次 TCP Segment 交换，四次握手是对 TCP 连接终止的一个抽象。
+
+TCP 连接可以从客户端和服务器端的任何一方发起，发起关闭连接的一次通常通过调运 close() 方法，我们将这一动作称为*主动关闭（Active Close）*，相应的另一端则称为*被动关闭（Passive Close）*，下图演示的是从服务器端 B 发起的主要关闭过程：
 
 image:img/tcp-4wayshandshake.png[]
 
-1. *B sends a FIN flag to A*
-2. *A acknowledges with an ACK flag B*
-3. *A sends a FIN flag to B* (`A is also ready to close the connection`)
-4. *B respond ACK flag to A*
+1. B 发送 FIN 标签到 A（FIN M）
+2. A 确认 B 并回复一个 ACK 标签(ACK M + 1)
+3. A 发送 FIN 标签到 B（FIN N）
+4. B 确认 A 并回复一个 ACK 标签(ACK N + 1)
 
-=== TCP Socket States
+=== TCP 套接字状态
+
+一个 TCP 套接字是一个潜在 TCP 连接一端的实例化，实例化。TCP 套接字有多个状态。
 
 A socket is the instantiation of an endpoint in a potential TCP connection.
 
-.*TCP sockets states*
+.*TCP 套接字状态*
 |===
 |名称 |描述
 
 |LISTEN
-|A TCP socket is ready and listening for incoming connections. (this on the server side only)
+|一个 TCP 套接字准备就绪，可以接收进入的连接，这个状态只会在服务器端。
 
 |SYN_SENT
-|A synchronization request has been sent, but the connection hasn't been established yet. (this on the client side only)
+|客户端发送了一个 SYN 标签的请求到服务器端，且连接建立还没有完成，这个状态只会在客户端。
 
 |SYN_RECEIVED
-|A  socket previously in a listener state, has received a synchronization request and sent a SYN_ACK back. But it hasn't received the final ACK from the client yet. (this on the server side only)
+|前序处于 LISTEN 状态，接收到 SYN 标签的请求，并且给客户端回复了 SYN 和 ACK，但是连接还没有建立，等待客户端的 ACK 请求。这个状态只会在服务器端。
 
 |ESTABLISHED
-|The TCP connection is in working order, and both sides are free to send each other data. (this on both the client and server sides of the connection)
+|TCP 连接建立后的状态，客户端和服务器可以自由相互发送数据，这个状态即可以是客户端，也可以是在服务器端。
 
 |FIN_WAIT
-|A FIN has been sent, but the corresponding ACK from the other end hasn't been received yet.
+|一个 FIN 标签的请求发送，同时没有接收到另一侧回复的 ACK。
 
 |CLOSE_WAIT
-|The connection has been closed at the TCP layer, but that the application that opened the socket hasn't released its hold on the socket yet.
+|传输层 TCP 连接已经关闭, 但应用层还没有释放相应的套接字。
 
 |CLOSED
-|The connection has been fully terminated, and that no further communication is possible.
+|TCP 连接完全关闭，没有任何进一步通信的可能性。
 
 |===
 
-=== UDP(User Datagram Protocol)
+=== UDP(用户数据报协议)
 
-Unlike TCP, UDP doesn't rely on connections and it doesn't even support the concept of an acknowledgement. With UDP, you just set a destination port and send the packet. 
+不像 TCP，UDP 不依赖一个连接，没有类似 TCP 中 ACK 的理念，UDP 中只需要设定一个目的地端口。
 
-=== System Ports Vs Ephemeral Ports
+=== 系统端口和临时端口
 
-The ports are represented by a single 16-bit number, meaning that they can represent the numbers 0-65535.
+传输层是根据端口号来确保端到端的通信，传输层的协议不管是 TCP 还是 UDP，都与端口号关联，端口号是一个 16 个字节长度的数字（范围为 0 - 65535）。端口号又分为系统端口和临时端口。
 
-.*IANA defined ports range*
+.*IANA 定义的端口范围*
 |===
-|Range |描述
+|范围 |描述
 
 |0
-|Port 0 isn’t in use for network traffic, but it’s sometimes used in communications taking place between different programs on the same computer.
+|端口 0 不会使用在网络连接中，但有时候如果同一个主机上又多个程序，那么使用 0 可以随机选择一个端口。
 
 |1 - 1023
-|Ports 1-1023 are referred to as system ports, or sometimes as "well-known ports." These ports represent the official ports for most well-known network services. eg, 80 is for HTTP, 21 is for FTP
+|系统端口范围，或被称为众所周知端口号，这些端口通常被一些大家熟知的服务所有，例如 80 为 HTTP 端口，21 是 FTP 等。这些端口受 IANA 控制。
 
 |1024 - 49151
-|Ports 1024-49151 are known as registered ports. These ports are used for lots of other network services that might not be quite as common as the ones that are on system ports. eg, 3306 is used for Mysql, 8080 is used by Tomcat/JBoss.
+|已注册端口，这些端口不受 IANA 控制，不过由 IANA 登记，并提供他们使用情况清单，以方便整个群体。这些端口中一些通过可能被熟悉，3306 是 Mysql 的端口，8080 为 Tomcat/JBoss 端口。
 
 |49152 - 65535
-|These are known as private or ephemeral ports. Ephemeral ports can’t be registered with the IANA and are generally used for establishing outbound connections. You should remember that all TCP traffic uses a destination port and a source port. When a client wants to communicate with a server, the client will be assigned an ephemeral port to be used for just that one connection, while the server listens on a static system or registered port.
+|这些端口被称为私有或临时端口，临时端口不能通过 INANA 注册，这些端口用在 TCP 连接的客户端随机选用（Source Port），一个客户端/服务器端通信的程序，服务器端通常监听与一个已注册的端口，客户端建立一个连接时会分配一个临时端口。
 |===
 
-=== Firewalls
+=== 防火墙
 
-A firewall is just a device that blocks traffic that meets certain criteria.  
+一个防火墙是一个网络设备，用来阻塞满足特定条件的网络负载。防火墙通常可以在不同的网络层运行：
 
-Firewalls can actually operate at lots of different layers of the network:
-
-* Firewalls that can perform inspection of application layer traffic, and firewalls that primarily deal with blocking ranges of IP addresses. 
-* Firewalls that operate at the transportation layer will generally have a configuration that enables them to block traffic to certain ports while allowing traffic to other ports.
+* 传输层 - 通常通过配置阻塞特定的端口上的网络负载，同时允许一些端口上的网络负载
+* 应用层 - 检测应用层数据负载，例如特定范围 IP地址等。
 
 == 应用层
 
