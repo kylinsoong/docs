@@ -48,6 +48,10 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |===
 |版本 |时间 |Notes
 
+|3.0
+|2020-01-12
+|Update network pages
+
 |2.1
 |2019-06-20
 |Add MongoDB module

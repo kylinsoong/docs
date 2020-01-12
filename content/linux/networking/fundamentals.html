@@ -61,7 +61,7 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="ifcfg.html" />
+    <link rel="next" href="tcp_debug.html" />
     
     
     <link rel="prev" href="./" />
@@ -313,6 +313,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1.1" data-path="tcp_debug.html">
+            
+                <a href="tcp_debug.html">
+            
+                    
+                    TCP 调试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.2.3.2" data-path="ifcfg.html">
@@ -399,6 +418,32 @@
             
                     
                     网络监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.9" data-path="programming.html">
+            
+                <a href="programming.html">
+            
+                    
+                    网络编程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.10" data-path="adn.html">
+            
+                <a href="adn.html">
+            
+                    
+                    应用交付网络
             
                 </a>
             
@@ -554,6 +599,19 @@
             
                     
                     OpenSSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.5" data-path="../security/ldap.html">
+            
+                <a href="../security/ldap.html">
+            
+                    
+                    LDAP
             
                 </a>
             
@@ -1704,7 +1762,7 @@
     
         <li class="chapter " data-level="1.7" >
             
-                <a target="_blank" href="https://mongocn.github.io">
+                <a target="_blank" href="https://realtimeinsights.github.io">
             
                     
                     DATA
@@ -1761,7 +1819,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.9.1" data-path="../../about/it-professions.html">
+        <li class="chapter " data-level="1.9.1" data-path="../../about/data.html">
+            
+                <a href="../../about/data.html">
+            
+                    
+                    数据洞见未来
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../../about/it-professions.html">
             
                 <a href="../../about/it-professions.html">
             
@@ -1774,7 +1845,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.9.2" data-path="../../about/softskills.html">
+        <li class="chapter " data-level="1.9.3" data-path="../../about/softskills.html">
             
                 <a href="../../about/softskills.html">
             
@@ -1841,61 +1912,63 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#__">&#x7F51;&#x7EDC;&#x6A21;&#x578B;</a>
+<ul class="sectlevel2">
 <li><a href="#_tcp_ip">TCP/IP &#x4E94;&#x5C42;&#x6A21;&#x578B;</a></li>
+<li><a href="#_tcp_ip_2">TCP/IP &#x56DB;&#x5C42;&#x6A21;&#x578B;</a></li>
 <li><a href="#_osi">OSI &#x4E03;&#x5C42;&#x6A21;&#x578B;</a></li>
-<li><a href="#__">&#x7F51;&#x7EDC;&#x8BBE;&#x5907;</a>
+<li><a href="#___2">&#x4E09;&#x79CD;&#x6A21;&#x578B;&#x5BF9;&#x6BD4;&#x53CA;&#x5BF9;&#x5E94;&#x7F51;&#x7EDC;&#x534F;&#x8BAE;</a></li>
+</ul>
+</li>
+<li><a href="#___3">&#x7F51;&#x7EDC;&#x8BBE;&#x5907;</a>
 <ul class="sectlevel2">
-<li><a href="#_cables">Cables</a></li>
+<li><a href="#__cables">&#x7535;&#x7F06;&#xFF08;Cables&#xFF09;</a></li>
 <li><a href="#_hub">Hub</a></li>
-<li><a href="#_switch">Switch</a></li>
-<li><a href="#_router">Router</a></li>
+<li><a href="#__switch">&#x4EA4;&#x6362;&#x673A;&#xFF08;Switch&#xFF09;</a></li>
+<li><a href="#__router">&#x8DEF;&#x7531;&#x5668;&#xFF08;Router&#xFF09;</a></li>
 </ul>
 </li>
-<li><a href="#___2">&#x7269;&#x7406;&#x5C42;</a>
+<li><a href="#___4">&#x7269;&#x7406;&#x5C42;</a>
 <ul class="sectlevel2">
-<li><a href="#_moving_bits_across_the_wire">Moving bits across the wire</a></li>
-<li><a href="#_twisted_pair_cabling_and_duplexing">Twisted Pair Cabling and Duplexing</a></li>
-<li><a href="#_network_ports_and_patch_panels">Network Ports and Patch Panels</a></li>
+<li><a href="#___5">&#x94FE;&#x8DEF;&#x4E0A;&#x7684;&#x5B57;&#x8282;&#x79FB;&#x52A8;</a></li>
+<li><a href="#__twisted_pair">&#x53CC;&#x7EDE;&#x7EBF;(Twisted Pair) &#x53CC;&#x5411;&#x4EA4;&#x6D41;</a></li>
+<li><a href="#___6">&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x548C;&#x914D;&#x7EBF;&#x67B6;</a></li>
 </ul>
 </li>
-<li><a href="#___3">&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;</a>
+<li><a href="#___7">&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;</a>
 <ul class="sectlevel2">
 <li><a href="#_ethernet_mac">Ethernet &#x548C; MAC &#x5730;&#x5740;</a></li>
-<li><a href="#_unicast_multicast_broadcast">Unicast, Multicast, Broadcast</a></li>
-<li><a href="#_ethernet_frame">Ethernet Frame</a></li>
+<li><a href="#___8">&#x5355;&#x64AD;, &#x591A;&#x64AD;, &#x5E7F;&#x64AD;</a></li>
+<li><a href="#__ethernet">&#x4EE5;&#x592A;&#x7F51;(Ethernet)&#x5E27;&#x7ED3;&#x6784;</a></li>
 </ul>
 </li>
-<li><a href="#___4">&#x7F51;&#x7EDC;&#x5C42;</a>
+<li><a href="#___9">&#x7F51;&#x7EDC;&#x5C42;</a>
 <ul class="sectlevel2">
-<li><a href="#_ip">IP &#x5730;&#x5740;</a></li>
-<li><a href="#_ip_datagrams_and_encapsulation">IP Datagrams and Encapsulation</a></li>
-<li><a href="#_ip_address_classes">IP Address Classes</a></li>
-<li><a href="#_arp_address_resolution_protocol">ARP(Address Resolution Protocol)</a></li>
-<li><a href="#_subnet_masks">Subnet Masks</a></li>
-<li><a href="#_basic_binary_math">Basic Binary Math</a></li>
-<li><a href="#_cidr_classless_inter_domain_routing">CIDR(classless inter-domain routing)</a></li>
-<li><a href="#___5">&#x8DEF;&#x7531;</a></li>
-<li><a href="#___6">&#x8DEF;&#x7531;&#x8868;</a></li>
-<li><a href="#___7">&#x8DEF;&#x7531;&#x534F;&#x8BAE;</a></li>
-<li><a href="#_non_routable_address_space">Non-Routable Address Space</a></li>
+<li><a href="#_ipv4">IPv4 &#x5730;&#x5740;</a></li>
+<li><a href="#_ipv4_3">IPv4 &#x6570;&#x636E;&#x62A5;&#x6587;&#x7ED3;&#x6784;</a></li>
+<li><a href="#_arp">ARP</a></li>
+<li><a href="#___13">&#x8DEF;&#x7531;</a></li>
+<li><a href="#_ipv6">IPv6 &#x5730;&#x5740;</a></li>
+<li><a href="#_ipv6_2">IPv6 &#x6570;&#x636E;&#x62A5;&#x6587;&#x7ED3;&#x6784;</a></li>
+<li><a href="#_ipv6_and_ipv4_harmony">IPv6 and IPv4 Harmony</a></li>
 </ul>
 </li>
-<li><a href="#___8">&#x4F20;&#x8F93;&#x5C42;</a>
+<li><a href="#___19">&#x4F20;&#x8F93;&#x5C42;</a>
 <ul class="sectlevel2">
-<li><a href="#_multiplexing_demultiplexing">Multiplexing &amp; Demultiplexing</a></li>
-<li><a href="#_dissection_of_a_tcp_segment">Dissection of a TCP Segment</a></li>
-<li><a href="#_tcp_control_flags">TCP Control Flags</a></li>
-<li><a href="#_three_way_handshake">Three-way Handshake</a></li>
-<li><a href="#_four_way_handshake">Four-way Handshake</a></li>
-<li><a href="#_tcp_socket_states">TCP Socket States</a></li>
-<li><a href="#_udp_user_datagram_protocol">UDP(User Datagram Protocol)</a></li>
-<li><a href="#_system_ports_vs_ephemeral_ports">System Ports Vs Ephemeral Ports</a></li>
-<li><a href="#_firewalls">Firewalls</a></li>
+<li><a href="#___20">&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001; &amp; &#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;</a></li>
+<li><a href="#_tcp_segment">TCP Segment &#x7ED3;&#x6784;</a></li>
+<li><a href="#_tcp">TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;</a></li>
+<li><a href="#___21">&#x4E09;&#x6B21;&#x63E1;&#x624B;</a></li>
+<li><a href="#___22">&#x56DB;&#x6B21;&#x63E1;&#x624B;</a></li>
+<li><a href="#_tcp_2">TCP &#x5957;&#x63A5;&#x5B57;&#x72B6;&#x6001;</a></li>
+<li><a href="#_udp">UDP(&#x7528;&#x6237;&#x6570;&#x636E;&#x62A5;&#x534F;&#x8BAE;)</a></li>
+<li><a href="#___23">&#x7CFB;&#x7EDF;&#x7AEF;&#x53E3;&#x548C;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;</a></li>
+<li><a href="#___24">&#x9632;&#x706B;&#x5899;</a></li>
 </ul>
 </li>
-<li><a href="#___9">&#x5E94;&#x7528;&#x5C42;</a>
+<li><a href="#___25">&#x5E94;&#x7528;&#x5C42;</a>
 <ul class="sectlevel2">
-<li><a href="#___10">&#x5E94;&#x7528;&#x5C42;&#x534F;&#x8BAE;</a></li>
+<li><a href="#___26">&#x5E94;&#x7528;&#x5C42;&#x534F;&#x8BAE;</a></li>
 <li><a href="#_application_layer_and_the_osi_model">Application Layer and the OSI Model</a></li>
 </ul>
 </li>
@@ -1905,7 +1978,7 @@
 <li><a href="#_operation_steps">Operation Steps</a></li>
 </ul>
 </li>
-<li><a href="#___11">&#x7F51;&#x7EDC;&#x670D;&#x52A1;</a>
+<li><a href="#___27">&#x7F51;&#x7EDC;&#x670D;&#x52A1;</a>
 <ul class="sectlevel2">
 <li><a href="#_dhcp">DHCP</a></li>
 <li><a href="#_nat_network_address_translation">NAT(Network Address Translation)</a></li>
@@ -1913,43 +1986,48 @@
 <li><a href="#_proxy_services">Proxy Services</a></li>
 </ul>
 </li>
-<li><a href="#___12">&#x7F51;&#x7EDC;&#x63A5;&#x5165;</a>
+<li><a href="#___28">&#x7F51;&#x7EDC;&#x63A5;&#x5165;</a>
 <ul class="sectlevel2">
-<li><a href="#___13">&#x62E8;&#x53F7;&#x63A5;&#x5165;</a></li>
-<li><a href="#___14">&#x5BBD;&#x5E26;&#x63A5;&#x5165;</a></li>
+<li><a href="#___29">&#x62E8;&#x53F7;&#x63A5;&#x5165;</a></li>
+<li><a href="#___30">&#x5BBD;&#x5E26;&#x63A5;&#x5165;</a></li>
 <li><a href="#_wans_wide_area_network">WANs(Wide Area Network)</a></li>
 <li><a href="#__wifi">&#x65E0;&#x7EBF;&#x7F51;&#x7EDC;(WIFI)</a></li>
 </ul>
 </li>
-<li><a href="#___15">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x89E3;&#x51B3;</a>
+<li><a href="#___31">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x89E3;&#x51B3;</a>
 <ul class="sectlevel2">
-<li><a href="#___16">&#x8FDE;&#x901A;&#x6027;&#x9A8C;&#x8BC1;</a></li>
+<li><a href="#___32">&#x8FDE;&#x901A;&#x6027;&#x9A8C;&#x8BC1;</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="sect1">
-<h2 id="_tcp_ip">TCP/IP &#x4E94;&#x5C42;&#x6A21;&#x578B;</h2>
+<h2 id="__">&#x7F51;&#x7EDC;&#x6A21;&#x578B;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image"><img src="img/layer_terminology.JPG" alt="layer terminology.JPG"></span></p>
+<p>&#x5404;&#x4E2A;&#x7EC4;&#x7EC7;&#x6216;&#x4F01;&#x4E1A;&#x5BF9;&#x7F51;&#x7EDC;&#x6A21;&#x578B;&#x5B9A;&#x4E49;&#x6709;&#x6240;&#x4E0D;&#x540C;&#xFF0C;&#x4F46;&#x76EE;&#x524D;&#x6700;&#x5E38;&#x89C1;&#x7684;&#x5B9A;&#x4E49;&#x6709;&#x4E00;&#x4E0B;&#x4E09;&#x79CD;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="_tcp_ip">TCP/IP &#x4E94;&#x5C42;&#x6A21;&#x578B;</h3>
+<div class="paragraph">
+<p><span class="image"><img src="img/layer_terminology.png" alt="layer terminology.png"></span></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Physical</strong> - The physical layer represents the physical devices that interconnect computers, which includes the specifications for the networking cables and the connectors that join devices together along with specifications describing how signals are sent over these connections.</p>
+<p><strong>&#x7269;&#x7406;&#x5C42;</strong> - &#x7269;&#x7406;&#x5C42;&#x8868;&#x793A;&#x4E0E;&#x8BA1;&#x7B97;&#x673A;&#x4E92;&#x8FDE;&#x7684;&#x7269;&#x7406;&#x8BBE;&#x5907;&#xFF0C;&#x5176;&#x4E2D;&#x8FD8;&#x5305;&#x62EC;&#x5C06;&#x7269;&#x7406;&#x8BBE;&#x5907;&#x8FDE;&#x63A5;&#x5728;&#x4E00;&#x8D77;&#x7684;&#x7F51;&#x7EBF;&#x3001;&#x5149;&#x7F06;&#x3001;&#x8FDE;&#x63A5;&#x5668;&#x7684;&#x89C4;&#x8303;&#xFF0C;&#x4EE5;&#x53CA;&#x63CF;&#x8FF0;&#x5982;&#x4F55;&#x901A;&#x8FC7;&#x8FD9;&#x4E9B;&#x8FDE;&#x63A5;&#x53D1;&#x9001;&#x4FE1;&#x53F7;&#x7684;&#x89C4;&#x8303;&#x3002;</p>
 </li>
 <li>
-<p><strong>Data Link</strong> - While the physical layer is all about cabling, connectors and sending signals, the data link layer is responsible for defining a common way of interpreting these signals, so network devices can communicate. The most common prototol in this layer is Ethernet, which specifies physical layer attributes, and defines a protocol responsible for getting data to nodes on the same network or link.</p>
+<p><strong>&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;</strong> - &#x7269;&#x7406;&#x5C42;&#x4EC5;&#x4EC5;&#x6D89;&#x53CA;&#x5230;&#x7684;&#x662F;&#x5149;&#x7F06;&#x3001;&#x8FDE;&#x63A5;&#x5668;&#x548C;&#x4FE1;&#x53F7;&#x53D1;&#x9001;&#xFF0C;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x8D1F;&#x8D23;&#x5B9A;&#x4E49;&#x89E3;&#x91CA;&#x8FD9;&#x4E9B;&#x4FE1;&#x53F7;&#x7684;&#x901A;&#x7528;&#x65B9;&#x6CD5;&#xFF0C;&#x4EE5;&#x4FBF;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x901A;&#x4FE1;&#x3002; &#x8BE5;&#x5C42;&#x4E2D;&#x6700;&#x5E38;&#x89C1;&#x7684;&#x534F;&#x8BAE;&#x662F;&#x4EE5;&#x592A;&#x7F51;&#xFF08;Ethernet&#xFF09;&#xFF0C;&#x5B83;&#x6307;&#x5B9A;&#x7269;&#x7406;&#x5C42;&#x5C5E;&#x6027;&#xFF0C;&#x5E76;&#x5B9A;&#x4E49;&#x8D1F;&#x8D23;&#x540C;&#x4E00;&#x7F51;&#x7EDC;&#x6216;&#x94FE;&#x8DEF;&#x4E0A;&#x7684;&#x8282;&#x70B9;&#x95F4;&#x4F20;&#x8F93;&#x6570;&#x636E;&#x7684;&#x534F;&#x8BAE;&#x3002;</p>
 </li>
 <li>
-<p><strong>Network</strong> - It also called called the Internet layer, which allows different networks to communicate with each other through devices known as routers. While the data link layer is responsible for getting data across a single link, the network layer is responsible for getting data delivered across a collection of networks. The most common protocol used at this layer is known as IP or Internet Protocol.</p>
+<p><strong>&#x7F51;&#x7EDC;&#x5C42;</strong> - &#x4E5F;&#x79F0;&#x4E3A; Internet &#x5C42;&#xFF0C;&#x5B83;&#x5141;&#x8BB8;&#x4E0D;&#x540C;&#x7684;&#x7F51;&#x7EDC;&#x4E4B;&#x95F4;&#x901A;&#x8FC7;&#x8DEF;&#x7531;&#x5668;&#x8BBE;&#x5907;&#x76F8;&#x4E92;&#x901A;&#x4FE1;&#x3002;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x53EA;&#x8D1F;&#x8D23;&#x7684;&#x662F;&#x540C;&#x4E00;&#x94FE;&#x8DEF;&#x4E0A;&#x7684;&#x6570;&#x636E;&#x4EA4;&#x4E92;&#xFF0C;&#x7F51;&#x7EDC;&#x5C42;&#x8D1F;&#x8D23;&#x7684;&#x662F;&#x8DE8;&#x4E0D;&#x540C;&#x7F51;&#x7EDC;&#x7684;&#x6570;&#x636E;&#x4EA4;&#x4E92;&#x3002;&#x7F51;&#x7EDC;&#x5C42;&#x6700;&#x5E38;&#x89C1;&#x7684;&#x4E24;&#x4E2A;&#x534F;&#x8BAE;&#x662F; IP &#x4E2A; Internet&#x3002;</p>
 </li>
 <li>
-<p><strong>Transport</strong> -  While the network layer delivers data between two individual nodes, the transport layer sorts out which client and server programs are supposed to get that data. TCP is the most commonly used protocol in the fourth layer. IP is responsible for getting data from one node to another; TCP and UDP is responsible for ensuring that data gets to the right applications running on those nodes.</p>
+<p><strong>&#x4F20;&#x8F93;&#x5C42;</strong> - &#x7F51;&#x7EDC;&#x5C42;&#x53EF;&#x4EE5;&#x8D1F;&#x8D23;&#x4E24;&#x4E2A;&#x4E0D;&#x540C;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x8282;&#x70B9;&#x95F4;&#x7684;&#x6570;&#x636E;&#x4EA4;&#x4E92;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x4F1A;&#x7406;&#x6E05;&#x5E94;&#x8BE5;&#x7531;&#x90A3;&#x4E2A;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;&#x83B7;&#x53D6;&#x8FD9;&#x4E9B;&#x6570;&#x636E;&#x3002;TCP &#x662F;&#x6700;&#x5E38;&#x89C1;&#x7684;&#x56DB;&#x5C42;&#x534F;&#x8BAE;&#xFF0C;IP &#x8D1F;&#x8D23;&#x5C06;&#x6570;&#x636E;&#x4ECE;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x4F20;&#x8F93;&#x5230;&#x53E6;&#x4E00;&#x4E2A;&#x8282;&#x70B9;; TCP &#x548C; UDP &#x8D1F;&#x8D23;&#x786E;&#x4FDD;&#x6570;&#x636E;&#x88AB;&#x8282;&#x70B9;&#x4E0A;&#x7684;&#x7279;&#x5B9A;&#x5E94;&#x7528;&#x83B7;&#x53D6;&#x3002;</p>
 </li>
 <li>
-<p><strong>Application</strong> -  There are lots of different application-specific protocols at this layer, which used to allow you to browse the web or send receive email are some common ones.</p>
+<p><strong>&#x5E94;&#x7528;&#x5C42;</strong> -  &#x8FD9;&#x4E00;&#x5C42;&#x5305;&#x62EC;&#x5F88;&#x591A;&#x534F;&#x8BAE;&#xFF0C;&#x5E38;&#x89C1;&#x7684;&#x4E00;&#x4E9B;&#x5305;&#x62EC;&#x662F;&#x7528;&#x6765;&#x5141;&#x8BB8;&#x60A8;&#x6D4F;&#x89C8;&#x7F51;&#x9875;&#x6216;&#x53D1;&#x9001;&#x63A5;&#x6536;&#x7535;&#x5B50;&#x90AE;&#x4EF6;&#x7B49;&#x3002;</p>
 </li>
 </ul>
 </div>
@@ -1960,19 +2038,19 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The physical layer is the delivery truck and the roads.</p>
+<p>&#x7269;&#x7406;&#x5C42;&#x76F8;&#x5F53;&#x4E8E;&#x6295;&#x9012;&#x5FEB;&#x9012;&#x7684;&#x5361;&#x8F66;&#x548C;&#x8DEF;&#x3002;</p>
 </li>
 <li>
-<p>The data link layer is how the delivery trucks get from one intersection to the next over and over.</p>
+<p>&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x786E;&#x4FDD;&#x6295;&#x9012;&#x5361;&#x8F66;&#x4ECE;&#x4E00;&#x4E2A;&#x5341;&#x5B57;&#x8DEF;&#x53E3;&#x5230;&#x4E0B;&#x4E00;&#x4E2A;&#x5341;&#x5B57;&#x8DEF;&#x53E3;&#xFF0C;&#x5E76;&#x4E14;&#x91CD;&#x590D;&#x591A;&#x6B21;&#x3002;</p>
 </li>
 <li>
-<p>The network layer identifies which roads need to be taken to get from address A to address B.</p>
+<p>&#x7F51;&#x7EDC;&#x5C42;&#x786E;&#x5B9A;&#x4E86;&#x5730;&#x5740; A &#x548C;&#x5730;&#x5740; B &#x4E4B;&#x95F4;&#x7684;&#x8DEF;&#x3002;</p>
 </li>
 <li>
-<p>The transport layer ensures that delivery driver knows how to knock on your door to tell you your package has arrived.</p>
+<p>&#x4F20;&#x8F93;&#x5C42;&#x786E;&#x4FDD;&#x67D0;&#x4E2A;&#x5730;&#x5740;&#x4E0A;&#x5177;&#x4F53;&#x7684;&#x95E8;&#x724C;&#x53F7;&#xFF0C;&#x4EE5;&#x53CA;&#x544A;&#x8BC9;&#x5FEB;&#x901F;&#x5DF2;&#x7ECF;&#x9001;&#x8FBE;&#x3002;</p>
 </li>
 <li>
-<p>The application layer is the contents of the package itself.</p>
+<p>&#x5E94;&#x7528;&#x5C42;&#x6307;&#x5305;&#x88F9;&#x7684;&#x5185;&#x5BB9;&#x672C;&#x8EAB;&#x3002;</p>
 </li>
 </ol>
 </div>
@@ -1981,33 +2059,74 @@
 <p><span class="image"><img src="img/5layermoles-hardwareComponent.png" alt="5layermoles hardwareComponent.png"></span></p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_osi">OSI &#x4E03;&#x5C42;&#x6A21;&#x578B;</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>&#x8BE6;&#x7EC6;&#x53C2;&#x7167;&#x94FE;&#x63A5; <a href="https://en.wikipedia.org/wiki/OSI_model" target="_blank">wiki/OSI_model</a>&#x3002;</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="__">&#x7F51;&#x7EDC;&#x8BBE;&#x5907;</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_cables">Cables</h3>
+<h3 id="_tcp_ip_2">TCP/IP &#x56DB;&#x5C42;&#x6A21;&#x578B;</h3>
 <div class="paragraph">
-<p>Cables are what connect different devices to each other allowing data to be transmitted over them.</p>
-</div>
-<div class="paragraph">
-<p>Cables &#x53EF;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;:</p>
+<p><span class="image"><img src="img/tcp-ip-model.png" alt="TCP/IP"></span></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Copper - Copper cables are the most common form of networking cable. They&#x2019;re made up of multiple pairs of copper wires inside plastic insulator. The most common forms of copper twisted pair cables used in networking are Cat5, Cat5e, and Cat6 cables. These categories have different physical characteristics like the number of twists in the pair of copper wires that result in different usable lengths and transfer rates.</p>
+<p>&#x5E94;&#x7528;&#x5C42; - &#x5E38;&#x89C1;&#x7684;&#x5E94;&#x7528;&#x5C42;&#x534F;&#x8BAE;&#x6709;&#xFF1A;SSH&#xFF0C;HTTPS&#xFF0C;NFS/CIFS&#xFF0C;SMTP</p>
 </li>
 <li>
-<p>Fiber(fiber optic cables) - Fiber cables contain individual optical fibers which are tiny tubes made out of glass about the width of a human hair. These tubes of glass can transport beams of light. Unlike copper, which uses electrical voltages, fiber cables use pulses of light to represent the ones and zeros of the underlying data.</p>
+<p>&#x4F20;&#x8F93;&#x5C42; - &#x4F20;&#x8F93;&#x5C42;&#x534F;&#x8BAE;&#x6709; TCP &#x548C; UDP&#xFF0C;TCP &#x5C5E;&#x4E8E;&#x53EF;&#x9760;&#x8FDE;&#x63A5;&#x4F20;&#x8F93;&#x534F;&#x8BAE;&#xFF0C;UDP &#x65E0;&#x8FDE;&#x63A5;&#x6570;&#x636E;&#x5305;&#x4F20;&#x8F93;&#x534F;&#x8BAE;</p>
+</li>
+<li>
+<p>&#x7F51;&#x7EDC;&#x4E92;&#x8FDE;&#x5C42; - &#x8D1F;&#x8D23;&#x5C06;&#x6570;&#x636E;&#x4ECE;&#x6E90;&#x4E3B;&#x673A;&#x4F20;&#x8F93;&#x5230;&#x76EE;&#x7684;&#x4E3B;&#x673A;&#xFF0C;&#x4EFB;&#x610F;&#x4E3B;&#x673A;&#x90FD;&#x6709;&#x4E00;&#x4E2A; IP &#x5730;&#x5740;&#x548C;&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x6765;&#x786E;&#x5B9A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x8DEF;&#x7531;&#x5668;&#x7528;&#x6765;&#x8FDE;&#x63A5;&#x7F51;&#x7EDC;&#x3002;&#x8FD9;&#x4E00;&#x5C42;&#x7684;&#x534F;&#x8BAE;&#x6709; ICMP&#xFF0C;<code>ping</code> &#x547D;&#x4EE4;&#x5C31;&#x662F;&#x57FA;&#x4E8E; ICMP &#x534F;&#x8BAE;&#xFF0C;<code>ping</code> &#x547D;&#x4EE4;&#x53D1;&#x9001;&#x4E00;&#x4E2A; ICMP ECHO_REQUEST &#x8BF7;
+&#x6C42;&#x5305;&#xFF0C;&#x6210;&#x529F;&#x5219;&#x8FD4;&#x56DE; ICMP ECHO_REPLY &#x786E;&#x8BA4;&#x3002;</p>
+</li>
+<li>
+<p>&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x5C42; - &#x63D0;&#x4F9B;&#x8FDE;&#x63A5;&#x5230;&#x7269;&#x7406;&#x5A92;&#x4ECB;&#xFF0C;&#x5982;&#x5E38;&#x89C1;&#x7684;&#x6709;&#x7EBF;&#x4EE5;&#x592A;&#x7F51;&#xFF08;802.3&#xFF09;&#x548C;&#x65E0;&#x7EBF;WLAN&#xFF08;802.11&#xFF09;&#xFF0C;&#x6BCF;&#x4E00;&#x4E2A;&#x7269;&#x7406;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x90FD;&#x6709;&#x4E00;&#x4E2A;&#x7269;&#x7406;&#x5730;&#x5740;&#xFF08;MAC&#xFF09;&#x7528;&#x6765;&#x5728;&#x7F51;&#x7EDC;&#x4E2D;&#x552F;&#x4E00;&#x6807;&#x8BC6;&#x76EE;&#x7684;&#x5730;&#x5740;&#x3002;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_osi">OSI &#x4E03;&#x5C42;&#x6A21;&#x578B;</h3>
+<div class="paragraph">
+<p>&#x8BE6;&#x7EC6;&#x53C2;&#x7167; <a href="https://en.wikipedia.org/wiki/OSI_model" target="_blank">wiki/OSI_model</a> &#x4E86;&#x89E3;&#x66F4;&#x591A;&#x5173;&#x4E8E; OSI &#x4E03;&#x5C42;&#x6A21;&#x578B;&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x4E09;&#x79CD;&#x6A21;&#x578B;&#x5BF9;&#x6BD4;&#x53CA;&#x5BF9;&#x5E94;&#x7F51;&#x7EDC;&#x534F;&#x8BAE;</h3>
+<div class="paragraph">
+<p>&#x9664;&#x4E86; TCP/IP &#x4E94;&#x5C42;&#x6A21;&#x578B;&#x5916;&#xFF0C;&#x5173;&#x4E8E;&#x7F51;&#x7EDC;&#x6A21;&#x578B;&#x5728;&#x4E1A;&#x754C;&#x8FD8;&#x6709;&#x5176;&#x4ED6;&#x8868;&#x8FF0;&#xFF0C;&#x6700;&#x6709;&#x5F71;&#x54CD;&#x529B;&#x7684;&#x8868;&#x6269;&#xFF1A;OSI &#x4E03;&#x5C42;&#x6A21;&#x578B;&#x548C; TCP/IP &#x56DB;&#x5C42;&#x6A21;&#x578B;&#xFF0C;&#x5177;&#x4F53;&#x5BF9;&#x7167;&#x5982;&#x4E0B;&#x8868;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/network-model.png" alt="network model.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>OSI &#x4E03;&#x5C42;&#x6A21;&#x578B;&#x5C06; TCP/IP &#x6A21;&#x578B;&#x4E2D;&#x7684;&#x5E94;&#x7528;&#x5C42;&#x7EC6;&#x5206;&#x4E3A;&#x4E09;&#x5C42;&#xFF1A;&#x5E94;&#x5C42;&#x5C42;&#x3001;&#x8868;&#x793A;&#x5C42;&#x3001;&#x4F1A;&#x8BDD;&#x5C42;</p>
+</li>
+<li>
+<p>&#x76F8;&#x6BD4;&#x8F83; TCP/IP &#x4E94;&#x5C42;&#x6A21;&#x578B;&#xFF0C;TCP/IP &#x56DB;&#x5C42;&#x6A21;&#x578B;&#x5C06;&#x7269;&#x7406;&#x5C42;&#x548C;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x5408;&#x4E3A;&#x4E00;&#x5C42;</p>
+</li>
+<li>
+<p>&#x7F51;&#x7EDC;&#x5C42;&#x4E5F;&#x53EB; Internet &#x5C42;&#x6216;&#x7F51;&#x7EDC;&#x4E92;&#x8054;&#x5C42;&#xFF0C;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x4E5F;&#x79F0;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x5C42;</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">&#x7F51;&#x7EDC;&#x8BBE;&#x5907;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__cables">&#x7535;&#x7F06;&#xFF08;Cables&#xFF09;</h3>
+<div class="paragraph">
+<p>&#x7535;&#x7F06;&#xFF08;Cables&#xFF09;&#x662F;&#x5C06;&#x4E0D;&#x540C;&#x7684;&#x8BBE;&#x5907;&#x8FDE;&#x63A5;&#x5728;&#x4E00;&#x8D77;&#xFF0C;&#x5141;&#x8BB8;&#x4ED6;&#x4EEC;&#x76F8;&#x4E92;&#x4EA4;&#x6362;&#x6570;&#x636E;&#x3002;&#x7535;&#x7F06;&#x53EF;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x94DC;&#x7F06; - &#x5C31;&#x662F;&#x6700;&#x957F;&#x89C1;&#x7684;&#x7F51;&#x7EBF;&#xFF0C;&#x94DC;&#x7F06;&#x662F;&#x7F51;&#x7EDC;&#x7535;&#x7F06;&#x7684;&#x6700;&#x5E38;&#x89C1;&#x5F62;&#x5F0F;&#xFF0C;&#x5B83;&#x4EEC;&#x7531;&#x5851;&#x6599;&#x7EDD;&#x7F18;&#x4F53;&#x5185;&#x7684;&#x591A;&#x5BF9;&#x94DC;&#x7EBF;&#x7EC4;&#x6210;&#x3002;&#x7F51;&#x7EDC;&#x4E2D;&#x6700;&#x957F;&#x89C1;&#x7684;&#x94DC;&#x7EBF;&#x914D;&#x5BF9;&#x7F20;&#x7ED5;&#x6807;&#x51C6;&#x6709; Cat5, Cat5e, &#x548C; Cat6&#x3002;&#x8FD9;&#x4E9B;&#x7C7B;&#x522B;&#x5177;&#x6709;&#x4E0D;&#x540C;&#x7684;&#x7269;&#x7406;&#x7279;&#x6027;&#xFF0C;&#x4F8B;&#x5982;&#x4E00;&#x5BF9;&#x94DC;&#x7EBF;&#x4E2D;&#x7684;&#x7EDE;&#x5408;&#x6570;&#x4F1A;&#x5BFC;&#x81F4;&#x4E0D;&#x540C;&#x7684;&#x53EF;&#x7528;&#x957F;&#x5EA6;&#x548C;&#x4F20;&#x8F93;&#x901F;&#x7387;&#x3002;</p>
+</li>
+<li>
+<p>&#x5149;&#x7F06; - &#x5149;&#x7EA4;&#x7535;&#x7F06;&#x5305;&#x542B;&#x5355;&#x4E2A;&#x7684;&#x5149;&#x7EA4;&#x662F;&#x7531;&#x73BB;&#x7483;&#x5236;&#x6210;&#x7684;&#x7EC6;&#x7BA1;&#xFF0C;&#x5927;&#x7EA6;&#x4E0E;&#x4EBA;&#x7684;&#x5934;&#x53D1;&#x5BBD;&#x5EA6;&#x76F8;&#x540C;&#x3002;&#x8FD9;&#x4E9B;&#x73BB;&#x7483;&#x7BA1;&#x53EF;&#x4EE5;&#x4F20;&#x8F93;&#x5149;&#x675F;&#x3002;&#x4E0E;&#x4F7F;&#x7528;&#x7535;&#x538B;&#x7684;&#x94DC;&#x7F06;&#x4E0D;&#x540C;&#xFF0C;&#x5149;&#x7F06;&#x4F7F;&#x7528;&#x5149;&#x8109;&#x51B2;&#x6765;&#x8868;&#x793A;&#x57FA;&#x7840;&#x6570;&#x636E;&#x7684; 1 &#x548C;0&#x3002;</p>
 </li>
 </ul>
 </div>
@@ -2015,44 +2134,50 @@
 <div class="sect2">
 <h3 id="_hub">Hub</h3>
 <div class="paragraph">
-<p>A hub is a physical layer device that allows for connections from many computers at once. All the devices connected to a hub will end up talking to all other devices at the same time. It&#x2019;s up to each system connected to the hub to determine if the incoming data was meant for them, or to ignore it if it isn&#x2019;t. This causes a lot of noise on the network and creates what&#x2019;s called a collision domain. A collision domain is a network segment where only one device can communicate at a time. If multiple systems try sending data at the same time, the electrical pulses sent across the cable can interfere with each other. This causes these systems to have to wait for a quiet period before they try sending their data again. It really slows down network communications, and is the primary reason hubs are fairly rare.</p>
+<p>Hub &#x662F;&#x7269;&#x7406;&#x5C42;&#x7684;&#x8BBE;&#x5907;&#xFF0C;&#x591A;&#x53F0;&#x8BA1;&#x7B97;&#x673A;&#x8BBE;&#x5907;&#x53EF;&#x8FDE;&#x63A5;&#x5230;&#x5B83;&#xFF0C;&#x5141;&#x8BB8;&#x540C;&#x4E00;&#x65F6;&#x523B;&#x6765;&#x81EA;&#x4E0D;&#x540C;&#x8BA1;&#x7B97;&#x673A;&#x7684;&#x8FDE;&#x63A5;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/network-hub.png" alt="network hub.png"></span></p>
+</div>
+<div class="paragraph">
+<p>All the devices connected to a hub will end up talking to all other devices at the same time. It&#x2019;s up to each system connected to the hub to determine if the incoming data was meant for them, or to ignore it if it isn&#x2019;t. This causes a lot of noise on the network and creates what&#x2019;s called a collision domain. A collision domain is a network segment where only one device can communicate at a time. If multiple systems try sending data at the same time, the electrical pulses sent across the cable can interfere with each other. This causes these systems to have to wait for a quiet period before they try sending their data again. It really slows down network communications, and is the primary reason hubs are fairly rare.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_switch">Switch</h3>
+<h3 id="__switch">&#x4EA4;&#x6362;&#x673A;&#xFF08;Switch&#xFF09;</h3>
 <div class="paragraph">
-<p>A switch is a much more common way of connecting many computers is with a more sophisticated device. A switch is very similar to a hub, since you can connect many devices to it so they can communicate. The difference is that while a hub is a layer 1 or physical layer device, a switch is a level 2 or data link device. This means that a switch can actually inspect the contents of the Ethernet protocol data being sent around the network, determine which system the data is intended for and then only send that data to that one system. This reduces or even completely eliminates the size of collision domains on a network. This also lead to fewer retransmissions and a higher overall throughput.</p>
+<p>&#x4EA4;&#x6362;&#x673A;&#x662F;&#x4E8C;&#x5C42;&#xFF08;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#xFF09;&#x8BBE;&#x5907;&#xFF0C;&#x662F;&#x76EE;&#x524D;&#x5E38;&#x89C1;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x5141;&#x8BB8;&#x591A;&#x53F0;&#x8BA1;&#x7B97;&#x673A;&#x8FDE;&#x63A5;&#x5230;&#x5B83;&#xFF0C;&#x7531;&#x4E8E;&#x662F;&#x4E8C;&#x5C42;&#x7684;&#x8BBE;&#x5907;&#xFF0C;&#x4EA4;&#x6362;&#x673A;&#x53EF;&#x4EE5;&#x8BC6;&#x522B; Ethernet &#x534F;&#x8BAE;&#x4E2D;&#x7684;&#x5C5E;&#x6027;&#x6765;&#x8BC6;&#x522B;&#x7279;&#x70B9;&#x7684;&#x8BA1;&#x7B97;&#x673A;&#xFF0C;&#x786E;&#x4FDD;&#x6570;&#x636E;&#x51C6;&#x786E;&#x7684;&#x4F20;&#x8F93;&#x5230;&#x7279;&#x5B9A;&#x7684;&#x673A;&#x5668;&#x3002;&#x8FD9;&#x6781;&#x5927;&#x7684;&#x51CF;&#x5C11;&#x4E86;&#x7F51;&#x7EDC;&#x57DF;&#x51B2;&#x7A81;&#xFF0C;&#x63D0;&#x9AD8;&#x4E86;&#x7F51;&#x7EDC;&#x4F20;&#x8F93;&#x7684;&#x541E;&#x5410;&#x91CF;.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_router">Router</h3>
+<h3 id="__router">&#x8DEF;&#x7531;&#x5668;&#xFF08;Router&#xFF09;</h3>
 <div class="paragraph">
-<p>A router is a device that knows how to forward data between independent networks. While a hub is a layer one device and a switch is a layer two device. A router operates at layer three, a network layer. Just like a switch can inspect Ethernet data to determine where to send things, a router can inspect IP data to determine where to send things. Routers store internal tables containing information about how to route traffic between lots of different networks all over the world.</p>
+<p>Hub &#x662F;&#x4E00;&#x5C42;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x4EA4;&#x6362;&#x673A;&#x662F;&#x4E8C;&#x5C42;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x4E8C;&#x8DEF;&#x7531;&#x5668;&#x662F;&#x4E09;&#x5C42;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x8DEF;&#x7531;&#x5668;&#x77E5;&#x9053;&#x5982;&#x4F55;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x7F51;&#x7EDC;&#x4E4B;&#x95F4;&#x53D1;&#x9001;&#x6570;&#x636E;&#x3002;&#x548C;&#x4EA4;&#x6362;&#x673A;&#x68C0;&#x6D4B; Ethernet &#x534F;&#x8BAE;&#x4E2D;&#x7684;&#x5C5E;&#x6027;&#x51B3;&#x5B9A;&#x5C06;&#x5305;&#x53D1;&#x9001;&#x5230;&#x4EC0;&#x4E48;&#x4F4D;&#x7F6E;&#x7C7B;&#x4F3C;&#xFF0C;&#x8DEF;&#x7531;&#x5668;&#x68C0;&#x6D4B; IP &#x534F;&#x8BAE;&#x4E2D;&#x7684;&#x5C5E;&#x6027;&#x51B3;&#x5B9A;&#x5C06;&#x5305;&#x53D1;&#x9001;&#x5230;&#x4EC0;&#x4E48;&#x4F4D;&#x7F6E;&#x3002;&#x8DEF;&#x7531;&#x5668;&#x5185;&#x90E8;&#x6709;&#x4E2A;&#x8DEF;&#x7531;&#x8868;&#xFF0C;&#x5305;&#x542B;&#x7740;&#x5C06;&#x6570;&#x636E;&#x8DEF;&#x7531;&#x5230;&#x4E16;&#x754C;&#x4E0A;&#x4E0D;&#x540C;&#x7F51;&#x7EDC;&#x7684;&#x4FE1;&#x606F;&#x3002;</p>
 </div>
 <div class="paragraph">
-<p>Routers share data with each other via a protocol known as BGP, or Border Gateway Protocol. That lets them learn about the most optimal paths to forward traffic. When you open a web browser and load a web page, the traffic between computers and the web servers could have traveled over dozens of different routers. The Internet is incredibly large and complicated. And routers are global guides for getting traffic to the right places.</p>
+<p>&#x4E0D;&#x540C;&#x7684;&#x8DEF;&#x7531;&#x5668;&#x4E4B;&#x95F4;&#x901A;&#x8FC7; BGP(Border Gateway Protocol) &#x534F;&#x8BAE;&#x5171;&#x4EAB;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x4F7F;&#x6570;&#x636E;&#x7684;&#x53D1;&#x9001;&#x57FA;&#x4E8E;&#x6700;&#x4F73;&#x8DEF;&#x5F84;&#x3002;&#x5F53;&#x60A8;&#x6253;&#x5F00;Web&#x6D4F;&#x89C8;&#x5668;&#x5E76;&#x52A0;&#x8F7D;&#x7F51;&#x9875;&#x65F6;&#xFF0C;&#x8BA1;&#x7B97;&#x673A;&#x548C;Web&#x670D;&#x52A1;&#x5668;&#x4E4B;&#x95F4;&#x7684;&#x6D41;&#x91CF;&#x53EF;&#x80FD;&#x4F1A;&#x7ECF;&#x8FC7;&#x6570;&#x5341;&#x4E2A;&#x4E0D;&#x540C;&#x7684;&#x8DEF;&#x7531;&#x5668;&#x3002; &#x4E92;&#x8054;&#x7F51;&#x5F02;&#x5E38;&#x5E9E;&#x5927;&#x4E14;&#x590D;&#x6742;&#x3002; &#x8DEF;&#x7531;&#x5668;&#x662F;&#x5C06;&#x6D41;&#x91CF;&#x5438;&#x5F15;&#x5230;&#x6B63;&#x786E;&#x4F4D;&#x7F6E;&#x7684;&#x5168;&#x7403;&#x6307;&#x5357;&#x3002;</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___2">&#x7269;&#x7406;&#x5C42;</h2>
+<h2 id="___4">&#x7269;&#x7406;&#x5C42;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_moving_bits_across_the_wire">Moving bits across the wire</h3>
+<h3 id="___5">&#x94FE;&#x8DEF;&#x4E0A;&#x7684;&#x5B57;&#x8282;&#x79FB;&#x52A8;</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>The physical layer is focus on moving ones and zeros from one end of the link to the next.</p>
+<p>&#x7269;&#x7406;&#x5C42;&#x8D1F;&#x8D23;&#x5C06;&#x5B57;&#x8282;&#x6D41;&#xFF08;0 &#x6216; 1 &#x7684;&#x5B57;&#x8282;&#x7801;&#x4E32;&#xFF09;&#x4ECE;&#x94FE;&#x8DEF;&#x7684;&#x4E00;&#x7AEF;&#x79FB;&#x52A8;&#x5230;&#x53E6;&#x4E00;&#x7AEF;</p>
 </li>
 <li>
-<p>The physical layer consists of devices and  means of transmitting bits across computer networks.</p>
+<p>&#x7269;&#x7406;&#x5C42;&#x662F;&#x7531;&#x4F20;&#x8F93;&#x5B57;&#x8282;&#x7801;&#x7684;&#x8BBE;&#x5907;&#x548C;&#x88C5;&#x7F6E;&#x7EC4;&#x6210;</p>
 </li>
 <li>
-<p>A bit is the smallest representation of data that a computer can understand. It&#x2019;s a one or a zero. These ones and zeros sends across networks at the lowest level are what make up the frames and packets of data that we&#x2019;ll learn about when we cover the other layers.</p>
+<p>&#x4E00;&#x4E2A;&#x6BD4;&#x7279;(bit)&#x4EE3;&#x8868;&#x8BA1;&#x7B97;&#x673A;&#x53EF;&#x4EE5;&#x660E;&#x767D;&#x7684;&#x6700;&#x5C0F;&#x6570;&#x636E;&#xFF0C;&#x5B83;&#x8981;&#x4E48;&#x662F; 1&#xFF0C;&#x8981;&#x4E48;&#x662F; 0&#x3002;&#x8FD9;&#x4E9B;&#x5728;&#x7F51;&#x7EDC;&#x94FE;&#x8DEF;&#x4E0A;&#x53D1;&#x9001;&#x7684; 0 &#x6216; 1 &#x7684;&#x5B57;&#x8282;&#x7801;&#x4E32;&#x662F;&#x7EC4;&#x6210;&#x6570;&#x636E;&#x5E27;&#x3001;&#x6570;&#x636E;&#x5305;&#x7684;&#x6700;&#x5E95;&#x5C42;&#x5143;&#x7D20;&#xFF0C;&#x8FD9;&#x4E9B;&#x5E27;&#x6216;&#x5305;&#x662F;&#x5176;&#x4ED6;&#x7F51;&#x7EDC;&#x5C42;&#x7684;&#x6982;&#x5FF5;&#x3002;</p>
 </li>
 <li>
-<p>Ones and zeros are sent across those network cables through a process called modulation. Modulation is a way of varying the voltage of this charge moving across the cable. When used for computer networks, this kind of modulation is more specifically known as line coding. It allows devices on either end of a link to understand that an electrical charge in a certain state is a zero, and in another state is a one.</p>
+<p>0 &#x6216; 1 &#x7684;&#x5B57;&#x8282;&#x7801;&#x4E32;&#x5728;&#x7F51;&#x7EDC;&#x4E0A;&#x53D1;&#x9001;&#x662F;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x53EB;&#x8C03;&#x8282;&#x5668;(Modulation)&#x7684;&#x7A0B;&#x5E8F;&#x63A7;&#x5236;&#xFF0C;&#x8C03;&#x8282;&#x5668;(Modulation)&#x662F;&#x4E00;&#x79CD;&#x6539;&#x53D8;&#x7535;&#x8377;&#x5728;&#x7535;&#x7F06;&#x4E0A;&#x79FB;&#x52A8;&#x7684;&#x7535;&#x538B;&#x7684;&#x65B9;&#x5F0F;&#x3002;&#x5F53;&#x7528;&#x4E8E;&#x8BA1;&#x7B97;&#x673A;&#x7F51;&#x7EDC;&#x65F6;&#xFF0C;&#x8FD9;&#x79CD;&#x8C03;&#x5236;&#x65B9;&#x5F0F;&#x66F4;&#x5177;&#x4F53;&#x5730;&#x79F0;&#x4E3A;&#x7EBF;&#x8DEF;&#x7F16;&#x7801;&#x3002;&#x5B83;&#x5141;&#x8BB8;&#x94FE;&#x8DEF;&#x4E24;&#x7AEF;&#x7684;&#x8BBE;&#x5907;&#x4E86;&#x89E3;&#x67D0;&#x79CD;&#x72B6;&#x6001;&#x4E0B;&#x7684;&#x7535;&#x8377;&#x4E3A; 0&#xFF0C;&#x800C;&#x53E6;&#x4E00;&#x79CD;&#x72B6;&#x6001;&#x4E0B;&#x7684;&#x7535;&#x8377;&#x4E3A; 1&#x3002;</p>
 </li>
 </ul>
 </div>
@@ -2061,14 +2186,14 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="_twisted_pair_cabling_and_duplexing">Twisted Pair Cabling and Duplexing</h3>
+<h3 id="__twisted_pair">&#x53CC;&#x7EDE;&#x7EBF;(Twisted Pair) &#x53CC;&#x5411;&#x4EA4;&#x6D41;</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>A standard cat six cable has eight wires consisting of four twisted pairs inside a single jacket.</p>
+<p>&#x4E00;&#x4E2A;&#x6807;&#x51C6;&#x7684; Cat 6 &#x7535;&#x7F06;&#x7531; 8 &#x6839;&#x94DC;&#x7EBF;&#xFF0C;4 &#x5BF9;&#x53CC;&#x7EDE;&#x7EBF;&#x7EC4;&#x6210;</p>
 </li>
 <li>
-<p>Duplex communication is the concept that information can flow in both directions across the cable.</p>
+<p>&#x53CC;&#x5411;&#x4EA4;&#x6D41;&#x6307;&#x7535;&#x7F06;&#x652F;&#x6301;&#x53CC;&#x5411;&#x4F20;&#x8F93; &#x4FE1;&#x606F;&#x3002;</p>
 </li>
 </ul>
 </div>
@@ -2076,52 +2201,86 @@
 <p><span class="image"><img src="img/cat5e-cat6.jpg" alt="cat5e cat6.jpg"></span></p>
 </div>
 <div class="paragraph">
-<p><a href="https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair" target="_blank">Ethernet over twisted pair</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair" target="_blank">&#x53CC;&#x7EDE;&#x7EBF;&#x4EE5;&#x592A;&#x7F51;</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_network_ports_and_patch_panels">Network Ports and Patch Panels</h3>
+<h3 id="___6">&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x548C;&#x914D;&#x7EBF;&#x67B6;</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>A network cable with an RJ-45 plug can connect to an RJ-45 network port. Network ports are generally directly attached to the devices that make up a computer network.</p>
+<p>&#x4E00;&#x6839;&#x7F51;&#x7EBF;&#x901A;&#x5E38;&#x901A;&#x8FC7;&#x4E00;&#x4E2A; RJ-45 &#x63A5;&#x5934;&#x8FDE;&#x63A5;&#x5230;&#x4E00;&#x4E2A; RJ-45 &#x7F51;&#x7EDC;&#x63A5;&#x53E3;. &#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x901A;&#x5E38;&#x4E0E;&#x7EC4;&#x6210;&#x8BA1;&#x7B97;&#x673A;&#x7F51;&#x7EDC;&#x7684;&#x8BBE;&#x5907;&#x76F4;&#x63A5;&#x8FDE;&#x63A5;&#xFF0C;&#x6216;&#x662F;&#x8BBE;&#x5907;&#x7684;&#x4E00;&#x4E2A;&#x90E8;&#x5206;&#xFF0C;&#x4F8B;&#x5982;&#x4EFB;&#x4F55;&#x4E00;&#x53F0;&#x8BA1;&#x7B97;&#x673A;&#x90FD;&#x4F1A;&#x81F3;&#x5C11;&#x6709;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x3002;</p>
 </li>
 <li>
-<p>Patch panel is a device containing many net ports but it does no other work. It&#x2019;s just a container for the endpoints of many runs of cable.</p>
+<p>&#x914D;&#x7EBF;&#x67B6;&#x662F;&#x4E00;&#x79CD;&#x5305;&#x542B;&#x8BB8;&#x591A;&#x7F51;&#x7EDC;&#x7AEF;&#x53E3;&#x7684;&#x8BBE;&#x5907;&#xFF0C;&#x4F46;&#x6CA1;&#x6709;&#x5176;&#x4ED6;&#x4F5C;&#x7528;&#xFF0C;&#x53EA;&#x662F;&#x5C06;&#x4E0D;&#x540C;&#x7F51;&#x7EDC;&#x7EBF;&#x7F06;&#x8FDE;&#x63A5;&#x5230;&#x4E00;&#x8D77;&#x3002;</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. <strong>&#x5E38;&#x89C1;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;</strong></caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x540D;&#x79F0;</th>
+<th class="tableblock halign-left valign-top">&#x56FE;&#x793A;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RJ-45 &#x63D2;&#x5934;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><span class="image"><img src="img/rj45.jpg" alt="rj45.jpg"></span></p>
-</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RJ-45 &#x7F51;&#x7EDC;&#x63A5;&#x53E3;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="image"><img src="img/rj45port.png" alt="rj45port.png"></span></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x914D;&#x7EBF;&#x67B6;(Patch Panel)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="image"><img src="img/patch_panel.png" alt="patch panel.png"></span></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___3">&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;</h2>
+<h2 id="___7">&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_ethernet_mac">Ethernet &#x548C; MAC &#x5730;&#x5740;</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Ethernet is most widely used protocol to send data across individual links.</p>
+<p>Ethernet &#x65F6;&#x76EE;&#x524D;&#x94FE;&#x8DEF;&#x5C42;&#x6700;&#x88AB;&#x5E7F;&#x6CDB;&#x4F7F;&#x7528;&#x7684;&#x534F;&#x8BAE;&#xFF0C;&#x7528;&#x6765;&#x5728;&#x5355;&#x4E2A;&#x94FE;&#x8DEF;&#x4E0A;&#x53D1;&#x9001;&#x6570;&#x636E;&#xFF0C;Ethernet &#x6700;&#x65E9;&#x5728; 1980 &#x5E74;&#x63D0;&#x51FA;&#xFF0C;1983 &#x6210;&#x4E3A;&#x6807;&#x51C6;&#xFF0C;&#x540E;&#x7EED;&#x53EA;&#x662F;&#x57FA;&#x4E8E;&#x5E26;&#x5BBD;&#x7684;&#x589E;&#x52A0;&#x76F8;&#x5E94;&#x8FDB;&#x884C;&#x8FC7;&#x4E00;&#x4E9B;&#x5FAE;&#x8C03;&#x3002;</p>
 </li>
 <li>
-<p>The data link layer is to essentially abstract away the need for any other layers to care about the physical layer and what hardware is in use.</p>
+<p>&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x5B9E;&#x8D28;&#x4E0A;&#x662F;&#x5BF9;&#x7269;&#x7406;&#x5C42;&#x7684;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#xFF0C;&#x4F7F;&#x5176;&#x4ED6;&#x5C42;&#x53EF;&#x4EE5;&#x4E0D;&#x7528;&#x8003;&#x8651;&#x7269;&#x7406;&#x5C42;&#x6240;&#x4F7F;&#x7528;&#x7684;&#x786C;&#x4EF6;&#x6216;&#x8BBE;&#x5907;&#xFF0C;&#x800C;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x53D1;&#x9001;&#x6570;&#x636E;&#x548C;&#x63A5;&#x53D7;&#x6570;&#x636E;&#x7684;&#x5DE5;&#x4F5C;&#xFF0C;&#x8FD9;&#x6837;&#x786E;&#x4FDD;&#x4E86;&#x4E0D;&#x7BA1;&#x7269;&#x7406;&#x5C42;&#x786C;&#x4EF6;&#x6216;&#x8BBE;&#x5907;&#x5982;&#x4F55;&#x53D8;&#x5316;&#xFF0C;&#x7F51;&#x7EDC;&#x5C42;&#x3001;&#x4F20;&#x8F93;&#x5C42;&#x3001;&#x5E94;&#x7528;&#x5C42;&#x90FD;&#x5728;&#x7528;&#x540C;&#x6837;&#x7684;&#x65B9;&#x5F0F;&#x5DE5;&#x4F5C;&#x3002;</p>
+</li>
+<li>
+<p>CSMA/CD(Carrier Sense Multiple Access With Collision Detection)* - CSMA/CD &#x7528;&#x4E8E;&#x786E;&#x5B9A;&#x901A;&#x4FE1;&#x901A;&#x9053;&#x4F55;&#x65F6;&#x7545;&#x901A;&#x4EE5;&#x53CA;&#x8BBE;&#x5907;&#x4F55;&#x65F6;&#x81EA;&#x7531;&#x4F20;&#x8F93;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x662F;&#x4E3A;&#x4E86;&#x907F;&#x514D;&#x51B2;&#x7A81;&#x57DF;&#x3002;CSMA/CD &#x7684;&#x5DE5;&#x4F5C;&#x539F;&#x7406;&#x5C31;&#x662F;&#x68C0;&#x6D4B;&#x5F53;&#x524D;&#x7F51;&#x6BB5;&#x4E0A;&#x662F;&#x5426;&#x6709;&#x6709;&#x6570;&#x636E;&#x4F20;&#x8F93;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#xFF0C;&#x5219;&#x53D1;&#x9001;&#x6570;&#x636E;&#xFF1B;&#x5982;&#x679C;&#x6709;&#xFF0C;&#x5219;&#x7B49;&#x5F85;&#x4E00;&#x4E2A;&#x968F;&#x673A;&#x7684;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#xFF0C;&#x7136;&#x540E;&#x5C1D;&#x8BD5;&#x518D;&#x6B21;&#x53D1;&#x9001;&#x6570;&#x636E;&#xFF0C;CSMA/CD &#x4F7F;&#x7528; MAC &#x5730;&#x5740;&#x6765;&#x786E;&#x8BA4;&#x76EE;&#x7684;&#x5730;&#x8282;&#x70B9;&#x3002;</p>
+</li>
+<li>
+<p>MAC(Media Access Control) &#x5730;&#x5740; - MAC &#x5730;&#x5740;&#x662F;&#x9644;&#x52A0;&#x5230;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x4E0A;&#x7684;&#x5168;&#x5C40;&#x552F;&#x4E00;&#x6807;&#x8BC6;&#x7B26;&#x3002;&#x5B83;&#x662F;&#x4E00;&#x4E2A; 48 &#x4F4D;&#x7684;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#x5B57;&#xFF0C;&#x7531;&#x516D;&#x7EC4;&#x4E8C;&#x4F4D;&#x7684;&#x5341;&#x516D;&#x8FDB;&#x5236;&#x6570;&#x5B57;&#x6784;&#x6210;&#xFF0C;&#x4F8B;&#x5982;&#xFF1A;<code>8:00:27:c3:0f:80</code>&#x3002;MAC &#x5730;&#x5740;&#x5206;&#x4E3A;&#x4E24;&#x90E8;&#x5206;, &#x524D;&#x4E09;&#x7EC4;&#x5341;&#x516D;&#x8FDB;&#x5236;&#x6570;&#x662F;&#x7EC4;&#x7EC7;&#x552F;&#x4E00;&#x6807;&#x8BC6;&#xFF0C;&#x662F;&#x7531; IEEE &#x7EC4;&#x7EC7;&#x5206;&#x914D;&#x7ED9;&#x5404;&#x4E2A;&#x786C;&#x4EF6;&#x5236;&#x9020;&#x5546;&#xFF1B;&#x540E;&#x4E09;&#x4F4D;&#x53EF;&#x4EE5;&#x6309;&#x5236;&#x9020;&#x5546;&#x5E0C;&#x671B;&#x7684;&#x65B9;&#x5F0F;&#x4EFB;&#x610F;&#x5206;&#x914D;&#xFF0C;&#x5206;&#x914D;&#x7684;&#x6761;&#x4EF6;&#x662F;&#x786E;&#x4FDD;&#x6BCF;&#x4E2A;&#x53EF;&#x80FD;&#x7684;&#x5730;&#x5740;&#x53EA;&#x5206;&#x914D;&#x4E00;&#x6B21;&#x3002;</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>CSMA/CD(carrier sense multiple access with collision detection)</strong> - CSMA/CD is used to determine when the communications channels are clear and when the device is free to transmit data, this is for avoiding collision domain.</p>
-</div>
-<div class="paragraph">
-<p><strong>MAC address</strong> - A MAC address is a globally unique identifier attached to an individual network interface. It&#x2019;s a 48-bit number normally represented by six groupings of two hexadecimal numbers.</p>
+<p><span class="image"><img src="img/mac_addr-strcture.png" alt="mac addr strcture.png"></span></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_unicast_multicast_broadcast">Unicast, Multicast, Broadcast</h3>
+<h3 id="___8">&#x5355;&#x64AD;, &#x591A;&#x64AD;, &#x5E7F;&#x64AD;</h3>
 <table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. <strong>&#x5355;&#x64AD;, &#x591A;&#x64AD;, &#x5E7F;&#x64AD;</strong></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2129,31 +2288,31 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">TYPES</th>
-<th class="tableblock halign-left valign-top">MODES</th>
-<th class="tableblock halign-left valign-top">DESC</th>
+<th class="tableblock halign-left valign-top">&#x7C7B;&#x578B;</th>
+<th class="tableblock halign-left valign-top">&#x6A21;&#x5F0F;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unicast</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One-to-One</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A unicast transmission is always meant for just one receiving address</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unicast&#xFF08;&#x5355;&#x64AD;&#xFF09;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E00;&#x5BF9;&#x4E00;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unicast &#x4F20;&#x8F93;&#x59CB;&#x7EC8;&#x610F;&#x5473;&#x7740;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x63A5;&#x6536;&#x5730;&#x5740;&#x3002;MAC &#x5730;&#x5740;&#x4E2D;&#x7B2C;&#x4E00;&#x7EC4;&#x6570;&#x5B57;&#x7684;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x4E8C;&#x8FDB;&#x4F4D;&#x4E3A; 0&#xFF0C;&#x5219; Ethernet &#x5E27;&#x53D1;&#x9001;&#x5230;&#x4E00;&#x4E2A;&#x5730;&#x5740;&#x3002;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multicast</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One-to-Many</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A multicast frame is similarly set to all devices on the local network signal.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multicast&#xFF08;&#x591A;&#x64AD;&#xFF09;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E00;&#x5BF9;&#x591A;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multicast &#x4F20;&#x8F93;&#x53D1;&#x9001;&#x5230;&#x591A;&#x4E2A;&#x7269;&#x7406;&#x5730;&#x5740;&#x3002;MAC &#x5730;&#x5740;&#x4E2D;&#x7B2C;&#x4E00;&#x7EC4;&#x6570;&#x5B57;&#x7684;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x4E8C;&#x8FDB;&#x4F4D;&#x4E3A; 1&#xFF0C;&#x5219; Ethernet &#x5E27;&#x53D1;&#x9001;&#x5230;&#x591A;&#x4E2A;&#x5730;&#x5740;&#x3002;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Broadcast</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One-to-All</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An Ethernet broadcast is sent to every single device on a LAN.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Broadcast&#xFF08;&#x5E7F;&#x64AD;&#xFF09;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E00;&#x5BF9;&#x6240;&#x6709;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ethernet &#x5E7F;&#x64AD;&#x53D1;&#x9001;&#x5230; LAN &#x4E2D;&#x7684;&#x6240;&#x6709;&#x5730;&#x5740;. MAC &#x5730;&#x5740;&#x7684;&#x6240;&#x6709;&#x4F4D;&#x90FD;&#x4E3A; f&#x3002;</p></td>
 </tr>
 </tbody>
 </table>
 <div class="listingblock">
-<div class="title"><strong>&#x793A;&#x4F8B; - Unicast MAC Address</strong></div>
+<div class="title"><strong>&#x793A;&#x4F8B; - Unicast MAC &#x5730;&#x5740;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">16:91:99:24:68:c9
 b6:fe:ee:92:78:42
@@ -2161,7 +2320,7 @@ fa:4e:1b:7f:27:7f</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x793A;&#x4F8B; - Multicast MAC Address</strong></div>
+<div class="title"><strong>&#x793A;&#x4F8B; - Multicast MAC &#x5730;&#x5740;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">6b:b7:22:a4:a4:cb
 97:20:82:57:fa:e5
@@ -2169,16 +2328,16 @@ a7:50:c1:30:ca:c1</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>&#x793A;&#x4F8B; - Broadcast MAC Address</strong></div>
+<div class="title"><strong>&#x793A;&#x4F8B; - Broadcast MAC &#x5730;&#x5740;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">ff:ff:ff:ff:ff:ff</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ethernet_frame">Ethernet Frame</h3>
+<h3 id="__ethernet">&#x4EE5;&#x592A;&#x7F51;(Ethernet)&#x5E27;&#x7ED3;&#x6784;</h3>
 <div class="paragraph">
-<p>An Ethernet frame is a highly structured collection of information presented in a specific order. This way network interfaces at the physical layer can convert a string of bits, travelling across a link into meaningful data or vice versa.</p>
+<p>&#x4EE5;&#x592A;&#x7F51;(Ethernet)&#x5E27;&#x662F;&#x6309;&#x7279;&#x5B9A;&#x987A;&#x5E8F;&#x663E;&#x793A;&#x7684;&#x9AD8;&#x5EA6;&#x7ED3;&#x6784;&#x5316;&#x7684;&#x4FE1;&#x606F;&#x96C6;&#x5408;&#x3002;&#x8FD9;&#x6837;&#xFF0C;&#x53EF;&#x4EE5;&#x786E;&#x4FDD;&#x5C06;&#x7269;&#x7406;&#x5C42;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x5C06;&#x4F20;&#x8F93;&#x7684;&#x4E8C;&#x8FDB;&#x5236;&#x4E32;&#x8F6C;&#x5316;&#x4E3A;&#x6709;&#x610F;&#x4E49;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x6216;&#x5C06;&#x6570;&#x636E;&#x8F6C;&#x5316;&#x4E3A;&#x4E8C;&#x8FDB;&#x5236;&#x4E32;&#x3002;</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/EthernetPacket.png" alt="EthernetPacket.png"></span></p>
@@ -2189,16 +2348,16 @@ a7:50:c1:30:ca:c1</code></pre>
 <p>The first part of an Ethernet frame is known as the preamble. A preamble is 8 bytes or 64 bits long and can itself be split into two sections. The first seven bytes are a series of alternating ones and zeros. These act partially as a buffer between frames and can also be used by the network interfaces to synchronize internal clocks they use, to regulate the speed at which they send data. This last byte in the preamble is known as the SFD or start frame delimiter. This signals to a receiving device that the preamble is over and that the actual frame contents will now follow.</p>
 </li>
 <li>
-<p>Destination MAC address, which is the hardware address of the intended recipient.</p>
+<p><strong>Destination MAC Address</strong> - &#x76EE;&#x7684;&#x5730;&#x63A5;&#x6536;&#x5730;&#x5740;&#x786C;&#x4EF6;&#x7684;&#x7269;&#x7406;&#x5730;&#x5740;&#xFF1B;</p>
 </li>
 <li>
-<p>Source MAC address, where the frame originated from.</p>
+<p><strong>Source MAC Address</strong> - &#x4EE5;&#x592A;&#x7F51;&#x5E27;&#x53D1;&#x9001;&#x7AEF;&#x7684;&#x7269;&#x7406;&#x5730;&#x5740;&#xFF1B;</p>
 </li>
 <li>
-<p>EtherType field, which is 16 bits long and used to describe the protocol of the contents of the frame.</p>
+<p><strong>Type Field</strong> - 16 &#x4E8C;&#x8FDB;&#x5236;&#x957F;&#x5EA6;&#xFF0C;&#x4EE5;&#x592A;&#x7F51;&#x7C7B;&#x578B;&#x6807;&#x8BC6;&#x5B57;&#x6BB5;&#xFF0C;&#x5305;&#x62EC;&#x5E27;&#x7684;&#x5185;&#x5BB9;&#xFF1B;</p>
 </li>
 <li>
-<p>Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn&#x2019;t a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long.</p>
+<p><strong>Payload</strong> - Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn&#x2019;t a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long.</p>
 </li>
 <li>
 <p>CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.</p>
@@ -2209,93 +2368,64 @@ a7:50:c1:30:ca:c1</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___4">&#x7F51;&#x7EDC;&#x5C42;</h2>
+<h2 id="___9">&#x7F51;&#x7EDC;&#x5C42;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_ip">IP &#x5730;&#x5740;</h3>
+<h3 id="_ipv4">IPv4 &#x5730;&#x5740;</h3>
 <div class="paragraph">
-<p>IP addresses are 32-bit long numbers made up of 4 octets, and each octet is normally described in decimal numbers.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ip-address.png" alt="ip address.png"></span></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_ip_datagrams_and_encapsulation">IP Datagrams and Encapsulation</h3>
-<div class="paragraph">
-<p>IP datagram is a highly structured series of fields that are strictly defined. The two primary sections of an IP datagram are the header and the payload.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ip-datagrams.png" alt="ip datagrams.png"></span></p>
+<p><span class="image"><img src="img/ipv4address-netmask.png" alt="ipv4address-netmask.png"></span></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Version</strong> - The very first field is four bits, and indicates what version of Internet protocol is being used. The most common version of IP is version four or IPv4.</p>
+<p>IPv4 &#x5730;&#x5740;&#x957F;&#x5EA6;&#x4E3A; 32 &#x4E3A;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#xFF0C;&#x7531; 4 &#x7EC4;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7EC4;&#x6210;&#xFF0C;4 &#x7EC4;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x4E4B;&#x95F4;&#x901A;&#x8FC7;&#x5706;&#x70B9;&#x8FDE;&#x63A5;</p>
 </li>
 <li>
-<p><strong>Header Length</strong> - Header Length field  is also a four bit field that declares how long the entire header is. This is almost always 20 bytes in length when dealing with IPv4. In fact, 20 bytes is the minimum length of an IP header. You couldn&#x2019;t fit all the data you need for a properly formatted IP header in any less space.</p>
+<p>IPv4 &#x5730;&#x5740;&#x6709;&#x4E24;&#x90E8;&#x7EC4;&#x6210;&#xFF1A;&#x7F51;&#x7EDC;&#x90E8;&#x5206;(Network)&#x548C;&#x4E3B;&#x673A;&#x90E8;&#x5206;(Host)&#xFF0C;&#x540C;&#x4E00;&#x5B50;&#x7F51;&#x7684;&#x6240;&#x6709;&#x4E3B;&#x673A;&#x53EF;&#x4EE5;&#x4E0D;&#x7ECF;&#x8FC7;&#x8DEF;&#x7531;&#x800C;&#x8FDE;&#x901A;&#x5F7C;&#x6B64;&#xFF0C;&#x540C;&#x4E00;&#x5B50;&#x7F51;&#x4E2D;&#x4E3B;&#x673A;&#x90E8;&#x5206;&#x552F;&#x4E00;&#x3002;</p>
 </li>
 <li>
-<p><strong>Service Type</strong> - Service Type field is eight bits can be used to specify details about quality of service or QoS technologies. The important takeaway about QoS is that there are services that allow routers to make decisions about which IP datagram may be more important than others.</p>
+<p>&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x7528;&#x6765;&#x533A;&#x5206; Network &#x548C; Host&#xFF0C;&#x5982;&#x4E0A;&#x56FE;&#xFF0C;10.66.192.36 &#x5B50;&#x7F51;&#x63A9;&#x7801;&#x4E3A; 255.255.0.0&#xFF0C;&#x5373;&#x524D;&#x7F00;&#x662F; 16&#xFF0C;&#x5219;&#x4E3A; 10.66 &#x7F51;&#x6BB5;&#x3002;</p>
 </li>
 <li>
-<p><strong>Total Length</strong> - Total Length field is a 16 bits filed, It&#x2019;s used for exactly what it sounds like to indicate the total length of the IP datagram it&#x2019;s attached to. The maximum size of a single datagram is the largest number you can represent with 16 bits, which is 65,535.</p>
-</li>
-<li>
-<p><strong>Identification</strong> - Identification field, is a 16-bit number that&#x2019;s used to group messages together.  If the total amount of data that needs to be sent is larger than what can fit in a single datagram, the IP layer needs to split this data up into many individual packets. When this happens, the identification field is used so that the receiving end understands that every packet with the same value in that field is part of the same transmission.</p>
-</li>
-<li>
-<p><strong>Flag</strong> - The flag field is used to indicate if a datagram is allowed to be fragmented, or to indicate that the datagram has already been fragmented.</p>
-</li>
-<li>
-<p><strong>Fragmentation</strong> - which is the process of taking a single IP datagram and splitting it up into several smaller datagrams.</p>
-</li>
-<li>
-<p><strong>TTL</strong> - TTL field is an 8-bit field that indicates how many router hops a datagram can traverse before it&#x2019;s thrown away.</p>
-</li>
-<li>
-<p><strong>Protocol</strong> - Protocol field is another 8-bit field that contains data about what transport layer protocol is being used. The most common transport layer protocols are TCP and UDP.</p>
-</li>
-<li>
-<p><strong>Header Checksum</strong> - Header checksum field is a checksum of the contents of the entire IP datagram header. It functions very much like the Ethernet checksum field we discussed in the last module. Since the TTL field has to be recomputed at every router that a datagram touches, the checksum field necessarily changes, too.</p>
-</li>
-<li>
-<p><strong>Source IP address</strong></p>
-</li>
-<li>
-<p><strong>Destination IP address</strong></p>
-</li>
-<li>
-<p><strong>IP options</strong> - IP options field  is an optional field and is used to set special characteristics for datagrams primarily used for testing purposes.</p>
-</li>
-<li>
-<p><strong>Padding</strong> - The IP options field is usually followed by a padding field. Since the IP options field is both optional and variable in length, the padding field is just a series of zeros used to ensure the header is the correct total size.</p>
+<p>&#x5E7F;&#x64AD;&#x5730;&#x5740;&#xFF1A;&#x5F53;&#x4E3B;&#x673A;&#x90E8;&#x5206;&#x6240;&#x6709;&#x4E3A;&#x4F4D;&#x7F6E;&#x4E3A;1&#x662F;&#x5C31;&#x4E3A;&#x5E7F;&#x64AD;&#x5730;&#x5740;&#xFF0C;&#x5982;&#x4E0A;&#x4E24;&#x4E2A;&#x5730;&#x5740;&#x7684;&#x5E7F;&#x64AD;&#x5730;&#x5740;&#x5206;&#x522B;&#x4E3A; 192.168.1.255&#xFF0C;10.66.255.255.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>IP datagram is the data payload section in Ethernet frame.</strong></p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ip-datagrams-encapsulation.png" alt="ip datagrams encapsulation.png"></span></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_ip_address_classes">IP Address Classes</h3>
-<div class="paragraph">
-<p>IP addresses can be split into two sections, the network ID, and the host ID.</p>
-</div>
 <div class="listingblock">
-<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;IBM IP &#x5730;&#x5740;&#xFF0C;9 &#x662F; network ID&#xFF0C;100.100.100 &#x662F; host ID</strong></div>
+<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;IBM IP &#x5730;&#x5740;&#xFF0C;9 &#x662F;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;100.100.100 &#x662F;&#x4E3B;&#x673A;&#x5730;&#x5740;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">9.100.100.100</code></pre>
 </div>
 </div>
+<div class="sect3">
+<h4 id="___10">&#x4E8C;&#x8FDB;&#x5236;&#x548C;&#x5341;&#x8FDB;&#x5236;&#x8F6C;&#x6362;</h4>
 <div class="paragraph">
-<p>The address class system is a way of defining how the global IP address space is split up. There are three primary types of address classes&#xFF1A;</p>
+<p><span class="image"><img src="img/bits2decimal.png" alt="bits2decimal.png"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ipv4_2">IPv4 &#x5730;&#x5740;&#x5206;&#x7C7B;</h4>
+<div class="paragraph">
+<p>IPv4 &#x5730;&#x5740;&#x88AB;&#x5206;&#x4E3A;&#x4E94;&#x4E2A;&#x7C7B;&#x578B;&#xFF08;&#x4E3A;&#x4E86;&#x66F4;&#x597D;&#x7684;&#x7BA1;&#x7406;&#x4E92;&#x8054;&#x7F51;&#x7F51;&#x7EDC;&#xFF09;&#xFF1A;A&#x3001;B&#x3001;C&#x3001;D&#x3001;E&#xFF0C;&#x5730;&#x5740;&#x5206;&#x7C7B;&#x662F;&#x4ECE;&#x4E24;&#x4E2A;&#x7EF4;&#x5EA6;&#x8FDB;&#x884C;&#xFF08;&#x6216;&#x4F9D;&#x8D56;&#x4E24;&#x4E2A;&#x539F;&#x5219;&#xFF09;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x7B2C;&#x4E00;&#x7EC4;&#x6570;&#x5B57;&#x7684;&#x8303;&#x56F4;&#xFF0C;0 - 127 &#x4E3A; A &#x7C7B;&#x5730;&#x5740;&#xFF0C;128 - 191 &#x4E3A; B &#x7C7B;&#x5730;&#x5740;&#xFF0C;192 - 223 &#x4E3A; C &#x7C7B;&#x5730;&#x5740;&#xFF0C;224 - 239 &#x4E3A; D &#x7C7B;&#x5730;&#x5740;&#xFF0C;240 - 255 &#x4E3A; E &#x7C7B;&#x5730;&#x5740;</p>
+</li>
+<li>
+<p>&#x7F51;&#x7EDC;&#x90E8;&#x5206;&#x548C;&#x4E3B;&#x673A;&#x90E8;&#x5206;&#x7684;&#x5212;&#x5206;&#xFF0C;A &#x7C7B;&#x5730;&#x5740;&#x53EA;&#x6709;&#x7B2C;&#x4E00;&#x7EC4;&#x4E3A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x9762;&#x4E09;&#x7EC4;&#x4E3A;&#x4E3B;&#x673A;&#x5730;&#x5740;&#xFF1B;B &#x7C7B;&#x5730;&#x5740;&#x524D;&#x4E24;&#x7EC4;&#x4E3A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x4E24;&#x7EC4;&#x4E3A;&#x4E3B;&#x673A;&#x5730;&#x5740;&#xFF1B;C &#x7C7B;&#x5730;&#x5740;&#x524D;&#x4E09;&#x7EC4;&#x4E3A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x4E00;&#x7EC4;&#x4E3A;&#x4E3B;&#x673A;&#x5730;&#x5740;</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>&#x5BF9;&#x6BD4; IPv4 &#x5730;&#x5740;&#x7684;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#x548C;&#x5341;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#x53EF;&#x4EE5;&#x5E2E;&#x52A9;&#x7406;&#x89E3; IPv4 &#x5730;&#x5740;&#x5206;&#x7C7B;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ipv4-classing.png" alt="ipv4 classing.png"></span></p>
 </div>
 <table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. <strong>IPv4 &#x5730;&#x5740;&#x5206;&#x7C7B;</strong></caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -2304,47 +2434,285 @@ a7:50:c1:30:ca:c1</code></pre>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">&#x7C7B;&#x578B;</th>
 <th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
 <th class="tableblock halign-left valign-top">&#x8303;&#x56F4;</th>
-<th class="tableblock halign-left valign-top">Max Hosts</th>
+<th class="tableblock halign-left valign-top">&#x6700;&#x5927;&#x4E3B;&#x673A;&#x6570;</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class A</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the first octet is used for the network ID, and the last three are used for the host ID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0 - 126</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7B2C;&#x4E00;&#x4F4D;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7528;&#x6765;&#x505A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x9762;&#x4E09;&#x4F4D;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7528;&#x6765;&#x505A;&#x4E3B;&#x673A;&#x5730;&#x5740;&#xFF1B;&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x7B2C;&#x4E00;&#x4F4D;&#x4EE5; 0 &#x5F00;&#x5934;&#xFF0C;&#x5373;&#x4E8C;&#x8FDB;&#x5236;&#x8303;&#x56F4;&#x4E3A; 00000000 - 01111111</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 - 127</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">16 M</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class B</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the first two octets are used for the network ID, and the second two, are used for the host ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x524D;&#x4E24;&#x4F4D;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7528;&#x6765;&#x505A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x9762;&#x4E8C;&#x4F4D;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7528;&#x6765;&#x505A;&#x4E3B;&#x673A;&#x5730;&#x5740;&#xFF1B;&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x7B2C;&#x4E00;&#x4F4D;&#x4EE5; 10 &#x5F00;&#x5934;&#xFF0C;&#x5373;&#x4E8C;&#x8FDB;&#x5236;&#x8303;&#x56F4;&#x4E3A; 10000000 - 10111111</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">128 - 191</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">64000</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class C</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the first three octets are used for the network ID, and only the final octet is used for the host ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x524D;&#x4E09;&#x4F4D;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7528;&#x6765;&#x505A;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x9762;&#x4E00;&#x4F4D;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7528;&#x6765;&#x505A;&#x4E3B;&#x673A;&#x5730;&#x5740;&#xFF1B;&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x7B2C;&#x4E00;&#x4F4D;&#x4EE5; 110 &#x5F00;&#x5934;&#xFF0C;&#x5373;&#x4E8C;&#x8FDB;&#x5236;&#x8303;&#x56F4; 11000000 -  11011111</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">192 - 223</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">254</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Class D</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">always begin with the bits 1110, and are used for multicasting, which is how a single IP datagram can be sent to an entire network at once.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x7B2C;&#x4E00;&#x4F4D;&#x4EE5; 1110 &#x5F00;&#x5934;&#xFF0C;&#x7528;&#x4E8E;&#x591A;&#x64AD;&#x901A;&#x4FE1;&#xFF0C;&#x5373;&#x4E00;&#x4E2A; IP&#x6570;&#x636E;&#x62A5;&#x6587;&#x53EF;&#x4EE5;&#x53D1;&#x9001;&#x5230; &#x591A;&#x4E2A;&#x5730;&#x5740;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">224 - 239</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Class E</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x7B2C;&#x4E00;&#x4F4D;&#x4EE5; 1111 &#x5F00;&#x5934;&#xFF0C;&#x9884;&#x4FDD;&#x7559;&#x5206;&#x7C7B;&#xFF0C;&#x4F9B;&#x4EE5;&#x540E;&#x4F7F;&#x7528;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">240 - 255</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p><span class="image"><img src="img/ip-address-classes.png" alt="ip address classes.png"></span></p>
+<p>&#x53C2;&#x7167; <a href="https://zh.wikipedia.org/wiki/&#x5206;&#x7C7B;&#x7F51;&#x7EDC;" target="_blank">&#x1F517;</a>&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x5173;&#x4E8E;&#x7F51;&#x7EDC;&#x5206;&#x7C7B;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___11">&#x5B50;&#x7F51;</h4>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x4E00;&#x4E2A; IPv4 &#x5730;&#x5740; &#x5C5E;&#x4E8E; A &#x7C7B;&#x6216; B&#x7C7B;&#x5730;&#x5740;&#xFF0C;&#x5219;&#x53EF;&#x80FD;&#x5B58;&#x5728;&#x7684;&#x6700;&#x5927;&#x4E3B;&#x673A;&#x8F83;&#x591A;&#xFF0C;&#x8FD9;&#x5C31;&#x9700;&#x8981;&#x5B50;&#x7F51;&#x6765;&#x8FDB;&#x4E00;&#x6B65;&#x5206;&#x7EC4;&#x6210;&#x8F83;&#x5C0F;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;&#x8FD9;&#x5C31;&#x53EB;&#x505A;&#x5B50;&#x7F51;&#x3002;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___12">&#x5B50;&#x7F51;&#x63A9;&#x7801;</h4>
+<div class="paragraph">
+<p>&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x957F;&#x5EA6;&#x4E5F;&#x4E3A; 32 &#x4F4D;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#xFF0C;&#x901A;&#x5E38;&#x7531; 4 &#x7EC4;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x7EC4;&#x6210;&#xFF0C;4 &#x7EC4;&#x5341;&#x8FDB;&#x5236;&#x6570;&#x4E4B;&#x95F4;&#x901A;&#x8FC7;&#x5706;&#x70B9;&#x8FDE;&#x63A5;&#xFF0C;&#x4E8C;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x7531;&#x8FDE;&#x7EED;&#x7684; 1 &#x548C; &#x8FDE;&#x7EED;&#x7684; 0 &#x6784;&#x6210;&#xFF0C;&#x901A;&#x5E38;&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x7531;&#x5341;&#x8FDB;&#x5236;&#x8868;&#x8FF0;&#xFF0C;&#x4F8B;&#x5982;&#x4E0B;&#x8868;&#x4E3A;&#x4E00;&#x4E9B;&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x4E8C;&#x8FDB;&#x5236;&#x548C;&#x5341;&#x8FDB;&#x5236;&#x793A;&#x4F8B;&#xFF1A;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 4. <strong>&#x5B50;&#x7F51;&#x63A9;&#x7801;</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x4E8C;&#x8FDB;&#x5236;</th>
+<th class="tableblock halign-left valign-top">&#x5341;&#x8FDB;&#x5236;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111111.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.00000000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.00000000.00000000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.0.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111110.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.254.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111100.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.252.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.248.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11110000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.240</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x793A;&#x4F8B;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ip-subnetmask.png" alt="ip subnetmask.png"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cidr_classless_inter_domain_routing">CIDR(classless inter-domain routing)</h4>
+<div class="paragraph">
+<p>CIDR &#x662F;&#x63CF;&#x8FF0; IP &#x5730;&#x5740;&#x7684;&#x4E00;&#x79CD;&#x66F4;&#x52A0;&#x7075;&#x6D3B;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x4EE5;&#x659C;&#x6760; + &#x6570;&#x5B57;&#x6765;&#x8868;&#x793A;&#x63A9;&#x7801;&#x957F;&#x5EA6;&#xFF0C;&#x8FD9;&#x6837;&#x5BF9;&#x5B50;&#x7F51;&#x7684;&#x5212;&#x5206;&#x66F4;&#x52A0;&#x6613;&#x8BFB;&#x3002;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 5. <strong>CIRD</strong></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x4E8C;&#x8FDB;&#x5236;</th>
+<th class="tableblock halign-left valign-top">&#x5341;&#x8FDB;&#x5236;</th>
+<th class="tableblock halign-left valign-top">CIDR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111111.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/24</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.00000000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.00000000.00000000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.0.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111110.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.254.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/23</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111100.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.252.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/22</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111000.00000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.248.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/21</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ipv4_3">IPv4 &#x6570;&#x636E;&#x62A5;&#x6587;&#x7ED3;&#x6784;</h3>
+<div class="paragraph">
+<p>IPv4 &#x6570;&#x636E;&#x62A5;&#x6587;&#x662F;&#x7531;&#x4E00;&#x7CFB;&#x5217;&#x9AD8;&#x5EA6;&#x7ED3;&#x6784;&#x5316;&#x7684;&#x5B57;&#x6BB5;&#x4E25;&#x683C;&#x5B9A;&#x4E49;&#xFF0C;IP &#x6570;&#x636E;&#x4E24;&#x4E2A;&#x4E3B;&#x8981;&#x90E8;&#x5206;&#x662F; header &#x548C; payload&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ip-datagrams.png" alt="ip datagrams.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Version</strong> - &#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BB5;&#x957F;&#x5EA6;&#x4E3A; 4 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x4EE3;&#x8868;&#x7740; IP &#x534F;&#x8BAE;&#x7684;&#x7248;&#x672C;&#x3002;&#x5E38;&#x89C1;&#x7684; IP&#x534F;&#x8BAE;&#x7248;&#x672C;&#x662F; 4&#xFF0C;&#x5373; IPv4&#x3002;</p>
+</li>
+<li>
+<p><strong>Header Length</strong> - Header Length &#x5B57;&#x6BB5;&#x957F;&#x5EA6;&#x4E3A; 4 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x4EE3;&#x8868;&#x7740;&#x6574;&#x4E2A; header &#x7684;&#x957F;&#x5EA6;&#x3002;&#x5982;&#x679C;&#x662F; IPv4&#xFF0C;&#x5219; Header &#x7684;&#x957F;&#x5EA6;&#x6C38;&#x8FDC;&#x90FD;&#x662F; 20&#xFF0C;&#x4E8B;&#x5B9E;&#x4E0A;&#xFF0C;20 &#x4E2A;&#x5B57;&#x8282;&#x662F; IP header &#x7684;&#x6700;&#x5C0F;&#x957F;&#x5EA6;&#xFF0C;&#x4F60;&#x4E0D;&#x80FD;&#x5728;&#x5C0F;&#x4E8E; 20 &#x81EA;&#x5DF1;&#x7684;&#x7A7A;&#x95F4;&#x91CC;&#x5408;&#x9002;&#x7684;&#x63CF;&#x8FF0;&#x4E00;&#x4E2A; IP Header&#x3002;</p>
+</li>
+<li>
+<p><strong>Service Type</strong> - Service Type &#x5B57;&#x6BB5;&#x957F;&#x5EA6;&#x4E3A; 8 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x7528;&#x6765;&#x6307;&#x5B9A; QoS &#x6280;&#x672F;&#x7684;&#x8BE6;&#x7EC6;&#x60C5;&#x51B5;&#x3002;QoS &#x7684;&#x4F5C;&#x7528;&#x662F;&#x5141;&#x8BB8;&#x8DEF;&#x7531;&#x5668;&#x4F5C;&#x51FA;&#x51B3;&#x7B56;&#xFF0C;&#x5728;&#x4E00;&#x7CFB;&#x5217; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x4E2D;&#xFF0C;&#x9009;&#x62E9;&#x51FA;&#x6700;&#x4E3A;&#x91CD;&#x8981;&#x7684;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x62A5;&#x6587;&#x3002;</p>
+</li>
+<li>
+<p><strong>Total Length</strong> - Total Length &#x5B57;&#x6BB5;&#x957F;&#x5EA6;&#x4E3A; 16 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x7528;&#x6765;&#x8868;&#x793A; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x7684;&#x6574;&#x4F53;&#x957F;&#x5EA6;&#x3002;&#x5355;&#x4E2A;&#x6570;&#x636E;&#x62A5;&#x6587;&#x7684;&#x6700;&#x5927;&#x957F;&#x5EA6;&#x4E3A; 16 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#x90FD;&#x4E3A; 1&#xFF0C;&#x5373;&#x4E3A; 65,535&#x3002;</p>
+</li>
+<li>
+<p><strong>Identification</strong> - Identification &#x5B57;&#x6BB5;&#x957F;&#x5EA6;&#x4E3A; 16 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x7528;&#x6765;&#x5C06;&#x6D88;&#x606F;&#x5206;&#x7EC4;&#x5728;&#x4E00;&#x8D77;&#xFF0C;&#x5F53;&#x8981;&#x53D1;&#x9001;&#x7684;&#x6570;&#x636E;&#x5927;&#x4E8E;&#x5355;&#x4E2A;&#x6570;&#x636E;&#x62A5;&#x6587;&#x5141;&#x8BB8;&#x7684;&#x6700;&#x5927;&#x503C;&#x65F6;&#xFF0C;&#x5219; IP &#x5C42;&#x9700;&#x8981;&#x5C06;&#x539F;&#x59CB;&#x7684;&#x5927;&#x7684;&#x6570;&#x636E;&#x5305;&#x5206;&#x5272;&#x6210;&#x51E0;&#x4E2A;&#x5C0F;&#x7684;&#x6570;&#x636E;&#x5305;&#xFF0C;&#x5728;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#x4E0B; Identification &#x5B57;&#x6BB5;&#x7528;&#x6765;&#x88AB;&#x63A5;&#x6536;&#x7AEF;&#x6807;&#x8BC6;&#x5206;&#x5272;&#x540E;&#x7684;&#x6570;&#x636E;&#x5305;&#x5C5E;&#x4E8E;&#x540C;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5305;&#x3002;</p>
+</li>
+<li>
+<p><strong>Flag</strong> - Flag &#x5B57;&#x6BB5;&#x7528;&#x6765;&#x6807;&#x8BC6;&#x6570;&#x636E;&#x62A5;&#x6587;&#x662F;&#x5426;&#x5141;&#x8BB8;&#x5206;&#x6BB5;&#xFF0C;&#x6216;&#x8005;&#x6807;&#x8BC6;&#x6570;&#x636E;&#x62A5;&#x6587;&#x5DF2;&#x7ECF;&#x5206;&#x6BB5;&#x3002;</p>
+</li>
+<li>
+<p><strong>Fragmentation</strong> - &#x662F;&#x5C06;&#x4E00;&#x4E2A;&#x5927;&#x7684; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x5206;&#x5272;&#x6210;&#x591A;&#x4E2A;&#x5C0F;&#x7684;&#x6570;&#x636E;&#x62A5;&#x6587;&#x7684;&#x8FDB;&#x7A0B;&#x3002;</p>
+</li>
+<li>
+<p><strong>TTL</strong> - TTL &#x5B57;&#x6BB5;&#x7684;&#x957F;&#x5EA6;&#x4E3A; 8 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x62A5;&#x6587;&#x5728;&#x7ECF;&#x8FC7;&#x591A;&#x5C11;&#x4E2A;&#x8DEF;&#x7531;&#x8DF3;&#x8F6C;&#x540E;&#x4E22;&#x5F03;&#x3002;</p>
+</li>
+<li>
+<p><strong>Protocol</strong> - Protocol &#x5B57;&#x6BB5;&#x7684;&#x957F;&#x5EA6;&#x4E3A; 8 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x5305;&#x542B;&#x6570;&#x636E;&#x6807;&#x8BC6;&#x90A3;&#x4E2A;&#x4F20;&#x8F93;&#x5C42;&#x7684;&#x534F;&#x8BAE;&#x88AB;&#x4F7F;&#x7528;&#xFF0C;&#x6700;&#x5E38;&#x89C1;&#x7684;&#x4F20;&#x8F93;&#x5C42;&#x534F;&#x8BAE;&#x662F; TCP &#x6216; UDP&#x3002;</p>
+</li>
+<li>
+<p><strong>Header Checksum</strong> - Header checksum &#x5B57;&#x6BB5;&#x7528;&#x6765;&#x5BF9;&#x6574;&#x4E2A; IP &#x6570;&#x636E;&#x62A5;&#x6587; header&#x8FDB;&#x884C;&#x6821;&#x9A8C;&#xFF0C;&#x5B83;&#x548C; Ethernet Checksum &#x5B57;&#x6BB5;&#x7C7B;&#x4F3C;&#xFF0C;&#x901A;&#x5E38;&#x7531;&#x4E8E; TTL &#x5B57;&#x6BB5;&#x7ECF;&#x8FC7;&#x4EFB;&#x610F;&#x4E00;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x65F6;&#x90FD;&#x4F1A;&#x88AB;&#x4FEE;&#x6539;&#xFF0C;Header Checksum &#x5B57;&#x6BB5;&#x76F8;&#x5E94;&#x7684;&#x4E5F;&#x4F1A;&#x88AB;&#x4FEE;&#x6539;&#x3002;</p>
+</li>
+<li>
+<p><strong>Source IP Address</strong> - &#x957F;&#x5EA6;&#x4E3A; 32 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x4EE3;&#x8868;&#x7740;&#x6E90; IP &#x5730;&#x5740;&#x3002;</p>
+</li>
+<li>
+<p><strong>Destination IP Address</strong> - &#x957F;&#x5EA6;&#x4E3A; 32 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#x4F4D;&#xFF0C;&#x4EE3;&#x8868;&#x7740;&#x76EE;&#x7684;&#x5730; IP &#x5730;&#x5740;&#x3002;</p>
+</li>
+<li>
+<p><strong>Option</strong> - &#x53EF;&#x9009;&#x7684;&#x5B57;&#x6BB5;&#xFF0C;&#x7528;&#x6765;&#x8BBE;&#x5B9A;&#x4E00;&#x4E9B;&#x7279;&#x5B9A;&#x5B57;&#x7B26;&#xFF0C;&#x901A;&#x5E38;&#x7528;&#x4E8E;&#x6D4B;&#x8BD5;&#x76EE;&#x7684;&#x3002;</p>
+</li>
+<li>
+<p><strong>Padding</strong> - &#x76F8;&#x5F53;&#x4E8E;&#x4E00;&#x4E2A;&#x5360;&#x4F4D;&#x7B26;&#x5B57;&#x6BB5;&#xFF0C;&#x7531;&#x4E8E; Option &#x5B57;&#x6BB5;&#x65F6;&#x53EF;&#x9009;&#x7684;&#x4E00;&#x4E2A;&#x53D8;&#x91CF;&#xFF0C;&#x957F;&#x5EA6;&#x4E0D;&#x5B9A;&#xFF0C;&#x8BE5;&#x5B57;&#x6BB5;&#x53EA;&#x662F;&#x4E00;&#x4E9B; 0 &#x4E32;&#xFF0C;&#x7528;&#x6765;&#x786E;&#x4FDD; Header &#x7684;&#x6574;&#x4F53;&#x957F;&#x5EA6;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>&#x7F51;&#x7EDC;&#x6A21;&#x578B;&#x4E2D;&#x5E95;&#x5C42;&#x5305;&#x7684; payload &#x662F;&#x4E34;&#x8FD1;&#x4E0A;&#x4E00;&#x5C42;&#x5305;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ip-datagrams-encapsulation.png" alt="ip datagrams encapsulation.png"></span></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42; Ethernet &#x5E27;&#x7684; Payload &#x662F;&#x5176;&#x4E0A;&#x4E00;&#x5C42;&#x7F51;&#x7EDC;&#x5C42; IP &#x6570;&#x636E;&#x62A5;&#x6587;</p>
+</li>
+<li>
+<p>&#x7F51;&#x7EDC;&#x5C42; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x7684; Payload &#x662F;&#x5176;&#x4E0A;&#x4E00;&#x5C42;&#x4F20;&#x8F93;&#x5C42; TCP &#x62A5;&#x6587;&#x6216; UDP &#x62A5;&#x6587;</p>
+</li>
+<li>
+<p>&#x4F20;&#x8F93;&#x5C42; TCP/UDP &#x62A5;&#x6587;&#x7684; Payload &#x662F;&#x5176;&#x4E0A;&#x4E00;&#x5C42;&#x5E94;&#x7528;&#x5C42;&#x7684; Message</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_arp">ARP</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>ARP(Address Resolution Protocol) &#x534F;&#x8BAE;&#x7528;&#x6765;&#x901A;&#x8FC7;&#x7279;&#x5B9A;&#x7684; IP &#x5730;&#x5740;&#x53D1;&#x73B0;&#x8BE5; IP &#x5730;&#x5740;&#x5BF9;&#x5E94;&#x7684;&#x786C;&#x4EF6;&#x8BBE;&#x5907;&#x7684; MAC &#x5730;&#x5740;&#x3002;</p>
+</li>
+<li>
+<p>&#x901A;&#x5E38;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x90FD;&#x6709;&#x4E00;&#x4E2A; ARP &#x8868;&#xFF0C;ARP &#x8868;&#x4E2D;&#x5305;&#x542B;&#x7740;&#x4E00;&#x7CFB;&#x5217; IP &#x5730;&#x5740;&#x4E0E; MAC &#x5730;&#x5740;&#x5BF9;&#x5E94;&#x7684;&#x6761;&#x76EE;&#x3002;ARP &#x8868;&#x4E2D;&#x6761;&#x76EE;&#x901A;&#x5E38; &#x4F1A;&#x5728;&#x8F83;&#x77ED;&#x7684;&#x65F6;&#x95F4;&#x540E;&#x8FC7;&#x671F;&#xFF0C;&#x4EE5;&#x786E;&#x4FDD;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x53CA;&#x65F6;&#x611F;&#x77E5;&#x5230;&#x7F51;&#x7EDC;&#x7684;&#x53D8;&#x66F4;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_tcpdump_arp">tcpdump &#x6293;&#x53BB; ARP &#x5305;</h4>
+<div class="paragraph">
+<p>&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x901A;&#x4FE1;&#x573A;&#x666F;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x901A;&#x5E38; <code>arp</code> &#x540D;&#x79F0;&#x548C; <code>tcpdump</code> &#x547D;&#x4EE4;&#x6293;&#x53D6; ARP &#x5305;&#xFF0C;&#x5E76;&#x67E5;&#x770B; IP &#x548C; MAC &#x6620;&#x5C04;&#x5217;&#x8868;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5BA2;&#x6237;&#x7AEF;&#x4E3B;&#x673A; client.example.com, IP &#x4E3A; 192.168.33.101</p>
+</li>
+<li>
+<p>&#x670D;&#x52A1;&#x7AEF;&#x4E3B;&#x673A; server.example.com, IP &#x4E3A; 192.168.33.201</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5BA2;&#x6237;&#x7AEF;&#x5220;&#x9664;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x8BB0;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo arp <span class="hljs-_">-d</span> server.example.com</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5BA2;&#x6237;&#x7AEF;&#x6267;&#x884C; ping &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x547D;&#x4EE4;&#xFF0C;&#x4F1A;&#x89E6;&#x53D1;&#x5BA2;&#x6237;&#x7AEF; &#x5411;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x53D1;&#x9001; ARP &#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">ping 192.168.33.201 -c3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5BA2;&#x6237;&#x7AEF;&#x67E5;&#x770B; ARP &#x8868;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ arp <span class="hljs-_">-e</span> -i eth1
+Address                  HW<span class="hljs-built_in">type</span>  HWaddress           Flags Mask            Iface
+192.168.33.1             ether   0a:00:27:00:00:05   C                     eth1
+server.example.com       ether   08:00:27:c3:0f:80   C                     eth1</code></pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2353,142 +2721,216 @@ a7:50:c1:30:ca:c1</code></pre>
 <div class="title">Note</div>
 </td>
 <td class="content">
-If the very first bit of an IP address is a zero, it belongs to a class A network, if the first bits are one, zero, it belongs to a class B network. Finally, if the first bits are 110, it belongs to a class C network.
+&#x5982;&#x4E0A;&#x8BF4;&#x660E;&#x670D;&#x52A1;&#x5668;&#x7AEF; MAC &#x5730;&#x5740;&#x4E3A; <code>08:00:27:c3:0f:80</code>&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x6293;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo tcpdump -vvv -nn -w arp.cap -i eth1 arp
+$ tcpdump -r arp.cap
+reading from file arp.cap, link-type EN10MB (Ethernet)
+02:09:34.895590 ARP, Request who-has server.example.com tell 192.168.33.101, length 46
+02:09:34.895609 ARP, Reply server.example.com is-at 08:00:27:c3:0f:80 (oui Unknown), length 28</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x6293;&#x5305;&#x7ED3;&#x679C;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;ARP &#x8BF7;&#x6C42;&#x5305;&#x4E2D;&#x5185;&#x5BB9;&#x6BD4;&#x8F83;&#x76F4;&#x63A5;&#xFF0C;&#x8BE2;&#x95EE; <code>server.example.com</code> &#x7684; MAC &#x5730;&#x5740;&#xFF0C;&#x5E76;&#x8981;&#x6C42;&#x544A;&#x8BC9;&#x5BA2;&#x6237;&#x7AEF; <code>192.168.33.101</code>&#xFF1B;&#x670D;&#x52A1;&#x7AEF;&#x7684;&#x56DE;&#x590D;&#x4E5F;&#x6BD4;&#x8F83;&#x76F4;&#x63A5;&#xFF0C;&#x544A;&#x8BC9;&#x4E86;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;<code>server.example.com</code> &#x7684; MAC &#x5730;&#x5740;&#x4E3A; <code>08:00:27:c3:0f:80</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x670D;&#x52A1;&#x5668;&#x7AEF;&#x67E5;&#x770B; MAC &#x5730;&#x5740;&#xFF0C;&#x9A8C;&#x8BC1;&#x4E0E;&#x4E0A;&#x9762;&#x7B2C; 3 &#x6B65;&#x4E2D;&#x5BA2;&#x6237;&#x7AEF; ARP &#x8868;&#x4E2D;&#x4EE5;&#x53CA;&#x7B2C; 4 &#x6B65;&#x6293;&#x5305;&#x4E2D;&#x83B7;&#x53D6;&#x7684; MAC &#x5730;&#x5740;&#x662F;&#x5426;&#x76F8;&#x540C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip addr show eth1 | grep ether
+    link/ether 08:00:27:c3:0f:80 brd ff:ff:ff:ff:ff:ff</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>6. &#x8BE6;&#x7EC6;&#x5206;&#x6790; ARP &#x8BF7;&#x6C42;&#x5305;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/arp-request.png" alt="arp request.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ethernet &#x5E27;&#x7684;&#x76EE;&#x7684;&#x5730;&#x5740;&#x662F;&#x4E00;&#x4E2A;&#x5E7F;&#x64AD;&#x5730;&#x5740; <code>ff:ff:ff:ff:ff:ff</code></p>
+</li>
+<li>
+<p>Ethernet &#x5E27;&#x7684;&#x7C7B;&#x578B;&#x4E3A; ARP&#xFF0C;&#x5373; Ethernet &#x5E27;&#x7684;&#x6570;&#x636E; Payload &#x4E3A; ARP &#x8BF7;&#x6C42;&#x5305;</p>
+</li>
+<li>
+<p>ARP &#x8BF7;&#x6C42;&#x786C;&#x4EF6;&#x534F;&#x8BAE;&#x4E3A; Ethernet&#xFF0C;&#x7C7B;&#x578B;&#x4E3A; IPv4</p>
+</li>
+<li>
+<p>ARP &#x8BF7;&#x6C42;&#x53D1;&#x9001;&#x8005;&#x7684; IP <code>192.168.33.101</code>&#xFF0C;&#x76EE;&#x7684;&#x8005;&#x7684; IP <code>192.168.33.201</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___13">&#x8DEF;&#x7531;</h3>
+<div class="sect3">
+<h4 id="___14">&#x8DEF;&#x7531;&#x5668;</h4>
+<div class="paragraph">
+<p>&#x8DEF;&#x7531;&#x5668;&#x662F;&#x7F51;&#x7EDC;&#x5C42;&#x8BBE;&#x5907;&#xFF08;&#x4E09;&#x5C42;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF09;&#xFF0C;&#x5B83;&#x6839;&#x636E;&#x6570;&#x636E;&#x5305;&#x7684;&#x76EE;&#x7684;&#x5730;&#x5740;&#x8F6C;&#x53D1;&#x76F8;&#x5E94;&#x7684;&#x6570;&#x636E;&#x5305;&#xFF0C;&#x5C06;&#x8FD9;&#x4E00;&#x6570;&#x636E;&#x5305;&#x7684;&#x8F6C;&#x53D1;&#x8FC7;&#x7A0B;&#x79F0;&#x4E3A;&#x8DEF;&#x7531;&#x3002;&#x4E00;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x8BBE;&#x5907;&#x81F3;&#x5C11;&#x6709;&#x4E24;&#x4E2A;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#xFF0C;&#x56E0;&#x4E3A;&#x8DEF;&#x7531;&#x5668;&#x5DE5;&#x4F5C;&#x673A;&#x5236;&#x81F3;&#x5C11;&#x9700;&#x8981;&#x8FDE;&#x63A5;&#x8FDE;&#x4E2A;&#x7F51;&#x7EDC;&#x3002;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___15">&#x8DEF;&#x7531;&#x7684;&#x57FA;&#x672C;&#x8FC7;&#x7A0B;</h4>
+<div class="paragraph">
+<p>&#x4E0B;&#x56FE;&#x63CF;&#x8FF0;&#x4E86;&#x4F4D;&#x4E8E;&#x4E0D;&#x540C;&#x7F51;&#x7EDC;&#x7684; PC &#x901A;&#x8FC7;&#x8DEF;&#x7531;&#x5668;&#x8FDB;&#x884C;&#x901A;&#x4FE1;&#x3002;&#x6570;&#x636E;&#x5305;&#x7ECF;&#x8FC7;&#x8DEF;&#x7531;&#x5668;&#x8F6C;&#x53D1;&#x5230;&#x76EE;&#x7684; PC &#x7684;&#x8FC7;&#x7A0B;&#x5C31;&#x662F;&#x8DEF;&#x7531;&#x7684;&#x57FA;&#x672C;&#x8FC7;&#x7A0B;&#xFF0C;&#x5177;&#x4F53;&#x5305;&#x62EC;&#x56DB;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/route_work_process.png" alt="route work process.png"></span></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x8DEF;&#x7531;&#x5668;&#x901A;&#x8FC7;&#x5B83;&#x7684;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x63A5;&#x6536;&#x5230;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5305;</p>
+</li>
+<li>
+<p>&#x8DEF;&#x7531;&#x5668;&#x68C0;&#x6D4B;&#x6570;&#x636E;&#x5305;&#x4E2D;&#x76EE;&#x7684;&#x5730;&#x7684; IP &#x5730;&#x5740;&#xFF08;&#x5BF9;&#x6E90;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x4EE5;&#x592A;&#x7F51;&#x5E27;&#x7684;&#x5934;&#x548C;&#x5C3E;&#x53BB;&#x6389;&#xFF0C;&#x53EA;&#x4FDD;&#x7559; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#xFF0C;&#x4ECE; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x7684;&#x5934;&#x4E2D;&#x83B7;&#x53D6;&#x76EE;&#x7684;&#x5730; IP &#x5730;&#x5740;&#xFF09;</p>
+</li>
+<li>
+<p>&#x8DEF;&#x7531;&#x5668;&#x4ECE;&#x8DEF;&#x7531;&#x8868;&#x4E2D;&#x67E5;&#x8BE2;&#x76EE;&#x7684;&#x5730;&#x7684; IP &#x5730;&#x5740;</p>
+</li>
+<li>
+<p>&#x8DEF;&#x7531;&#x5668;&#x901A;&#x8FC7;&#x5B83;&#x7684;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#x5C06;&#x6570;&#x636E;&#x5305;&#x8F6C;&#x53D1;&#x51FA;&#x53BB;&#xFF08;&#x4FEE;&#x6539; 2 &#x6B65;&#x9AA4;&#x4E2D;&#x7684; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#xFF0C;&#x5BF9; IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x5934;&#x4E2D;&#x7684; TTL &#x5B57;&#x6BB5;&#x51CF;&#x4E00;&#xFF0C;&#x91CD;&#x65B0;&#x8BA1;&#x7B97; Header Checksum &#x5B57;&#x6BB5;&#xFF0C;&#x7136;&#x540E;&#x5C01;&#x88C5;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x592A;&#x7F51;&#x5E27;&#xFF0C;&#x6DFB;&#x52A0;&#x5934;&#x548C;&#x5C3E;&#xFF09;</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x679C;&#x6570;&#x636E;&#x5305;&#x4F20;&#x8F93;&#x8DE8;&#x591A;&#x4E2A;&#x7F51;&#x7EDC;&#xFF0C;&#x5219;&#x67E5;&#x8BE2;&#x8DEF;&#x7531;&#x8868;&#x6216;&#x627E;&#x51FA;&#x6700;&#x8FD1;&#x7684;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x5C06;&#x6570;&#x636E;&#x5305;&#x8F6C;&#x53D1;&#x51FA;&#x53BB;&#xFF0C;&#x540C;&#x65F6;&#x6BCF;&#x7ECF;&#x8FC7;&#x4E00;&#x6B21;&#x8DEF;&#x7531;&#xFF0C;IP &#x6570;&#x636E;&#x62A5;&#x6587;&#x7684; TTL &#x5B57;&#x6BB5;&#x90FD;&#x4F1A;&#x51CF;&#x5C0F; 1&#x3002;
 </td>
 </tr>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_arp_address_resolution_protocol">ARP(Address Resolution Protocol)</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>ARP is a protocol used to discover the hardware address of a node with a certain IP address.</p>
-</li>
-<li>
-<p>ARP table is just a list of IP addresses and the MAC addresses associated with them.  ARP table entries generally expire after a short amount of time to ensure changes in the network are accounted for.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_subnet_masks">Subnet Masks</h3>
+<div class="sect3">
+<h4 id="___16">&#x8DEF;&#x7531;&#x8868;</h4>
 <div class="paragraph">
-<p>Subnet masks are 32-bit numbers that are normally written now as four octets in decimal.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ip-subnetmask.png" alt="ip subnetmask.png"></span></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_basic_binary_math">Basic Binary Math</h3>
-<div class="paragraph">
-<p><span class="image"><img src="img/bits2decimal.png" alt="bits2decimal.png"></span></p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ipaddressand.png" alt="ipaddressand.png"></span></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_cidr_classless_inter_domain_routing">CIDR(classless inter-domain routing)</h3>
-<div class="paragraph">
-<p>CIDR is an even more flexible approach to describing blocks of IP addresses. It expands on the concept of subnetting by using subnet masks to demarcate networks. To demarcate something means to set something off.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___5">&#x8DEF;&#x7531;</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A router is a network device that forwards traffic depending on the destination address of that traffic.</p>
-</li>
-<li>
-<p>A router is a device that has at least two network interfaces, since it has to be connected to two networks to do its job.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title"><strong>&#x8DEF;&#x7531;&#x7684;&#x57FA;&#x672C;&#x8FC7;&#x7A0B;&#xFF1A;</strong></div>
-<p><span class="image"><img src="img/routing-procedures.png" alt="routing procedures.png"></span></p>
+<p>&#x8DEF;&#x7531;&#x8868;&#x7ED3;&#x6784;&#x6BD4;&#x8F83;&#x7B80;&#x5355;&#xFF0C;&#x901A;&#x5E38;&#x6709;&#x56DB;&#x4E2A;&#x5217;&#xFF1A;</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>A router receives a packet of data on one of its interfaces.</p>
+<p>Destination - &#x76EE;&#x7684;&#x5730;&#x7F51;&#x7EDC;&#xFF0C;&#x8DEF;&#x7531;&#x5668;&#x4E0A;&#x5DF2;&#x77E5;&#x7684;&#x6240;&#x6709;&#x7F51;&#x7EDC;&#x90FD;&#x4F1A;&#x5B58;&#x5728;&#x4E00;&#x884C;&#xFF0C;&#x4EE3;&#x8868;&#x7684;&#x662F;&#x76EE;&#x7684;&#x5730;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;&#x5305;&#x62EC;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#x548C;&#x5B50;&#x7F51;&#x63A9;&#x7801;&#x3002;</p>
 </li>
 <li>
-<p>The router examines the destination IP of this packet.</p>
+<p>Next Hop - &#x662F;&#x53BB;&#x5F80;&#x76EE;&#x7684;&#x7F51;&#x7EDC;&#x6700;&#x8FD1;&#x7684;&#x8DEF;&#x7531;&#x5668;&#x7684; IP &#x5730;&#x5740;&#xFF1B;&#x5982;&#x679C;&#x53BB;&#x5F80;&#x76EE;&#x7684;&#x7F51;&#x7EDC;&#x4E0D;&#x9700;&#x8981;&#x7ECF;&#x8FC7;&#x7F51;&#x7EDC;&#x8DF3;&#x8F6C;&#xFF0C;&#x6216;&#x8005;&#x8BF4;&#x76EE;&#x7684;&#x5730;&#x548C;&#x8DEF;&#x7531;&#x5668;&#x5728;&#x540C;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#xFF0C;&#x5219;&#x8BE5;&#x5B57;&#x6BB5;&#x662F;&#x76EE;&#x7684;&#x5730;&#x7684; IP &#x5730;&#x5740;&#x3002;</p>
 </li>
 <li>
-<p>The router then looks up the destination network of this IP in its routing table.</p>
+<p>Total Hops - &#x8FD9;&#x662F;&#x4E86;&#x89E3;&#x8DEF;&#x7531;&#x4EE5;&#x53CA;&#x8DEF;&#x7531;&#x8868;&#x5982;&#x4F55;&#x5DE5;&#x4F5C;&#x7684;&#x5173;&#x952E;&#x90E8;&#x5206;&#xFF0C;&#x5728;&#x4EFB;&#x4F55;&#x590D;&#x6742;&#x7684;&#x7F51;&#x7EDC;&#xFF08;&#x5982;Internet&#xFF09;&#x4E0A;&#xFF0C;&#x4ECE;&#x4E00;&#x4E2A;&#x70B9;&#x5230;&#x53E6;&#x4E00;&#x4E2A;&#x70B9;&#x90FD;&#x6709;&#x5F88;&#x591A;&#x4E0D;&#x540C;&#x7684;&#x8DEF;&#x5F84;&#x3002;</p>
 </li>
 <li>
-<p>The router forwards that out though the interface that&#x2019;s closest to the remote network.</p>
+<p>Interface - &#x8DEF;&#x7531;&#x5668;&#x7684;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;&#xFF0C;&#x8BE5;&#x63A5;&#x53E3;&#x7528;&#x4E8E;&#x5C06;&#x6570;&#x636E;&#x5305;&#x4ECE;&#x8DEF;&#x7531;&#x5668;&#x8F6C;&#x53D1;&#x51FA;&#x53BB;</p>
 </li>
 </ol>
 </div>
+<div class="listingblock">
+<div class="title"><strong>Linux &#x4E0A; route &#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8DEF;&#x7531;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ route -nv
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.2.2        0.0.0.0         UG    100    0        0 eth0
+10.0.2.0        0.0.0.0         255.255.255.0   U     100    0        0 eth0
+192.168.33.0    0.0.0.0         255.255.255.0   U     101    0        0 eth1</code></pre>
 </div>
-<div class="sect2">
-<h3 id="___6">&#x8DEF;&#x7531;&#x8868;</h3>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Linux &#x4E0A; ip route &#x67E5;&#x770B;&#x8DEF;&#x7531;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip route list
+default via 10.0.2.2 dev eth0 proto dhcp metric 100
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100
+192.168.33.0/24 dev eth1 proto kernel scope link src 192.168.33.201 metric 101</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___17">&#x8DEF;&#x7531;&#x534F;&#x8BAE;</h4>
 <div class="paragraph">
-<p>The most basic routing table will have four columns&#xFF1A;</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Destination network - this column would contain a row for each network that the router knows about, this is just the definition of the remote network, a network ID, and the net mask.</p>
-</li>
-<li>
-<p>Next hop - this is the IP address of the next router that should receive data intended for the destination networking question or this could just state the network is directly connected and that there aren&#x2019;t any additional hops needed.</p>
-</li>
-<li>
-<p>Total hops - this is the crucial part to understand routing and how routing tables work, on any complex network like the Internet, there will be lots of different paths to get from point A to point B.</p>
-</li>
-<li>
-<p>Interface - the router also has to know which of its interfaces it should for traffic matching the destination network out of.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___7">&#x8DEF;&#x7531;&#x534F;&#x8BAE;</h3>
-<div class="paragraph">
-<p>Routing protocols fall into two main categories: interior gateway protocols and exterior gateway protocols.</p>
+<p>&#x8DEF;&#x7531; &#x534F;&#x8BAE;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;&#xFF1A;IGP(Interior Gateway Protocol &#x5185;&#x90E8;&#x7F51;&#x5173;&#x534F;&#x8BAE;) &#x548C; EGP(Exterior Gateway Protocol &#x5916;&#x90E8;&#x7F51;&#x7BA1;&#x534F;&#x8BAE;)&#x3002;IGP &#x901A;&#x5E38;&#x662F;&#x5728;&#x4E00;&#x4E2A;&#x81EA;&#x6CBB;&#x7CFB;&#x7EDF;&#xFF08;Autonomous system, AS&#xFF0C;&#x4E00;&#x4E2A;&#xFF0C;&#x6709;&#x65F6;&#x662F;&#x591A;&#x4E2A;&#x5B9E;&#x4F53;&#x7BA1;&#x8F96;&#x4E0B;&#x7684;&#x6240;&#x6709; IP &#x7F51;&#x7EDC;&#x548C;&#x8DEF;&#x7531;&#x5668;&#x7684;&#x5168;&#x4F53;&#xFF0C;&#x4F8B;&#x5982;&#x4E00;&#x4E2A;&#x4F01;&#x4E1A;/&#x7EC4;&#x7EC7;&#x7684;&#x5185;&#x7F51;&#xFF09;&#x5185;&#x8DEF;&#x7531;&#x5668;&#x5171;&#x4EAB;&#x4FE1;&#x606F;&#xFF1B;&#x4E0E;&#x4E4B;&#x5BF9;&#x5E94;&#xFF0C;EGP&#x662F;&#x81EA;&#x5236;&#x7CFB;&#x7EDF;&#x4E4B;&#x95F4;&#x8DEF;&#x7531;&#x5668;&#x5171;&#x4EAB;&#x4FE1;&#x606F;&#x3002;</p>
 </div>
 <div class="paragraph">
-<p>Interior gateway protocols are further split into two categories: Link state routing protocols and distance-vector protocols.</p>
-</div>
-<div class="paragraph">
-<p>Interior gateway protocols are used by routers to share information within a single autonomous system. In networking terms, an autonomous system is a collection of networks that all fall under the control of a single network operator.</p>
+<p>IGP &#x534F;&#x8BAE;&#x53EF;&#x4EE5;&#x8FDB;&#x4E00;&#x6B65;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;&#xFF1A;</p>
 </div>
 <div class="ulist">
-<div class="title"><strong>Link state routing protocols Vs distance-vector protocols</strong></div>
 <ul>
 <li>
-<p>Distance vector protocols are an older standard. A router using a distance vector protocol basically just takes its routing table which is a list of every network known to it and how far away these networks are in terms of hops. Then the router sends this list to every neighboring router, which is basically every router directly connected to it. In computer science, a list is known as a vector. This is why a protocol that just sends a list of distances to networks, is known as a distance vector protocol. With a distance vector protocol, routers don&#x2019;t really know that much about the total state of an autonomous system. They just have some information about their immediate neighbors.</p>
+<p>&#x94FE;&#x8DEF;&#x72B6;&#x6001;&#x8DEF;&#x7531;&#x534F;&#x8BAE;&#xFF08;Link State Routing Protocol&#xFF09;</p>
 </li>
 <li>
-<p>Link-state protocol, Routers using a link-state protocol take a more sophisticated approach to determining the best path to a network. Linked state protocols got their name because each router advertises the state of the link of each of its interfaces. These interfaces can be connected to other routers or they could be direct connections to networks. The information about each router is propagated to every other router on the autonomous system. This means that every router on the system knows every detail about every other router in the system.</p>
+<p>&#x8DDD;&#x79BB;&#x77E2;&#x91CF;&#x8DEF;&#x7531;&#x534F;&#x8BAE;&#xFF08;Distance-Vector Protocol&#xFF09;&#x3002;</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title"><strong>Distance-vector protocol</strong></div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 6. <strong>&#x8DEF;&#x7531;&#x534F;&#x8BAE;</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x8DDD;&#x79BB;&#x77E2;&#x91CF;&#x8DEF;&#x7531;&#x534F;&#x8BAE;</th>
+<th class="tableblock halign-left valign-top">&#x94FE;&#x8DEF;&#x72B6;&#x6001;&#x8DEF;&#x7531;&#x534F;&#x8BAE;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><span class="image"><img src="img/routing-instance-vector-protocol.png" alt="routing instance vector protocol.png"></span></p>
-</div>
-<div class="paragraph">
-<div class="title"><strong>Link-state protocol</strong></div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><span class="image"><img src="img/routing-link-state-protocol.png" alt="routing link state protocol.png"></span></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x8DDD;&#x79BB;&#x77E2;&#x91CF;&#x8DEF;&#x7531;&#x534F;&#x8BAE;&#x662F;&#x4E00;&#x4E2A;&#x65E7;&#x7684;&#x6807;&#x51C6;&#x3002;&#x4F7F;&#x7528;&#x8DDD;&#x79BB;&#x77E2;&#x91CF;&#x8DEF;&#x7531;&#x534F;&#x8BAE;&#x7684;&#x8DEF;&#x7531;&#x5668;&#x83B7;&#x53D6;&#x5176;&#x8DEF;&#x7531;&#x8868;&#xFF0C;&#x8BE5;&#x8DEF;&#x7531;&#x8868;&#x5305;&#x62EC;&#x5B83;&#x5DF2;&#x77E5;&#x7684;&#x6BCF;&#x4E2A;&#x7F51;&#x7EDC;&#x7684;&#x5217;&#x8868;&#xFF0C;&#x4EE5;&#x53CA;&#x8FD9;&#x4E9B;&#x7F51;&#x7EDC;&#x5728;&#x8DF3;&#x6570;&#x65B9;&#x9762;&#x7684;&#x8DDD;&#x79BB;&#x3002; &#x7136;&#x540E;&#x8DEF;&#x7531;&#x5668;&#x5C06;&#x6B64;&#x8DEF;&#x7531;&#x8868;&#x53D1;&#x9001;&#x7ED9;&#x6BCF;&#x4E2A;&#x76F8;&#x90BB;&#x8DEF;&#x7531;&#x5668;&#xFF0C;&#x5373;&#x662F;&#x76F4;&#x63A5;&#x4E0E;&#x5176;&#x76F8;&#x8FDE;&#x7684;&#x6BCF;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x3002;&#x5728;&#x8BA1;&#x7B97;&#x673A;&#x79D1;&#x5B66;&#x4E2D;&#xFF0C;&#x5217;&#x8868;&#x79F0;&#x4E3A;&#x5411;&#x91CF;&#xFF0C;&#x8FD9;&#x5C31;&#x662F;&#x8DDD;&#x79BB;&#x77E2;&#x91CF;&#x534F;&#x8BAE;&#x7684;&#x540D;&#x5B57;&#x7531;&#x6765;&#x3002; &#x501F;&#x52A9;&#x8DDD;&#x79BB;&#x77E2;&#x91CF;&#x8DEF;&#x7531;&#x534F;&#x8BAE;&#xFF0C;&#x8DEF;&#x7531;&#x5668;&#x5B9E;&#x9645;&#x4E0A;&#x5BF9;&#x81EA;&#x6CBB;&#x7CFB;&#x7EDF;&#x7684;&#x603B;&#x4F53;&#x72B6;&#x6001;&#x4E86;&#x89E3;&#x4E0D;&#x591A;&#xFF0C;&#x4ED6;&#x4EEC;&#x53EA;&#x662F;&#x4E86;&#x89E3;&#x4E00;&#x4E9B;&#x4E0E;&#x5176;&#x76F4;&#x63A5;&#x76F8;&#x90BB;&#x7684;&#x8DEF;&#x7531;&#x5668;&#x7684;&#x4FE1;&#x606F;&#x3002;</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x94FE;&#x8DEF;&#x72B6;&#x6001;&#x8DEF;&#x7531;&#x534F;&#x8BAE;&#x91C7;&#x7528;&#x66F4;&#x52A0;&#x590D;&#x6742;&#x7684;&#x65B9;&#x5F0F;&#x6765;&#x786E;&#x5B9A;&#x7F51;&#x7EDC;&#x7684;&#x6700;&#x4F73;&#x8DEF;&#x5F84;&#x3002;&#x94FE;&#x63A5;&#x72B6;&#x6001;&#x534F;&#x8BAE;&#x4E4B;&#x6240;&#x4EE5;&#x5F97;&#x540D;&#xFF0C;&#x662F;&#x56E0;&#x4E3A;&#x6BCF;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x90FD;&#x4F1A;&#x901A;&#x544A;&#x5176;&#x6BCF;&#x4E2A;&#x63A5;&#x53E3;&#x7684;&#x94FE;&#x63A5;&#x72B6;&#x6001;&#x3002;&#x8FD9;&#x4E9B;&#x63A5;&#x53E3;&#x53EF;&#x4EE5;&#x8FDE;&#x63A5;&#x5230;&#x5176;&#x4ED6;&#x8DEF;&#x7531;&#x5668;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x8FDE;&#x63A5;&#x5230;&#x7F51;&#x7EDC;&#x3002; &#x6709;&#x5173;&#x6BCF;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x7684;&#x4FE1;&#x606F;&#x5C06;&#x4F20;&#x64AD;&#x5230;&#x81EA;&#x6CBB;&#x7CFB;&#x7EDF;&#x4E0A;&#x7684;&#x6BCF;&#x4E2A;&#x5176;&#x4ED6;&#x8DEF;&#x7531;&#x5668;&#x3002;&#x8FD9;&#x610F;&#x5473;&#x7740;&#x7CFB;&#x7EDF;&#x4E0A;&#x7684;&#x6BCF;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x90FD;&#x77E5;&#x9053;&#x6709;&#x5173;&#x7CFB;&#x7EDF;&#x4E2D;&#x5176;&#x4ED6;&#x6BCF;&#x4E2A;&#x8DEF;&#x7531;&#x5668;&#x7684;&#x6BCF;&#x4E2A;&#x7EC6;&#x8282;&#x3002;</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+IANA(Internet Assigned Numbers Authority) &#x662F;&#x4E00;&#x4E2A;&#x975E;&#x76C8;&#x5229;&#x7684;&#x7EC4;&#x7EC7;&#xFF0C;&#x524D;&#x9762;&#x5DF2;&#x7ECF;&#x77E5;&#x9053;&#x5B83;&#x8D1F;&#x8D23; IP &#x5730;&#x5740;&#x7684;&#x5206;&#x914D;&#xFF0C;&#x9664;&#x4E86;&#x8D1F;&#x8D23; IP &#x5730;&#x5740;&#x7684; &#x5206;&#x914D;&#xFF0C;&#x8BE5;&#x7EC4;&#x7EC7;&#x8FD8;&#x8D1F;&#x8D23; ASN(Autonomous System Number,&#x81EA;&#x6CBB;&#x7CFB;&#x7EDF;&#x7F16;&#x53F7;)&#x7684;&#x5206;&#x914D;&#xFF0C;ASN &#x662F;&#x5206;&#x914D;&#x7ED9;&#x5404;&#x4E2A;&#x81EA;&#x6CBB;&#x7CFB;&#x7EDF;&#x7684;&#x7F16;&#x53F7;&#xFF0C;&#x5C31;&#x50CF; IP &#x5730;&#x5740;&#xFF0C;ASN &#x4E5F;&#x662F;&#x4E00;&#x4E2A; 32 &#x4F4D;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#xFF0C;&#x4F46;&#x548C; IP &#x5730;&#x5740;&#x4E0D;&#x540C;&#x7684;&#x662F; ASN &#x662F;&#x4E00;&#x4E2A;&#x5341;&#x8FDB;&#x5236;&#x7684;&#x6570;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x6BCF;&#x516B;&#x4F4D;&#x5206;&#x6210;&#x4E00;&#x7EC4;&#x3002;
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Exterior gateway protocols are used to communicate data between routers representing the edges of an autonomous system.</p>
-</div>
-<div class="paragraph">
-<p>The IANA or the Internet Assigned Numbers Authority, is a non-profit organization that helps manage things like IP address allocation. Along with managing IP address allocation, the IANA is also responsible for ASN, or Autonomous System Number allocation. ASNs are numbers assigned to individual autonomous systems. Just like IP addresses, ASNs are 32-bit numbers. But, unlike IP addresses, they&#x2019;re normally referred to as just a single decimal number, instead of being split out into readable bits.</p>
+<p><strong>Wikipedia &#x94FE;&#x63A5;</strong></p>
 </div>
 <div class="ulist">
-<div class="title"><strong>Wikipedia Links</strong></div>
 <ul>
 <li>
 <p><a href="https://en.wikipedia.org/wiki/Routing_Information_Protocol" target="_blank">EIP(Routing Information Protocol)</a></p>
@@ -2505,13 +2947,13 @@ If the very first bit of an IP address is a zero, it belongs to a class A networ
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_non_routable_address_space">Non-Routable Address Space</h3>
+<div class="sect3">
+<h4 id="___18">&#x4E0D;&#x53EF;&#x8DEF;&#x7531;&#x7684;&#x5730;&#x5740;&#x7A7A;&#x95F4;</h4>
 <div class="paragraph">
-<p>Non-routable address space is basically exactly what it sounds like. They are ranges of IPs set aside for use by anyone that cannot be routed to. Not every computer connected to the internet needs to be able to communicate with every other computer connected to the internet. Non-routable address space allows for nodes on such a network to communicate with each other but no gateway router will attempt to forward traffic to this type of network.</p>
+<p>&#x4E0D;&#x53EF;&#x8DEF;&#x7531;&#x7684;&#x5730;&#x5740;&#x7A7A;&#x95F4;&#x662F;&#x4E00;&#x4E9B; IP &#x8303;&#x56F4;&#xFF0C;&#x53EF;&#x4EE5;&#x88AB;&#x4EFB;&#x4F55;&#x4EBA;&#x4F7F;&#x7528;&#xFF0C;&#x4F46;&#x662F;&#x4E0D;&#x80FD;&#x8DEF;&#x7531;&#x3002;&#x4E0D;&#x662F;&#x6BCF;&#x53F0;&#x6BCF;&#x53F0;&#x8FDE;&#x63A5;&#x5230; Internet &#x7684;&#x8BA1;&#x7B97;&#x673A;&#x90FD;&#x9700;&#x8981;&#x80FD;&#x591F;&#x4E0E;&#x5176;&#x4ED6;&#x8FDE;&#x63A5;&#x5230; Internet &#x7684;&#x8BA1;&#x7B97;&#x673A;&#x8FDB;&#x884C;&#x901A;&#x4FE1;&#xFF0C;&#x4E0D;&#x53EF;&#x8DEF;&#x7531;&#x7684;&#x5730;&#x5740;&#x4E3A;&#x8FD9;&#x4E00;&#x9700;&#x6C42;&#x800C;&#x5B9A;&#xFF0C;&#x6B64;&#x7C7B;&#x8282;&#x70B9;&#x6784;&#x6210;&#x7684;&#x7F51;&#x7EDC;&#x4ED6;&#x4EEC;&#x53EF;&#x4EE5;&#x76F8;&#x4E92;&#x901A;&#x4FE1;&#xFF0C;&#x4F46;&#x6CA1;&#x6709;&#x7F51;&#x5173;&#x8DEF;&#x7531;&#x5668;&#x4F1A;&#x5C1D;&#x8BD5;&#x5C06;&#x6D41;&#x91CF;&#x8F6C;&#x53D1;&#x5230;&#x6B64;&#x7C7B;&#x7F51;&#x7EDC;&#x3002;</p>
 </div>
 <div class="paragraph">
-<p>The primary three ranges of non-routable address space are:</p>
+<p>&#x4E0D;&#x53EF;&#x8DEF;&#x7531;&#x7684;&#x5730;&#x5740;&#x7A7A;&#x95F4;&#x4E3B;&#x8981;&#x6709;&#x4E09;&#x4E2A;&#x8303;&#x56F4;&#xFF1A;</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2531,44 +2973,251 @@ If the very first bit of an IP address is a zero, it belongs to a class A networ
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="___8">&#x4F20;&#x8F93;&#x5C42;</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ipv6">IPv6 &#x5730;&#x5740;</h3>
 <div class="paragraph">
-<p>The transport layer is responsible for lots of important functions of reliable computer networking. These including:</p>
+<p><span class="image"><img src="img/ipv6-addr.png" alt="ipv6-addr.png"></span></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Multiplexing traffic</p>
+<p><strong>IPv6 &#x5730;&#x5740;:</strong> IPv6 &#x5730;&#x5740;&#x662F;&#x4E00;&#x4E2A;&#x7531; 32 &#x4E2A;&#x5341;&#x516D;&#x8FDB;&#x5236;&#xFF08;128 &#x4E2A;&#x4E8C;&#x8FDB;&#x5236;&#xFF09;&#x7684;&#x6570;&#x5B57;&#x7EC4;&#x6210;&#xFF0C;&#x4E14; 32 &#x4E2A;&#x5341;&#x516D;&#x8FDB;&#x5236;&#x4F4D;&#x5206;&#x4E3A; 8 &#x7EC4;&#xFF0C;&#x6BCF;&#x7EC4; 4 &#x4F4D;&#x3002;&#x4E3A;&#x65B9;&#x4FBF;&#x4E66;&#x5199;&#xFF0C;&#x5B9A;&#x4E49;&#x4E86;&#x5982;&#x4E0B;&#x89C4;&#x5219;&#xFF1A;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6BCF; 4 &#x4F4D;&#x5C0F;&#x7EC4;&#x4E2D;&#x7684;&#x524D;&#x7F00; 0 &#x53EF;&#x4EE5;&#x7701;&#x7565;&#xFF0C;&#x4F8B;&#x5982; <code>2001:0db8:0000:0010:0000:0000:0000:0001</code> &#x7B80;&#x5199;&#x4E3A; <code>2001:db8:0:10:0:0:0:1</code></p>
 </li>
 <li>
-<p>Demultiplexing traffic</p>
+<p>&#x4E00;&#x7EC4;&#x6216;&#x591A;&#x7EC4;&#x8FDE;&#x7EED; 0 &#x5FC5;&#x987B;&#x4EE5;&#x4E00;&#x4E2A; :: &#x5757;&#x6765;&#x5408;&#x5E76;&#xFF0C;&#x4F8B;&#x5982; <code>2001:db8:0:10:0:0:0:1</code> &#x9700;&#x5199;&#x4E3A; <code>2001:db8:0:10::1</code></p>
 </li>
 <li>
-<p>Etablishing long running connections</p>
+<p>&#x6240;&#x6709;&#x53EF;&#x80FD;&#x51FA;&#x73B0;&#x5B57;&#x6BCD;&#x7684;&#x5341;&#x516D;&#x8FDB;&#x5236;&#x4F4D;&#x5FC5;&#x987B;&#x4F7F;&#x7528;&#x5C0F;&#x5199;&#x5B57;&#x6BCD; a &#x5230; f</p>
 </li>
 <li>
-<p>Ensuring data integrity through error checking and data verification.</p>
+<p>&#x5982;&#x679C;&#x5728; IPv6 &#x5730;&#x5740;&#x540E;&#x9762;&#x5305;&#x62EC; TCP &#x6216; UDP &#x7F51;&#x7EDC;&#x7AEF;&#x53E3;&#xFF0C;&#x5219;&#x9700;&#x5C06; IPv6 &#x5730;&#x5740;&#x62EC;&#x5728;&#x65B9;&#x62EC;&#x53F7;&#x4E2D;&#xFF0C;&#x4F8B;&#x5982; <code>[2001:db8:0:10::1]:80</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>IPv6 &#x5730;&#x5740;&#x6709;&#x4E24;&#x90E8;&#x7EC4;&#x6210;:</strong> <code>&#x7F51;&#x7EDC;&#x524D;&#x7F00;</code>&#x548C;<code>&#x63A5;&#x53E3; ID</code>&#x3002;&#x4E0E; IPv4 &#x4E0D;&#x540C;&#x7684;&#x662F;&#xFF0C;IPv6 &#x5177;&#x6709;&#x4E00;&#x4E2A;&#x6807;&#x51C6;&#x7684;&#x5B50;&#x7F51;&#x63A9;&#x7801;<strong>/64</strong>&#xFF0C;&#x7528;&#x4E8E;&#x51E0;&#x4E4E;&#x6240;&#x6709;&#x7684;&#x666E;&#x901A;&#x5730;&#x5740;&#x3002;&#x5728;&#x6B64;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x5730;&#x5740;&#x7684;&#x4E00;&#x534A;&#x662F;<code>&#x7F51;&#x7EDC;&#x524D;&#x7F00;</code>&#xFF0C;&#x53E6;&#x4E00;&#x534A;&#x662F;<code>&#x63A5;&#x53E3; ID</code>&#x3002;&#x8FD9;&#x610F;&#x5473;&#x7740;&#x5355;&#x4E2A;&#x5B50;&#x7F51;&#x53EF;&#x4EE5;&gt;&#x6839;&#x636E;&#x9700;&#x8981;&#x5BB9;&#x7EB3;&#x4EFB;&#x610F;&#x6570;&#x91CF;&#x7684;&#x4E3B;&#x673A;&#x3002;</p>
+</li>
+<li>
+<p><strong>&#x5B50;&#x7F51;&#x5206;&#x914D;:</strong> &#x901A;&#x5E38;&#xFF0C;&#x7F51;&#x7EDC;&#x63D0;&#x4F9B;&#x5546;&#x5C06;&#x4E3A;&#x7EC4;&#x7EC7;&#x5206;&#x914D;&#x4E00;&#x4E2A;&#x8F83;&#x77ED;&#x7684;&#x524D;&#x7F00;&#xFF0C;&#x5982;<strong>/48</strong>&#x3002;&#x8FD9;&#x4F1A;&#x4FDD;&#x7559;&#x5176;&#x4F59;&#x7F51;&#x7EDC;&#x90E8;&#x5206;&#x4EE5;&#x7528;&#x4E8E;&#x901A;&#x8FC7;&#x8FD9;&#x4E00;&#x5206;&#x914D;&#x7684;&#x524D;&#x7F00;&#x6765;&#x6307;&#x5B9A;&#x5B50;&#x7F51;&#x3002;&#x5904;&#x7406;&#x5DF2;&#x5206;&#x914D;&#x7684;48&#x4F4D;&#xFF0C;&#x5C06;&#x4FDD;&#x7559;16&#x4F4D;&#x4EE5;&#x7528;&#x4E8E;&#x5B50;&#x7F51;&#xFF08;&#x6700;&#x591A; 65536 &#x4E2A;&#x5B50;&#x7F51;&#xFF09;&#x3002;&#x540C;&#x4E00;&#x5B50;&#x7F51;&#x4E0A;&#x7684;&#x4EFB;&#x4F55;
+&#x4E24;&#x4E2A;&#x5B50;&#x7F51;&#x63A5;&#x53E3;&#x90FD;&#x4E0D;&#x80FD;&#x5177;&#x6709;&#x76F8;&#x540C;<code>&#x63A5;&#x53E3; ID</code>&#xFF0C;<code>&#x63A5;&#x53E3; ID</code> &#x53EF;&#x6807;&#x8BC6;&#x5B50;&#x7F51;&#x4E0A;&#x7684;&#x7279;&#x5B9A;&#x63A5;&#x53E3;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title"><strong>IPv6 &#x5730;&#x5740;&#x793A;&#x4F8B;&#xFF1A;</strong></div>
+<p><span class="image"><img src="img/ipv6-shortern-excercise.png" alt="ipv6 shortern excercise.png"></span></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 7. <strong>IPv6 &#x901A;&#x7528;&#x5730;&#x5740;&#x8868;</strong></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x5730;&#x5740;/&#x7F51;&#x7EDC;</th>
+<th class="tableblock halign-left valign-top">&#x7528;&#x9014;</th>
+<th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">::1/128</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">localhost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7B49;&#x6548;&#x4E8E; IPv4 &#x4E2D;&#x7684; <code>127.0.0.1/8</code>, &#x5728; lookback interface &#x4E0A;&#x8BBE;&#x7F6E;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">::</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x672A;&#x6307;&#x5B9A;&#x7684;&#x5730;&#x5740;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7B49;&#x6548;&#x4E8E; IPv4 &#x4E2D;&#x7684; <code>0.0.0.0</code>&#xFF0C;&#x5BF9;&#x4E8E;&#x7F51;&#x7EDC;&#x670D;&#x52A1;&#xFF0C;&#x8FD9;&#x53EF;&#x80FD;&#x8868;&#x793A;&#x5176;&#x6B63;&#x5728;&#x4FA6;&#x542C;&#x6240;&#x6709;&#x5DF2;&#x914D;&#x7F6E;&#x7684; IP &#x5730;&#x5740;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">::/0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPv6 &#x7F51;&#x7EDC;&#x9ED8;&#x8BA4;&#x8DEF;&#x7531;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8DEF;&#x7531;&#x8868;&#x4E2D;&#x7684;&#x9ED8;&#x8BA4;&#x8DEF;&#x7531;&#x4E0E;&#x6B64;&#x7F51;&#x7EDC;&#x5339;&#x914D;&#xFF1B;&#x6B64;&#x7F51;&#x7EDC;&#x7684;&#x8DEF;&#x7531;&#x5668;&#x662F;&#x5728;&#x6CA1;&#x6709;&#x66F4;&#x597D;&#x8DEF;&#x7531;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x53D1;&#x9001;&#x6240;&#x6709;&#x6D41;&#x91CF;&#x7684;&#x4F4D;&#x7F6E;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2000::/3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5168;&#x5C40;&#x5355;&#x64AD;&#x5730;&#x5740;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x201C;&#x666E;&#x901A;&#x201D;&#x7684; IPv6 &#x5730;&#x5740;&#x76EE;&#x524D;&#x7531; IANA &#x4ECE;&#x8BE5;&#x7A7A;&#x95F4;&#x8FDB;&#x884C;&#x5206;&#x914D;&#x3002;&#x8FD9;&#x7B49;&#x540C;&#x4E8E;&#x8303;&#x56F4;&#x4ECE; <code>2000::/16</code> &#x5230; <code>3fff::/16</code> &#x7684;&#x6240;&#x6709;&#x7F51;&#x7EDC;&#x3002;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fd00::/8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x552F;&#x4E00;&#x672C;&#x5730;&#x5730;&#x5740; (RFC 4193)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IPv6 &#x6CA1;&#x6709; RFC 1918 &#x4E13;&#x7528;&#x5730;&#x5740;&#x7A7A;&#x95F4;&#x7684;&#x76F4;&#x63A5;&#x7B49;&#x6548;&#x5BF9;&#x8C61;&#xFF0C;&#x5C3D;&#x7BA1;&#x8FD9;&#x5F88;&#x63A5;&#x8FD1;&#x3002;&#x7AD9;&#x70B9;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x8FD9;&#x4E9B;&#x4EE5;&#x5728;&#x7EC4;&#x7EC7;&#x4E2D;&#x81EA;&#x52A9;&#x5206;&#x914D;&#x53EF;&#x8DEF;&#x7531;&#x7684;&#x4E13;&#x7528; IP &#x5730;&#x5740;&#x7A7A;&#x95F4;&#xFF0C;&#x4F46;&#x662F;&#x8FD9;&#x4E9B;&#x7F51;&#x7EDC;&#x4E0D;&#x80FD;&#x5728;&#x5168;&#x5C40; Internet &#x4E0A;&#x4F7F;&#x7528;&#x3002;&#x7AD9;&#x70B9;&#x5FC5;&#x987B;&#x968F;&#x673A;&#x4ECE;&#x8BE5;&#x7A7A;&#x95F4;&#x4E2D;&#x9009;&#x62E9;&#x4E00;&#x4E2A; /48&#xFF0C;&#x4F46;
+&#x662F;&#x5B83;&#x53EF;&#x4EE5;&#x6B63;&#x5E38;&#x5C06;&#x5206;&#x914D;&#x7A7A;&#x95F4;&#x5212;&#x5206;&#x4E3A; /64 &#x7F51;&#x7EDC;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fe80::/64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x672C;&#x5730;&#x94FE;&#x63A5;&#x5730;&#x5740;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x6BCF;&#x4E2A; IPv6 &#x63A5;&#x53E3;&#x81EA;&#x52A8;&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x94FE;&#x63A5;&#x5730;&#x5740;&#xFF0C;&#x8BE5;&#x5730;&#x5740;&#x4EC5;&#x5728;&#x8BE5;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x672C;&#x5730;&#x94FE;&#x63A5;&#x4E2D;&#x6709;&#x6548;&#x3002;Link-local unicast addresses allow for local network segment communications and are configured based upon a host&#x2019;s MAC address.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ff00::/8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x591A;&#x64AD;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7B49;&#x6548;&#x4E8E; IPv4 &#x4E2D;&#x7684; <code>224.0.0.0/4</code>&#xFF0C;&#x591A;&#x64AD;&#x7528;&#x4E8E;&#x540C;&#x65F6;&#x4F20;&#x64AD;&#x5230;&#x591A;&#x4E2A;&#x4E3B;&#x673A;&#xFF0C;&#x5E76;&#x4E14;&#x5728; IPv6 &#x4E2D;&#x7279;&#x522B;&#x91CD;&#x8981;&#xFF0C;&#x56E0;&#x4E3A;&#x5176;&#x6CA1;&#x6709;&#x5E7F;&#x64AD;&#x5730;&#x5740;&#x3002;</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_ipv6_2">IPv6 &#x6570;&#x636E;&#x62A5;&#x6587;&#x7ED3;&#x6784;</h3>
+<div class="paragraph">
+<p>IPv6 &#x6570;&#x636E;&#x62A5;&#x6587;&#x540C;&#x6837;&#x662F;&#x7531;&#x4E00;&#x7CFB;&#x5217;&#x9AD8;&#x5EA6;&#x7ED3;&#x6784;&#x5316;&#x7684;&#x5B57;&#x6BB5;&#x4E25;&#x683C;&#x5B9A;&#x4E49;&#xFF0C;IPv6 &#x6570;&#x636E;&#x62A5;&#x6587;&#x540C;&#x6837;&#x4E3B;&#x8981;&#x4E3B;&#x8981;&#x90E8;&#x5206;&#x662F; header &#x548C; payload&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ipv6-headers.png" alt="ipv6 headers.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Version</strong> - A 4-bit field that defines what version of IP is in use.</p>
+</li>
+<li>
+<p><strong>Traffic Class</strong> - An 8-bit field that defines the type of traffic contained within the IP datagram and allows for different classes of traffic to receive different priorities.</p>
+</li>
+<li>
+<p><strong>Flow Labe</strong> - A 20-bit field that&#x2019;s used in conjunction with the traffic class field for routers to make decisions about the quality of service level for a specific datagram.</p>
+</li>
+<li>
+<p><strong>Payload Length</strong> - A 16-bit field that defines how long the data payload section of the datagram is.</p>
+</li>
+<li>
+<p><strong>Next header</strong> - The next header field defines what kind of header is immediately after this current one.</p>
+</li>
+<li>
+<p><strong>Hop limit</strong> - An 8-bit field that&#x2019;s identical in purpose to the TTL field in an IPv4 header.</p>
+</li>
+<li>
+<p><strong>Source address</strong> - 128 bits length</p>
+</li>
+<li>
+<p><strong>Destination address</strong> - 128 bits length</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ipv6_and_ipv4_harmony">IPv6 and IPv4 Harmony</h3>
+<div class="paragraph">
+<p><strong>IPv6 tunnels</strong> - IPv6 tunnels are conceptually pretty simple. They consist of IPv6 tunnels servers on either end of a connection. These IPv6 tunnel servers take incoming IPv6 traffic and encapsulate it within traditional IPv4 datagrams.</p>
+</div>
+<div class="paragraph">
+<p><strong>IPv6 tunnel broker</strong> - Companies that provide IPv6 tunneling endpoints for you, so you don&#x2019;t have to introduce additional equipment to your network.</p>
+</div>
+<div class="paragraph">
+<p><strong>Links:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/6in4" target="_blank">6in4</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Tunnel_Setup_Protocol" target="_blank">TSP(Tunnel Setup Protocol)</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Anything_In_Anything" target="_blank">Anything In Anything</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___19">&#x4F20;&#x8F93;&#x5C42;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x8BA1;&#x7B97;&#x673A;&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x4E2D;&#x6709;&#x4E24;&#x4E2A;&#x5E38;&#x89C1;&#x7684;&#x540D;&#x8BCD;&#xFF0C;&#x5373;&#x7AEF;&#x5230;&#x7AEF;(End to End)&#x901A;&#x4FE1;&#x548C;&#x70B9;&#x5230;&#x70B9;(Point to Point)&#x901A;&#x4FE1;&#xFF0C;&#x4E0B;&#x56FE;&#x4E3A;&#x5E38;&#x89C1;&#x7684;&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x573A;&#x666F;&#xFF0C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/end-to-end-net.png" alt="end to end net.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5BA2;&#x6237;&#x7AEF; PC &#x53D1;&#x9001;&#x8BF7;&#x6C42;&#x5230;&#x670D;&#x52A1;&#x5668;&#x7AEF; Server&#xFF0C;&#x800C;PC &#x548C; Server  &#x4F4D;&#x4E8E;&#x4E0D;&#x540C;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;PC &#x8BF7;&#x6C42;&#x5230;&#x8FBE; Server &#x9700;&#x8981;&#x7ECF;&#x8FC7;&#x8DEF;&#x7531;&#x5668; R1 &#x548C; &#x8DEF;&#x7531;&#x5668; R2&#xFF0C;&#x90A3;&#x4E48; &#x5728;&#x8FD9;&#x4E2A;&#x573A;&#x666F;&#x4E2D;&#x53D1;&#x751F;&#x7684;&#x70B9;&#x5BF9;&#x70B9;&#x901A;&#x4FE1;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PC &#x2192; R1</p>
+</li>
+<li>
+<p>R1 &#x2192; R2</p>
+</li>
+<li>
+<p>R2 &#x2192; Server</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x901A;&#x4FE1;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#xFF0C;&#x5373; PC &#x2192; Server&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x524D;&#x9762;&#x7684;&#x5185;&#x5BB9;&#x63CF;&#x8FF0;&#xFF0C;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x53EF;&#x786E;&#x4FDD;&#x70B9;&#x5BF9;&#x70B9;&#x7684;&#x7F51;&#x7EDC;&#x4F20;&#x8F93;&#x53EF;&#x9760;&#xFF0C;&#x7F51;&#x7EDC;&#x5C42;&#x53EF;&#x8BA9;&#x6570;&#x636E;&#x5305;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x7F51;&#x7EDC;&#x4E4B;&#x95F4;&#x8F6C;&#x53D1;&#xFF0C;&#x800C;&#x7F51;&#x7EDC;&#x6A21;&#x578B;&#x4E2D;&#x7684;&#x4F20;&#x8F93;&#x5C42;&#x8D1F;&#x8D23;&#x7684;&#x662F;<strong>&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x53EF;&#x9760;&#x7F51;&#x7EDC;&#x901A;&#x4FE1;</strong>&#x3002;&#x4E3A;&#x4E86;&#x5B9E;&#x73B0;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x53EF;&#x9760;&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E9B;&#x91CD;&#x8981;&#x7684;&#x65B9;&#x6CD5;&#x548C;&#x529F;&#x80FD;&#xFF0C;&#x5177;&#x4F53;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001;(Multiplexing Traffic)</p>
+</li>
+<li>
+<p>&#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;(Demultiplexing Traffic)</p>
+</li>
+<li>
+<p>&#x5EFA;&#x7ACB;&#x957F;&#x8FD0;&#x884C;&#x8FDE;&#x63A5;</p>
+</li>
+<li>
+<p>&#x901A;&#x8FC7;&#x9519;&#x8BEF;&#x68C0;&#x67E5;&#x548C;&#x6570;&#x636E;&#x9A8C;&#x8BC1;&#x6765;&#x786E;&#x4FDD;&#x6570;&#x636E;&#x5B8C;&#x6574;&#x6027;</p>
 </li>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_multiplexing_demultiplexing">Multiplexing &amp; Demultiplexing</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Multiplexing in the transport layer means that nodes on the network have the ability to direct traffic toward many different receiving services.</p>
-</li>
-<li>
-<p>Demultiplexing is the same concept, just at the receiving end, it&#x2019;s taking traffic that&#x2019;s all aimed at the same node and delivering it to the proper receiving service.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/multiplexerDemultiplexer.png" alt="multiplexerDemultiplexer.png"></span></p>
-</div>
+<h3 id="___20">&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001; &amp; &#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;</h3>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 8. <strong>&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001; &amp; &#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001;(Multiplexing Traffic)</th>
+<th class="tableblock halign-left valign-top">&#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;(Demultiplexing Traffic)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="image"><img src="img/transport-multiplexer.png" alt="transport multiplexer.png"></span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="image"><img src="img/transport-demultiplexer.png" alt="transport demultiplexer.png"></span></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6D88;&#x606F;&#x53D1;&#x9001;&#x7AEF;</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6D88;&#x606F;&#x63A5;&#x6536;&#x7AEF;</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x53D1;&#x9001;&#x7AEF;&#x53EF;&#x80FD;&#x6709;&#x591A;&#x4E2A;&#x8FDB;&#x7A0B;&#x9700;&#x8981;&#x53D1;&#x9001;&#x6570;&#x636E;&#xFF0C;&#x4F46;&#x662F;&#x5728;&#x4EFB;&#x610F;&#x4E00;&#x4E2A;&#x65F6;&#x95F4;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x4F20;&#x8F93;&#x534F;&#x8BAE;&#xFF0C;&#x8FD9;&#x79CD;&#x591A;&#x5BF9;&#x4E00;&#x7684;&#x573A;&#x666F;&#x5C31;&#x9700;&#x8981;&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001;&#xFF0C;&#x534F;&#x8BAE;&#x63A5;&#x53D7;&#x6D88;&#x606F;&#x6765;&#x81EA;&#x4E0D;&#x540C;&#x7684;&#x8FDB;&#x7A0B;&#xFF0C;&#x5E76;&#x4E14;&#x66F4;&#x52A0;&#x6D88;&#x606F;&#x5934;&#x4E0A;&#x7684;&#x7AEF;&#x53E3;&#x53F7;&#x4E0D;&#x540C;&#x6765;&#x533A;&#x5206;&#xFF0C;&#x5F53;&#x5B8C;&#x6210;&#x6D88;&#x606F;&#x5934;&#x6DFB;&#x52A0;&#x540E;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x53EF;&#x4EE5;&#x5C06;&#x4F20;&#x8F93;&#x5C42;&#x5305;&#x4F20;&#x9012;&#x7ED9;&#x7F51;&#x7EDC;&#x5C42;&#x3002;</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x4E0E;&#x53D1;&#x9001;&#x6D4B;&#x6B63;&#x597D;&#x76F8;&#x53CD;&#xFF0C;&#x63A5;&#x6536;&#x6D4B;&#x5728;&#x63A5;&#x6536;&#x5230;&#x7F51;&#x7EDC;&#x5C42;&#x7684;&#x6570;&#x636E;&#x5305;&#x540E;&#xFF0C;&#x9762;&#x5BF9;&#x7684;&#x662F;&#x4E00;&#x4E2A;&#x4E00;&#x5BF9;&#x591A;&#x7684;&#x573A;&#x666F;&#xFF0C;&#x8FD9;&#x5C31;&#x9700;&#x8981;&#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;&#x3002;&#x5728;&#x7ECF;&#x8FC7;&#x9519;&#x8BEF;&#x9A8C;&#x8BC1;&#x548C;&#x53BB;&#x9664;&#x6D88;&#x606F;&#x5934;&#x540E;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x4F1A;&#x901A;&#x8FC7;&#x7AEF;&#x53E3;&#x53F7;&#x5C06;&#x6D88;&#x606F;&#x53D1;&#x9001;&#x5230;&#x4E0D;&#x540C;&#x7684;&#x8FDB;&#x7A0B;&#x670D;&#x52A1;</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2576,19 +3225,16 @@ If the very first bit of an IP address is a zero, it belongs to a class A networ
 <div class="title">Note</div>
 </td>
 <td class="content">
-The transport layer handles multiplexing and demultiplexing through ports.
+&#x4F20;&#x8F93;&#x5C42;&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001;&#x548C;&#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;&#x90FD;&#x662F;&#x57FA;&#x4E8E;&#x7AEF;&#x53E3;&#x53F7;&#x6765;&#x5B8C;&#x6210;&#x7684;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x7684;&#x7AEF;&#x53E3;&#x53F7;&#x662F;&#x4E00;&#x4E2A; 16 &#x4F4D;&#x5B57;&#x8282;&#x957F;&#x5EA6;&#x7684;&#x6570;&#x5B57;&#xFF0C;&#x7528;&#x6765;&#x5728;&#x5728;&#x8BA1;&#x7B97;&#x673A;&#x7F51;&#x7EDC;&#x4E2D;&#x4E0D;&#x540C;&#x4E3B;&#x673A;&#x4E0A; &#x7684; &#x8FDB;&#x7A0B;&#x4E4B;&#x95F4;&#x7684;&#x901A;&#x4FE1;&#x3002;
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>A <strong>Port</strong> is a 16-bit number that&#x2019;s used to direct traffic to specific services running on a networked computer.</p>
-</div>
 </div>
 <div class="sect2">
-<h3 id="_dissection_of_a_tcp_segment">Dissection of a TCP Segment</h3>
+<h3 id="_tcp_segment">TCP Segment &#x7ED3;&#x6784;</h3>
 <div class="paragraph">
-<p>A TCP segment is made up of a TCP header and a data section.</p>
+<p>&#x4E00;&#x4E2A; TCP Segment &#x662F;&#x6709; TCP &#x5934;&#x548C;&#x6570;&#x636E;&#x90E8;&#x5206;&#x6784;&#x6210;&#x3002;</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/tcp-segment.png" alt="tcp segment.png"></span></p>
@@ -2596,45 +3242,45 @@ The transport layer handles multiplexing and demultiplexing through ports.
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Destination port</strong> - A destination port is the port of the service the traffic is intended for.</p>
+<p><strong>Destination port</strong> - &#x76EE;&#x7684;&#x5730;&#x7AEF;&#x53E3;&#xFF0C;&#x662F;&#x76EE;&#x7684;&#x670D;&#x52A1;&#x6240;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;&#xFF0C;&#x662F;&#x6700;&#x7EC8;&#x63A5;&#x6536;TCP Segment &#x7684;&#x670D;&#x52A1;&#x7684;&#x7AEF;&#x53E3;&#x3002;</p>
 </li>
 <li>
-<p><strong>Source port</strong> - A source port is a high numbered port chosen from a special section of ports known as ephemeral ports.</p>
+<p><strong>Source port</strong> - &#x6E90;&#x7AEF;&#x53E3;&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x8F83;&#x5927;&#x7684;&#x6570;&#x5B57;&#xFF0C;&#x53D1;&#x9001; TCP Segment &#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x4ECE;&#x968F;&#x673A;&#x7AEF;&#x53E3;&#x4E2D;&#x968F;&#x673A;&#x9009;&#x62E9;</p>
 </li>
 <li>
-<p><strong>Sequence number</strong> - Sequence number is a 32-bit number that&#x2019;s used to keep track of where in a sequence of TCP segments this one is expected to be.</p>
+<p><strong>Sequence number</strong> - 32 &#x4F4D;&#x5B57;&#x8282;&#x957F;&#x5EA6;&#xFF0C;&#x7528;&#x6765;&#x8DDF;&#x8E2A; TCP Segment &#x5728;&#x4F20;&#x8F93;&#x5E8F;&#x5217;&#x4E2D;&#x9884;&#x671F;&#x7684;&#x4F4D;&#x7F6E;&#x3002;</p>
 </li>
 <li>
-<p><strong>Acknowledgment number</strong> - The acknowledgment number is the number of the next expected segment.</p>
+<p><strong>Acknowledgment number</strong> - 32 &#x4F4D;&#x5B57;&#x8282;&#x957F;&#x5EA6;&#xFF0C;&#x7528;&#x6765;&#x786E;&#x5B9A;&#x4E0B;&#x4E00;&#x4E2A;&#x671F;&#x671B;&#x7684; TCP Segment&#x3002;</p>
 </li>
 <li>
-<p><strong>Data offset field</strong> - Data offset field is a four-bit number that communicates how long the TCP header for this segment is. This is so that the receiving network device understands where the actual data payload begins.</p>
+<p><strong>Header Length</strong> - &#x957F;&#x5EA6;&#x4E3A; 4 &#x4E2A;&#x5B57;&#x8282;&#xFF0C;&#x4E5F;&#x53EB;&#x6570;&#x636E;&#x504F;&#x79FB;&#x5B57;&#x6BB5;&#xFF0C;&#x5B83;&#x5B9A;&#x4E49;&#x4E86;&#x5728;&#x4E00;&#x4E2A; TCP Segment &#x4E2D; TCP &#x5934;&#x7684;&#x957F;&#x5EA6;&#xFF0C;&#x8FD9;&#x4E5F;&#x4F7F;&#x63A5;&#x6536;&#x7AEF;&#x7684;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x77E5;&#x9053;&#x771F;&#x6B63;&#x6570;&#x636E; &#x8D1F;&#x8F7D;&#x5F00;&#x59CB;&#x7684;&#x4F4D;&#x7F6E;&#x3002;</p>
 </li>
 <li>
-<p><strong>Control flags</strong> - TCP control flags.</p>
+<p><strong>Control flags</strong> - TCP Segment &#x63A7;&#x5236;&#x6807;&#x7B7E;&#x3002;</p>
 </li>
 <li>
-<p><strong>TCP window</strong> - TCP window is a 16-bit number, which specifies the range of sequence numbers that might be sent before an acknowledgement is required.</p>
+<p><strong>TCP window</strong> - 16 &#x5B57;&#x8282;&#x7684;&#x6570;&#x5B57;&#xFF0C;&#x6307;&#x5B9A;&#x5728;&#x9700;&#x8981;&#x786E;&#x8BA4;&#x524D;&#x53EF;&#x80FD;&#x53D1;&#x9001;&#x7684;&#x5E8F;&#x5217;&#x53F7;&#x8303;&#x56F4;&#x3002;</p>
 </li>
 <li>
-<p><strong>Checksum</strong> - A 16-bit filed, which operates just like the checksum fields at the IP and Ethernet level. Once all of this segment has been ingested by a recipient, the checksum is calculated across the entire segment and is compared with the checksum in the header to make sure that there was no data lost or corrupted along the way.</p>
+<p><strong>Checksum</strong> - &#x957F;&#x5EA6;&#x4E3A; 16 &#x4E2A;&#x5B57;&#x8282;&#xFF0C;&#x548C; IP&#x3001;Ethernet &#x4E2D;&#x7684; Checksum &#x5B57;&#x6BB5;&#x7C7B;&#x4F3C;&#xFF0C;&#x5F53;&#x63A5;&#x6536;&#x8005;&#x63A5;&#x6536;&#x5230;&#x8FD9;&#x4E2A; TCP Segment &#x540E;&#xFF0C;Checksum &#x4F1A;&#x8FDB;&#x884C;&#x4E00;&#x6B21;&#x8BA1;&#x7B97;&#xFF0C;&#x8BA1;&#x7B97;&#x6574;&#x4E2A; TCP Segment &#x7684;&#x957F;&#x5EA6;&#xFF0C;&#x5E76;&#x548C;&#x6539;&#x5B57;&#x6BB5;&#x5B9A;&#x4E49;&#x7684;&#x957F;&#x5EA6;&#x8FDB;&#x884C;&#x6BD4;&#x8F83;&#xFF0C;&#x4EE5;&#x786E;&#x4FDD;&#x4F20;&#x8F93;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x6CA1;&#x6709;&#x6570;&#x636E;&#x7684;&#x4E22;&#x5931;&#x6216;&#x635F;&#x574F;&#x3002;</p>
 </li>
 <li>
-<p><strong>Urgent</strong> - The Urgent pointer field is used in conjunction with one of the TCP control flags to point out particular segments that might be more important than others.</p>
+<p><strong>Urgent</strong> - &#x8BE5;&#x5B57;&#x6BB5;&#x901A;&#x5E38;&#x4E0E; TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;&#x4E2D;&#x7684;&#x67D0;&#x4E2A;&#x6807;&#x7B7E;&#x8054;&#x5408;&#x4F7F;&#x7528;&#xFF0C;&#x6765;&#x8BF4;&#x660E;&#x67D0;&#x4E2A; Segment &#x6BD4;&#x5176;&#x4ED6; Segment &#x91CD;&#x8981;&#xFF0C;&#x6216;&#x6709;&#x7279;&#x5B9A;&#x542B;&#x4E49;&#x3002;</p>
 </li>
 <li>
-<p><strong>Options</strong> - Options field is rarely used in the real world, but it&#x2019;s sometimes used for more complicated flow control protocols.</p>
+<p><strong>Options</strong> - &#x8BE5;&#x5B57;&#x6BB5;&#x901A;&#x5E38;&#x6BD4;&#x8F83;&#x5C11;&#x7528;&#xFF0C;&#x4F46;&#x6709;&#x65F6;&#x4F1A;&#x7528;&#x4E8E;&#x66F4;&#x590D;&#x6742;&#x7684;&#x6D41;&#x63A7;&#x5236;&#x534F;&#x8BAE;&#x3002;</p>
 </li>
 <li>
-<p><strong>Padding</strong> - Aequence of zeros to ensure that the data payload section begins at the expected location.</p>
+<p><strong>Padding</strong> - &#x96F6;&#x5E8F;&#x5217;&#xFF0C;&#x4EE5;&#x786E;&#x4FDD;&#x6570;&#x636E;&#x6709;&#x6548;&#x8D1F;&#x8F7D;&#x90E8;&#x5206;&#x4ECE;&#x9884;&#x671F;&#x4F4D;&#x7F6E;&#x5F00;&#x59CB;&#x3002;</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_tcp_control_flags">TCP Control Flags</h3>
+<h3 id="_tcp">TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;</h3>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. <strong>6 TCP control flags</strong></caption>
+<caption class="title">Table 9. <strong>6 &#x79CD; TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2648,63 +3294,68 @@ The transport layer handles multiplexing and demultiplexing through ports.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URG(urgent)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A value of one here indicates that the segment is considered urgent and that the urgent pointer field has more data about this.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5982;&#x679C;&#x6B64;&#x6807;&#x7B7E;&#x503C;&#x4E3A; 1&#xFF0C;&#x5219;&#x8868;&#x793A;&#x5F53;&#x524D; TCP Segment &#x7279;&#x522B;&#x91CD;&#x8981;&#xFF0C;&#x8BE5;&#x6807;&#x7B7E;&#x901A;&#x5E38; &#x4E0E; TCP &#x5934;&#x4E2D;&#x7684; <strong>Urgent</strong> &#x5B57;&#x6BB5;&#x4E00;&#x8D77;&#x4F7F;&#x7528;&#xFF0C; <strong>Urgent</strong> &#x5B57;&#x6BB5;&#x6709;&#x66F4;&#x591A;&#x4FE1;&#x606F;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ACK(acknowledge)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A value of one in this field means that the acknowledgment number field should be examined.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5982;&#x679C;&#x6B64;&#x6807;&#x7B7E;&#x503C;&#x4E3A; 1&#xFF0C;&#x5219;&#x8868;&#x793A; <strong>Acknowledgment number</strong> &#x5B57;&#x6BB5;&#x5E94;&#x8BE5;&#x88AB;&#x68C0;&#x67E5;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PSH(push)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the transmitting device wants the receiving device to push currently buffered data to the application on the receiving end as soon as possible.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4F20;&#x8F93;&#x8BBE;&#x5907;&#x60F3; &#x8BA9;&#x63A5;&#x6536;&#x7AEF;&#x8BBE;&#x5907;&#x5C3D;&#x5FEB;&#x5C06;&#x7F13;&#x51B2;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x63A8;&#x9001; &#x5230;&#x5E94;&#x7528;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RST(reset)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One of the sides in a TCP connection hasn&#x2019;t been able to properly recover from a series of missing or malformed segments.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP &#x8FDE;&#x63A5;&#x4E2D;&#x7684;&#x4E00;&#x65B9;&#x65E0;&#x6CD5;&#x4ECE;&#x4E00;&#x7CFB;&#x5217;&#x4E22;&#x5931;&#x6216;&#x683C;&#x5F0F;&#x9519;&#x8BEF;&#x7684;&#x6BB5;&#x4E2D;&#x6B63;&#x786E;&#x6062;&#x590D;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SYN(synchronize)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It&#x2019;s used when first establishing a TCP connection and make sure the receiving end knows to examine the sequence number field.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x521D;&#x6B21;&#x5EFA;&#x7ACB;&#x4E00;&#x4E2A; TCP &#x8FDE;&#x63A5;&#x65F6;&#x4F7F;&#x7528;&#xFF0C;&#x8BA9;&#x63A5;&#x6536;&#x7AEF;&#x77E5;&#x9053;&#x9700;&#x8981;&#x68C0;&#x67E5; <strong>Sequence number</strong> &#x5B57;&#x6BB5;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FIN(finish)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It&#x2019;s hints that the transmitting computer doesn&#x2019;t have any more data to send and the connection can be closed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x63D0;&#x793A;&#x4F20;&#x8F93;&#x8BA1;&#x7B97;&#x673A;&#x7AEF;&#x6CA1;&#x6709;&#x66F4;&#x591A;&#x6570;&#x636E;&#xFF0C;&#x8FDE;&#x63A5;&#x53EF;&#x4EE5;&#x5173;&#x95ED;&#x3002;</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_three_way_handshake">Three-way Handshake</h3>
+<h3 id="___21">&#x4E09;&#x6B21;&#x63E1;&#x624B;</h3>
 <div class="paragraph">
-<p>Three-way Handshake is a abstraction for establishing a TCP connection.</p>
+<p>&#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;&#xFF0C;TCP &#x8FDE;&#x63A5;&#x7684;&#x5EFA;&#x7ACB;&#x81F3;&#x5C11;&#x9700;&#x8981;&#x4EA4;&#x6362;&#x4E09;&#x4E2A; TCP Segment&#xFF0C;&#x4E09;&#x6B21;&#x63E1;&#x624B;&#x662F;&#x5BF9; TCP &#x8FDE;&#x63A5;&#x5EFA;&#x7ACB;&#x7684;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x3002;</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/tcp-3-hands-handshake.png" alt="tcp 3 hands handshake.png"></span></p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>A sends a TCP segment to B with SYN flag set</strong> (<code>Let&#x2019;s establish a connection and look at my sequence number field, so we know where this conversation starts.</code>)</p>
-</li>
-<li>
-<p><strong>B then responds with a TCP segment, where both the SYN and ACK flags are set</strong> (<code>Sure, let&#x2019;s establish a connection and I acknowledge your sequence number.</code>)</p>
-</li>
-<li>
-<p><strong>A responds again with just the ACK flag set</strong> (<code>I acknowledge your acknowledgement. Let&#x2019;s start sending data.</code>)</p>
-</li>
-</ol>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">// Step One
+A &#x53D1;&#x9001;&#x4E00;&#x4E2A; TCP Segment &#x5230; B&#xFF0C;&#x4E3B;&#x8981;&#x5305;&#x62EC;&#x4E00;&#x4E2A; SYN &#x6807;&#x7B7E;&#xFF0C;&#x544A;&#x8BC9; B &#x5BA2;&#x6237;&#x7AEF; A &#x7684;&#x521D;&#x59CB;&#x5E8F;&#x5217;&#x53F7;&#x4E3A; J&#x3002;&#xFF08;&#x8BA9;&#x6211;&#x4EEC;&#x5F00;&#x59CB;&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;&#x5427;&#xFF0C;&#x6211;&#x7684;&#x5E8F;&#x5217;&#x53F7;&#x4E3A; J&#xFF0C;&#x8FD9;&#x6837;&#x6211;&#x4EEC;&#x4F1A;&#x77E5;&#x9053;&#x6211;&#x4EEC;&#x4EA4;&#x6D41;&#x5F00;&#x59CB;&#x7684;&#x4F4D;&#x7F6E;&#xFF09;
+A sends a TCP segment to B with SYN flag set (`Let&apos;s establish a connection and look at my sequence number field, so we know where this conversation starts.`)
+
+// Step Two
+B &#x56DE;&#x590D;&#x4E00;&#x4E2A; TCP Segment &#x5230; A&#xFF0C;&#x5305;&#x62EC;&#x4E24;&#x4E2A;&#x6807;&#x7B7E; SYN &#x548C; ACK&#xFF0C;&#x544A;&#x8BC9; A &#x670D;&#x52A1;&#x5668;&#x7AEF;&#xFF08;B&#xFF09;&#x7684;&#x521D;&#x59CB;&#x5E8F;&#x5217;&#x53F7;&#x4E3A; K&#xFF0C;&#x540C;&#x65F6;&#x786E;&#x8BA4; A &#x670D;&#x52A1;&#x5668;&#xFF08;B&#xFF09;&#x786E;&#x8BA4;&#x5BA2;&#x6237;&#x7AEF; A &#x7684;&#x5E8F;&#x5217;&#x53F7;&#xFF08;ACK &#x7684;&#x503C;&#x4E3A; J + 1&#xFF09;
+B then responds with a TCP segment, where both the SYN and ACK flags are set(`Sure, let&apos;s establish a connection and I acknowledge your sequence number.`)
+
+// Step Three
+A &#x56DE;&#x590D;&#x4E00;&#x4E2A; TCP Segment &#x5230; B&#xFF0C;&#x4E3B;&#x8981;&#x5305;&#x62EC;&#x4E00;&#x4E2A; ACK &#x6807;&#x7B7E;&#xFF0C;&#x544A;&#x8BC9;&#x670D;&#x52A1;&#x5668;&#x7AEF; B &#x5BA2;&#x6237;&#x7AEF; A &#x786E;&#x8BA4;&#x670D;&#x52A1;&#x7AEF;&#x7684;&#x5E8F;&#x5217;&#x53F7;&#xFF08;ACK &#x7684;&#x503C;&#x4E3A; K + 1&#xFF09;&#x3002;
+A responds again with just the ACK flag set* (`I acknowledge your acknowledgement. Let&apos;s start sending data.`)</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>A handshake is a way for two devices to ensure that they&#x2019;re speaking the same protocol and will be able to understand each other.</p>
+<p>&#x4E00;&#x6B21;&#x63E1;&#x624B;&#x662F;&#x4E24;&#x4E2A;&#x8BBE;&#x5907;&#x786E;&#x4FDD;&#x4ED6;&#x4EEC;&#x6240;&#x4F7F;&#x7528;&#x540C;&#x4E00;&#x4E2A;&#x534F;&#x8BAE;&#xFF0C;&#x5E76;&#x4E14;&#x80FD;&#x591F;&#x5F7C;&#x6B64;&#x76F8;&#x4E92;&#x7406;&#x89E3;&#x3002;</p>
 </div>
 <div class="paragraph">
-<p>TCP connection is operating in full duplex.  Each segment sent in either direction should be responded to by TCP segment with the ACK field set. This way, the other side always knows what has been received.</p>
+<p>TCP &#x8FDE;&#x63A5;&#x662F;&#x4E00;&#x4E2A;&#x591A;&#x8DEF;&#x590D;&#x7528;&#x7684;&#x6A21;&#x5F0F;&#xFF0C;&#x6BCF;&#x4E00;&#x4E2A; TCP Segment &#x7684;&#x53D1;&#x9001;&#x90FD;&#x4F1A;&#x6709;&#x4E00;&#x4E2A; TCP Segment &#x7684;&#x56DE;&#x590D;&#xFF08;ACK &#x6807;&#x7B7E;&#xFF09;&#xFF0C;&#x8FD9;&#x6837;&#x53D1;&#x9001;&#x7AEF;&#x5C31;&#x77E5;&#x9053;&#x63A5;&#x6536;&#x7AEF;&#x63A5;&#x6536;&#x5230;&#x76F8;&#x5E94;&#x7684;&#x7247;&#x6BB5;&#x3002;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_four_way_handshake">Four-way Handshake</h3>
+<h3 id="___22">&#x56DB;&#x6B21;&#x63E1;&#x624B;</h3>
 <div class="paragraph">
-<p>Four-way Handshake is a abstraction for closing a TCP connection.</p>
+<p>TCP &#x5EFA;&#x7ACB;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x9700;&#x8981;&#x4E09;&#x6B21; TCP Segment &#x4EA4;&#x6362;&#xFF0C;&#x800C;&#x7EC8;&#x6B62;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x9700;&#x8981;&#x56DB;&#x6B21; TCP Segment &#x4EA4;&#x6362;&#xFF0C;&#x56DB;&#x6B21;&#x63E1;&#x624B;&#x662F;&#x5BF9; TCP &#x8FDE;&#x63A5;&#x7EC8;&#x6B62;&#x7684;&#x4E00;&#x4E2A;&#x62BD;&#x8C61;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>TCP &#x8FDE;&#x63A5;&#x53EF;&#x4EE5;&#x4ECE;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7684;&#x4EFB;&#x4F55;&#x4E00;&#x65B9;&#x53D1;&#x8D77;&#xFF0C;&#x53D1;&#x8D77;&#x5173;&#x95ED;&#x8FDE;&#x63A5;&#x7684;&#x4E00;&#x6B21;&#x901A;&#x5E38;&#x901A;&#x8FC7;&#x8C03;&#x8FD0; close() &#x65B9;&#x6CD5;&#xFF0C;&#x6211;&#x4EEC;&#x5C06;&#x8FD9;&#x4E00;&#x52A8;&#x4F5C;&#x79F0;&#x4E3A;<strong>&#x4E3B;&#x52A8;&#x5173;&#x95ED;&#xFF08;Active Close&#xFF09;</strong>&#xFF0C;&#x76F8;&#x5E94;&#x7684;&#x53E6;&#x4E00;&#x7AEF;&#x5219;&#x79F0;&#x4E3A;<strong>&#x88AB;&#x52A8;&#x5173;&#x95ED;&#xFF08;Passive Close&#xFF09;</strong>&#xFF0C;&#x4E0B;&#x56FE;&#x6F14;&#x793A;&#x7684;&#x662F;&#x4ECE;&#x670D;&#x52A1;&#x5668;&#x7AEF; B &#x53D1;&#x8D77;&#x7684;&#x4E3B;&#x8981;&#x5173;&#x95ED;&#x8FC7;&#x7A0B;&#xFF1A;</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/tcp-4wayshandshake.png" alt="tcp 4wayshandshake.png"></span></p>
@@ -2712,27 +3363,30 @@ The transport layer handles multiplexing and demultiplexing through ports.
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>B sends a FIN flag to A</strong></p>
+<p>B &#x53D1;&#x9001; FIN &#x6807;&#x7B7E;&#x5230; A&#xFF08;FIN M&#xFF09;</p>
 </li>
 <li>
-<p><strong>A acknowledges with an ACK flag B</strong></p>
+<p>A &#x786E;&#x8BA4; B &#x5E76;&#x56DE;&#x590D;&#x4E00;&#x4E2A; ACK &#x6807;&#x7B7E;(ACK M + 1)</p>
 </li>
 <li>
-<p><strong>A sends a FIN flag to B</strong> (<code>A is also ready to close the connection</code>)</p>
+<p>A &#x53D1;&#x9001; FIN &#x6807;&#x7B7E;&#x5230; B&#xFF08;FIN N&#xFF09;</p>
 </li>
 <li>
-<p><strong>B respond ACK flag to A</strong></p>
+<p>B &#x786E;&#x8BA4; A &#x5E76;&#x56DE;&#x590D;&#x4E00;&#x4E2A; ACK &#x6807;&#x7B7E;(ACK N + 1)</p>
 </li>
 </ol>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_tcp_socket_states">TCP Socket States</h3>
+<h3 id="_tcp_2">TCP &#x5957;&#x63A5;&#x5B57;&#x72B6;&#x6001;</h3>
+<div class="paragraph">
+<p>&#x4E00;&#x4E2A; TCP &#x5957;&#x63A5;&#x5B57;&#x662F;&#x4E00;&#x4E2A;&#x6F5C;&#x5728; TCP &#x8FDE;&#x63A5;&#x4E00;&#x7AEF;&#x7684;&#x5B9E;&#x4F8B;&#x5316;&#xFF0C;&#x5B9E;&#x4F8B;&#x5316;&#x3002;TCP &#x5957;&#x63A5;&#x5B57;&#x6709;&#x591A;&#x4E2A;&#x72B6;&#x6001;&#x3002;</p>
+</div>
 <div class="paragraph">
 <p>A socket is the instantiation of an endpoint in a potential TCP connection.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. <strong>TCP sockets states</strong></caption>
+<caption class="title">Table 10. <strong>TCP &#x5957;&#x63A5;&#x5B57;&#x72B6;&#x6001;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2746,93 +3400,90 @@ The transport layer handles multiplexing and demultiplexing through ports.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">LISTEN</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A TCP socket is ready and listening for incoming connections. (this on the server side only)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E00;&#x4E2A; TCP &#x5957;&#x63A5;&#x5B57;&#x51C6;&#x5907;&#x5C31;&#x7EEA;&#xFF0C;&#x53EF;&#x4EE5;&#x63A5;&#x6536;&#x8FDB;&#x5165;&#x7684;&#x8FDE;&#x63A5;&#xFF0C;&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x53EA;&#x4F1A;&#x5728;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SYN_SENT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A synchronization request has been sent, but the connection hasn&#x2019;t been established yet. (this on the client side only)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x9001;&#x4E86;&#x4E00;&#x4E2A; SYN &#x6807;&#x7B7E;&#x7684;&#x8BF7;&#x6C42;&#x5230;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#xFF0C;&#x4E14;&#x8FDE;&#x63A5;&#x5EFA;&#x7ACB;&#x8FD8;&#x6CA1;&#x6709;&#x5B8C;&#x6210;&#xFF0C;&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x53EA;&#x4F1A;&#x5728;&#x5BA2;&#x6237;&#x7AEF;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SYN_RECEIVED</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A  socket previously in a listener state, has received a synchronization request and sent a SYN_ACK back. But it hasn&#x2019;t received the final ACK from the client yet. (this on the server side only)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x524D;&#x5E8F;&#x5904;&#x4E8E; LISTEN &#x72B6;&#x6001;&#xFF0C;&#x63A5;&#x6536;&#x5230; SYN &#x6807;&#x7B7E;&#x7684;&#x8BF7;&#x6C42;&#xFF0C;&#x5E76;&#x4E14;&#x7ED9;&#x5BA2;&#x6237;&#x7AEF;&#x56DE;&#x590D;&#x4E86; SYN &#x548C; ACK&#xFF0C;&#x4F46;&#x662F;&#x8FDE;&#x63A5;&#x8FD8;&#x6CA1;&#x6709;&#x5EFA;&#x7ACB;&#xFF0C;&#x7B49;&#x5F85;&#x5BA2;&#x6237;&#x7AEF;&#x7684; ACK &#x8BF7;&#x6C42;&#x3002;&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x53EA;&#x4F1A;&#x5728;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ESTABLISHED</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The TCP connection is in working order, and both sides are free to send each other data. (this on both the client and server sides of the connection)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP &#x8FDE;&#x63A5;&#x5EFA;&#x7ACB;&#x540E;&#x7684;&#x72B6;&#x6001;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x53EF;&#x4EE5;&#x81EA;&#x7531;&#x76F8;&#x4E92;&#x53D1;&#x9001;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x5373;&#x53EF;&#x4EE5;&#x662F;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x662F;&#x5728;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FIN_WAIT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A FIN has been sent, but the corresponding ACK from the other end hasn&#x2019;t been received yet.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4E00;&#x4E2A; FIN &#x6807;&#x7B7E;&#x7684;&#x8BF7;&#x6C42;&#x53D1;&#x9001;&#xFF0C;&#x540C;&#x65F6;&#x6CA1;&#x6709;&#x63A5;&#x6536;&#x5230;&#x53E6;&#x4E00;&#x4FA7;&#x56DE;&#x590D;&#x7684; ACK&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE_WAIT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The connection has been closed at the TCP layer, but that the application that opened the socket hasn&#x2019;t released its hold on the socket yet.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4F20;&#x8F93;&#x5C42; TCP &#x8FDE;&#x63A5;&#x5DF2;&#x7ECF;&#x5173;&#x95ED;, &#x4F46;&#x5E94;&#x7528;&#x5C42;&#x8FD8;&#x6CA1;&#x6709;&#x91CA;&#x653E;&#x76F8;&#x5E94;&#x7684;&#x5957;&#x63A5;&#x5B57;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CLOSED</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The connection has been fully terminated, and that no further communication is possible.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP &#x8FDE;&#x63A5;&#x5B8C;&#x5168;&#x5173;&#x95ED;&#xFF0C;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x8FDB;&#x4E00;&#x6B65;&#x901A;&#x4FE1;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x3002;</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_udp_user_datagram_protocol">UDP(User Datagram Protocol)</h3>
+<h3 id="_udp">UDP(&#x7528;&#x6237;&#x6570;&#x636E;&#x62A5;&#x534F;&#x8BAE;)</h3>
 <div class="paragraph">
-<p>Unlike TCP, UDP doesn&#x2019;t rely on connections and it doesn&#x2019;t even support the concept of an acknowledgement. With UDP, you just set a destination port and send the packet.</p>
+<p>&#x4E0D;&#x50CF; TCP&#xFF0C;UDP &#x4E0D;&#x4F9D;&#x8D56;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#xFF0C;&#x6CA1;&#x6709;&#x7C7B;&#x4F3C; TCP &#x4E2D; ACK &#x7684;&#x7406;&#x5FF5;&#xFF0C;UDP &#x4E2D;&#x53EA;&#x9700;&#x8981;&#x8BBE;&#x5B9A;&#x4E00;&#x4E2A;&#x76EE;&#x7684;&#x5730;&#x7AEF;&#x53E3;&#x3002;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_system_ports_vs_ephemeral_ports">System Ports Vs Ephemeral Ports</h3>
+<h3 id="___23">&#x7CFB;&#x7EDF;&#x7AEF;&#x53E3;&#x548C;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;</h3>
 <div class="paragraph">
-<p>The ports are represented by a single 16-bit number, meaning that they can represent the numbers 0-65535.</p>
+<p>&#x4F20;&#x8F93;&#x5C42;&#x662F;&#x6839;&#x636E;&#x7AEF;&#x53E3;&#x53F7;&#x6765;&#x786E;&#x4FDD;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x901A;&#x4FE1;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x7684;&#x534F;&#x8BAE;&#x4E0D;&#x7BA1;&#x662F; TCP &#x8FD8;&#x662F; UDP&#xFF0C;&#x90FD;&#x4E0E;&#x7AEF;&#x53E3;&#x53F7;&#x5173;&#x8054;&#xFF0C;&#x7AEF;&#x53E3;&#x53F7;&#x662F;&#x4E00;&#x4E2A; 16 &#x4E2A;&#x5B57;&#x8282;&#x957F;&#x5EA6;&#x7684;&#x6570;&#x5B57;&#xFF08;&#x8303;&#x56F4;&#x4E3A; 0 - 65535&#xFF09;&#x3002;&#x7AEF;&#x53E3;&#x53F7;&#x53C8;&#x5206;&#x4E3A;&#x7CFB;&#x7EDF;&#x7AEF;&#x53E3;&#x548C;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;&#x3002;</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. <strong>IANA defined ports range</strong></caption>
+<caption class="title">Table 11. <strong>IANA &#x5B9A;&#x4E49;&#x7684;&#x7AEF;&#x53E3;&#x8303;&#x56F4;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Range</th>
+<th class="tableblock halign-left valign-top">&#x8303;&#x56F4;</th>
 <th class="tableblock halign-left valign-top">&#x63CF;&#x8FF0;</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Port 0 isn&#x2019;t in use for network traffic, but it&#x2019;s sometimes used in communications taking place between different programs on the same computer.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7AEF;&#x53E3; 0 &#x4E0D;&#x4F1A;&#x4F7F;&#x7528;&#x5728;&#x7F51;&#x7EDC;&#x8FDE;&#x63A5;&#x4E2D;&#xFF0C;&#x4F46;&#x6709;&#x65F6;&#x5019;&#x5982;&#x679C;&#x540C;&#x4E00;&#x4E2A;&#x4E3B;&#x673A;&#x4E0A;&#x53C8;&#x591A;&#x4E2A;&#x7A0B;&#x5E8F;&#xFF0C;&#x90A3;&#x4E48;&#x4F7F;&#x7528; 0 &#x53EF;&#x4EE5;&#x968F;&#x673A;&#x9009;&#x62E9;&#x4E00;&#x4E2A;&#x7AEF;&#x53E3;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1 - 1023</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ports 1-1023 are referred to as system ports, or sometimes as &quot;well-known ports.&quot; These ports represent the official ports for most well-known network services. eg, 80 is for HTTP, 21 is for FTP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7CFB;&#x7EDF;&#x7AEF;&#x53E3;&#x8303;&#x56F4;&#xFF0C;&#x6216;&#x88AB;&#x79F0;&#x4E3A;&#x4F17;&#x6240;&#x5468;&#x77E5;&#x7AEF;&#x53E3;&#x53F7;&#xFF0C;&#x8FD9;&#x4E9B;&#x7AEF;&#x53E3;&#x901A;&#x5E38;&#x88AB;&#x4E00;&#x4E9B;&#x5927;&#x5BB6;&#x719F;&#x77E5;&#x7684;&#x670D;&#x52A1;&#x6240;&#x6709;&#xFF0C;&#x4F8B;&#x5982; 80 &#x4E3A; HTTP &#x7AEF;&#x53E3;&#xFF0C;21 &#x662F; FTP &#x7B49;&#x3002;&#x8FD9;&#x4E9B;&#x7AEF;&#x53E3;&#x53D7; IANA &#x63A7;&#x5236;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1024 - 49151</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ports 1024-49151 are known as registered ports. These ports are used for lots of other network services that might not be quite as common as the ones that are on system ports. eg, 3306 is used for Mysql, 8080 is used by Tomcat/JBoss.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x5DF2;&#x6CE8;&#x518C;&#x7AEF;&#x53E3;&#xFF0C;&#x8FD9;&#x4E9B;&#x7AEF;&#x53E3;&#x4E0D;&#x53D7; IANA &#x63A7;&#x5236;&#xFF0C;&#x4E0D;&#x8FC7;&#x7531; IANA &#x767B;&#x8BB0;&#xFF0C;&#x5E76;&#x63D0;&#x4F9B;&#x4ED6;&#x4EEC;&#x4F7F;&#x7528;&#x60C5;&#x51B5;&#x6E05;&#x5355;&#xFF0C;&#x4EE5;&#x65B9;&#x4FBF;&#x6574;&#x4E2A;&#x7FA4;&#x4F53;&#x3002;&#x8FD9;&#x4E9B;&#x7AEF;&#x53E3;&#x4E2D;&#x4E00;&#x4E9B;&#x901A;&#x8FC7;&#x53EF;&#x80FD;&#x88AB;&#x719F;&#x6089;&#xFF0C;3306 &#x662F; Mysql &#x7684;&#x7AEF;&#x53E3;&#xFF0C;8080 &#x4E3A; Tomcat/JBoss &#x7AEF;&#x53E3;&#x3002;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">49152 - 65535</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">These are known as private or ephemeral ports. Ephemeral ports can&#x2019;t be registered with the IANA and are generally used for establishing outbound connections. You should remember that all TCP traffic uses a destination port and a source port. When a client wants to communicate with a server, the client will be assigned an ephemeral port to be used for just that one connection, while the server listens on a static system or registered port.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8FD9;&#x4E9B;&#x7AEF;&#x53E3;&#x88AB;&#x79F0;&#x4E3A;&#x79C1;&#x6709;&#x6216;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;&#xFF0C;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;&#x4E0D;&#x80FD;&#x901A;&#x8FC7; INANA &#x6CE8;&#x518C;&#xFF0C;&#x8FD9;&#x4E9B;&#x7AEF;&#x53E3;&#x7528;&#x5728; TCP &#x8FDE;&#x63A5;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x968F;&#x673A;&#x9009;&#x7528;&#xFF08;Source Port&#xFF09;&#xFF0C;&#x4E00;&#x4E2A;&#x5BA2;&#x6237;&#x7AEF;/&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x901A;&#x4FE1;&#x7684;&#x7A0B;&#x5E8F;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x901A;&#x5E38;&#x76D1;&#x542C;&#x4E0E;&#x4E00;&#x4E2A;&#x5DF2;&#x6CE8;&#x518C;&#x7684;&#x7AEF;&#x53E3;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x5EFA;&#x7ACB;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x65F6;&#x4F1A;&#x5206;&#x914D;&#x4E00;&#x4E2A;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;&#x3002;</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_firewalls">Firewalls</h3>
+<h3 id="___24">&#x9632;&#x706B;&#x5899;</h3>
 <div class="paragraph">
-<p>A firewall is just a device that blocks traffic that meets certain criteria.</p>
-</div>
-<div class="paragraph">
-<p>Firewalls can actually operate at lots of different layers of the network:</p>
+<p>&#x4E00;&#x4E2A;&#x9632;&#x706B;&#x5899;&#x662F;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x7528;&#x6765;&#x963B;&#x585E;&#x6EE1;&#x8DB3;&#x7279;&#x5B9A;&#x6761;&#x4EF6;&#x7684;&#x7F51;&#x7EDC;&#x8D1F;&#x8F7D;&#x3002;&#x9632;&#x706B;&#x5899;&#x901A;&#x5E38;&#x53EF;&#x4EE5;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x7F51;&#x7EDC;&#x5C42;&#x8FD0;&#x884C;&#xFF1A;</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Firewalls that can perform inspection of application layer traffic, and firewalls that primarily deal with blocking ranges of IP addresses.</p>
+<p>&#x4F20;&#x8F93;&#x5C42; - &#x901A;&#x5E38;&#x901A;&#x8FC7;&#x914D;&#x7F6E;&#x963B;&#x585E;&#x7279;&#x5B9A;&#x7684;&#x7AEF;&#x53E3;&#x4E0A;&#x7684;&#x7F51;&#x7EDC;&#x8D1F;&#x8F7D;&#xFF0C;&#x540C;&#x65F6;&#x5141;&#x8BB8;&#x4E00;&#x4E9B;&#x7AEF;&#x53E3;&#x4E0A;&#x7684;&#x7F51;&#x7EDC;&#x8D1F;&#x8F7D;</p>
 </li>
 <li>
-<p>Firewalls that operate at the transportation layer will generally have a configuration that enables them to block traffic to certain ports while allowing traffic to other ports.</p>
+<p>&#x5E94;&#x7528;&#x5C42; - &#x68C0;&#x6D4B;&#x5E94;&#x7528;&#x5C42;&#x6570;&#x636E;&#x8D1F;&#x8F7D;&#xFF0C;&#x4F8B;&#x5982;&#x7279;&#x5B9A;&#x8303;&#x56F4; IP&#x5730;&#x5740;&#x7B49;&#x3002;</p>
 </li>
 </ul>
 </div>
@@ -2840,10 +3491,10 @@ The transport layer handles multiplexing and demultiplexing through ports.
 </div>
 </div>
 <div class="sect1">
-<h2 id="___9">&#x5E94;&#x7528;&#x5C42;</h2>
+<h2 id="___25">&#x5E94;&#x7528;&#x5C42;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___10">&#x5E94;&#x7528;&#x5C42;&#x534F;&#x8BAE;</h3>
+<h3 id="___26">&#x5E94;&#x7528;&#x5C42;&#x534F;&#x8BAE;</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -2977,7 +3628,7 @@ The transport layer handles multiplexing and demultiplexing through ports.
 </div>
 </div>
 <div class="sect1">
-<h2 id="___11">&#x7F51;&#x7EDC;&#x670D;&#x52A1;</h2>
+<h2 id="___27">&#x7F51;&#x7EDC;&#x670D;&#x52A1;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_dhcp">DHCP</h3>
@@ -3056,7 +3707,7 @@ IP masquerading is an important security concept. The most basic concept at play
 <div class="sect3">
 <h4 id="_rir_regional_internet_registries">RIR(regional internet registries)</h4>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 4. <strong>The IANA assigned address blocks to the five regional internet registries or RIRs</strong></caption>
+<caption class="title">Table 12. <strong>The IANA assigned address blocks to the five regional internet registries or RIRs</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3185,10 +3836,10 @@ Reverse proxy can also used in encrypting and decrypting web data.
 </div>
 </div>
 <div class="sect1">
-<h2 id="___12">&#x7F51;&#x7EDC;&#x63A5;&#x5165;</h2>
+<h2 id="___28">&#x7F51;&#x7EDC;&#x63A5;&#x5165;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___13">&#x62E8;&#x53F7;&#x63A5;&#x5165;</h3>
+<h3 id="___29">&#x62E8;&#x53F7;&#x63A5;&#x5165;</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -3210,7 +3861,7 @@ Reverse proxy can also used in encrypting and decrypting web data.
 </div>
 </div>
 <div class="sect2">
-<h3 id="___14">&#x5BBD;&#x5E26;&#x63A5;&#x5165;</h3>
+<h3 id="___30">&#x5BBD;&#x5E26;&#x63A5;&#x5165;</h3>
 <div class="sect3">
 <h4 id="_what_is_broadband">What is broadband?</h4>
 <div class="paragraph">
@@ -3403,10 +4054,10 @@ WAN technologies usually require that you contract a link across the Internet wi
 </div>
 </div>
 <div class="sect1">
-<h2 id="___15">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x89E3;&#x51B3;</h2>
+<h2 id="___31">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x89E3;&#x51B3;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___16">&#x8FDE;&#x901A;&#x6027;&#x9A8C;&#x8BC1;</h3>
+<h3 id="___32">&#x8FDE;&#x901A;&#x6027;&#x9A8C;&#x8BC1;</h3>
 <div class="paragraph">
 <p>ICMP(internet control message protocol) is mainly used by router or remote hosts to communicate while transmission has failed back to the origin of the transmission.</p>
 </div>
@@ -3524,7 +4175,7 @@ Ncat: 0 bytes sent, 0 bytes received <span class="hljs-keyword">in</span> 0.25 s
                 </a>
                 
                 
-                <a href="ifcfg.html" class="navigation navigation-next " aria-label="Next page: 网络配置">
+                <a href="tcp_debug.html" class="navigation navigation-next " aria-label="Next page: TCP 调试">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -3535,7 +4186,7 @@ Ncat: 0 bytes sent, 0 bytes received <span class="hljs-keyword">in</span> 0.25 s
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"网络基础","level":"1.2.3.1","depth":3,"next":{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},"previous":{"title":"网络","level":"1.2.3","depth":2,"path":"linux/networking/README.adoc","ref":"linux/networking/README.adoc","articles":[{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[]},{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},{"title":"IPv6 网络配置","level":"1.2.3.3","depth":3,"path":"linux/networking/ipv6cfg.adoc","ref":"linux/networking/ipv6cfg.adoc","articles":[]},{"title":"namespace","level":"1.2.3.4","depth":3,"path":"linux/networking/netns.adoc","ref":"linux/networking/netns.adoc","articles":[]},{"title":"teaming","level":"1.2.3.5","depth":3,"path":"linux/networking/teaming.adoc","ref":"linux/networking/teaming.adoc","articles":[]},{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},{"title":"网络监控","level":"1.2.3.8","depth":3,"path":"linux/networking/monitor.adoc","ref":"linux/networking/monitor.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/fundamentals.adoc","mtime":"2019-03-27T08:41:56.927Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T09:29:16.283Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络基础","level":"1.2.3.1","depth":3,"next":{"title":"TCP 调试","level":"1.2.3.1.1","depth":4,"path":"linux/networking/tcp_debug.adoc","ref":"linux/networking/tcp_debug.adoc","articles":[]},"previous":{"title":"网络","level":"1.2.3","depth":2,"path":"linux/networking/README.adoc","ref":"linux/networking/README.adoc","articles":[{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[{"title":"TCP 调试","level":"1.2.3.1.1","depth":4,"path":"linux/networking/tcp_debug.adoc","ref":"linux/networking/tcp_debug.adoc","articles":[]}]},{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},{"title":"IPv6 网络配置","level":"1.2.3.3","depth":3,"path":"linux/networking/ipv6cfg.adoc","ref":"linux/networking/ipv6cfg.adoc","articles":[]},{"title":"namespace","level":"1.2.3.4","depth":3,"path":"linux/networking/netns.adoc","ref":"linux/networking/netns.adoc","articles":[]},{"title":"teaming","level":"1.2.3.5","depth":3,"path":"linux/networking/teaming.adoc","ref":"linux/networking/teaming.adoc","articles":[]},{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},{"title":"网络监控","level":"1.2.3.8","depth":3,"path":"linux/networking/monitor.adoc","ref":"linux/networking/monitor.adoc","articles":[]},{"title":"网络编程","level":"1.2.3.9","depth":3,"path":"linux/networking/programming.adoc","ref":"linux/networking/programming.adoc","articles":[]},{"title":"应用交付网络","level":"1.2.3.10","depth":3,"path":"linux/networking/adn.adoc","ref":"linux/networking/adn.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/fundamentals.adoc","mtime":"2019-12-30T06:11:57.590Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-01-12T09:30:37.833Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
