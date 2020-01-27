@@ -43,6 +43,7 @@ $ gitbook mobi ./ cookbook.mobi
 
 Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`, `cookbook.epub`, and `cookbook.mobi` will be generated.
 
+
 == Changes
 
 |===
