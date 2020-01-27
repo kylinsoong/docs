@@ -1,5 +1,9 @@
 = Cookbook Docspace
 
+== IMPORTANT
+
+This documents will be migration to gitbook.com.
+
 == 3 Steps to Contribute
 
 *Step.1* clone
@@ -42,7 +46,6 @@ $ gitbook mobi ./ cookbook.mobi
 ----
 
 Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`, `cookbook.epub`, and `cookbook.mobi` will be generated.
-
 
 == Changes
 
