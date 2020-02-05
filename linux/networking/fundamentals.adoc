@@ -118,6 +118,84 @@ https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 |image:img/patch_panel.png[]
 |===
 
+=== 拨号接入
+
+* PSTN(Public Switched Telephone Network) is also referred to as the POTS(Plain Old Telephone Service).
+* A dial-up connection uses POTS for data transfer, and gets its name because the connection is established by actually dialing a phone number.
+* Modem stands for modulator/demodulator, and they take data that computers can understand and turn them into audible wavelengths that can be transmitted over POTS.
+* A baud rate is a measurement of how many bits could be passed across a phone line in a second.
+
+image:img/dial-up-moderms.png[]
+
+=== 宽带接入
+
+==== What is broadband?
+
+In terms of internet connectivity, it's used to refer to any connectivity technology that isn't dial-up Internet. Broadband Internet is almost always much faster than even the fastest dial-up connections and refers to connections that are always on. This means that they're long lasting connections that don't need to be established with each use. They're essentially links that are always present.
+
+==== T-Carrier Technologies
+
+* T-Carrier Technologies were originally invented by AT&T in order to transmit multiple phone calls over a single link.
+* T1 stands for Transmission System 1.
+* A T1 communicates at speeds of 1.544 Kb/sec.
+* A T3 is just 28 multiplexed T1 lines.
+
+==== Digital Subscriber Lines
+
+* DSL(digital subscriber line) was able to send much more data across the wire than traditional dial-up technologies.
+* DSL technologies use DSLAMs or Digital Subscriber Line Access Multiplexers to establish data connections across phone lines.
+
+两种常见的 DSL 类型：
+
+1. *ADSL* - ADSL stands for Asymmetric Digital Subscriber Line. ADSL connections featured different speeds for outbound and incoming data. Generally, this means faster download speeds and slower upload speeds.
+2. *SDSL* - SDSL stands for Symmetric Digital Subscriber Line. SDSL technology is basically the same as ADSL, except the upload and download speeds are the same.
+
+==== Cable Broadband
+
+Cable Internet connections are usually managed by what's known as a cable modem. This is a device that sits at the edge of a consumer's network and connects it to the cable modem termination system, or CMTS. The CMTS is what connects lots of different cable connections to an ISP's core network.
+
+image:img/cable-broadband.png[]
+
+==== Fiber Connections
+
+* FTTN means fiber to the neighborhood that fiber technologies are used to deliver data to a single physical cabinet that serves a certain amount of the population.
+* FTTB stands for fiber to the building, fiber to the business or even a fiber to the basement, since this is generally where cables to buildings physically enter.
+* FTTH stands for fiber to the home, that is used in instances where fiber is actually run to each individual residents in a neighborhood or apartment building.
+* FTTP fiber to the premises, FTTH and FTTB may both also be referred to as FTTP.
+
+Instead of a modem, the demarcation point for fiber technologies is known as Optical Network Terminator, or ONT. An ONT converts data from protocols the fiber network can understand to those that are more traditional twisted pair copper networks can understand.
+
+=== 无线网络(WIFI)
+
+* The most common specifications for how wireless networking devices should communicate, are defined by the IEEE 802.11 standards. This set of specifications, also called the 802.11 family, make up the set of technologies we call WiFi.
+* A frequency band is a certain section of the radio spectrum that's been agreed upon to be used for certain communications.
+* WiFi networks operate on a few different frequency bands. Most commonly, the 2.4 gigahertz and 5 gigahertz bands. There are lots of 802.11 specifications including some that exist just experimentally or for testing. The most common specifications you might run into are 802.11b, 802.11a, 802.11g, 802.11n, and 802.11ac.
+
+*802.11 frame*
+
+image:img/802.11-frame.png[]
+
+* *Frame Control* - Frame control field is 16 bits long, and contains a number of sub-fields that are used to describe how the frame itself should be processed.
+* *Duration ID* - It specifies how long the total frame is. So, the receiver knows how long it should expect to have to listen to the transmission.
+* *Address* - There are four address fields, because there needs to be room to indicate which wireless access point should be processing the frame. So, we'd have our normal source address field, which would represent the MAC address of the sending device.
+* *Sequence Control* - Sequence control field is 16 bits long and mainly contains a sequence number used to keep track of ordering the frames.
+* *Data payload* - Data payload section which has all of the data of the protocols further up the stack.
+* *FCS* - Frame check sequence field which contains a checksum used for a cyclical redundancy check.
+
+==== Wireless Channels
+
+Channels are individual, smaller sections of the overall frequency band used by a wireless network.
+
+==== Wireless Security
+
+* WEP stands for Wired Equivalent Privacy, it's an encryption technology that provides a very low level of privacy.
+* WPA stabds for Wi-Fi Protected Access, by default, uses a 128-bit key, making it a whole lot more difficult to crack than WEP.
+* WPA2,  an update to the original WPA. WPA2 uses a 256-bit key make it even harder to crack.
+
+==== Cellular Networking
+
+Cellular networks are built around the concept of cells. Each cell is assigned a specific frequency band for use.
+
 == 数据链路层
 
 === Ethernet 和 数据链路层
@@ -206,6 +284,18 @@ image:img/vlan.png[]
 * VLAN 可以有效的降低广播负载，提高网络性能；传统上引入 VLAN 可以进行更好的安全、分组等控制，而且大多数 2 层交换机厂商的设备默认就有 VLAN 的划分；另外，新的 SDN（软件定义的网络）只有 VLAN 的概念。
 * 不同 VLAN 之间的通信是通过路由设备
 
+=== WAN
+
+与 LAN 相对应，WAN stands for wide area network. A wide area network acts like a single network but spans across multiple physical locations.
+
+NOTE: WAN technologies usually require that you contract a link across the Internet with your ISP. This ISP handles sending your data from one side to the other. So, it could be like all of your computers are in the same physical location.
+
+WAN 协议：
+
+* https://en.wikipedia.org/wiki/Frame_Relay[Frame Relay]
+* https://en.wikipedia.org/wiki/High-Level_Data_Link_Control[High-Level Data Link Control]
+* https://en.wikipedia.org/wiki/Asynchronous_transfer_mode[Asynchronous transfer mode]
+
 === 以太网(Ethernet)帧结构
 
 以太网(Ethernet)帧是按特定顺序显示的高度结构化的信息集合。这样，可以确保将物理层网络接口将传输的二进制串转化为有意义的数据，或将数据转化为二进制串。
@@ -218,6 +308,18 @@ image:img/EthernetPacket.png[]
 4. *Type Field* - 16 二进制长度，以太网类型标识字段，包括帧的内容； 
 5. *Payload* - Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long. 
 6. CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.
+
+=== 链路聚合/LACP
+
+链路聚合就是把多个链路聚合在一起，多个网络接口抽象出一个逻辑的网络接口，链路聚合的目的是增加链路的带宽，例如 4 条 100 MB 的链路聚合后带宽是 400 MB。除了增加带宽外，链路聚合还可以增加容错，例如当一条链路不可用不会影响整体聚合链路的可用性。聚合的链路总数通常是 2 的 N 次方（2，4，8）。
+
+不同厂商链路聚合技术各异，F5 BIG-IP 采用 `trunk` 代表一组网络接口的抽象，基于 `trunk`，在 F5 BIG-IP 中最多可聚合 8 条链路。F5 BIG-IP `trunk` 会有一个独立的 MAC 地址，该地址用来和 pee 进行通信。
+
+image:img/link-aggragation.png[]
+
+LACP(Link Aggregation Control Protocol) 链路聚合控制协议是 IEEE 标准 802.3ad 定义，用来检测链路的错误，重传等机制，以确保聚合的链路可靠，容错。
+
+不同网路厂商 LACP 行为可陪，例如，Linux Bonding 就是一种软件 LACP 实现，可以灵活配置负载分发方式等。F5 BIG-IP 系统中 LACP 是一个可选配置，可以自定制 LACP 行为，如各个链路数据传输权重等，还可以配置一些控制策略。
 
 == 网络层
 
@@ -282,10 +384,6 @@ image:img/ipv4-classing.png[]
 |===
 
 参照 link:https://zh.wikipedia.org/wiki/分类网络[🔗]了解更多关于网络分类
-
-==== 子网
-
-如果一个 IPv4 地址 属于 A 类或 B类地址，则可能存在的最大主机较多，这就需要子网来进一步分组成较小的网络，这就叫做子网。
 
 ==== 子网掩码
 
@@ -358,6 +456,10 @@ CIDR 是描述 IP 地址的一种更加灵活的方法，以斜杠 + 数字来�
 /20
 |===
 
+==== 子网
+
+如果一个 IPv4 地址 属于 A 类或 B类地址，则可能存在的最大主机较多，这就需要子网来进一步分组成较小的网络，这就叫做子网。
+
 === IPv4 数据报文结构
 
 IPv4 数据报文是由一系列高度结构化的字段严格定义，IP 数据两个主要部分是 header 和 payload。
@@ -378,14 +480,6 @@ image:img/ip-datagrams.png[]
 * *Destination IP Address* - 长度为 32 个二进制位，代表着目的地 IP 地址。 
 * *Option* - 可选的字段，用来设定一些特定字符，通常用于测试目的。
 * *Padding* - 相当于一个占位符字段，由于 Option 字段时可选的一个变量，长度不定，该字段只是一些 0 串，用来确保 Header 的整体长度。
-
-*网络模型中底层包的 payload 是临近上一层包*
-
-image:img/ip-datagrams-encapsulation.png[]
-
-1. 数据链路层 Ethernet 帧的 Payload 是其上一层网络层 IP 数据报文
-2. 网络层 IP 数据报文的 Payload 是其上一层传输层 TCP 报文或 UDP 报文
-3. 传输层 TCP/UDP 报文的 Payload 是其上一层应用层的 Message
 
 === ARP
 
@@ -484,30 +578,48 @@ NOTE: 如果数据包传输跨多个网络，则查询路由表或找出最近�
 $ route -nv
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-0.0.0.0         10.0.2.2        0.0.0.0         UG    100    0        0 eth0
-10.0.2.0        0.0.0.0         255.255.255.0   U     100    0        0 eth0
-192.168.33.0    0.0.0.0         255.255.255.0   U     101    0        0 eth1
+0.0.0.0         10.1.10.2       0.0.0.0         UG    0      0        0 external
+0.0.0.0         10.1.1.1        0.0.0.0         UG    9      0        0 mgmt
+10.1.1.0        0.0.0.0         255.255.255.0   U     0      0        0 mgmt
+10.1.10.0       0.0.0.0         255.255.255.0   U     0      0        0 external
+10.1.20.0       0.0.0.0         255.255.255.0   U     0      0        0 internal
+127.1.1.0       0.0.0.0         255.255.255.0   U     0      0        0 tmm
+127.7.0.0       127.1.1.253     255.255.0.0     UG    0      0        0 tmm
+127.20.0.0      0.0.0.0         255.255.0.0     U     0      0        0 tmm_bp
 ----
 
 [source, bash]
 .*Linux 上 ip route 查看路由信息*
 ----
 $ ip route list
-default via 10.0.2.2 dev eth0 proto dhcp metric 100 
-10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
-192.168.33.0/24 dev eth1 proto kernel scope link src 192.168.33.201 metric 101 
+default via 10.1.10.2 dev external 
+default via 10.1.1.1 dev mgmt  metric 9  mtu 1500
+10.1.1.0/24 dev mgmt  proto kernel  scope link  src 10.1.1.245 
+10.1.10.0/24 dev external  proto kernel  scope link  src 10.1.10.240 
+10.1.20.0/24 dev internal  proto kernel  scope link  src 10.1.20.240 
+127.1.1.0/24 dev tmm  proto kernel  scope link  src 127.1.1.254 
+127.7.0.0/16 via 127.1.1.253 dev tmm 
+127.20.0.0/16 dev tmm_bp  proto kernel  scope link  src 127.20.0.254 
 ----
 
 ==== 路由协议
 
-路由 协议可以分为两类：IGP(Interior Gateway Protocol 内部网关协议) 和 EGP(Exterior Gateway Protocol 外部网管协议)。IGP 通常是在一个自治系统（Autonomous system, AS，一个，有时是多个实体管辖下的所有 IP 网络和路由器的全体，例如一个企业/组织的内网）内路由器共享信息；与之对应，EGP是自制系统之间路由器共享信息。
+路由协议主要目的有两个：
+
+1. 网络发现
+2. 路由表更新
+
+路由协议可以分为两类：
+
+1. IGP(Interior Gateway Protocol 内部网关协议) - IGP 通常是在一个自治系统（Autonomous system, AS，一个，有时是多个实体管辖下的所有 IP 网络和路由器的全体，例如一个企业/组织的内网）内路由器共享信息
+2. EGP(Exterior Gateway Protocol 外部网管协议) - EGP 是自制系统之间路由器共享信息。
 
 IGP 协议可以进一步分为两类：
 
-* 链路状态路由协议（Link State Routing Protocol）
-* 距离矢量路由协议（Distance-Vector Protocol）。
+1.  链路状态路由协议（Link State Routing Protocol）
+2.  距离矢量路由协议（Distance-Vector Protocol）。
 
-.*路由协议*
+.*IGP 路由协议*
 [cols="5a,5a"]
 |===
 |距离矢量路由协议 | 链路状态路由协议
@@ -523,12 +635,20 @@ image:img/routing-link-state-protocol.png[]
 
 NOTE: IANA(Internet Assigned Numbers Authority) 是一个非盈利的组织，前面已经知道它负责 IP 地址的分配，除了负责 IP 地址的 分配，该组织还负责 ASN(Autonomous System Number,自治系统编号)的分配，ASN 是分配给各个自治系统的编号，就像 IP 地址，ASN 也是一个 32 位二进制数，但和 IP 地址不同的是 ASN 是一个十进制的数，而不是每八位分成一组。 
 
-*Wikipedia 链接*
+==== 动态路由协议
+
+现代路由器设备通常通过动态路由器共享远程网络的状态和可达性，如下是一些常见的动态路由协议
 
 * https://en.wikipedia.org/wiki/Routing_Information_Protocol[EIP(Routing Information Protocol)]
 * https://en.wikipedia.org/wiki/Enhanced_Interior_Gateway_Routing_Protocol[EIGRP(Enhanced Interior Gateway Routing Protocol)]
 * https://en.wikipedia.org/wiki/Open_Shortest_Path_First[OSPF(Open Shortest Path First)]
 * https://en.wikipedia.org/wiki/Border_Gateway_Protocol[BGP(Border Gateway Protocol)]
+
+动态路由协议的优点是：
+
+* 动态更新路由表
+* 不仅仅针对不同的网络可以选择出一个最佳路径，而且在初始最佳路径不可用（网络拓扑变化）后可以重新选择出一个最佳路径
+* 不同路由器之间动态共享路由信息，而不需要网络管理员人为参与
 
 ==== 不可路由的地址空间
 
@@ -541,6 +661,22 @@ NOTE: IANA(Internet Assigned Numbers Authority) 是一个非盈利的组织，�
 * 192.168.0.0/16
 
 http://www.ietf.org/
+
+=== Fragmentation
+
+如下图，应用层发送一个消息在网络模型中每一层封装过程，底层包的 payload 是临近上一层包，
+
+image:img/ip-datagrams-encapsulation.png[]
+
+1. 数据链路层 Ethernet 帧的 Payload 是其上一层网络层 IP 数据报文
+2. 网络层 IP 数据报文的 Payload 是其上一层传输层 TCP 报文或 UDP 报文
+3. 传输层 TCP/UDP 报文的 Payload 是其上一层应用层的 Message
+
+如果 IP Datagram 的大小大于当前网络允许的 MTU(Maximum Transmission Unit) 时，则 IP Datagram 被首先分割成多个 Packet，然后在网络上传输，这个过程叫做 *Fragmentation*。*Fragmentation* 可以发生在初始的主机，或在路由过程中。
+
+*Fragmentation* 可能会造成一个重传的出现，例如如果一个 Packet 的丢失，可能会导致多个 IP Datagrams 的重传。
+
+NOTE: 以太网上允许的最大 MTU 默认值为 1500 bytes。
 
 === IPv6 地址
 
@@ -618,6 +754,19 @@ image:img/ipv6-headers.png[]
 * https://en.wikipedia.org/wiki/6in4[6in4]
 * https://en.wikipedia.org/wiki/Tunnel_Setup_Protocol[TSP(Tunnel Setup Protocol)]
 * https://en.wikipedia.org/wiki/Anything_In_Anything[Anything In Anything]
+
+=== ICMP
+
+ICMP(internet control message protocol) is mainly used by router or remote hosts to communicate while transmission has failed back to the origin of the transmission.
+
+.*ICMP packet Struct:*
+image:img/icmp-struct.png[]
+
+* *Type* - Type field is eight bits long which specifies what type of message is being delivered.
+* *Code* - Code field indicates a more specific reason for the message than just the type.
+* *Checksum* - Checksum is 16 bit length, that works like every other checksum field in other frame, like Ethernet frame, IP datagram and TCP segment.
+* *Rest of header* - A 32 bit field with an uninspired name, this field is optionally used by some of the specific types and codes to send more data.
+* *Data payload* - Data payload for an ICMP packet exists entirely so that the recipient of the message knows which of their transmissions caused the error being reported.
 
 == 传输层
 
@@ -814,58 +963,42 @@ A socket is the instantiation of an endpoint in a potential TCP connection.
 * HTTP - For web traffic
 * FTP  - For ftp traffic
 
-=== Application Layer and the OSI Model
+=== HTTP
 
-* The session layer is that it's responsible for things like facilitating the communication between actual applications and the transport layer
-* The presentation layer is responsible for making sure that the unencapsulated application layer data is actually able to be understood by the application in question.
+在 TCP/IP 体系结构中，HTTP 属于应用层协议，位于 TCP/IP 协议的顶层。因此，它在设 计和使用中要以 TCP/IP 协议族中的其他协议为基础。例如，它要通过 DNS 进行域名和 IP 地 址的转换，要建立 TCP 连接才能进行文档传输。
 
-image:img/osi-model-application.png[]
+显然，HTTP 也是客户/服务器结构。这里，客户是浏览器(Browser),服务器是 Web 服 务器。浏览 Web 时，浏览器通过 HTTP 协议于 Web 服务器交换信息。每当在 Web 上从一个 资源转到另一个资源时，浏览器用 HTTP 访问 Web 服务器，其中就包括想要获得的资源信息。
 
-== The Five-Layer Network Model Scenario
+浏览器和服务器通过 HTTP 交换 Web 文档时，实际可以交换不同的文档类型。这些文档 类型的格式由多用途 Internet 邮件扩展 MIME(Mutipurpose Internet Mail Extensions)定义。MIME 是专门描述通过 Internet 传输多媒体数据的技术标准。
 
-=== Scenario Description
+HTTP 支持客户(一般是浏览器)与服务器间的通信，相互传送数据。一个服务器可以 为分布在世界各地的许多客户服务。HTTP 定义的事务处理由以下四步组成:
 
-image:img/five-models-scenario.png[]
+* 客户与服务器建立连接
+* 客户向服务器提出请求
+* 如果请求被接受，则服务器送回响应，在响应中包含状态码和所需的文件
+* 客户与服务器断开连接
 
-As depicted in above figure:
+HTTP 与必须持续连接的 FTP 等不同，它是无状态的。也就是说，浏览器和服务器每进 行一次 HTTP 操作，就建立一次连接，但随即又断开此次连接。访问 Web 站点时，浏览器与 服务其之间建立连接，以便将服务器上的 HTML 文件下载到浏览器上。在 HTTP 1.0 版本中， 浏览器收到文件后，即断开此次连接，如果浏览器发现还需要某些文件(例如下载图形)时， 必须重新建立连接。而在 HTTP 1.1 版本中，可以采用一些机制使客户端和浏览器不断开最 初建立的连接，而使用最初的连接请求后续的内容。
 
-1. Network A contains address space 10.1.1.0/24, and computer A is part of Network A and has been assigned an IP address of 10.1.1.100
-2. Network B contains address space 192.168.1.0/24, and computer B is part of Network B and has been assigned an *IP address* of 192.168.1.100, web server on computer B is running and listening on port 80
-3. Router sits between network A and network B, with an interface configured with an IP of 10.1.1.1 on network A, and an interface at 192.168.1.1 on network B
-4. An end user sitting at computer A opens up a web browser and enters 192.168.1.100 into the address bar to access the content in computer B's web server
+一次 HTTP 操作通常被称为一次事务(Transection)。HTTP 采用 TCP 连接，而且该连接 仅在此次事务中保持，浏览器和服务器都不会记忆上次的连接状态。
 
-=== Operation Steps
+HTTP 之所以采用这种无状态机制，完全是为了提高服务器的工作效率。在 Web 中点击 一个超链接时，浏览器有可能从当前站点转到另一个站点。因此，无论何时单击超链接时， 服务器都假定用户要退出浏览，因而断开连接。如果要继续浏览，就再次建立连接。如果用户确实要退出，服务期就不需要执行任务，因为连接已经断开。
 
-1. The web browser communicates with the local networking stack(part of OS), and know that it's going to establish a TCP connection to 192.168.1.100, port 80 on another network.
-2. Computer A looks at its ARP table to determine what MAC address of it's gateway 10.1.1.1 is, but it doesn't find any corresponding entry.
-3. Router receives ARP message, check that currently it assigned the IP address of 10.1.1.1. So it responds to computer A to let it know about its own *MAC address* of 00:11:22:33:44:55.
-4. Computer A receives this response and now knows the hardware address of its gateway, and ready to start constructing the outbound packet.
-5. *Application layer*'s web browser trigger to open a socket, and get a ephemeral port 50000 from computer A OS
-6. In the *Transport layer*, the networking stack starts to build a `TCP segment`, with appropriate fields in the header, including a source port of 50000, destination port of 80, sequence number field filled with a appropriate sequence number, the `SYN` flag is set, checksum for the segment is calculated and written to the checksum field.
-7. The `TCP segment` passed along to the *Network layer* and start to encapsulate a `IP Datagram`, fill IP header with the source IP, the destination IP, a *TTL* of 64, fill the `TCP segment` as the data payload of the `IP datagram`, a checksum is calculated and put in checksum field.
-8. The `IP datagram` passed alone to the *Data link layer* and start to construct a `Ethernet frame`, fill `00:11:22:33:44:55` as destination MAC addresses and computer A's MAC addresses as source MAC addresses, insert `IP datagram` as he data payload of the Ethernet frame, enter a calculated checksum to reference field.
-9. The `Ethernet frame` is ready to be sent across the *physical layer*, the `network interface` connected to computer A sends this binary data as modulations of the voltage of an electrical current running across a `CAT6 cable` that's connected between it and a network switch.
-10. This switch receives the frame and inspects the destination MAC address. The switch knows which of its interfaces this MAC address is attached to, and forwards the frame across only the cable connected to this interface.
-11. Router receives the frame and recognizes its own hardware address as the destination. Router knows that this frame is intended for itself. So it now takes the entirety of the frame and performa *checksum check* against it. Router compares this checksum with the one in the Ethernet frame header and sees that they match.
-12. Router strips away the `Ethernet frame`, leaving it with just the `IP datagram`. Again, it performs a checksum calculation against the entire datagram. And again, it finds that it matches. It then inspects the destination IP address and performs a lookup of this destination in its *routing table*, the look up results is that the router sees that the destination address 192.168.1.100 is on a locally connected network.
-13. Continue in Router, the TTL be decrement, a new checksum be re-calculated, and creates a new `IP datagram`. Similar with Step 8, this new IP datagram is again encapsulated by a new `Ethernet frame`, which the source and destination MAC address of router and and computer B
-14. The new Ethernet frame` is ready to be sent, and computer B receives the frame.
-15. Computer B identifies its own MAC address as the destination, and knows that it's intended for itself. computer B then strips away the Ethernet frame, leaving it with the IP datagram. It performs a `checksum check` and recognizes that the data has been delivered intact. It then examines the destination IP address and recognizes that as its own.
-16. Computer B strips away the IP datagram, leaving it with just the `TCP segment`. Again, the checksum for this layer is examined, and everything checks out.
-17. Computer B examines the destination port, which is *TCP port* 80. The networking stack on computer B checks to ensure that there's an open socket on port 80, which there is. It's in the listen state, and held open by a running Apache web server.
-18. Computer B then sees that this packet has the `SYN` flag and knows that this is a TCP connection request.
-19. Repeat the steps from 6 - 16, and form a `TCP segment` with flag `SYN-ACK`, and other field be filled correctly.
-20. Computer A receives frame and awared the `SYN-ACK` flag and knows that the Computer B are ready to establish connection.
-21. Repeat the steps from 6 - 16, and form a `TCP segment` with flag `ACK`, and other field be filled correctly.
-22. Computer B receives frame and awared the `ACK` flag from computer A, knows that the Computer A are acknowledged. And finally finish the socket instantiation, and set the state to `ESTABLISHED`.
+当然 HTTP 的无状态也有缺点。由于没有状态，协议对事务处理没有记忆能力。如果后 续事务处理需要前面处理的有关信息，那么这些信息必须在协议外面保存。缺少状态意味着 所需要的前面信息必须重现，势必导致每次连接要传送较多的信息。在实际的应用中，状态 的信息通常会采用客户端 Cookie 和服务器端的 Session ID 来配合保持用户的连接状态。
 
-== 网络服务
+=== FTP
+
+
+
+=== SMTP
+
+
 
 === DHCP
 
-* DHCP stands for Dynamic Host Configuration Protocol, which is an application layer protocol that automates the configuration process of hosts on a network. With DHCP, a machine can query a DHCP server when the computer connects to the network and receive all the network configuration in one go. 
+* DHCP stands for Dynamic Host Configuration Protocol, which is an application layer protocol that automates the configuration process of hosts on a network. With DHCP, a machine can query a DHCP server when the computer connects to the network and receive all the network configuration in one go.
 * DHCP is an application layer protocol, which means it relies on the transport, network, data link and physical layers to operate.
-* The process by which a client configured to use DHCP attempts to get network configuration information is known as DHCP discovery. 
+* The process by which a client configured to use DHCP attempts to get network configuration information is known as DHCP discovery.
 
 *DHCP discovery process - 4 steps:*
 
@@ -873,7 +1006,7 @@ image:img/DHCP-process.jpg[]
 
 1. *DHCP Discovery* - DHCP clients sends a `DHCP discover message(DHCPDISCOVER)` out onto the network, the DHCPDISCOVER message is encapsulated in a UDP datagram with a destination port of 67 and a source port of 68, this is then encapsulated inside of an IP datagram with a destination IP of 255.255.255.255, and a source IP of 0.0.0.0.
 2. *DHCP Offer* - DHCP server examine its own configuration and make a decision on what, if any, IP address to offer to the client, the response would be sent as a DHCPOFFER message with a destination port of 68, a source port of 67, a destination broadcast IP of 255.255.255.255, and its actual IP as the source.
-3. *DHCP Request* - DHCP client respond to the DHCPOFFER message with a DHCPREQUEST message, which essentially says, yes, I would like to have an IP that you offer to me. Since the IP hasn't been assigned yet, this is again sent from an IP of 0.0.0.0 and to the broadcast IP of 255.255.255.255. 
+3. *DHCP Request* - DHCP client respond to the DHCPOFFER message with a DHCPREQUEST message, which essentially says, yes, I would like to have an IP that you offer to me. Since the IP hasn't been assigned yet, this is again sent from an IP of 0.0.0.0 and to the broadcast IP of 255.255.255.255.
 4. *DHCP ACK* - DHCP server receives the DHCPREQUEST message and responds with a DHCPACK or DHCP acknowledgement message, which is again sent to a broadcast IP of 255.255.255.255, and with a source IP corresponding to the actual IP of the DHCP server.
 
 === NAT(Network Address Translation)
@@ -888,7 +1021,7 @@ NOTE: IP masquerading is an important security concept. The most basic concept a
 
 ==== NAT and the Transport Layer
 
-* Port preservation is a technique where the source port chosen by a client, is the same port used by the router. 
+* Port preservation is a technique where the source port chosen by a client, is the same port used by the router.
 * Port forwarding is a technique where a specific destination ports can be configured to always be delivered to specific nodes.
 
 ==== RIR(regional internet registries)
@@ -917,9 +1050,9 @@ https://en.wikipedia.org/wiki/IPv4_address_exhaustion[IPv4 address exhaustion]
 
 ==== NAT and non-routable address space
 
-* Non-routable address space was defined in RFC1918 and consists of several different IP ranges that anyone can use. 
-* And unlimited number of networks can use non-routable address space internally because internet routers won't forward traffic to it. This means there's never any global collision of IP addresses when people use those address spaces. 
-* Non-routable address space is largely usable today because of technologies like NAT. 
+* Non-routable address space was defined in RFC1918 and consists of several different IP ranges that anyone can use.
+* And unlimited number of networks can use non-routable address space internally because internet routers won't forward traffic to it. This means there's never any global collision of IP addresses when people use those address spaces.
+* Non-routable address space is largely usable today because of technologies like NAT.
 
 === VPN(Virtual Private Networks)
 
@@ -929,182 +1062,72 @@ https://en.wikipedia.org/wiki/IPv4_address_exhaustion[IPv4 address exhaustion]
 .*VPN Tunnel Example:*
 image:img/vpn-tunel-example.png[]
 
-* VPNs, usually requires strict authentication procedures in order to ensure that they can only be connected to by computers and users authorized to do so. In fact, VPNs were one of the first technologies where two-factor authentication became common. 
+* VPNs, usually requires strict authentication procedures in order to ensure that they can only be connected to by computers and users authorized to do so. In fact, VPNs were one of the first technologies where two-factor authentication became common.
 * Two-factor authentication is a technique where more than just a username and password are required to authenticate. Usually, a short-lived numerical token is generated by the user through a specialized piece of hardware or software.
 
 ==== VPN 构建点对点连接
 
-VPNs can also be used to establish site-to-site connectivity. It's just that the router, or sometimes a specialized VPN device on one network, establishes the VPN tunnel to the router or VPN device on another network. This way, two physically separated offices might be able to act as one network and access network resources across the tunnel. 
+VPNs can also be used to establish site-to-site connectivity. It's just that the router, or sometimes a specialized VPN device on one network, establishes the VPN tunnel to the router or VPN device on another network. This way, two physically separated offices might be able to act as one network and access network resources across the tunnel.
 
 image:img/vpn-p2p-connectivity.png[]
 
 === Proxy Services
 
-* A proxy service is a server that actson behalf of a client in order to access another service. Proxies sit between clients and other servers, providing some additional benefit, anonymity, security, content filtering, increased performance, a couple other things. 
+* A proxy service is a server that actson behalf of a client in order to access another service. Proxies sit between clients and other servers, providing some additional benefit, anonymity, security, content filtering, increased performance, a couple other things.
 * Proxies doesn't refer to any specific implementation. Proxies exist at almost every layer of our networking model.
 
 ==== Reverse proxy
 
-A reverse proxy is a service that might appear to be a single server to external clients, but actually represents many servers living behind it. 
+A reverse proxy is a service that might appear to be a single server to external clients, but actually represents many servers living behind it.
 
 .*现代 Web 应用架构使用 Reverse proxy：*
 image:img/proxy-reverse.png[]
 
 NOTE: Reverse proxy can also used in encrypting and decrypting web data.
 
-== 网络接入
 
-=== 拨号接入
+=== Application Layer and the OSI Model
 
-* PSTN(Public Switched Telephone Network) is also referred to as the POTS(Plain Old Telephone Service).
-* A dial-up connection uses POTS for data transfer, and gets its name because the connection is established by actually dialing a phone number.
-* Modem stands for modulator/demodulator, and they take data that computers can understand and turn them into audible wavelengths that can be transmitted over POTS.
-* A baud rate is a measurement of how many bits could be passed across a phone line in a second.
+* The session layer is that it's responsible for things like facilitating the communication between actual applications and the transport layer
+* The presentation layer is responsible for making sure that the unencapsulated application layer data is actually able to be understood by the application in question.
 
-image:img/dial-up-moderms.png[]
+image:img/osi-model-application.png[]
 
-=== 宽带接入
+== TCP/IP 五层模型示例
 
-==== What is broadband?
+=== 场景描述
 
-In terms of internet connectivity, it's used to refer to any connectivity technology that isn't dial-up Internet. Broadband Internet is almost always much faster than even the fastest dial-up connections and refers to connections that are always on. This means that they're long lasting connections that don't need to be established with each use. They're essentially links that are always present. 
+image:img/five-models-scenario.png[]
 
-==== T-Carrier Technologies
+As depicted in above figure:
 
-* T-Carrier Technologies were originally invented by AT&T in order to transmit multiple phone calls over a single link. 
-* T1 stands for Transmission System 1.
-* A T1 communicates at speeds of 1.544 Kb/sec.
-* A T3 is just 28 multiplexed T1 lines.
+1. Network A contains address space 10.1.1.0/24, and computer A is part of Network A and has been assigned an IP address of 10.1.1.100
+2. Network B contains address space 192.168.1.0/24, and computer B is part of Network B and has been assigned an *IP address* of 192.168.1.100, web server on computer B is running and listening on port 80
+3. Router sits between network A and network B, with an interface configured with an IP of 10.1.1.1 on network A, and an interface at 192.168.1.1 on network B
+4. An end user sitting at computer A opens up a web browser and enters 192.168.1.100 into the address bar to access the content in computer B's web server
 
-==== Digital Subscriber Lines
+=== 通信过程
 
-* DSL(digital subscriber line) was able to send much more data across the wire than traditional dial-up technologies.  
-* DSL technologies use DSLAMs or Digital Subscriber Line Access Multiplexers to establish data connections across phone lines.
-
-两种常见的 DSL 类型：
-
-1. *ADSL* - ADSL stands for Asymmetric Digital Subscriber Line. ADSL connections featured different speeds for outbound and incoming data. Generally, this means faster download speeds and slower upload speeds.
-2. *SDSL* - SDSL stands for Symmetric Digital Subscriber Line. SDSL technology is basically the same as ADSL, except the upload and download speeds are the same. 
-
-==== Cable Broadband
-
-Cable Internet connections are usually managed by what's known as a cable modem. This is a device that sits at the edge of a consumer's network and connects it to the cable modem termination system, or CMTS. The CMTS is what connects lots of different cable connections to an ISP's core network.
-
-image:img/cable-broadband.png[]
-
-==== Fiber Connections
-
-* FTTN means fiber to the neighborhood that fiber technologies are used to deliver data to a single physical cabinet that serves a certain amount of the population.
-* FTTB stands for fiber to the building, fiber to the business or even a fiber to the basement, since this is generally where cables to buildings physically enter.
-* FTTH stands for fiber to the home, that is used in instances where fiber is actually run to each individual residents in a neighborhood or apartment building.
-* FTTP fiber to the premises, FTTH and FTTB may both also be referred to as FTTP.
-
-Instead of a modem, the demarcation point for fiber technologies is known as Optical Network Terminator, or ONT. An ONT converts data from protocols the fiber network can understand to those that are more traditional twisted pair copper networks can understand.
-
-=== WANs(Wide Area Network)
-
-WAN stands for wide area network. A wide area network acts like a single network but spans across multiple physical locations.
-
-NOTE: WAN technologies usually require that you contract a link across the Internet with your ISP. This ISP handles sending your data from one side to the other. So, it could be like all of your computers are in the same physical location.
-
-WAN 协议：
-
-* https://en.wikipedia.org/wiki/Frame_Relay[Frame Relay]
-* https://en.wikipedia.org/wiki/High-Level_Data_Link_Control[High-Level Data Link Control]
-* https://en.wikipedia.org/wiki/Asynchronous_transfer_mode[Asynchronous transfer mode]
-
-=== 无线网络(WIFI)
-
-* The most common specifications for how wireless networking devices should communicate, are defined by the IEEE 802.11 standards. This set of specifications, also called the 802.11 family, make up the set of technologies we call WiFi.
-* A frequency band is a certain section of the radio spectrum that's been agreed upon to be used for certain communications.
-* WiFi networks operate on a few different frequency bands. Most commonly, the 2.4 gigahertz and 5 gigahertz bands. There are lots of 802.11 specifications including some that exist just experimentally or for testing. The most common specifications you might run into are 802.11b, 802.11a, 802.11g, 802.11n, and 802.11ac. 
-
-*802.11 frame*
-
-image:img/802.11-frame.png[]
-
-* *Frame Control* - Frame control field is 16 bits long, and contains a number of sub-fields that are used to describe how the frame itself should be processed.
-* *Duration ID* - It specifies how long the total frame is. So, the receiver knows how long it should expect to have to listen to the transmission.
-* *Address* - There are four address fields, because there needs to be room to indicate which wireless access point should be processing the frame. So, we'd have our normal source address field, which would represent the MAC address of the sending device.
-* *Sequence Control* - Sequence control field is 16 bits long and mainly contains a sequence number used to keep track of ordering the frames.
-* *Data payload* - Data payload section which has all of the data of the protocols further up the stack.
-* *FCS* - Frame check sequence field which contains a checksum used for a cyclical redundancy check.
-
-==== Wireless Channels
-
-Channels are individual, smaller sections of the overall frequency band used by a wireless network.
-
-==== Wireless Security
-
-* WEP stands for Wired Equivalent Privacy, it's an encryption technology that provides a very low level of privacy. 
-* WPA stabds for Wi-Fi Protected Access, by default, uses a 128-bit key, making it a whole lot more difficult to crack than WEP. 
-* WPA2,  an update to the original WPA. WPA2 uses a 256-bit key make it even harder to crack.
-
-==== Cellular Networking
-
-Cellular networks are built around the concept of cells. Each cell is assigned a specific frequency band for use.
+1. The web browser communicates with the local networking stack(part of OS), and know that it's going to establish a TCP connection to 192.168.1.100, port 80 on another network.
+2. Computer A looks at its ARP table to determine what MAC address of it's gateway 10.1.1.1 is, but it doesn't find any corresponding entry.
+3. Router receives ARP message, check that currently it assigned the IP address of 10.1.1.1. So it responds to computer A to let it know about its own *MAC address* of 00:11:22:33:44:55.
+4. Computer A receives this response and now knows the hardware address of its gateway, and ready to start constructing the outbound packet.
+5. *Application layer*'s web browser trigger to open a socket, and get a ephemeral port 50000 from computer A OS
+6. In the *Transport layer*, the networking stack starts to build a `TCP segment`, with appropriate fields in the header, including a source port of 50000, destination port of 80, sequence number field filled with a appropriate sequence number, the `SYN` flag is set, checksum for the segment is calculated and written to the checksum field.
+7. The `TCP segment` passed along to the *Network layer* and start to encapsulate a `IP Datagram`, fill IP header with the source IP, the destination IP, a *TTL* of 64, fill the `TCP segment` as the data payload of the `IP datagram`, a checksum is calculated and put in checksum field.
+8. The `IP datagram` passed alone to the *Data link layer* and start to construct a `Ethernet frame`, fill `00:11:22:33:44:55` as destination MAC addresses and computer A's MAC addresses as source MAC addresses, insert `IP datagram` as he data payload of the Ethernet frame, enter a calculated checksum to reference field.
+9. The `Ethernet frame` is ready to be sent across the *physical layer*, the `network interface` connected to computer A sends this binary data as modulations of the voltage of an electrical current running across a `CAT6 cable` that's connected between it and a network switch.
+10. This switch receives the frame and inspects the destination MAC address. The switch knows which of its interfaces this MAC address is attached to, and forwards the frame across only the cable connected to this interface.
+11. Router receives the frame and recognizes its own hardware address as the destination. Router knows that this frame is intended for itself. So it now takes the entirety of the frame and performa *checksum check* against it. Router compares this checksum with the one in the Ethernet frame header and sees that they match.
+12. Router strips away the `Ethernet frame`, leaving it with just the `IP datagram`. Again, it performs a checksum calculation against the entire datagram. And again, it finds that it matches. It then inspects the destination IP address and performs a lookup of this destination in its *routing table*, the look up results is that the router sees that the destination address 192.168.1.100 is on a locally connected network.
+13. Continue in Router, the TTL be decrement, a new checksum be re-calculated, and creates a new `IP datagram`. Similar with Step 8, this new IP datagram is again encapsulated by a new `Ethernet frame`, which the source and destination MAC address of router and and computer B
+14. The new Ethernet frame` is ready to be sent, and computer B receives the frame.
+15. Computer B identifies its own MAC address as the destination, and knows that it's intended for itself. computer B then strips away the Ethernet frame, leaving it with the IP datagram. It performs a `checksum check` and recognizes that the data has been delivered intact. It then examines the destination IP address and recognizes that as its own.
+16. Computer B strips away the IP datagram, leaving it with just the `TCP segment`. Again, the checksum for this layer is examined, and everything checks out.
+17. Computer B examines the destination port, which is *TCP port* 80. The networking stack on computer B checks to ensure that there's an open socket on port 80, which there is. It's in the listen state, and held open by a running Apache web server.
+18. Computer B then sees that this packet has the `SYN` flag and knows that this is a TCP connection request.
+19. Repeat the steps from 6 - 16, and form a `TCP segment` with flag `SYN-ACK`, and other field be filled correctly.
+20. Computer A receives frame and awared the `SYN-ACK` flag and knows that the Computer B are ready to establish connection.
+21. Repeat the steps from 6 - 16, and form a `TCP segment` with flag `ACK`, and other field be filled correctly.
+22. Computer B receives frame and awared the `ACK` flag from computer A, knows that the Computer A are acknowledged. And finally finish the socket instantiation, and set the state to `ESTABLISHED`.
  
-== 常见问题解决
-
-=== 连通性验证
-
-ICMP(internet control message protocol) is mainly used by router or remote hosts to communicate while transmission has failed back to the origin of the transmission.
-
-.*ICMP packet Struct:*
-image:img/icmp-struct.png[]
-
-* *Type* - Type field is eight bits long which specifies what type of message is being delivered.
-* *Code* - Code field indicates a more specific reason for the message than just the type. 
-* *Checksum* - Checksum is 16 bit length, that works like every other checksum field in other frame, like Ethernet frame, IP datagram and TCP segment.
-* *Rest of header* - A 32 bit field with an uninspired name, this field is optionally used by some of the specific types and codes to send more data.
-* *Data payload* - Data payload for an ICMP packet exists entirely so that the recipient of the message knows which of their transmissions caused the error being reported.
-
-==== Ping
-
-Ping is a super simple program and the basics are the same no matter which operating system you're using. 
-
-[source, bash]
-----
-$ ping 10.4.204.55 -c3
-PING 10.4.204.55 (10.4.204.55) 56(84) bytes of data.
-64 bytes from 10.4.204.55: icmp_seq=1 ttl=249 time=239 ms
-64 bytes from 10.4.204.55: icmp_seq=2 ttl=249 time=239 ms
-64 bytes from 10.4.204.55: icmp_seq=3 ttl=249 time=240 ms
-
---- 10.4.204.55 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2003ms
-rtt min/avg/max/mdev = 239.552/239.787/240.212/0.500 ms
-----
-
-==== Traceroute
-
-Traceroute is an awesome utility that lets you discover the paths between two nodes, and gives you information about each hop along the way.
-
-[source, bash]
-----
-$ traceroute redhat.com
-traceroute to redhat.com (10.4.204.55), 30 hops max, 60 byte packets
- 1  10.66.193.253 (10.66.193.253)  1.009 ms  1.133 ms  1.524 ms
- 2  10.66.254.13 (10.66.254.13)  0.464 ms  0.455 ms  0.438 ms
- 3  10.4.57.254 (10.4.57.254)  239.447 ms  239.446 ms  239.425 ms
- 4  10.4.56.12 (10.4.56.12)  250.716 ms  250.678 ms  261.759 ms
- 5  unused (10.4.60.2)  253.584 ms  253.562 ms unused (10.4.60.6)  253.529 ms
- 6  unused (10.4.253.2)  274.428 ms network (10.4.253.0)  247.439 ms unused (10.4.253.6)  274.089 ms
- 7  10.4.255.154 (10.4.255.154)  241.891 ms 10.4.255.156 (10.4.255.156)  241.231 ms  240.579 ms
- 8  10.4.192.5 (10.4.192.5)  239.829 ms  239.946 ms  240.473 ms
- 9  redirect-redhat-com.vserver.prod.ext.phx2.redhat.com (10.4.204.55)  239.598 ms  240.883 ms  239.943 ms
-----
-
-==== nc
-
-The Netcat tool can be run through the command nc, and has two mandatory arguments, a host and a port. 
-
-[source, bash]
-----
-$ nc -z -v redhat.com 80
-Ncat: Version 7.50 ( https://nmap.org/ncat )
-Ncat: Connected to 10.4.204.55:80.
-Ncat: 0 bytes sent, 0 bytes received in 0.25 seconds.
-----
-
-https://docs.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=win10-ps[Microsoft’s Documentation: Test-NetConnection]
