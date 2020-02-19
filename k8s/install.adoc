@@ -1,0 +1,255 @@
+= 安装
+:toc: manual
+
+== 环境准备
+
+[source, bash]
+.*1. 所有节点静态域名配置*
+----
+// static ip addr
+- machine01
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [192.168.100.101/24]
+      gateway4: 192.168.100.2
+      nameservers:
+        addresses: [192.168.100.2]
+
+- machine02
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [192.168.100.102/24]
+      gateway4: 192.168.100.2
+      nameservers:
+        addresses: [192.168.100.2]
+
+- machine03
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [192.168.100.103/24]
+      gateway4: 192.168.100.2
+      nameservers:
+        addresses: [192.168.100.2]
+
+// config static ip
+netplan apply
+
+// set ip host mapping
+sudo echo "192.168.1.128 machine01.example.com machine01" >> /etc/hosts
+sudo echo "192.168.1.129 machine02.example.com machine02" >> /etc/hosts
+sudo echo "192.168.1.130 machine03.example.com machine03" >> /etc/hosts
+----
+
+[source, bash]
+.*2. ping  测试*
+----
+for i in 1 2 3 ; do ping machine0$i.example.com -c3 ; done
+----
+
+[source, bash]
+.*3. ssh 免密登录*
+----
+// generate key
+ssh-keygen
+
+// sshd on all machines
+apt-get install openssh-server -y
+systemctl status ssh
+
+// enable ssh root login
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+systemctl restart ssh
+
+// copy to other machines
+for i in 1 2 3 ; do ssh-copy-id machine0$i.example.com ; done
+
+// check connectivity
+for i in 1 2 3 ; do ssh machine0$i.example.com 'date' ; done
+----
+
+[source, bash]
+.*4. Software install & setup*
+----
+// install
+for i in 1 2 3 ; do ssh machine0$i.example.com 'apt install vim tree -y' ; done
+
+// disable swap
+
+// docker
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+apt update
+apt-cache policy docker-ce
+apt install docker-ce
+systemctl status docker
+systemctl enable docker
+----
+
+== kubeadm 准备
+
+[source, bash]
+----
+apt-get update && sudo apt-get install -y apt-transport-https curl
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+apt-get update 
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+systemctl daemon-reload
+systemctl restart kubelet
+----
+
+== 安装
+
+[source, bash]
+.*1. config.yml*
+----
+apiVersion: kubeadm.k8s.io/v1beta2
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: abcdef.0123456789abcdef
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 1.2.3.4
+  bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: machine01.example.com
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+---
+apiServer:
+  timeoutForControlPlane: 4m0s
+apiVersion: kubeadm.k8s.io/v1beta2
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+controllerManager: {}
+dns:
+  type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+imageRepository: k8s.gcr.io
+kind: ClusterConfiguration
+kubernetesVersion: v1.17.0
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+scheduler: {}
+----
+
+[source, bash]
+.*2. init control panel*
+----
+# kubeadm init --control-plane-endpoint=control-plane.example.com --ignore-preflight-errors=NumCPU
+
+...
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of control-plane nodes by copying certificate authorities
+and service account keys on each node and then running the following as root:
+
+  kubeadm join control-plane.example.com:6443 --token 887x5p.6uyb4cembh7926ok \
+    --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b \
+    --control-plane 
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join control-plane.example.com:6443 --token 887x5p.6uyb4cembh7926ok \
+    --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b 
+----
+
+[source, bash]
+.*3. none root user run kubectl*
+----
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+----
+
+[source, bash]
+.*4. pod networking*
+----
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+----
+
+[source, bash]
+.*5. check kube-system pods*
+----
+# kubectl get pods --all-namespaces
+NAMESPACE     NAME                                            READY   STATUS    RESTARTS   AGE
+kube-system   calico-kube-controllers-5b644bc49c-m6wdh        1/1     Running   0          46m
+kube-system   calico-node-5nqz7                               1/1     Running   0          46m
+kube-system   coredns-6955765f44-f4wxq                        1/1     Running   0          56m
+kube-system   coredns-6955765f44-rfdzc                        1/1     Running   0          56m
+kube-system   etcd-machine01.example.com                      1/1     Running   0          57m
+kube-system   kube-apiserver-machine01.example.com            1/1     Running   0          57m
+kube-system   kube-controller-manager-machine01.example.com   1/1     Running   0          57m
+kube-system   kube-proxy-ghm6k                                1/1     Running   0          56m
+kube-system   kube-scheduler-machine01.example.com            1/1     Running   0          57m
+----
+
+[source, bash]
+.*6. join workers*
+----
+kubeadm join control-plane.example.com:6443 --token 887x5p.6uyb4cembh7926ok \
+    --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+----
+
+[source, bash]
+.*7. check all nodes is ready*
+----
+# kubectl get nodes
+NAME                    STATUS   ROLES    AGE     VERSION
+machine01.example.com   Ready    master   158m    v1.17.3
+machine02.example.com   Ready    worker   6m44s   v1.17.3
+machine03.example.com   Ready    worker   5m10s   v1.17.3
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+
+
+

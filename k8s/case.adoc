@@ -1,0 +1,242 @@
+= 用例
+:toc: manual
+
+== 基础
+
+本部分来自 https://kubernetes.io/docs/tutorials/kubernetes-basics/。
+
+=== Creating a Cluster
+
+[source, yaml]
+----
+// 1. view the version
+# kubectl version
+Client Version: version.Info{Major:"1", Minor:"17", GitVersion:"v1.17.3", GitCommit:"06ad960bfd03b39c8310aaf92d1e7c12ce618213", GitTreeState:"clean", BuildDate:"2020-02-11T18:14:22Z", GoVersion:"go1.13.6", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"17", GitVersion:"v1.17.3", GitCommit:"06ad960bfd03b39c8310aaf92d1e7c12ce618213", GitTreeState:"clean", BuildDate:"2020-02-11T18:07:13Z", GoVersion:"go1.13.6", Compiler:"gc", Platform:"linux/amd64"}
+
+// 2. view the cluster details
+# kubectl cluster-info
+Kubernetes master is running at https://control-plane.example.com:6443
+KubeDNS is running at https://control-plane.example.com:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+
+// 3. view the cluster nodes
+# kubectl get nodes
+NAME                    STATUS   ROLES    AGE     VERSION
+machine01.example.com   Ready    master   4h49m   v1.17.3
+machine02.example.com   Ready    worker   137m    v1.17.3
+machine03.example.com   Ready    worker   135m    v1.17.3
+
+// 4. view all pods
+# kubectl get pods --all-namespaces
+NAMESPACE     NAME                                            READY   STATUS    RESTARTS   AGE
+kube-system   calico-kube-controllers-5b644bc49c-m6wdh        1/1     Running   1          4h43m
+kube-system   calico-node-5nqz7                               1/1     Running   1          4h43m
+kube-system   calico-node-tmnvm                               1/1     Running   0          140m
+kube-system   calico-node-wcjhn                               1/1     Running   0          141m
+kube-system   coredns-6955765f44-f4wxq                        1/1     Running   1          4h53m
+kube-system   coredns-6955765f44-rfdzc                        1/1     Running   1          4h53m
+kube-system   etcd-machine01.example.com                      1/1     Running   0          149m
+kube-system   kube-apiserver-machine01.example.com            1/1     Running   0          148m
+kube-system   kube-controller-manager-machine01.example.com   1/1     Running   4          4h53m
+kube-system   kube-proxy-ghm6k                                1/1     Running   1          4h53m
+kube-system   kube-proxy-k5prs                                1/1     Running   0          141m
+kube-system   kube-proxy-ntbst                                1/1     Running   0          140m
+kube-system   kube-scheduler-machine01.example.com            1/1     Running   4          4h53m 
+----
+
+=== Deploy an App
+
+[source, yaml]
+----
+// 1. create deployment
+# kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+
+// 2. get all items in default namespaces
+# kubectl get all
+NAME                                       READY   STATUS    RESTARTS   AGE
+pod/kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          37s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5h11m
+
+NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kubernetes-bootcamp   1/1     1            1           37s
+
+NAME                                             DESIRED   CURRENT   READY   AGE
+replicaset.apps/kubernetes-bootcamp-69fbc6f4cf   1         1         1       37s
+
+// 3. start a proxy
+kubectl proxy
+
+// 4. view API version
+# curl http://127.0.0.1:8001/version
+{
+  "major": "1",
+  "minor": "17",
+  "gitVersion": "v1.17.3",
+  "gitCommit": "06ad960bfd03b39c8310aaf92d1e7c12ce618213",
+  "gitTreeState": "clean",
+  "buildDate": "2020-02-11T18:07:13Z",
+  "goVersion": "go1.13.6",
+  "compiler": "gc",
+  "platform": "linux/amd64"
+}
+----
+
+=== Exploring Your App
+
+[source, yaml]
+----
+// 1. view pod
+# kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          34m
+
+// 2. view the details inside pod
+# kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7q
+
+// 3. view application via proxy
+kubectl proxy
+
+curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
+
+// 4. view the pod logs
+# kubectl logs $POD_NAME
+Kubernetes Bootcamp App Started At: 2020-02-19T12:31:07.245Z | Running On:  kubernetes-bootcamp-69fbc6f4cf-4g7qz 
+
+// 5. exec the command inside pod
+kubectl exec $POD_NAME env
+kubectl exec $POD_NAME ip a
+kubectl exec $POD_NAME hostname
+
+// 6. start a bash session
+kubectl exec -ti $POD_NAME bash
+root@kubernetes-bootcamp-69fbc6f4cf-4g7qz:/# cat server.js 
+var http = require('http');
+var requests=0;
+var podname= process.env.HOSTNAME;
+var startTime;
+var host;
+var handleRequest = function(request, response) {
+  response.setHeader('Content-Type', 'text/plain');
+  response.writeHead(200);
+  response.write("Hello Kubernetes bootcamp! | Running on: ");
+  response.write(host);
+  response.end(" | v=1\n");
+  console.log("Running On:" ,host, "| Total Requests:", ++requests,"| App Uptime:", (new Date() - startTime)/1000 , "seconds", "| Log Time:",new Date());
+}
+var www = http.createServer(handleRequest);
+www.listen(8080,function () {
+    startTime = new Date();;
+    host = process.env.HOSTNAME;
+    console.log ("Kubernetes Bootcamp App Started At:",startTime, "| Running On: " ,host, "\n" );
+});
+
+# curl http://127.0.0.1:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-4g7qz | v=1
+----
+
+=== Exposing Your App
+
+[source, yaml]
+----
+// 1. view service(Cluster IP only can be view internally
+# kubectl get services 
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6h20m
+
+// 2. expose service to external
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+
+// 3. view services again
+# kubectl get services 
+NAME                  TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
+kubernetes            ClusterIP   10.96.0.1     <none>        443/TCP          6h22m
+kubernetes-bootcamp   NodePort    10.102.1.85   <none>        8080:32437/TCP   44s
+
+// 4. view the details of service
+# kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   app=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 app=kubernetes-bootcamp
+Type:                     NodePort
+IP:                       10.102.1.85
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  32437/TCP
+Endpoints:                192.168.208.193:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
+// 5. view the service outside cluster
+# kubectl get services/kubernetes-bootcamp -o go-template=''
+32437
+
+$ curl http://192.168.100.101:32437
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-4g7qz | v=1
+
+// 6. vew deployment
+kubectl describe deployment
+
+// 7. get pod by label filters
+kubectl get pods -l app=kubernetes-bootcamp
+
+// 8. get service by label filters
+kubectl get service -l app=kubernetes-bootcamp
+
+// 9. set a lable to a pod
+kubectl label pod kubernetes-bootcamp-69fbc6f4cf-4g7qz name=ksong
+
+// 10. get pod via new lable
+kubectl get service -l name=ksong
+
+// 11. describe pods
+kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7qz 
+
+// 12. delete service
+kubectl delete service -l app=kubernetes-bootcamp	
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+
+
