@@ -1,9 +1,9 @@
-= 用例
+= 基本概念
 :toc: manual
 
-== 基础
+本部分来自 https://kubernetes.io/docs/tutorials/ 部分中实验的一些记录。
 
-本部分来自 https://kubernetes.io/docs/tutorials/kubernetes-basics/。
+== 基础
 
 === Creating a Cluster
 
@@ -201,6 +201,709 @@ kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7qz
 
 // 12. delete service
 kubectl delete service -l app=kubernetes-bootcamp	
+----
+
+=== Scaling Your App
+
+[source, yaml]
+----
+// 1. view the replicaset
+# kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+kubernetes-bootcamp-69fbc6f4cf   1         1         1       12h
+
+// 2. scale the app
+kubectl scale deployments/kubernetes-bootcamp --replicas=4
+
+// 3. view the replicaset 
+# kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+kubernetes-bootcamp-69fbc6f4cf   4         4         4       12h
+
+// 4. view the pods widely
+# kubectl get pod -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          12h   192.168.208.193   machine03.example.com   <none>           <none>
+kubernetes-bootcamp-69fbc6f4cf-8jj95   1/1     Running   0          90s   192.168.251.1     machine02.example.com   <none>           <none>
+kubernetes-bootcamp-69fbc6f4cf-d2f2c   1/1     Running   0          90s   192.168.251.2     machine02.example.com   <none>           <none>
+kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Running   0          90s   192.168.208.194   machine03.example.com   <none>           <none>
+
+// 5. view the details of deployment
+kubectl describe deployments/kubernetes-bootcamp
+
+// 6. expose service via NodePort
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+
+// 7. view the details of service
+# kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   app=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 app=kubernetes-bootcamp
+Type:                     NodePort
+IP:                       10.109.10.113
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  30811/TCP
+Endpoints:                192.168.208.193:8080,192.168.208.194:8080,192.168.251.1:8080 + 1 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
+// 8. access the service
+# curl http://control-plane.example.com:30811
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-kqsvn | v=1
+
+// 9. scale down the service to 2
+kubectl scale deployments/kubernetes-bootcamp --replicas=2
+
+// 10. view the pods widely
+# kubectl get pods -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          14h   192.168.208.193   machine03.example.com   <none>           <none>
+kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Running   0          96m   192.168.208.194   machine03.example.com   <none>           <none>
+----
+
+=== Updating Your App
+
+[source, yaml]
+----
+// 1. set the image to v2
+kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+
+// 2. view the upgrade
+# kubectl get pods
+NAME                                   READY   STATUS              RESTARTS   AGE
+kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running             0          14h
+kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Terminating         0          103m
+kubernetes-bootcamp-b4d9f565-4zv7w     0/1     ContainerCreating   0          1s
+kubernetes-bootcamp-b4d9f565-lrthd     1/1     Running             0          17s
+
+// 3. view the details of service
+# kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   app=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 app=kubernetes-bootcamp
+Type:                     NodePort
+IP:                       10.109.10.113
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  30811/TCP
+Endpoints:                192.168.208.195:8080,192.168.251.3:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
+// 4. access the app again
+# curl http://control-plane.example.com:30811
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-b4d9f565-lrthd | v=2
+
+// 5. view the images
+# kubectl describe pods | grep Image
+    Image:          jocatalin/kubernetes-bootcamp:v2
+    Image:          jocatalin/kubernetes-bootcamp:v2
+
+// 6. rolling update
+kubectl rollout status deployments/kubernetes-bootcamp
+
+// 7. set to v10
+kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
+
+// 8. roll back the updates
+kubectl rollout undo deployments/kubernetes-bootcamp
+
+// 9. check the images agai
+kubectl describe pods | grep Image 
+
+// 10. delete all
+kubectl delete all --all
+----
+
+== ConfigMap
+
+[source, yaml]
+.*1. create a redis-config file*
+----
+cat <<EOF > ./redis-config
+maxmemory 2mb
+maxmemory-policy allkeys-lru
+EOF
+----
+
+[source, yaml]
+.*2. create a pod yaml file*
+----
+cat <<EOF > ./pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+  - name: redis
+    image: redis:5.0.4
+    command:
+      - redis-server
+      - "/redis-master/redis.conf"
+    env:
+    - name: MASTER
+      value: "true"
+    ports:
+    - containerPort: 6379
+    resources:
+      limits:
+        cpu: "0.1"
+    volumeMounts:
+    - mountPath: /redis-master-data
+      name: data
+    - mountPath: /redis-master
+      name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: example-redis-config
+        items:
+        - key: redis-config
+          path: redis.conf
+EOF
+----
+
+[source, yaml]
+.*3. create a kustomization.yaml file*
+----
+cat <<EOF > ./kustomization.yaml
+configMapGenerator:
+- name: example-redis-config
+  files:
+  - redis-config
+resources:
+- pod.yaml
+EOF
+----
+
+[source, yaml]
+.*4. Deploy*
+----
+# kubectl apply -k .
+configmap/example-redis-config-dgh9dg555m created
+pod/redis created
+----
+
+[source, yaml]
+.*5. view the deployments*
+----
+# kubectl get all
+NAME        READY   STATUS    RESTARTS   AGE
+pod/redis   1/1     Running   0          61s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   39m
+----
+
+[source, yaml]
+.*6. test the services*
+----
+# kubectl exec -it redis redis-cli
+127.0.0.1:6379> CONFIG GET maxmemory
+1) "maxmemory"
+2) "2097152"
+127.0.0.1:6379> CONFIG GET maxmemory-policy
+1) "maxmemory-policy"
+2) "allkeys-lru"
+----
+
+[source, yaml]
+.*7. clean up*
+----
+# kubectl delete all --all
+pod "redis" deleted
+service "kubernetes" deleted
+----
+
+== 无状态应用
+
+=== External Load Balancer
+
+[source, yaml]
+.*1. create a deployment.yaml*
+----
+cat <<EOF > ./deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: load-balancer-example
+  name: hello-world
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: load-balancer-example
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: load-balancer-example
+    spec:
+      containers:
+      - image: gcr.io/google-samples/node-hello:1.0
+        name: hello-world
+        ports:
+        - containerPort: 8080
+EOF
+----
+
+[source, yaml]
+.*2. deploy*
+----
+# kubectl apply -f deployment.yaml 
+deployment.apps/hello-world created
+----
+
+[source, yaml]
+.*3. view the deployment details*
+----
+// view all
+kubectl get all
+
+// view the details of Deployment
+kubectl describe deployment.apps/hello-world
+
+// view the details of ReplicaSet
+kubectl describe  replicaset.apps/hello-world-f9b447754 
+
+// view the pods distribution
+# kubectl get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE     IP                NODE                    NOMINATED NODE   READINESS GATES
+hello-world-f9b447754-4cqrn   1/1     Running   0          4m37s   192.168.251.5     machine02.example.com   <none>           <none>
+hello-world-f9b447754-cvhgm   1/1     Running   0          4m37s   192.168.251.6     machine02.example.com   <none>           <none>
+hello-world-f9b447754-cxwm6   1/1     Running   0          4m37s   192.168.208.199   machine03.example.com   <none>           <none>
+hello-world-f9b447754-tvq9v   1/1     Running   0          4m37s   192.168.208.198   machine03.example.com   <none>           <none>
+hello-world-f9b447754-v85fw   1/1     Running   0          4m37s   192.168.208.197   machine03.example.com   <none>           <none>
+----
+
+[source, yaml]
+.*4. Create LB Service*
+----
+// create
+kubectl expose deployment hello-world --type=LoadBalancer --name=my-service
+
+// view service
+# kubectl get services my-service
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+my-service   LoadBalancer   10.100.32.120   <pending>     8080:31059/TCP   7m8s
+----
+
+[source, yaml]
+.*5. edit service, add a external IP(external lb), the externalIPs is added*
+----
+# kubectl edit service/my-service
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2020-02-20T08:53:43Z"
+  labels:
+    app.kubernetes.io/name: load-balancer-example
+  name: my-service
+  namespace: default
+  resourceVersion: "185225"
+  selfLink: /api/v1/namespaces/default/services/my-service
+  uid: 6667dd2b-9ebb-499f-b202-b0539d75df1a
+spec:
+  clusterIP: 10.100.32.120
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 31059
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: load-balancer-example
+  sessionAffinity: None
+  type: LoadBalancer
+  externalIPs:
+  - 192.168.100.102
+status:
+  loadBalancer: {}
+----
+
+[source, yaml]
+.*5. view the services*
+----
+# kubectl get svc my-service
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
+my-service   LoadBalancer   10.100.32.120   192.168.100.102   8080:31059/TCP   14m
+----
+
+[source, yaml]
+.*6. access the application*
+----
+# curl http://192.168.100.102:8080
+Hello Kubernetes!
+----
+
+[source, yaml]
+.*7. clean up*
+----
+kubectl delete all --all
+----
+
+=== Guestbook 示例
+
+[source, yaml]
+.*1. 部署 Redis Master*
+----
+// 1. create the deployment yaml
+cat <<EOF > ./redis-master-deployment.yaml
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: redis-master
+  labels:
+    app: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+      role: master
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: master
+        tier: backend
+    spec:
+      containers:
+      - name: master
+        image: k8s.gcr.io/redis:e2e  # or just image: redis
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 6379
+EOF
+
+// 2. deploy
+kubectl apply -f redis-master-deployment.yaml 
+
+// 3. view deployments
+kubectl get all
+
+// 4. view redis logs
+kubectl logs -f pod/redis-master-7db7f6579f-j2bbv
+----
+
+[source, yaml]
+.*2. 给 Redis Master 创建一个 Service*
+----
+// 1. create the service yaml
+cat <<EOF > ./redis-master-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master
+  labels:
+    app: redis
+    role: master
+    tier: backend
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: redis
+    role: master
+    tier: backend
+EOF
+
+// 2. create service
+kubectl apply -f redis-master-service.yaml 
+
+// 3. view the services
+kubectl get svc
+kubectl describe svc redis-master
+----
+
+[source, yaml]
+.*3. 部署 2 个 Redis Slave 节点*
+----
+// 1. create the deployment yaml
+cat <<EOF > ./redis-slave-deployment.yaml
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: redis-slave
+  labels:
+    app: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+      role: slave
+      tier: backend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: slave
+        tier: backend
+    spec:
+      containers:
+      - name: slave
+        image: gcr.io/google_samples/gb-redisslave:v3
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 6379
+EOF
+
+// 2. deploy
+kubectl apply -f redis-slave-deployment.yaml 
+
+// 3. view the deployments
+kubectl get all -l role=slave
+----
+
+[source, yaml]
+.*4. 给 Redis Slave 创建一个 Service*
+----
+// 1. create the service yaml
+cat <<EOF > ./redis-slave-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave
+  labels:
+    app: redis
+    role: slave
+    tier: backend
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: redis
+    role: slave
+    tier: backend
+EOF
+
+// 2. create service
+kubectl apply -f redis-slave-service.yaml 
+
+// 3. view the service
+kubectl get svc -l role=slave
+kubectl describe svc redis-slave 
+----
+
+[source, yaml]
+.*5. 部署 Guestbook*
+----
+// 1. create the deployment yaml
+cat <<EOF > ./frontend-deployment.yaml
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+spec:
+  selector:
+    matchLabels:
+      app: guestbook
+      tier: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: guestbook
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google-samples/gb-frontend:v4
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
+EOF
+
+// 2. deploy
+kubectl apply -f frontend-deployment.yaml 
+
+// 3. view the deploy details
+kubectl get all -l app=guestbook
+----
+
+[source, yaml]
+.*6. 给 Guestbook 创建一个服务*
+----
+// 1. create the service yaml
+cat <<EOF > ./frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  type: NodePort 
+  ports:
+  - port: 80
+  selector:
+    app: guestbook
+    tier: frontend
+EOF
+
+// 2. create svc
+kubectl apply -f frontend-service.yaml 
+
+// 3. view service
+kubectl get svc -l app=guestbook 
+kubectl describe svc frontend
+----
+
+[source, yaml]
+.*7. 查看部署完成后的集群*
+----
+# kubectl get pods -o wide
+NAME                            READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
+frontend-6cb7f8bd65-6b76c       1/1     Running   0          20m   192.168.251.9     machine02.example.com   <none>           <none>
+frontend-6cb7f8bd65-p66hr       1/1     Running   0          20m   192.168.208.204   machine03.example.com   <none>           <none>
+frontend-6cb7f8bd65-pz78j       1/1     Running   0          20m   192.168.208.203   machine03.example.com   <none>           <none>
+redis-master-7db7f6579f-j2bbv   1/1     Running   0          46m   192.168.251.7     machine02.example.com   <none>           <none>
+redis-slave-7664787fbc-5b6ds    1/1     Running   0          33m   192.168.251.8     machine02.example.com   <none>           <none>
+redis-slave-7664787fbc-lr7bp    1/1     Running   0          33m   192.168.208.202   machine03.example.com   <none>           <none>
+
+# kubectl get deployments
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+frontend       3/3     3            3           21m
+redis-master   1/1     1            1           47m
+redis-slave    2/2     2            2           33m
+
+# kubectl get svc
+NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+frontend       NodePort    10.110.209.79   <none>        80:32465/TCP   17m
+kubernetes     ClusterIP   10.96.0.1       <none>        443/TCP        58m
+redis-master   ClusterIP   10.97.142.208   <none>        6379/TCP       40m
+redis-slave    ClusterIP   10.104.96.140   <none>        6379/TCP       29m
+
+# kubectl get rs
+NAME                      DESIRED   CURRENT   READY   AGE
+frontend-6cb7f8bd65       3         3         3       22m
+redis-master-7db7f6579f   1         1         1       47m
+redis-slave-7664787fbc    2         2         2       34m
+----
+
+*8. 访问 Guestbook*
+
+浏览器打开 http://192.168.100.101:32465/
+
+[source, yaml]
+.*9. Clean up*
+----
+kubectl delete all --all
+----
+
+== 有状态应用
+
+=== 基本概念
+
+[source, yaml]
+.*1. 创建一个 StatefulSet*
+----
+// 1. create the web yaml
+cat <<EOF > ./web.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  serviceName: "nginx"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: k8s.gcr.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+EOF
+
+// 2. create
+kubectl apply -f web.yaml
+
+// 3. view the creation
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
+----
+
+[source, yaml]
+----
+
 ----
 
 [source, yaml]
