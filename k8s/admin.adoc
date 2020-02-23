@@ -21,10 +21,6 @@ kubectl get pods --all-namespaces --sort-by=.metadata.name > ~/tmp/02
 
 == Daemonset
 
-* Ensure a single instance of Pod nginx is running on each node of the kubernetes cluster where nginx also represents the image name which has to be used.
-* Do no override any taints currently in place.
-* Use Daemonset to complete this task and use ds.kusc00201 as Daemonset name.
-
 [source, yaml]
 ----
 // 1. sample daemonset
@@ -53,7 +49,7 @@ kubectl apply -f deployments.yaml
 // 3. view the deployments
 ----
 
-== 04 - nodeSelector
+== nodeSelector
 
 创建 Pod，名字为 nginx-abc101，镜像为 nginx，存放在 label 为 disk=ssd 的 node 上
 
@@ -89,11 +85,7 @@ kubectl delete all --all
 kubectl label node machine03.example.com disk-
 ----
 
-== 05 - initContainer
-
-添加一个 initcontainer 到 myapp-pod
-
-这个 initcontainer 应该创建一个名为 /workdir/calm.txt 的空文件，如果/workdir/calm.txt 没有被检测到，这个 Pod 应该更新 spec 文件并退 出，这个 Pod 应该被创建
+== initContainer
 
 [source, yaml]
 ----
@@ -130,12 +122,14 @@ kubectl apply -f deploy.yaml
 
 https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
 
-== 06 - 多容器 pod 创建  
+== Containers 
 
 创建一个名为 kucc4 的 Pod,其中内部运行 着 nginx+redis+memcached+consul 4 个容器。
 
 [source, yaml]
 ----
+kubectl run kucc4 --image=nginx --generator=run-pod/v1 --dry-run -o yaml
+
 apiVersion: v1
 kind: Pod
 metadata:
@@ -154,16 +148,13 @@ spec:
     image: consul
 
 kubectl apply -f pod.yaml
+
+kubectl logs pod/kucc4 consul
 ----
 
 https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/#pod-templates
 
-== 07 - Deployments 
-
-创建 deployment
-名字为 nginx-app
-容器采用 1.11.9 版本的 nginx
-这个 deployment 包含 3 个副本 接下来，通过滚动升级的方式更新镜像版本为 1.12.0，并记录这个更新 最后，回滚这个更新到之前的 1.11.9 版本
+== Deployments 
 
 [source, yaml]
 ----
@@ -199,7 +190,7 @@ kubectl rollout undo deployment/nginx-app
 
 https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment
 
-== 08 - Service
+== Service
 
 创建和配置 service，名字为 front-end-service。可以通过 NodePort/ClusterIp 访问，并且路由到 front-end 的 Pod上。
 
@@ -208,7 +199,7 @@ https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a
 kubectl expose pod front-end --name=front-end-service --type='NodePort' --port=80
 ----
 
-== 09 - Deploy Pod on different namespace
+== Namespace
 
 创建一个 Pod，名字为 Jenkins，镜像使用 Jenkins。在新的 namespace ns01上创建。
 
@@ -218,7 +209,7 @@ kubectl create namespace ns01
 kubectl apply -f pod.yaml -n ns01
 ----
 
-== 10 - yaml 部署
+== yaml
 
 创建 deployment 的 spec 文件:
 使用 redis 镜像，7 个副本，label 为 app_enb_stage=dev
@@ -229,10 +220,11 @@ deployment 名字为 abc
 ----
 kubectl apply -f deploy.yaml 
 
+run kua100201 --image=redis --replicas=7 --labels=app_env_stage=dev
 kubectl delete all -l app_enb_stage=dev
 ----
 
-== 11 - secret
+== Secret
 
 Create a kubetnetes Secret as follows:
 
@@ -287,7 +279,7 @@ spec:
   restartPolicy: Never
 ----
 
-== 12 - 统计Service中的pod
+== Labels
 
 Create a file /opt/KUCC00302/kucc00302.txt that lists all pods that implement Service foo in Namespce production。
 
@@ -302,14 +294,7 @@ kubectl get pods -l app=redis,role=slave,tier=backend --no-headers | awk '{print
 kubectl get pods -l app=redis,role=slave,tier=backend --no-headers | awk '{print $1}' > pods.txt
 ----
 
-== 13 - 不要以持久卷方式挂载
-
-Create a pod as follows:
-Name: non-persistent-redis
-Container image: redis
-Named-volume with name: cache-control
-Mount path : /data/redis
-It should launch in the pre-prod namespace and the volume MUST NOT be persistent
+== emptyDir
 
 [source, yaml]
 ----
@@ -329,7 +314,7 @@ spec:
     emptyDir: {}
 ----
 
-== 14 - Scale
+== Scale
 
 Scale the deployment webserver to 6 pods
 
@@ -338,17 +323,14 @@ Scale the deployment webserver to 6 pods
 kubectl scale deployment.apps/webserver --replicas=6
 ----
 
-== 15 - 统计pod的CPU
-
-From the Pod label name=cpu-utilizer, find pods running high CPU workloads and write the name of the Pod consuming
-most CPU
+== top
 
 [source, yaml]
 ----
 kubectl top pods -l name=cpu-utilizer
 ----
 
-== 16 - 节点统计
+== Nodes
 
 Check to see how many nodes are ready (not including nodes tainted NoSchedule) and write the
 number
@@ -362,11 +344,15 @@ kubectl describe nodes | grep Taints | grep NoSchedule
 kubectl describe nodes | grep Taints | grep NoSchedule | wc -l
 ----
 
-== 17 - DNS
+== DNS
 
 [source, yaml]
 ----
+kubectl expose deployment nginx-dns --name=nginx-dns --port=80
 
+kubectl exec -ti busybox1 -- nslookup nginx-dns 
+
+kubectl exec -ti busybox1 -- nslookup 10.105.132.132 
 ----
 
 == etcd snapshot
@@ -436,13 +422,21 @@ cat /var/lib/kubelet/config.yaml | grep staticPodPath
 systemctl restart kubelet
 ----
 
-== 22 - 添加节点
+== Install
 
 给出一个集群，将节点node1添加到集群中。
 
 [source, yaml]
 ----
+$ kubeadm token create
+n2kb3q.ctmc0wpfnt4cjtbl
 
+$ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+    openssl dgst -sha256 -hex | sed 's/^.* //'
+cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+
+kubeadm join control-plane.example.com:6443 --token n2kb3q.ctmc0wpfnt4cjtbl \
+    --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
 ----
 
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
@@ -502,7 +496,7 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volum
 * Ensure a single instance of Pod nginx is running on each node of the kubernetes cluster where nginx also represents the image name which has to be used. Do no override any taints currently in place.
 * Use Daemonsets to complete this task and use ds.kusc00201 as Daemonset name. 
 
-|5
+|5 - link:#_initContainer[init Container]
 |7
 |
 1. Add an init container to lumpy--koala (Which has been defined in spec file /opt/kucc00100/pod-spec-KUCC00100.yaml)
@@ -510,11 +504,11 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volum
 3. If /workdir/calm.txt is not detected, the Pod should exit
 4. Once the spec file has been updated with the init container definition, the Pod should be created.
 
-|6
+|6 - link:#_containers[Containers]
 |4
 |Create a pod named kucc4 with a single container for each of the following images running inside (there may be between 1 and 4 images specified): nginx + redis + memcached + consul
 
-|7
+|7 - link:#_nodeSelector[nodeSelector]
 |2
 |Schedule a Pod as follows:
 
@@ -522,7 +516,7 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volum
 2. Image: nginx
 3. Node selector: disk=ssd 
 
-|8
+|8 - link:#_deployments[Deployments]
 |4
 |Create a deployment as follows:
 
@@ -534,11 +528,11 @@ Next, deploy the app with new version 1.13.0-alpine by performing a rolling upda
 
 Finally, rollback that update to the previous version 1.10.2-alpine 
 
-|9
+|9 - link:#_service[Service]
 |4
 |Create and configure the service front-end-service so it’s accessible through NodePort and routes to the existing pod named front-end
 
-|10
+|10 - link:#_namespace[Namespace]
 |3
 |Create a Pod as follows:
 
@@ -546,7 +540,7 @@ Finally, rollback that update to the previous version 1.10.2-alpine
 2. Using image: jenkins
 3. In a new Kubenetes namespace named website-frontend 
 
-|11
+|11 - link:#_yaml[yaml]
 |3
 |Create a deployment spec file that will:
 
@@ -557,13 +551,13 @@ Save a copy of this spec file to /opt/KUAL00201/deploy_spec.yaml (or .json)
 
 When you are done, clean up (delete) any new k8s API objects that you produced during this task
 
-|12
+|12 - link:#_labels[Labels]
 |3
 |Create a file /opt/KUCC00302/kucc00302.txt that lists all pods that implement Service foo in Namespace production.
 
 The format of the file should be one pod name per line.
 
-|13
+|13 - link:#_secret[Secret]
 |9
 |Create a Kubernetes Secret as follows:
 
@@ -574,7 +568,7 @@ Create a Pod named pod-secrets-via-file using the redis image which mounts a sec
 
 Create a second Pod named pod-secrets-via-env using the redis image, which exports credential as TOPSECRET
 
-|14
+|14 - link:#_emptydir[emptyDir]
 |4
 |Create a pad as follows:
 
@@ -583,19 +577,19 @@ Create a second Pod named pod-secrets-via-env using the redis image, which expor
 3. Named-volume with name: cache-control
 4. Mount path: /data/redis
 
-|15
+|15 - link:#_scale[Scale]
 |1
 |Scale the deployment webserver to 6 pods
 
-|16
+|16 - link:#_nodes[Nodes]
 |2
 |Check to see how many nodes are ready (not including nodes tainted NoSchedule) and write the number to /opt/nodenum
 
-|17
+|17 - link:#_top[top] 
 |2
 |From the Pod label name=cpu-utilizer, find pods running high CPU workloads and write the name of the Pod consuming most CPU to the file /opt/cpu.txt (which already exists)
 
-|18
+|18 - link:#_dns[DNS]
 |7
 |Create a deployment as follows:
 
@@ -642,7 +636,7 @@ Hints:
 1. You can ssh to the failed node using $ ssh wk8s-node-0
 2. You can assume elevated privileges on the node with the following command $ sudo -i 
 
-|23
+|23 - link:#_install[Install]
 |8
 |In this task, you will configure a new Node, ik8s-node-0, to join a Kubernetes cluster as follows:
 
