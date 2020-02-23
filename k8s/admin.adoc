@@ -1,5 +1,684 @@
 = 基本管理
 :toc: manual
 
+== logging
+
+[source, yaml]
+----
+kubectl logs pod/redis | grep WARNING
+kubectl logs pod/redis | grep WARNING > ~/tmp/01
+----
+
+https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs
+
+== sort-by
+
+[source, yaml]
+----
+kubectl get pods --all-namespaces --sort-by=.metadata.name
+kubectl get pods --all-namespaces --sort-by=.metadata.name > ~/tmp/02
+----
+
+== Daemonset
+
+* Ensure a single instance of Pod nginx is running on each node of the kubernetes cluster where nginx also represents the image name which has to be used.
+* Do no override any taints currently in place.
+* Use Daemonset to complete this task and use ds.kusc00201 as Daemonset name.
+
+[source, yaml]
+----
+// 1. sample daemonset
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+
+// 2. create 
+kubectl apply -f deployments.yaml 
+
+// 3. view the deployments
+----
+
+== 04 - nodeSelector
+
+创建 Pod，名字为 nginx-abc101，镜像为 nginx，存放在 label 为 disk=ssd 的 node 上
+
+[source, yaml]
+----
+// 1. assign a lable to node
+kubectl label node machine03.example.com disk=ssd
+kubectl get nodes --show-labels
+
+// 2. deployments yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
+    disk: ssd
+
+// 3. deploy
+kubectl apply -f deploy.yaml 
+
+// 4. check the deloyment
+kubectl get pod -o wide
+
+// 5. clean up
+kubectl delete all --all
+kubectl label node machine03.example.com disk-
+----
+
+== 05 - initContainer
+
+添加一个 initcontainer 到 myapp-pod
+
+这个 initcontainer 应该创建一个名为 /workdir/calm.txt 的空文件，如果/workdir/calm.txt 没有被检测到，这个 Pod 应该更新 spec 文件并退 出，这个 Pod 应该被创建
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: nginx
+    livenessProbe:
+      exec:
+        command: ['test', '-e', '/workdir/calm.txt']
+    volumeMounts:
+    - name: workdir
+      mountPath: /workdir
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['/bin/sh', '-c', 'touch /workdir/calm.txt']
+    volumeMounts:
+    - name: workdir
+      mountPath: /workdir
+  volumes:
+  - name: workdir
+    emptyDir: {}
 
 
+kubectl apply -f deploy.yaml
+----
+
+https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+
+== 06 - 多容器 pod 创建  
+
+创建一个名为 kucc4 的 Pod,其中内部运行 着 nginx+redis+memcached+consul 4 个容器。
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kucc4
+  labels:
+    app: kucc4
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  - name: redis
+    image: redis
+  - name: memcached
+    image: memcached
+  - name: consul
+    image: consul
+
+kubectl apply -f pod.yaml
+----
+
+https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/#pod-templates
+
+== 07 - Deployments 
+
+创建 deployment
+名字为 nginx-app
+容器采用 1.11.9 版本的 nginx
+这个 deployment 包含 3 个副本 接下来，通过滚动升级的方式更新镜像版本为 1.12.0，并记录这个更新 最后，回滚这个更新到之前的 1.11.9 版本
+
+[source, yaml]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.11.9-alpine
+        ports:
+        - containerPort: 80
+
+
+kubectl apply -f deploy.yaml 
+
+kubectl set image deployment/nginx-app nginx=nginx:1.12.0-alpine --record
+
+kubectl rollout undo deployment/nginx-app
+----
+
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment
+
+== 08 - Service
+
+创建和配置 service，名字为 front-end-service。可以通过 NodePort/ClusterIp 访问，并且路由到 front-end 的 Pod上。
+
+[source, yaml]
+----
+kubectl expose pod front-end --name=front-end-service --type='NodePort' --port=80
+----
+
+== 09 - Deploy Pod on different namespace
+
+创建一个 Pod，名字为 Jenkins，镜像使用 Jenkins。在新的 namespace ns01上创建。
+
+[source, yaml]
+----
+kubectl create namespace ns01
+kubectl apply -f pod.yaml -n ns01
+----
+
+== 10 - yaml 部署
+
+创建 deployment 的 spec 文件:
+使用 redis 镜像，7 个副本，label 为 app_enb_stage=dev
+deployment 名字为 abc
+保存这个 spec 文件到/opt/abc/deploy_spec.yaml 完成后，清理(删除)在此任务期间生成的任何新的 k8s API 对象
+
+[source, yaml]
+----
+kubectl apply -f deploy.yaml 
+
+kubectl delete all -l app_enb_stage=dev
+----
+
+== 11 - secret
+
+Create a kubetnetes Secret as follows:
+
+Name: super-secret 
+
+Credential: alice or username:bob 
+
+Create a Pod named pod-secrets-via-file using the redis image which mounts a secret named super-secret at /secrets
+
+Create a second Pod named pod-secrets-via-env using the redis image,which exports credential/username as TOPSECRET/CREDENTIALS
+
+[source, yaml]
+----
+kubectl create secret generic super-secret --from-literal=credential=alice --from-literal=username=bob
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-secrets-via-file
+spec:
+  containers:
+  - name: pod-secrets-via-file
+    image: redis
+    volumeMounts:
+    - name: super-secret
+      mountPath: "/secrets"
+  volumes:
+  - name: super-secret
+    secret:
+      secretName: super-secret
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-secrets-via-env
+spec:
+  containers:
+  - name: pod-secrets-via-env
+    image: redis
+    env:
+      - name: TOPSECRET
+        valueFrom:
+          secretKeyRef:
+            name: super-secret
+            key: credential
+      - name: CREDENTIALS
+        valueFrom:
+          secretKeyRef:
+            name: super-secret
+            key: username
+  restartPolicy: Never
+----
+
+== 12 - 统计Service中的pod
+
+Create a file /opt/KUCC00302/kucc00302.txt that lists all pods that implement Service foo in Namespce production。
+
+[source, yaml]
+----
+kubectl get svc foo -o yaml
+kubectl describe svc foo
+
+kubectl get pods -l app=redis,role=slave,tier=backend
+kubectl get pods -l app=redis,role=slave,tier=backend --no-headers
+kubectl get pods -l app=redis,role=slave,tier=backend --no-headers | awk '{print $1}'
+kubectl get pods -l app=redis,role=slave,tier=backend --no-headers | awk '{print $1}' > pods.txt
+----
+
+== 13 - 不要以持久卷方式挂载
+
+Create a pod as follows:
+Name: non-persistent-redis
+Container image: redis
+Named-volume with name: cache-control
+Mount path : /data/redis
+It should launch in the pre-prod namespace and the volume MUST NOT be persistent
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: non-persistent-redis
+spec:
+  containers:
+  - image: redis
+    name: redis
+    volumeMounts:
+    - mountPath: "/data/redis"
+      name: cache-control
+  volumes:
+  - name: cache-control
+    emptyDir: {}
+----
+
+== 14 - Scale
+
+Scale the deployment webserver to 6 pods
+
+[source, yaml]
+----
+kubectl scale deployment.apps/webserver --replicas=6
+----
+
+== 15 - 统计pod的CPU
+
+From the Pod label name=cpu-utilizer, find pods running high CPU workloads and write the name of the Pod consuming
+most CPU
+
+[source, yaml]
+----
+kubectl top pods -l name=cpu-utilizer
+----
+
+== 16 - 节点统计
+
+Check to see how many nodes are ready (not including nodes tainted NoSchedule) and write the
+number
+
+[source, yaml]
+----
+kubectl get nodes | grep Ready
+kubectl get nodes | grep Ready | wc -l
+
+kubectl describe nodes | grep Taints | grep NoSchedule
+kubectl describe nodes | grep Taints | grep NoSchedule | wc -l
+----
+
+== 17 - DNS
+
+[source, yaml]
+----
+
+----
+
+== etcd snapshot
+
+Create a snapshot of the etcd instance running at http://127.0.0.1:2379 saving the snapshot to the file path /data/backup/etcd-snapshot.db
+
+The etcd instance is running etcd version 3.2.18
+
+The following TLS certificates/key are supplied for connnecting to the server with etcdctl 
+
+CA certificate：/opt/KUCM00302/ca.crt
+
+Client certificate：/opt/KUCM00302/etcd-client.crt
+
+Client key: /opt/KUCM00302/etcd-client.key
+
+[source, yaml]
+----
+etcdctl --endpoints=http://127.0.0.1:2379 \
+ 
+--ca-file=/opt/KUCM00302/ca.crt \
+ 
+--certfile=/opt/KUCM00302/etcd-client.crt \
+ 
+--key=/opt/KUCM00302/etcd-client.key snapshot save /data/backup/etcd-snapshot.db
+----
+
+== Drain
+
+[source, yaml]
+----
+kubectl drain wk8s-node-1 --ignore-daemonsets=true --delete-local-data=true --force=true
+----
+
+== Node NotReady
+
+[source, yaml]
+----
+kubectl get node
+systemctl status kubelet
+----
+
+== Static Pod
+
+[source, yaml]
+----
+ssh machine02
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myservice
+spec:
+  containers:
+    - name: myservice
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+
+
+kubectl create -f myservice.yaml
+
+cat /var/lib/kubelet/config.yaml | grep staticPodPath
+
+systemctl restart kubelet
+----
+
+== 22 - 添加节点
+
+给出一个集群，将节点node1添加到集群中。
+
+[source, yaml]
+----
+
+----
+
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+== kubelet.service
+
+[source, yaml]
+----
+systemctl list-units | grep schedule
+systemctl list-units | grep etcd
+systemctl list-units | grep controllor-manager
+systemctl list-units | grep api-server
+
+# cat /var/lib/kubelet/config.yaml | grep staticPodPath
+staticPodPath: /etc/kubernetes/manifests
+----
+
+== PersistentVolume
+
+[source, yaml]
+----
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: app-config
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /srv/app-config
+----
+
+https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volumes
+
+== Summay
+
+[cols="2,2,5a"]
+|===
+|N |W |Q
+
+|2 - link:#_logging[logging]
+|5
+|
+1. Extract log lines corresponding to error file-not-found
+2. Write them to /opt/KULM00201/foobar
+
+|3 - link:#_sort_by[sort-by]
+|3
+|List all PVs sorted by name saving the full kubectl output to /opt/KUCC0010/my_volumes . Use kubectl’s own functionally for sorting the output, and do not manipulate it any further.
+
+|4 - link:#_daemonset[Daemonset]
+|3
+|
+* Ensure a single instance of Pod nginx is running on each node of the kubernetes cluster where nginx also represents the image name which has to be used. Do no override any taints currently in place.
+* Use Daemonsets to complete this task and use ds.kusc00201 as Daemonset name. 
+
+|5
+|7
+|
+1. Add an init container to lumpy--koala (Which has been defined in spec file /opt/kucc00100/pod-spec-KUCC00100.yaml)
+2. The init container should create an empty file named /workdir/calm.txt
+3. If /workdir/calm.txt is not detected, the Pod should exit
+4. Once the spec file has been updated with the init container definition, the Pod should be created.
+
+|6
+|4
+|Create a pod named kucc4 with a single container for each of the following images running inside (there may be between 1 and 4 images specified): nginx + redis + memcached + consul
+
+|7
+|2
+|Schedule a Pod as follows:
+
+1. Name: nginx-kusc00101
+2. Image: nginx
+3. Node selector: disk=ssd 
+
+|8
+|4
+|Create a deployment as follows:
+
+1. Name: nginx-app
+2. Using container nginx with version 1.10.2-alpine
+3. The deployment should contain 3 replicas
+
+Next, deploy the app with new version 1.13.0-alpine by performing a rolling update and record that update.
+
+Finally, rollback that update to the previous version 1.10.2-alpine 
+
+|9
+|4
+|Create and configure the service front-end-service so it’s accessible through NodePort and routes to the existing pod named front-end
+
+|10
+|3
+|Create a Pod as follows:
+
+1. Name: jenkins
+2. Using image: jenkins
+3. In a new Kubenetes namespace named website-frontend 
+
+|11
+|3
+|Create a deployment spec file that will:
+
+1. Launch 7 replicas of the redis image with the label: app_env_stage=dev
+2. Deployment name: kual00201
+
+Save a copy of this spec file to /opt/KUAL00201/deploy_spec.yaml (or .json)
+
+When you are done, clean up (delete) any new k8s API objects that you produced during this task
+
+|12
+|3
+|Create a file /opt/KUCC00302/kucc00302.txt that lists all pods that implement Service foo in Namespace production.
+
+The format of the file should be one pod name per line.
+
+|13
+|9
+|Create a Kubernetes Secret as follows:
+
+1. Name: super-secret
+2. Credential: alice  or username:bob 
+
+Create a Pod named pod-secrets-via-file using the redis image which mounts a secret named super-secret at /secrets
+
+Create a second Pod named pod-secrets-via-env using the redis image, which exports credential as TOPSECRET
+
+|14
+|4
+|Create a pad as follows:
+
+1. Name: non-persistent-redis
+2. Container image: redis
+3. Named-volume with name: cache-control
+4. Mount path: /data/redis
+
+|15
+|1
+|Scale the deployment webserver to 6 pods
+
+|16
+|2
+|Check to see how many nodes are ready (not including nodes tainted NoSchedule) and write the number to /opt/nodenum
+
+|17
+|2
+|From the Pod label name=cpu-utilizer, find pods running high CPU workloads and write the name of the Pod consuming most CPU to the file /opt/cpu.txt (which already exists)
+
+|18
+|7
+|Create a deployment as follows:
+
+1. Name: nginx-dns
+2. Exposed via a service: nginx-dns
+3. Ensure that the service & pod are accessible via their respective DNS records
+4. The container(s) within any Pod(s) running as a part of this deployment should use the nginx image
+
+Next, use the utility nslookup to look up the DNS records of the service & pod and write the output to /opt/service.dns and /opt/pod.dns respectively.
+
+Ensure you use the busybox:1.28 image(or earlier) for any testing, an the latest release has an unpstream bug which impacts thd use of nslookup.
+
+|19 - link:#_etcd_snapshot[etcd snapshot]
+|7
+|Create a snapshot of the etcd instance running at https://127.0.0.1:2379 saving the snapshot to the file path /data/backup/etcd-snapshot.db
+
+The etcd instance is running etcd version 3.1.10
+
+The following TLS certificates/key are supplied for connecting to the server with etcdctl
+
+1. CA certificate: /opt/KUCM00302/ca.crt
+2. Client certificate: /opt/KUCM00302/etcd-client.crt
+3. Clientkey:/opt/KUCM00302/etcd-client.key 
+
+|20 - link:#_drain[Drain]
+|4
+|Set the node labelled with name=ek8s-node-1 as unavailable and reschedule all the pods running on it.
+
+|21 - link:#_node_notready[NotReady]
+|4
+|A Kubernetes worker node, labelled with name=wk8s-node-0 is in state NotReady . Investigate why this is the case, and perform any appropriate steps to bring the node to a Ready state, ensuring that any changes are made permanent.
+
+Hints:
+
+1. You can ssh to the failed node using $ ssh wk8s-node-0
+2. You can assume elevated privileges on the node with the following command $ sudo -i 
+
+|22 - link:#_static_pod[Static Pod]
+|4
+|Configure the kubelet systemd managed service, on the node labelled with name=wk8s-node-1, to launch a Pod containing a single container of image nginx named myservice automatically. Any spec files required should be placed in the /etc/kubernetes/manifests directory on the node.
+
+Hints:
+
+1. You can ssh to the failed node using $ ssh wk8s-node-0
+2. You can assume elevated privileges on the node with the following command $ sudo -i 
+
+|23
+|8
+|In this task, you will configure a new Node, ik8s-node-0, to join a Kubernetes cluster as follows:
+
+1. Configure kubelet for automatic certificate rotation and ensure that both server and client CSRs are automatically approved and signed as appropnate via the use of RBAC.
+2. Ensure that the appropriate cluster-info ConfigMap is created and configured appropriately in the correct namespace so that future Nodes can easily join the cluster
+3. Your bootstrap kubeconfig should be created on the new Node at /etc/kubernetes/bootstrap-kubelet.conf (do not remove this file once your Node has successfully joined the cluster)
+4. The appropriate cluster-wide CA certificate is located on the Node at /etc/kubernetes/pki/ca.crt . You should ensure that any automatically issued certificates are installed to the node at /var/lib/kubelet/pki and that the kubeconfig file for kubelet will be rendered at /etc/kubernetes/kubelet.conf upon successful bootstrapping
+5. Use an additional group for bootstrapping Nodes attempting to join the cluster which should be called system:bootstrappers:cka:default-node-token
+6. Solution should start automatically on boot, with the systemd service unit file for kubelet available at /etc/systemd/system/kubelet.service
+
+To test your solution, create the appropriate resources from the spec file located at /opt/..../kube-flannel.yaml This will create the necessary supporting resources as well as the kube-flannel -ds DaemonSet . You should ensure that this DaemonSet is correctly deployed to the single node in the cluster.
+
+Hints:
+
+1. kubelet is not configured or running on ik8s-master-0 for this task, and you should not attempt to configure it.
+2. You will make use of TLS bootstrapping to complete this task.
+3. You can obtain the IP address of the Kubernetes API server via the following command $ ssh ik8s-node-0 getent hosts ik8s-master-0
+4. The API server is listening on the usual port, 6443/tcp, and will only server TLS requests
+5. The kubelet binary is already installed on ik8s-node-0 at /usr/bin/kubelet . You will not need to deploy kube-proxy to the cluster during this task.
+6. You can ssh to the new worker node using $ ssh ik8s-node-0
+7. You can ssh to the master node with the following command $ ssh ik8s-master-0
+8. No further configuration of control plane services running on ik8s-master-0 is required
+9. You can assume elevated privileges on both nodes with the following command $ sudo -i
+10. Docker is already installed and running on ik8s-node-0
+
+|24 - link:#_kubelet_service[K8S SVC]
+|4
+|Given a partially-functioning Kubenetes cluster, identify symptoms of failure on the cluster. Determine the node, the failing service and take actions to bring up the failed service and restore the health of the cluster. Ensure that any changes are made permanently.
+
+The worker node in this cluster is labelled with name=bk8s-node-0 Hints:
+
+1. You can ssh to the relevant nodes using $ ssh $(NODE) where $(NODE) is one of bk8s-master-0 or bk8s-node-0
+2. You can assume elevated privileges on any node in the cluster with the following command$ sudo -i
+
+|25 - link:#_persistentvolume[PV]
+|3
+|Creae a persistent volume with name app-config of capacity 1Gi and access mode ReadWriteOnce. The type of volume is hostPath and its location is /srv/app-config
+
+|===
