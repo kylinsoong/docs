@@ -3,15 +3,13 @@
 
 == 基本概念
 
-=== Why do we need DNS?
-
-* DNS is a global and highly distributed network service that resolves strings of letters into IP address for you.
-* A domain name is just the term we use for something that can be resolved by DNS.
-* https://www.icann.org/[ICANN] is responsible for DNS at a global level.
-
 === 什么是 DNS
 
-DNS 英文全称 *Domain Name System*，即域名系统。DNS 是一个分层的命名系统，充当着网络系统主机和资源的目录，目录中的信息是将网络名称映射到逻辑条目/资源记录数据。
+* DNS 是一个全球分布式的系统，用来将字母的地址转化为 IP 地址。https://www.icann.org/[ICANN] 在全球的视角负责 DNS。
+* DNS 英文全称 *Domain Name System*，是一个树状分布式域名系统，为互联网或私有网络中的计算机、服务或其他任何资源提供解析。最突出的功能是将易于记忆的名称翻译成数字的IP地址用来定位需要访问的资源。
+** WWW    www.hinet.net <-> 168.95.1.82
+** MAIL    msa.hinet.net <-> 168.95.4.211
+* DNS 是一个分层的命名系统，充当着网络系统主机和资源的目录，目录中的信息是将网络名称映射到逻辑条目/资源记录数据。
 
 image:img/dns-level.png[DNS 分层命名系统]
 
