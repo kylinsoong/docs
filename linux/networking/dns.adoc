@@ -43,65 +43,61 @@ NOTE: DNS can technically support up to 127 levels of domain in total for a sing
 
 === DNS 服务器种类
 
-.*Five primary types of DNS servers*
+.*DNS servers 类型*
 [cols="2,5a"]
 |===
 |名称 |说明
 
-|缓存名称服务器(Caching name servers)
-|缓存名称服务器在本地缓存中存储 DNS 查询结果，并且在 TTL 到期后从缓存中删除资源记录。通常设置缓存名称服务器以为本地网络上的客户端执行查询。这降低了 Internet 上的 DNS 流量，从而极大提高了 DNS 名称解析的效率。随着缓存的增加，缓存名称服务器从其本地缓存中回答越来越多的客户端查询，从而提高 DNS 性能。
+|Local DNS(Caching/Recursive Name Servers)
+|通常是被 ISP 或本地网络提供，执行 DNS 解析请求
+
+缓存名称服务器在本地缓存中存储 DNS 查询结果，并且在 TTL 到期后从缓存中删除资源记录。通常设置缓存名称服务器以为本地网络上的客户端执行查询。这降低了 Internet 上的 DNS 流量，从而极大提高了 DNS 名称解析的效率。随着缓存的增加，缓存名称服务器从其本地缓存中回答越来越多的客户端查询，从而提高 DNS 性能。
 
 鉴于 UDP 的无状态性质，DNS 事务很容易被欺骗和篡改。缓存名称服务器过去一直是期望重定向或劫持网络流量的攻击者青睐的目标。这通常通过以下方式来实现：利用 DNS 服务器软件中的漏洞来欺骗 DNS 服务器接受恶意数据并将其填充到其缓存中，也就是通常称为缓存中毒的方法。一旦攻击者成功使 DNS 服务器的缓存中毒，便可利用 DNS 服务器上的缓存名称服务有效破坏众多客户端收到的 DNS 数据，并因此可以重定向或劫持客户端的网络流量。
 
 缓存名称服务器可以极大提高本地网络上的 DNS 性能，同时它们还可以通过执行域名系统安全性扩展 (Domain Name System Security Extensions, DNSSEC) 验证来提高安全性。在缓存名称服务器上启用的 DNSSEC 验证可在将资源记录置于缓存中供客户端使用之前验证资源记录的真实性和完整性，从而防止客户端遭受缓存中毒。
 
-|Recursive name servers
-|Provided by an ISP or local network. Perform full DNS resolution requests.
-
-|Root name servers
+|Root Name Servers
 |13 total root name servers, what are responsible for directing queries toward the appropriate TLD name server.
 
-|TLD name servers
+|TLD Name Servers
 |The TLD name servers will respond again with a redirect, this time informing the computer performing the name lookup with what authoritative name server to contact.
 
-|Authoritative name servers
+|Authoritative Name Servers
 |Authoritative name servers are responsible for the last two parts of any domain name which is the resolution at which a single organization may be responsible for DNS lookups.
 |===
 
-.*Steps of Name Resolution*
+.*域名解析过程*
 image:img/5typesdnsserverlookup.png[]
 
-=== 域名查询解析
+=== DNS 工作过程
 
-当系统需要使用 DNS 服务器执行名称解析时，首先会按顺序向 /etc/resolv.conf 中列出的服务器发送查询，直到获得响应或所有列出的服务器耗尽。host 或 dig 命令可以用来手动查找 DNS 名称。
+image:img/dns_lookup_process.png[]
 
-[source, bash]
-.*An example of dig*
-----
-$ dig https://test.apps.example.com
+上图所示为 DNS 工作的一般过程，WEB 服务器的域名为 www.example.com，Client 在浏览器上请求访问 www.example.com，具体域名解析的过程如下：
 
-; <<>> DiG 9.9.4-RedHat-9.9.4-51.el7_4.1 <<>> https://test.apps.example.com
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44376
-;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+. 一个用户想浏览一个域名为 “www.example.com” 的网站
+. 首先去 LDNS 解析。如果 LDNS 没有这个域名的缓存，将递归到因特网查询谁有这个域名。
+. 首先 LDNS 去根服务器查询 .com 服务器
+. .com 服务器确定 example.com服务器，并且通过 NS(Name Server) 记录让 LDNS 去访问 domain.com 服务器
+. LDNS 查询 example.com 服务的 NS 记录 
+.. .example.com 查询域名
+.. 如果找到了域名，返回 A 记录，A 记录包含以下信息：
+... 请求的名字
+... 对应的 IP 地址
+... 对应的 TTL 时间。TTL 时间告诉 LDNS A 记录可以缓存多长时间
+. 当 LDNS 收到了 A 记录，将对应信息缓存，并设定一个 TTL 时间，如果有其他用户也请求相同的域名，LDNS 将用这个缓存直接返回结果，直到TTL 时间过期。
+. LDNS 把www.example.com 的 IP 地址返回给客户端。
+. 这时，浏览器缓存住这个记录。所以，这时，这个记录缓存在本地电脑上和 LDNS 上。
+. 浏览器用这个 IP 地址去连接这个 WEB 服务器
+. WEB 服务器返回请求结果
 
-;; QUESTION SECTION:
-;https://test.apps.example.com.	IN	A
-
-;; ANSWER SECTION:
-https://test.apps.example.com. 0 IN	A	192.168.122.105
-
-;; Query time: 1 msec
-;; SERVER: 192.168.122.106#53(192.168.122.106)
-;; WHEN: Sat Jan 06 17:43:43 CST 2018
-;; MSG SIZE  rcvd: 63
-----
+=== LDNS 缓存更新过程
 
 image:img/anatomy-of-dns-lookup.png[DNS 查询解析]
 
 1. 从 `/etc/resolv.conf` 获取 DNS 服务器的地址
-2. 发送 `https://example.com 的 IP 地址是多少` 请求到步骤1获取到的 DNS 服务器
+2. 发送 `example.com 的 IP 地址是多少` 请求到步骤1获取到的 DNS 服务器
 3. 查询 `example.com` 是否在本地是有认证的
 4. 如果是直接返回对应的 IP 地址，跳过以后的步骤，直接将 IP 地址返回给 Client。在这种情况下，则返回会有一个 aa 的标记，即表示是本地 authoritative answer 的。 
 5. 如果 `example.com` 在本地没有认证，则查看 `example.com` 是否在缓存中有对应的记录
@@ -332,6 +328,55 @@ google.com.		3600	IN	TXT	"v=spf1 include:_spf.google.com ~all"
 https://godaddy.com
 
 == DNS 工具
+
+=== host
+
+host 是 Linux 系统上 DNS 查询的工具。
+
+[source, bash]
+.*示例*
+----
+$ host -v -t A ksoong.org
+Trying "ksoong.org"
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 328
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;ksoong.org.			IN	A
+
+;; ANSWER SECTION:
+ksoong.org.		676	IN	A	192.30.252.154
+ksoong.org.		676	IN	A	192.30.252.153
+
+Received 60 bytes from 192.168.204.180#53 in 89 ms
+----
+
+=== dig
+
+当系统需要使用 DNS 服务器执行名称解析时，首先会按顺序向 /etc/resolv.conf 中列出的服务器发送查询，直到获得响应或所有列出的服务器耗尽。dig 命令可以用来手动查找 DNS 名称。
+
+[source, bash]
+.*An example of dig*
+----
+$ dig https://test.apps.example.com
+
+; <<>> DiG 9.9.4-RedHat-9.9.4-51.el7_4.1 <<>> https://test.apps.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44376
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;https://test.apps.example.com. IN      A
+
+;; ANSWER SECTION:
+https://test.apps.example.com. 0 IN     A       192.168.122.105
+
+;; Query time: 1 msec
+;; SERVER: 192.168.122.106#53(192.168.122.106)
+;; WHEN: Sat Jan 06 17:43:43 CST 2018
+;; MSG SIZE  rcvd: 63
+----
 
 === nslookup
 

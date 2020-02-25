@@ -1,0 +1,196 @@
+= 网络
+:toc: manual
+
+== Service
+
+[source, bash]
+.*1. Define a Service*
+----
+// create a pod
+kubectl run nginx --image=nginx --generator=run-pod/v1 --port=80
+
+// expose NodePort
+kubectl expose pod nginx --type=NodePort --name=nginx
+
+kubectl exec -it pod/nginx sh
+# cd /usr/share/nginx/html/
+# echo "HELLO" > hello
+# exit
+
+$ kubectl describe service/nginx | grep NodePort | grep TCP
+NodePort:                 <unset>  32447/TCP
+
+$ curl http://192.168.100.101:32447/hello
+HELLO
+
+// selector reference
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    run: nginx
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+
+kubectl apply -f svc.yaml 
+----
+
+[source, bash]
+.*2. DNS*
+----
+// 1. deploy pods 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-dns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-dns
+  template:
+    metadata:
+      labels:
+        app: test-dns
+    spec:
+      containers:
+      - name: test-dns
+        image: gcr.io/google-samples/kubernetes-bootcamp:v1
+        ports:
+        - name: http
+          containerPort: 8080
+
+kubectl create -f deploy.yaml
+
+// 2. expose to service
+kubectl expose deployment test-dns --name=test-dns --port=80 --target-port=8080
+
+// 3. curl pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl-pod
+spec:
+  containers:
+  - name: curl
+    image: appropriate/curl
+    command:
+      - sleep
+      - "3600"
+
+kubectl create -f curl.yaml
+
+// 4. nslookup pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  labels:
+    name: busybox
+spec:
+  containers:
+  - image: busybox:1.28
+    command:
+      - sleep
+      - "3600"
+    name: busybox
+
+kubectl create -f nslookup.yaml 
+
+// 5. test access svc
+for i in {1..5} ; do kubectl exec curl-pod curl test-dns ; done
+
+// 6. dns lookup
+kubectl exec -ti busybox -- nslookup test-dns
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      test-dns
+Address 1: 10.111.208.78 test-dns.default.svc.cluster.local
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+
+
