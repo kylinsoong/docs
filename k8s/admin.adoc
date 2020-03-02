@@ -508,7 +508,7 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volum
 |4
 |Create a pod named kucc4 with a single container for each of the following images running inside (there may be between 1 and 4 images specified): nginx + redis + memcached + consul
 
-|7 - link:#_nodeSelector[nodeSelector]
+|7 - link:#_nodeselector[nodeSelector]
 |2
 |Schedule a Pod as follows:
 

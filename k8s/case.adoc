@@ -1,341 +1,210 @@
 = 基本概念
 :toc: manual
 
-本部分来自 https://kubernetes.io/docs/tutorials/ 部分中实验的一些记录。
+== 基础示例
 
-== 基础
+本部分通过一个示例展示 K8S 的基本操作，具体包括：创建集群、部署应用、外部访问应用、扩展应用、升级应用等。
 
-=== Creating a Cluster
+[cols="2,5a"]
+|===
+|编号 |命令
 
-[source, yaml]
+|1
+|
+[source, bash]
+.*集群版本*
 ----
-// 1. view the version
-# kubectl version
-Client Version: version.Info{Major:"1", Minor:"17", GitVersion:"v1.17.3", GitCommit:"06ad960bfd03b39c8310aaf92d1e7c12ce618213", GitTreeState:"clean", BuildDate:"2020-02-11T18:14:22Z", GoVersion:"go1.13.6", Compiler:"gc", Platform:"linux/amd64"}
-Server Version: version.Info{Major:"1", Minor:"17", GitVersion:"v1.17.3", GitCommit:"06ad960bfd03b39c8310aaf92d1e7c12ce618213", GitTreeState:"clean", BuildDate:"2020-02-11T18:07:13Z", GoVersion:"go1.13.6", Compiler:"gc", Platform:"linux/amd64"}
-
-// 2. view the cluster details
-# kubectl cluster-info
-Kubernetes master is running at https://control-plane.example.com:6443
-KubeDNS is running at https://control-plane.example.com:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-
-
-// 3. view the cluster nodes
-# kubectl get nodes
-NAME                    STATUS   ROLES    AGE     VERSION
-machine01.example.com   Ready    master   4h49m   v1.17.3
-machine02.example.com   Ready    worker   137m    v1.17.3
-machine03.example.com   Ready    worker   135m    v1.17.3
-
-// 4. view all pods
-# kubectl get pods --all-namespaces
-NAMESPACE     NAME                                            READY   STATUS    RESTARTS   AGE
-kube-system   calico-kube-controllers-5b644bc49c-m6wdh        1/1     Running   1          4h43m
-kube-system   calico-node-5nqz7                               1/1     Running   1          4h43m
-kube-system   calico-node-tmnvm                               1/1     Running   0          140m
-kube-system   calico-node-wcjhn                               1/1     Running   0          141m
-kube-system   coredns-6955765f44-f4wxq                        1/1     Running   1          4h53m
-kube-system   coredns-6955765f44-rfdzc                        1/1     Running   1          4h53m
-kube-system   etcd-machine01.example.com                      1/1     Running   0          149m
-kube-system   kube-apiserver-machine01.example.com            1/1     Running   0          148m
-kube-system   kube-controller-manager-machine01.example.com   1/1     Running   4          4h53m
-kube-system   kube-proxy-ghm6k                                1/1     Running   1          4h53m
-kube-system   kube-proxy-k5prs                                1/1     Running   0          141m
-kube-system   kube-proxy-ntbst                                1/1     Running   0          140m
-kube-system   kube-scheduler-machine01.example.com            1/1     Running   4          4h53m 
+kubectl version
 ----
 
-=== Deploy an App
-
-[source, yaml]
+|2
+|
+[source, bash]
+.*集群详情*
 ----
-// 1. create deployment
-# kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
-
-// 2. get all items in default namespaces
-# kubectl get all
-NAME                                       READY   STATUS    RESTARTS   AGE
-pod/kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          37s
-
-NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5h11m
-
-NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/kubernetes-bootcamp   1/1     1            1           37s
-
-NAME                                             DESIRED   CURRENT   READY   AGE
-replicaset.apps/kubernetes-bootcamp-69fbc6f4cf   1         1         1       37s
-
-// 3. start a proxy
-kubectl proxy
-
-// 4. view API version
-# curl http://127.0.0.1:8001/version
-{
-  "major": "1",
-  "minor": "17",
-  "gitVersion": "v1.17.3",
-  "gitCommit": "06ad960bfd03b39c8310aaf92d1e7c12ce618213",
-  "gitTreeState": "clean",
-  "buildDate": "2020-02-11T18:07:13Z",
-  "goVersion": "go1.13.6",
-  "compiler": "gc",
-  "platform": "linux/amd64"
-}
+kubectl cluster-info
+kubectl cluster-info dump
 ----
 
-=== Exploring Your App
-
-[source, yaml]
+|3 
+|
+[source, bash]
+.*查节点*
 ----
-// 1. view pod
-# kubectl get pods
-NAME                                   READY   STATUS    RESTARTS   AGE
-kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          34m
-
-// 2. view the details inside pod
-# kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7q
-
-// 3. view application via proxy
-kubectl proxy
-
-curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
-
-// 4. view the pod logs
-# kubectl logs $POD_NAME
-Kubernetes Bootcamp App Started At: 2020-02-19T12:31:07.245Z | Running On:  kubernetes-bootcamp-69fbc6f4cf-4g7qz 
-
-// 5. exec the command inside pod
-kubectl exec $POD_NAME env
-kubectl exec $POD_NAME ip a
-kubectl exec $POD_NAME hostname
-
-// 6. start a bash session
-kubectl exec -ti $POD_NAME bash
-root@kubernetes-bootcamp-69fbc6f4cf-4g7qz:/# cat server.js 
-var http = require('http');
-var requests=0;
-var podname= process.env.HOSTNAME;
-var startTime;
-var host;
-var handleRequest = function(request, response) {
-  response.setHeader('Content-Type', 'text/plain');
-  response.writeHead(200);
-  response.write("Hello Kubernetes bootcamp! | Running on: ");
-  response.write(host);
-  response.end(" | v=1\n");
-  console.log("Running On:" ,host, "| Total Requests:", ++requests,"| App Uptime:", (new Date() - startTime)/1000 , "seconds", "| Log Time:",new Date());
-}
-var www = http.createServer(handleRequest);
-www.listen(8080,function () {
-    startTime = new Date();;
-    host = process.env.HOSTNAME;
-    console.log ("Kubernetes Bootcamp App Started At:",startTime, "| Running On: " ,host, "\n" );
-});
-
-# curl http://127.0.0.1:8080
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-4g7qz | v=1
+kubectl get nodes
+kubectl get nodes -o wide
+kubectl get nodes -o wide --show-labels
 ----
 
-=== Exposing Your App
-
-[source, yaml]
+|4
+|
+[source, bash]
+.*查 Pod*
 ----
-// 1. view service(Cluster IP only can be view internally
-# kubectl get services 
-NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6h20m
-
-// 2. expose service to external
-kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
-
-// 3. view services again
-# kubectl get services 
-NAME                  TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
-kubernetes            ClusterIP   10.96.0.1     <none>        443/TCP          6h22m
-kubernetes-bootcamp   NodePort    10.102.1.85   <none>        8080:32437/TCP   44s
-
-// 4. view the details of service
-# kubectl describe services/kubernetes-bootcamp
-Name:                     kubernetes-bootcamp
-Namespace:                default
-Labels:                   app=kubernetes-bootcamp
-Annotations:              <none>
-Selector:                 app=kubernetes-bootcamp
-Type:                     NodePort
-IP:                       10.102.1.85
-Port:                     <unset>  8080/TCP
-TargetPort:               8080/TCP
-NodePort:                 <unset>  32437/TCP
-Endpoints:                192.168.208.193:8080
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:                   <none>
-
-// 5. view the service outside cluster
-# kubectl get services/kubernetes-bootcamp -o go-template=''
-32437
-
-$ curl http://192.168.100.101:32437
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-4g7qz | v=1
-
-// 6. vew deployment
-kubectl describe deployment
-
-// 7. get pod by label filters
-kubectl get pods -l app=kubernetes-bootcamp
-
-// 8. get service by label filters
-kubectl get service -l app=kubernetes-bootcamp
-
-// 9. set a lable to a pod
-kubectl label pod kubernetes-bootcamp-69fbc6f4cf-4g7qz name=ksong
-
-// 10. get pod via new lable
-kubectl get service -l name=ksong
-
-// 11. describe pods
-kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7qz 
-
-// 12. delete service
-kubectl delete service -l app=kubernetes-bootcamp	
+kubectl get pods
+kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces -o wide
+kubectl get pods --all-namespaces --show-labels
 ----
 
-=== Scaling Your App
-
-[source, yaml]
+|5 
+|
+[source, bash]
+.*创建 Deployment*
 ----
-// 1. view the replicaset
-# kubectl get rs
-NAME                             DESIRED   CURRENT   READY   AGE
-kubernetes-bootcamp-69fbc6f4cf   1         1         1       12h
-
-// 2. scale the app
-kubectl scale deployments/kubernetes-bootcamp --replicas=4
-
-// 3. view the replicaset 
-# kubectl get rs
-NAME                             DESIRED   CURRENT   READY   AGE
-kubernetes-bootcamp-69fbc6f4cf   4         4         4       12h
-
-// 4. view the pods widely
-# kubectl get pod -o wide
-NAME                                   READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
-kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          12h   192.168.208.193   machine03.example.com   <none>           <none>
-kubernetes-bootcamp-69fbc6f4cf-8jj95   1/1     Running   0          90s   192.168.251.1     machine02.example.com   <none>           <none>
-kubernetes-bootcamp-69fbc6f4cf-d2f2c   1/1     Running   0          90s   192.168.251.2     machine02.example.com   <none>           <none>
-kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Running   0          90s   192.168.208.194   machine03.example.com   <none>           <none>
-
-// 5. view the details of deployment
-kubectl describe deployments/kubernetes-bootcamp
-
-// 6. expose service via NodePort
-kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
-
-// 7. view the details of service
-# kubectl describe services/kubernetes-bootcamp
-Name:                     kubernetes-bootcamp
-Namespace:                default
-Labels:                   app=kubernetes-bootcamp
-Annotations:              <none>
-Selector:                 app=kubernetes-bootcamp
-Type:                     NodePort
-IP:                       10.109.10.113
-Port:                     <unset>  8080/TCP
-TargetPort:               8080/TCP
-NodePort:                 <unset>  30811/TCP
-Endpoints:                192.168.208.193:8080,192.168.208.194:8080,192.168.251.1:8080 + 1 more...
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:                   <none>
-
-// 8. access the service
-# curl http://control-plane.example.com:30811
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-kqsvn | v=1
-
-// 9. scale down the service to 2
-kubectl scale deployments/kubernetes-bootcamp --replicas=2
-
-// 10. view the pods widely
-# kubectl get pods -o wide
-NAME                                   READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
-kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          14h   192.168.208.193   machine03.example.com   <none>           <none>
-kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Running   0          96m   192.168.208.194   machine03.example.com   <none>           <none>
+kubectl create deployment helloworld --image=gcr.io/google-samples/kubernetes-bootcamp:v1
 ----
 
-=== Updating Your App
-
-[source, yaml]
+|6
+|
+[source, bash]
+.*查看所有*
 ----
-// 1. set the image to v2
-kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+kubectl get all
+----
 
-// 2. view the upgrade
-# kubectl get pods
-NAME                                   READY   STATUS              RESTARTS   AGE
-kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running             0          14h
-kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Terminating         0          103m
-kubernetes-bootcamp-b4d9f565-4zv7w     0/1     ContainerCreating   0          1s
-kubernetes-bootcamp-b4d9f565-lrthd     1/1     Running             0          17s
+|7 
+|
+[source, bash]
+.*启用 Proxy*
+----
+$ kubectl proxy
+Starting to serve on 127.0.0.1:8001
 
-// 3. view the details of service
-# kubectl describe services/kubernetes-bootcamp
-Name:                     kubernetes-bootcamp
-Namespace:                default
-Labels:                   app=kubernetes-bootcamp
-Annotations:              <none>
-Selector:                 app=kubernetes-bootcamp
-Type:                     NodePort
-IP:                       10.109.10.113
-Port:                     <unset>  8080/TCP
-TargetPort:               8080/TCP
-NodePort:                 <unset>  30811/TCP
-Endpoints:                192.168.208.195:8080,192.168.251.3:8080
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:                   <none>
+curl http://127.0.0.1:8001/version
+curl http://127.0.0.1:8001/api/v1/namespaces/default/pods/$POD_NAME
+----
 
-// 4. access the app again
-# curl http://control-plane.example.com:30811
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-b4d9f565-lrthd | v=2
+|8 
+|
+[source, bash]
+.*查看 Pod 日志*
+----
+kubectl logs helloworld-7bf845589-mb92f
+----
 
-// 5. view the images
-# kubectl describe pods | grep Image
-    Image:          jocatalin/kubernetes-bootcamp:v2
-    Image:          jocatalin/kubernetes-bootcamp:v2
+|9
+|
+[source, bash]
+.*在 Pod 中执行命令*
+----
+kubectl exec helloworld-7bf845589-mb92f env
+kubectl exec helloworld-7bf845589-mb92f ip a
+kubectl exec helloworld-7bf845589-mb92f hostname
+kubectl exec helloworld-7bf845589-mb92f curl http://127.0.0.1:8080
 
-// 6. rolling update
-kubectl rollout status deployments/kubernetes-bootcamp
+kubectl exec -it helloworld-7bf845589-mb92f bash
+----
 
-// 7. set to v10
-kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
+|10 
+|
+[source, bash]
+.*查看服务*
+----
+kubectl get svc
+----
 
-// 8. roll back the updates
-kubectl rollout undo deployments/kubernetes-bootcamp
+|11 
+|
+[source, bash]
+.*NodePort 暴露*
+----
+kubectl expose deployment helloworld --type='NodePort' --port=8080
 
-// 9. check the images agai
-kubectl describe pods | grep Image 
+curl http://192.168.100.101:31012
+----
 
-// 10. delete all
+|12
+|
+[source, bash]
+.*kubectl describe*
+----
+kubectl describe deployment helloworld
+kubectl describe pod/helloworld-7bf845589-mb92f
+kubectl describe service/helloworld
+kubectl describe replicaset helloworld-7bf845589
+----
+
+|13
+|
+[source, bash]
+.*Pod 与标签*
+----
+kubectl get pod --show-labels
+kubectl get pod helloworld-7bf845589-mb92f --show-labels
+kubectl label pod helloworld-7bf845589-mb92f tester=kylin
+kubectl get pods -l tester=kylin
+kubectl label pod helloworld-7bf845589-mb92f tester-
+----
+
+|14
+|
+[source, bash]
+.*查看 replicaset*
+----
+kubectl get rs
+----
+
+|15
+|
+[source, bash]
+.*扩展 Deployment*
+----
+kubectl scale deployment/helloworld --replicas=4
+----
+
+|16
+|
+[source, bash]
+.*滚动升级: 默认部署策略为 RollingUpdate*
+----
+kubectl set image deployments/helloworld kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v2
+
+kubectl rollout status deployments/helloworld
+----
+
+|17 
+|
+[source, bash]
+.*回滚*
+----
+kubectl rollout undo deployment/helloworld
+kubectl rollout history deployments/helloworld
+
+----
+
+|18 
+|
+[source, bash]
+.*删除所有*
+----
 kubectl delete all --all
 ----
+|===
 
 == ConfigMap
 
+=== Redis 配置文件(Volume 对接 ConfigMap) 
+
+本部分演示将 Redis 的配置文件通过 ConfigMap 传递。
+
 [source, yaml]
-.*1. create a redis-config file*
+.*1. 创建 redis-config*
 ----
+// prepare files
 cat <<EOF > ./redis-config
 maxmemory 2mb
 maxmemory-policy allkeys-lru
 EOF
+
+// create configMap
+kubectl create configmap redis-config --from-file=redis-config
 ----
 
 [source, yaml]
-.*2. create a pod yaml file*
+.*2. 创建一个 POD*
 ----
+// prepare yaml files
 cat <<EOF > ./pod.yaml
 apiVersion: v1
 kind: Pod
@@ -366,47 +235,18 @@ spec:
       emptyDir: {}
     - name: config
       configMap:
-        name: example-redis-config
+        name: redis-config
         items:
         - key: redis-config
           path: redis.conf
 EOF
+
+// create pod
+kubectl create -f pod.yaml
 ----
 
 [source, yaml]
-.*3. create a kustomization.yaml file*
-----
-cat <<EOF > ./kustomization.yaml
-configMapGenerator:
-- name: example-redis-config
-  files:
-  - redis-config
-resources:
-- pod.yaml
-EOF
-----
-
-[source, yaml]
-.*4. Deploy*
-----
-# kubectl apply -k .
-configmap/example-redis-config-dgh9dg555m created
-pod/redis created
-----
-
-[source, yaml]
-.*5. view the deployments*
-----
-# kubectl get all
-NAME        READY   STATUS    RESTARTS   AGE
-pod/redis   1/1     Running   0          61s
-
-NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   39m
-----
-
-[source, yaml]
-.*6. test the services*
+.*3. 验证*
 ----
 # kubectl exec -it redis redis-cli
 127.0.0.1:6379> CONFIG GET maxmemory
@@ -417,12 +257,284 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   39m
 2) "allkeys-lru"
 ----
 
+=== Ngnix 运行参数(ENV 参数对接 ConfigMap)
+
 [source, yaml]
-.*7. clean up*
+.*1. 创建 nginx-config*
 ----
-# kubectl delete all --all
-pod "redis" deleted
-service "kubernetes" deleted
+kubectl create configmap nginx-config --from-literal=username=kylin --from-literal=password=password
+----
+
+[source, yaml]
+.*2. 创建一个 POD*
+----
+// prepare yaml files
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+    env:
+    - name: NGINX_USERNAME
+      valueFrom:
+        configMapKeyRef:
+          name: nginx-config
+          key: username 
+    - name: NGINX_PASSWORD
+      valueFrom:
+        configMapKeyRef:
+          name: nginx-config
+          key: password
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec nginx env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=nginx
+NGINX_PASSWORD=password
+NGINX_USERNAME=kylin
+----
+
+== Pod 亲和性策略
+
+=== nodeSelector
+
+[source, yaml]
+.*1. 设定 nodes label*
+----
+kubectl label node machine03.example.com disk=ssd
+
+kubectl get nodes -l disk=ssd
+----
+
+[source, yaml]
+.*2. 部署 Pod 到 node*
+----
+// create pod yaml
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  nodeSelector:
+    disk: ssd
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml 
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl get pods -o wide --no-headers
+nginx   1/1   Running   0     64s   192.168.208.224   machine03.example.com   <none>   <none>
+----
+
+=== Node affinity
+
+[source, yaml]
+.*1. 设定 nodes label*
+----
+kubectl label node machine03.example.com example.com/zone=zone1
+
+kubectl get nodes -l example.com/zone=zone1
+----
+
+[source, yaml]
+.*2. 部署 Pod 到 node*
+----
+// create pod yaml
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+       nodeSelectorTerms:
+       - matchExpressions:
+         - key: example.com/zone
+           operator: In
+           values:
+           - zone1
+           - zone2
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: example.com/disk
+            operator: In
+            values:
+            - ssd
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml 
+----
+
+.*3. 验证*
+----
+# kubectl get pods -o wide --no-headers
+nginx   1/1   Running   0     64s   192.168.208.224   machine03.example.com   <none>   <none>
+----
+
+=== Pod affinity
+
+=== nodeName
+
+[source, yaml]
+.*1. 部署 Pod 到 node*
+----
+// create pod yaml
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  nodeName: machine02.example.com
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml
+----
+
+[source, yaml]
+.*2. 验证*
+----
+# kubectl get pods -o wide --no-headers
+nginx   1/1   Running   0     20s   192.168.251.35   machine02.example.com   <none>   <none>
+----
+
+=== DaemonSet
+
+[source, yaml]
+.*1. 部署 Pod 到 node*
+---- 
+// create daemonset yaml
+cat <<EOF > ./daemonset.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+EOF
+
+// create 
+kubectl create -f daemonset.yaml
+----
+
+[source, yaml]
+.*2. 验证*
+----
+# kubectl get pods -o wide --no-headers
+nginx-8x4tq   1/1   Running   0     57s   192.168.251.38    machine02.example.com   <none>   <none>
+nginx-krp9l   1/1   Running   0     57s   192.168.208.225   machine03.example.com   <none>   <none>
+----
+
+=== Tolerations
+
+[source, yaml]
+.*1. 部署 Pod 到 node*
+----
+// create pod yaml
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml
+----
+
+[source, yaml]
+.*2. 验证*
+----
+# kubectl get pods -o wide --no-headers
 ----
 
 == 无状态应用
