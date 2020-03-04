@@ -399,8 +399,8 @@ systemctl status kubelet
 
 [source, yaml]
 ----
-ssh machine02
-
+// 1. yaml
+cat <<EOF > ./myservice.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -413,12 +413,17 @@ spec:
         - name: web
           containerPort: 80
           protocol: TCP
+EOF
 
+// 2. place to manifests
+cd /etc/kubernetes/manifests/
+cp myservice.yaml ./
 
-kubectl create -f myservice.yaml
+// 3. verify the manifests path 
+# cat /var/lib/kubelet/config.yaml | grep staticPodPath
+staticPodPath: /etc/kubernetes/manifests
 
-cat /var/lib/kubelet/config.yaml | grep staticPodPath
-
+// 4. restart service
 systemctl restart kubelet
 ----
 
@@ -496,7 +501,7 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volum
 * Ensure a single instance of Pod nginx is running on each node of the kubernetes cluster where nginx also represents the image name which has to be used. Do no override any taints currently in place.
 * Use Daemonsets to complete this task and use ds.kusc00201 as Daemonset name. 
 
-|5 - link:#_initContainer[init Container]
+|5 - link:#_initcontainer[init Container]
 |7
 |
 1. Add an init container to lumpy--koala (Which has been defined in spec file /opt/kucc00100/pod-spec-KUCC00100.yaml)

@@ -313,6 +313,262 @@ NGINX_PASSWORD=password
 NGINX_USERNAME=kylin
 ----
 
+== Secrets
+
+=== 以文件的方式使用 Secret
+
+[source, yaml]
+.*1. 创建 redis-secret*
+----
+kubectl create secret generic redis-secret --from-literal=credential=alice --from-literal=username=bob
+----
+
+[source, yaml]
+.*2. 部署*
+----
+// yaml
+cat <<EOF > ./pod-1.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-secrets-via-file
+  name: pod-secrets-via-file
+spec:
+  containers:
+  - image: redis
+    name: pod-secrets-via-file
+    volumeMounts:
+    - name: foo
+      mountPath: "/secrets"
+      readOnly: true
+  volumes:
+  - name: foo
+    secret:
+      secretName: redis-secret
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create
+kubectl create -f pod-1.yaml 
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec  pod-secrets-via-file ls /secrets/
+credential
+username
+
+# kubectl exec  pod-secrets-via-file cat /secrets/credential
+alice
+----
+
+=== 以环境变量的方式使用 Secret
+
+[source, yaml]
+.*1. 创建 redis-secret*
+----
+kubectl create secret generic redis-secret --from-literal=credential=alice --from-literal=username=bob
+----
+
+[source, yaml]
+.*2. 部署*
+----
+// yaml
+cat <<EOF > ./pod-2.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-secrets-via-env
+  name: pod-secrets-via-env
+spec:
+  containers:
+  - image: redis
+    name: pod-secrets-via-env
+    env:
+    - name: USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: redis-secret
+          key: username
+    - name: TOPSECRET
+      valueFrom:
+        secretKeyRef:
+          name: redis-secret
+          key: credential
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create
+kubectl create -f pod-2.yaml 
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec pod-secrets-via-env env
+TOPSECRET=alice
+USERNAME=bob
+----
+
+== 容器
+
+=== Init Containers
+
+Init Containers 是 APP Containers 启动之前运行的容器，特点：
+
+* 一个 POD 中可以有多个 Init Containers 
+* Init Containers 总是运行结束后退出
+* 每一个 init container 必需运行成功退出后，下一个 container 才可以运行 
+
+[source, yaml]
+.*示例*
+----
+// 1. pod yaml
+cat <<EOF > ./pod-init.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', 'until nslookup mydb; do echo waiting for mydb; sleep 2; done;']
+EOF
+
+// 2. create pod
+kubectl create -f pod-init.yaml
+
+// 3. get pods
+# kubectl get pods --no-headers
+myapp-pod   0/1   Init:0/2   0     44s
+
+// 4. get pod details
+kubectl describe pod myapp-pod
+
+// 5. create svc 1
+cat <<EOF > ./svc-1.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9376
+EOF
+
+kubectl create -f svc-1.yaml 
+
+// 6. get pods
+# kubectl get pods --no-headers
+myapp-pod   0/1   Init:1/2   0     7m10s
+
+// 7. create svc2
+cat <<EOF > ./svc-2.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mydb
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9377
+EOF
+
+kubectl create -f svc-2.yaml 
+
+// 8. get pods
+# kubectl get pods --no-headers
+myapp-pod   1/1   Running   0     9m27s
+----
+
+=== Static Pod
+
+[source, yaml]
+----
+// 1. yaml
+cat <<EOF > ./myservice.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myservice
+spec:
+  containers:
+    - name: myservice
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+EOF
+
+// 2. place to manifests
+cd /etc/kubernetes/manifests/
+cp myservice.yaml ./
+
+// 3. verify the manifests path 
+# cat /var/lib/kubelet/config.yaml | grep staticPodPath
+staticPodPath: /etc/kubernetes/manifests
+
+// 4. restart service
+systemctl restart kubelet
+----
+
+=== Pod 中多个容器
+
+[source, yaml]
+----
+// 1. yaml
+cat <<EOF > ./containers.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: kucc4
+  name: kucc4
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+  - image: redis
+    name: redis
+  - image: memcached
+    name: memcached
+  - image: consul
+    name: consul
+EOF
+
+// 2. create 
+kubectl create -f containers.yaml 
+
+// 3. get pods
+# kubectl get pods -l run=kucc4 --no-headers
+kucc4   4/4   Running   0     80s
+
+// 4. view specific contains log
+kubectl logs kucc4 redis
+----
+
 == Pod 亲和性策略
 
 === nodeSelector
