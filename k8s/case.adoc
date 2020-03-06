@@ -15,6 +15,7 @@
 .*集群版本*
 ----
 kubectl version
+kubectl version --short
 ----
 
 |2
@@ -313,7 +314,7 @@ NGINX_PASSWORD=password
 NGINX_USERNAME=kylin
 ----
 
-== Secrets
+== Secret
 
 === 以文件的方式使用 Secret
 
@@ -417,7 +418,7 @@ TOPSECRET=alice
 USERNAME=bob
 ----
 
-== 容器
+== Container
 
 === Init Containers
 

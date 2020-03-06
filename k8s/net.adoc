@@ -1,117 +1,218 @@
 = 网络
 :toc: manual
 
-== Service
+== Pod and Node Networking
 
 [source, bash]
-.*1. Define a Service*
 ----
-// create a pod
-kubectl run nginx --image=nginx --generator=run-pod/v1 --port=80
+// 1. deploy pod
+kubectl run nginx --image=nginx --port=80 --generator=run-pod/v1
 
-// expose NodePort
-kubectl expose pod nginx --type=NodePort --name=nginx
+// 2. view pod ip
+# kubectl get pod nginx -o wide --no-headers | awk '{print $1, $6, $7}'
+nginx 192.168.208.240 machine03.example.com
 
-kubectl exec -it pod/nginx sh
+// 3. login into machine03
+ssh machine03
+
+// 4. calic interface
+# ip addr show calic440f455693 
+14: calic440f455693@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1440 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+
+// 5. check container id
+# docker ps | grep nginx
+6548b19ca8eb        nginx                  "nginx -g 'daemon of…"   13 minutes ago      Up 13 minutes                           k8s_nginx_nginx_default_5ee00c88-d1b8-45cf-b347-2ef7172be356_0
+
+// 6. Get the process ID 
+# docker inspect 6548b19ca8eb | grep Pid
+            "Pid": 121154,
+
+// 7. check namespace ip addr
+# nsenter -t 121154 -n ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+4: eth0@if14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1440 qdisc noqueue state UP group default 
+    link/ether 72:b0:fb:70:63:30 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.208.240/32 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+== Container Network Interface (CNI)
+
+CNI 是不同物理节点之间通信的接口。
+
+== Service Networking
+
+[source, bash]
+----
+// 1. deploy pod
+kubectl run nginx --image=nginx --port=80 --generator=run-pod/v1
+
+// 2 expose service
+kubectl expose pod nginx --port=80 --name=nginx
+
+# kubectl get svc nginx --no-headers | awk '{print $1, $3}'
+nginx 10.101.99.130
+
+// 3. view endpoints
+# kubectl get endpoints nginx --no-headers | awk '{print $1, $2}'
+nginx 192.168.208.240:80
+
+// 4. iptables rules
+# iptables-save | grep KUBE | grep nginx
+-A KUBE-SERVICES -d 10.101.99.130/32 -p tcp -m comment --comment "default/nginx: cluster IP" -m tcp --dport 80 -j KUBE-SVC-4N57TFCL4MD7ZTDA
+----
+
+== Service Types
+
+=== ClusterIP
+
+[source, bash]
+----
+// 1. create pod
+kubectl run front-end --image=nginx --port=80 --generator=run-pod/v1
+
+// 2. create svc
+kubectl expose pod front-end --type='ClusterIP' --port=80 --target-port=80 --name=front-end-service
+
+// 3. test
+kubectl exec -it pod/front-end sh
 # cd /usr/share/nginx/html/
 # echo "HELLO" > hello
 # exit
 
-$ kubectl describe service/nginx | grep NodePort | grep TCP
-NodePort:                 <unset>  32447/TCP
+kubectl run curl --image=radial/busyboxplus:curl --generator=run-pod/v1 --command -- sh -c "sleep 3600"
 
-$ curl http://192.168.100.101:32447/hello
+# kubectl exec curl curl http://front-end-service/hello
 HELLO
-
-// selector reference
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-service
-spec:
-  selector:
-    run: nginx
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 80
-
-kubectl apply -f svc.yaml 
 ----
+
+=== NodePort
 
 [source, bash]
-.*2. DNS*
 ----
-// 1. deploy pods 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: test-dns
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: test-dns
-  template:
-    metadata:
-      labels:
-        app: test-dns
-    spec:
-      containers:
-      - name: test-dns
-        image: gcr.io/google-samples/kubernetes-bootcamp:v1
-        ports:
-        - name: http
-          containerPort: 8080
+// 1. create pod
+kubectl run front-end --image=nginx --port=80 --generator=run-pod/v1
 
-kubectl create -f deploy.yaml
+// 2. create svc
+kubectl expose pod front-end --type='NodePort' --port=80 --target-port=80 --name=front-end-service
 
-// 2. expose to service
-kubectl expose deployment test-dns --name=test-dns --port=80 --target-port=8080
+# kubectl get svc front-end-service --no-headers | awk '{print $5}'
+80:30520/TCP
 
-// 3. curl pod
-apiVersion: v1
-kind: Pod
-metadata:
-  name: curl-pod
-spec:
-  containers:
-  - name: curl
-    image: appropriate/curl
-    command:
-      - sleep
-      - "3600"
+// 3. test
+kubectl exec -it pod/front-end sh
+# cd /usr/share/nginx/html/
+# echo "HELLO" > hello
+# exit
 
-kubectl create -f curl.yaml
+$ curl http://192.168.100.101:30520/hello
+HELLO
+----
 
-// 4. nslookup pod
-apiVersion: v1
-kind: Pod
-metadata:
-  name: busybox
-  labels:
-    name: busybox
-spec:
-  containers:
-  - image: busybox:1.28
-    command:
-      - sleep
-      - "3600"
-    name: busybox
+=== LoadBalancer
 
-kubectl create -f nslookup.yaml 
+[source, bash]
+----
+// 1. create pod
+kubectl run front-end --image=nginx --port=80 --generator=run-pod/v1
 
-// 5. test access svc
-for i in {1..5} ; do kubectl exec curl-pod curl test-dns ; done
+// 2. create svc
+kubectl expose pod front-end --type='LoadBalancer' --port=80 --target-port=80 --name=front-end-service
 
-// 6. dns lookup
-kubectl exec -ti busybox -- nslookup test-dns
+// 3. test
+kubectl exec -it pod/front-end sh
+# cd /usr/share/nginx/html/
+# echo "HELLO" > hello
+# exit
+
+$ curl http://192.168.100.101/hello
+HELLO
+----
+
+== DNS
+
+=== Service DNS
+
+[source, bash]
+----
+// 1. deploy pod
+kubectl create deployment nginx --image=nginx
+kubectl scale --replicas=3 deployments/nginx
+
+// 2. expose service
+kubectl expose deployment nginx --port=80 --name=my-nginx
+
+// 3. deploy tools
+kubectl run tools --image=radial/busyboxplus:curl --generator=run-pod/v1 --command -- sh -c "sleep 3600"
+
+// 4. kube dns
+$ kubectl get svc kube-dns -n=kube-system --no-headers | awk '{print $1, $3}'
+kube-dns 10.96.0.10
+
+// 5. my-nginx
+$ kubectl get svc my-nginx --no-headers | awk '{print $1, $3}'
+my-nginx 10.96.167.67
+
+// 6. test
+kubectl exec tools nslookup my-nginx
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
 
-Name:      test-dns
-Address 1: 10.111.208.78 test-dns.default.svc.cluster.local
+Name:      my-nginx
+Address 1: 10.96.167.67 my-nginx.default.svc.cluster.local
 ----
+
+=== Pod DNS
+
+[source, bash]
+----
+// 1. deploy pod
+kubectl create deployment nginx-dns --image=nginx
+
+// 2. expose service
+kubectl expose deployment nginx-dns --port=80 --name=nginx-dns
+
+// 3. deploy tools
+kubectl run tools --image=busybox:1.28 --generator=run-pod/v1 --command -- sh -c "sleep 3600"
+
+// 4. kube dns
+$ kubectl get svc kube-dns -n=kube-system --no-headers | awk '{print $1, $3}'
+kube-dns 10.96.0.10
+
+// 5. nginx-dns
+$ kubectl get svc nginx-dns --no-headers | awk '{print $1, $3}'
+nginx-dns 10.110.192.26
+
+// 6. pod ip
+$ kubectl get pods nginx-dns-69fdc94b9f-hdh7d -o wide --no-headers | awk '{print $1, $6}'
+nginx-dns-69fdc94b9f-hdh7d 192.168.208.238
+
+// 7. look up service
+# kubectl exec tools nslookup nginx-dns
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      nginx-dns
+Address 1: 10.110.192.26 nginx-dns.default.svc.cluster.local
+
+// 8. look up pod
+$ kubectl exec tools nslookup 192-168-208-238.nginx-dns.default.svc.cluster.local
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      192.168.208.238
+Address 1: 192.168.208.238 192-168-208-238.nginx-dns.default.svc.cluster.local
+----
+
+== TD
 
 [source, bash]
 .**

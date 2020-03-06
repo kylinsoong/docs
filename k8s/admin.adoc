@@ -357,19 +357,26 @@ kubectl exec -ti busybox1 -- nslookup 10.105.132.132
 
 == etcd snapshot
 
-Create a snapshot of the etcd instance running at http://127.0.0.1:2379 saving the snapshot to the file path /data/backup/etcd-snapshot.db
+[source, yaml]
+.*Kubernets 备份一般步骤（etcd 负责持久化状态，所以只备份 etcd）*
+----
+// 1. install etcdctl(etcdctl defualt not installed, the api version 3 is necessary)
+ETCDCTL_API=3 etcdctl --help
 
-The etcd instance is running etcd version 3.2.18
+// 2. execute backup
+ETCDCTL_API=3 etcdctl snapshot save etcd-2020-0305.db --cacert=/etc/kubernetes/pki/etcd/server.crt --cert=/etc/kubernetes/pki/etcd/ca.crt --key=/etc/kubernetes/pki/etcd/ca.key
 
-The following TLS certificates/key are supplied for connnecting to the server with etcdctl 
-
-CA certificate：/opt/KUCM00302/ca.crt
-
-Client certificate：/opt/KUCM00302/etcd-client.crt
-
-Client key: /opt/KUCM00302/etcd-client.key
+// 3. view the backup
+# ETCDCTL_API=3 etcdctl --write-out=table snapshot status etcd-2020-0305.db 
++----------+----------+------------+------------+
+|   HASH   | REVISION | TOTAL KEYS | TOTAL SIZE |
++----------+----------+------------+------------+
+| 9613afde |  1101819 |       1758 |     2.9 MB |
++----------+----------+------------+------------+
+----
 
 [source, yaml]
+.*远程备份*
 ----
 etcdctl --endpoints=http://127.0.0.1:2379 \
  
@@ -383,8 +390,23 @@ etcdctl --endpoints=http://127.0.0.1:2379 \
 == Drain
 
 [source, yaml]
+.*节点维护一般步骤*
 ----
+// 1. drain node for maintenance
 kubectl drain wk8s-node-1 --ignore-daemonsets=true --delete-local-data=true --force=true
+
+// 2. do maintenance
+
+// 3. add back the node
+kubectl uncordon wk8s-node-1
+----
+
+== Delete node
+
+[source, yaml]
+.*删除节点*
+----
+kubectl delete node [node_name]
 ----
 
 == Node NotReady
@@ -429,19 +451,36 @@ systemctl restart kubelet
 
 == Install
 
-给出一个集群，将节点node1添加到集群中。
+[source, yaml]
+.*添加节点方法一*
+----
+// 1. generate token
+# kubeadm token generate
+yfvb6j.0628gwwf3ec5bzu4
+
+// 2. pring join commands
+# kubeadm token create yfvb6j.0628gwwf3ec5bzu4 --ttl 2h --print-join-command
+kubeadm join control-plane.example.com:6443 --token yfvb6j.0628gwwf3ec5bzu4     --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+
+// 3. copy kubeadm join commands to worker node implement the node join
+----
 
 [source, yaml]
+.*添加节点方法二*
 ----
+// 1. generate token
 $ kubeadm token create
 n2kb3q.ctmc0wpfnt4cjtbl
 
+// 2. generate join node commands
 $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
     openssl dgst -sha256 -hex | sed 's/^.* //'
 cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
 
 kubeadm join control-plane.example.com:6443 --token n2kb3q.ctmc0wpfnt4cjtbl \
     --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+
+// 3. copy kubeadm join commands to worker node implement the node join
 ----
 
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
