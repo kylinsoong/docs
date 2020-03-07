@@ -1,0 +1,90 @@
+= 安全
+:toc: manual
+
+== Kubernets 安全基本
+
+[source, bash]
+----
+
+----
+
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----

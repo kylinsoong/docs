@@ -1193,102 +1193,140 @@ kubectl delete all --all
 
 == 有状态应用
 
-=== 基本概念
+=== Redis 
 
 [source, yaml]
-.*1. 创建一个 StatefulSet*
+.*1. Create a PersistentVolume*
 ----
-// 1. create the web yaml
-cat <<EOF > ./web.yaml
+// yaml
+cat <<EOF > ./redis-pv.yaml
 apiVersion: v1
-kind: Service
+kind: PersistentVolume
 metadata:
-  name: nginx
-  labels:
-    app: nginx
+  name: redis-pv
 spec:
-  ports:
-  - port: 80
-    name: web
-  clusterIP: None
-  selector:
-    app: nginx
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: web
-spec:
-  serviceName: "nginx"
-  replicas: 2
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: k8s.gcr.io/nginx-slim:0.8
-        ports:
-        - containerPort: 80
-          name: web
-        volumeMounts:
-        - name: www
-          mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
-  - metadata:
-      name: www
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+  storageClassName: ""
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/data"
 EOF
 
-// 2. create
-kubectl apply -f web.yaml
+// create
+kubectl create -f redis-pv.yaml 
 
-// 3. view the creation
-
+// view
+# kubectl get pv --no-headers
+redis-pv   1Gi   RWO   Retain   Available                     5m53s
 ----
 
 [source, yaml]
+.*2. Create a PersistentVolumeClaim*
 ----
+// yaml
+cat <<EOF > ./redis-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redisdb-pvc
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+EOF
 
+// create
+kubectl create -f redis-pvc.yaml 
+
+// view
+# kubectl get pv --no-headers
+redis-pv   1Gi   RWO   Retain   Bound   default/redisdb-pvc               6m40s
+
+# kubectl get pvc --no-headers
+redisdb-pvc   Bound   redis-pv   1Gi   RWO         34s
 ----
 
 [source, yaml]
+.*3. Create the redispod image, with a mounted volume to mount path /data*
 ----
+// yaml
+cat <<EOF > ./redispod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redispod
+spec:
+  containers:
+  - image: redis
+    name: redisdb
+    volumeMounts:
+    - name: redis-data
+      mountPath: /data
+    ports:
+    - containerPort: 6379
+      protocol: TCP
+  volumes:
+  - name: redis-data
+    persistentVolumeClaim:
+      claimName: redisdb-pvc
+EOF
 
+// create pod
+kubectl create -f redispod.yaml
+
+// view pod
+# kubectl get pod redispod -o wide --no-headers
+redispod   1/1   Running   0     3m31s   192.168.208.248   machine03.example.com   <none>   <none>
 ----
 
 [source, yaml]
+.*4. Connect to the container and write some data*
 ----
-
-----
-
-[source, yaml]
-----
-
-----
-
-[source, yaml]
-----
-
+kubectl exec -it redispod redis-cli
+127.0.0.1:6379> SET server:name "redis server"
+OK
+127.0.0.1:6379> GET server:name
+"redis server"
+127.0.0.1:6379> QUIT
 ----
 
 [source, yaml]
+.*5. Delete pod and check persist files*
 ----
+// delete pod
+kubectl delete pod redispod
 
+// check persist files
+# ssh machine03.example.com "ls /tmp/data"
+dump.rdb
 ----
 
 [source, yaml]
+.*6. Create pod again*
+----
+// create
+kubectl create -f redispod.yaml
+
+// get pod
+# kubectl get pod redispod -o wide --no-headers
+redispod   1/1   Running   0     62s   192.168.208.253   machine03.example.com   <none>   <none>
 ----
 
+[source, yaml]
+7. Verify data existing
 ----
+kubectl exec -it redispod redis-cli
+127.0.0.1:6379> GET server:name
+"redis server"
+127.0.0.1:6379> QUIT
+----
+
+=== TD
 
 [source, yaml]
 ----
