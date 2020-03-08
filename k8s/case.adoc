@@ -185,6 +185,8 @@ kubectl delete all --all
 
 == ConfigMap
 
+ConfigMap 保存 key/value 数据供容器使用。
+
 === Redis 配置文件(Volume 对接 ConfigMap) 
 
 本部分演示将 Redis 的配置文件通过 ConfigMap 传递。

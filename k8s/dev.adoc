@@ -1,0 +1,303 @@
+= 开发
+:toc: manual
+
+== 基本对象
+
+[source, bash]
+.*获取 Kubernets 所有对象列表*
+----
+$ kubectl version --short
+Client Version: v1.17.3
+Server Version: v1.17.3
+
+$ kubectl api-resources --sort-by=name -o name | wc -l
+67
+
+$ kubectl api-resources --sort-by=name -o name 
+apiservices.apiregistration.k8s.io
+bgpconfigurations.crd.projectcalico.org
+bgppeers.crd.projectcalico.org
+bindings
+blockaffinities.crd.projectcalico.org
+certificatesigningrequests.certificates.k8s.io
+clusterinformations.crd.projectcalico.org
+clusterrolebindings.rbac.authorization.k8s.io
+clusterroles.rbac.authorization.k8s.io
+componentstatuses
+configmaps
+controllerrevisions.apps
+cronjobs.batch
+csidrivers.storage.k8s.io
+csinodes.storage.k8s.io
+customresourcedefinitions.apiextensions.k8s.io
+daemonsets.apps
+deployments.apps
+endpoints
+endpointslices.discovery.k8s.io
+events
+events.events.k8s.io
+felixconfigurations.crd.projectcalico.org
+globalnetworkpolicies.crd.projectcalico.org
+globalnetworksets.crd.projectcalico.org
+horizontalpodautoscalers.autoscaling
+hostendpoints.crd.projectcalico.org
+ingresses.extensions
+ingresses.networking.k8s.io
+ipamblocks.crd.projectcalico.org
+ipamconfigs.crd.projectcalico.org
+ipamhandles.crd.projectcalico.org
+ippools.crd.projectcalico.org
+jobs.batch
+leases.coordination.k8s.io
+limitranges
+localsubjectaccessreviews.authorization.k8s.io
+mutatingwebhookconfigurations.admissionregistration.k8s.io
+namespaces
+networkpolicies.networking.k8s.io
+networkpolicies.crd.projectcalico.org
+networksets.crd.projectcalico.org
+nodes
+persistentvolumeclaims
+persistentvolumes
+poddisruptionbudgets.policy
+pods
+podsecuritypolicies.policy
+podtemplates
+priorityclasses.scheduling.k8s.io
+replicasets.apps
+replicationcontrollers
+resourcequotas
+rolebindings.rbac.authorization.k8s.io
+roles.rbac.authorization.k8s.io
+runtimeclasses.node.k8s.io
+secrets
+selfsubjectaccessreviews.authorization.k8s.io
+selfsubjectrulesreviews.authorization.k8s.io
+serviceaccounts
+services
+statefulsets.apps
+storageclasses.storage.k8s.io
+subjectaccessreviews.authorization.k8s.io
+tokenreviews.authentication.k8s.io
+validatingwebhookconfigurations.admissionregistration.k8s.io
+volumeattachments.storage.k8s.io
+----
+
+=== Pod
+
+[source, bash]
+----
+// create pod
+kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 --command -- sh -c "echo Hello Kubernetes! && sleep 3600"
+
+// get pod
+kubectl get pods -o wide
+----
+
+=== Node
+
+[source, bash]
+----
+// get node
+kubectl get nodes
+
+// view details
+kubectl describe nodes
+----
+
+=== Namespace
+
+[source, bash]
+----
+// create ns
+kubectl create ns web
+
+// create pod on ns
+kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 -n web --command -- sh -c "echo Hello Kubernetes! && sleep 3600"
+
+// delete ns
+kubectl delete nd web
+----
+
+== Configuration
+
+=== ConfigMap
+
+link:case.adoc#_configmap[点击链接]
+
+=== SecurityContexts
+
+SecurityContexts 用来定义 Pod 或容器如何和底层的安全机制进行交互。
+
+[source, bash]
+----
+// 1. create some users, groups, and files on both worker nodes
+for i in 2 3 ; do ssh root@machine0$i "useradd -u 2000 container-user-0; groupadd -g 3000 container-group-0 ; useradd -u 2001 container-user-1 ; groupadd -g 3001 container-group-1"; done
+for i in 2 3 ; do ssh root@machine0$i "mkdir -p /etc/message/"; done
+for i in 2 3 ; do ssh root@machine0$i "echo 'Hello, World' | tee -a /etc/message/message.txt "; done
+for i in 2 3 ; do ssh root@machine0$i "chown 2000:3000 /etc/message/message.txt ; chmod 640 /etc/message/message.txt"; done
+# for i in 2 3 ; do ssh root@machine0$i "cat /etc/message/message.txt "; done
+Hello, World
+Hello, World
+
+// 2. deploy pod with none securityContext, The root user be used, the pod run well
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-securitycontext-pod
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]
+    volumeMounts:
+    - name: message-volume
+      mountPath: /message
+  volumes:
+  - name: message-volume
+    hostPath:
+      path: /etc/message
+
+// 3. define wrong user and groud, the Pod will run failed
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-securitycontext-pod
+spec:
+  securityContext:
+    runAsUser: 2001
+    fsGroup: 3001
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]
+    volumeMounts:
+    - name: message-volume
+      mountPath: /message
+  volumes:
+  - name: message-volume
+    hostPath:
+      path: /etc/message
+
+// 4. define correct user and group, the Pod run success
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-securitycontext-pod
+spec:
+  securityContext:
+    runAsUser: 2000
+    fsGroup: 3000
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]
+    volumeMounts:
+    - name: message-volume
+      mountPath: /message
+  volumes:
+  - name: message-volume
+    hostPath:
+      path: /etc/message
+----
+
+=== Resource Requirements
+
+Kubernets allow us to specify the resource requirements of a container in the pod spec. A container's memory and CPU requirements are defined in term of `resource requests` and `resource limits`:
+
+* *Resource request* - The amount of resources necessary to run a container. A pod will only be a run on a node that has enough avalilable resources to run pod's containers
+* *Resource limit* - A maximum value of the resource usage of a container.
+
+[source, bash]
+.*Example*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-resource-pod
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', 'echo Hello Kubernetes! && sleep 3600']
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+----
+
+=== Secret
+
+link:case.adoc#_secret[点击链接]
+
+=== ServiceAccounts
+
+ServiceAccounts 可以使某一个容器内调运 Kubernetes API.
+
+[source, bash]
+.*示例*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-serviceaccount-pod
+spec:
+  serviceAccountName: my-serviceaccount
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----

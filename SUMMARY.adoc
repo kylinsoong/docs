@@ -97,7 +97,7 @@
 .. link:k8s/install.adoc[安装]
 .. link:k8s/case.adoc[概念]
 .. link:k8s/net.adoc[网络]
-.. link:k8s/sec.adoc[安全]
+.. link:k8s/dev.adoc[开发]
 .. link:k8s/admin.adoc[管理]
 . link:ansible/README.adoc[ANSIBLE]
 .. link:ansible/basic-usage.adoc[基本使用]
