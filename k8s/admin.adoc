@@ -1,4 +1,4 @@
-= 基本管理
+= 管理
 :toc: manual
 
 == logging

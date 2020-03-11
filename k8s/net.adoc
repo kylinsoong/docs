@@ -70,6 +70,10 @@ nginx 192.168.208.240:80
 -A KUBE-SERVICES -d 10.101.99.130/32 -p tcp -m comment --comment "default/nginx: cluster IP" -m tcp --dport 80 -j KUBE-SVC-4N57TFCL4MD7ZTDA
 ----
 
+== Network Policies
+
+在同一个 namespace 下，kubernetes 默认是扁平的网络，所有 POD 之间可以互通，但通常生产中需要更细粒度的定义 POD 之间的网络，NetworkPolicy 结合 labels 定义 POD 之间网络通信方式。
+
 == Service Types
 
 === ClusterIP

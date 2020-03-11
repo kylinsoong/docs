@@ -1,15 +1,12 @@
 = 开发
 :toc: manual
 
-== 基本对象
+== Core Concepts
+
+=== 获取 Kubernets 所有对象
 
 [source, bash]
-.*获取 Kubernets 所有对象列表*
 ----
-$ kubectl version --short
-Client Version: v1.17.3
-Server Version: v1.17.3
-
 $ kubectl api-resources --sort-by=name -o name | wc -l
 67
 
@@ -83,7 +80,35 @@ validatingwebhookconfigurations.admissionregistration.k8s.io
 volumeattachments.storage.k8s.io
 ----
 
-=== Pod
+=== 在 namespace 下创建容器
+
+创建一个 namespace，名称为 mynamespace，并在该 namespace 下创建 POD，POD 中容器使用镜像为 nginx，POD 的名称为 nginx
+
+[source, bash]
+----
+kubectl create ns mynamespace
+kubectl run nginx --image=nginx --generator=run-pod/v1 -n mynamespace
+kubectl delete ns mynamespace
+----
+
+=== 使用 yaml 文件创建和删除 POD
+
+[source, bash]
+----
+kubectl run nginx --image=nginx --generator=run-pod/v1 --dry-run -o yaml > pod.yaml
+kubectl create -f pod.yaml
+kubectl delete -f pod.yaml 
+----
+
+=== 创建 POD 并查看 POD 环境变量
+
+[source, bash]
+----
+kubectl run busybox --image=busybox --generator=run-pod/v1 --command -- env
+kubectl logs busybox > env.log
+----
+
+=== 创建 busybox POD 并确保 POD 一致运行
 
 [source, bash]
 ----
@@ -94,7 +119,29 @@ kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 --command -- sh 
 kubectl get pods -o wide
 ----
 
-=== Node
+=== 创建一个 POD 执行 echo 命令后退出
+
+[source, bash]
+----
+kubectl run busybox --image=busybox --generator=run-pod/v1 --restart=Never --command -- echo "Hello World"
+----
+
+=== 创建一个 POD 执行 echo 命令后删除
+
+[source, bash]
+----
+kubectl run busybox --image=busybox -it --rm --generator=run-pod/v1 --restart=Never --command -- echo "Hello World"
+----
+
+=== 创建 ResourceQuota 限制 default 下最多使用 1GB 内存 1 CPU，最多运行 2 POD
+
+[source, bash]
+----
+kubectl create quota myrq --hard=cpu=1,memory=1G,pods=2
+kubectl delete quota myrq
+----
+
+=== 查看 Node
 
 [source, bash]
 ----
@@ -105,25 +152,320 @@ kubectl get nodes
 kubectl describe nodes
 ----
 
-=== Namespace
+== Configuration
+
+=== 创建 ConfigMap 包含两个键值对(foo=love, bar=puppy)
 
 [source, bash]
 ----
-// create ns
-kubectl create ns web
-
-// create pod on ns
-kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 -n web --command -- sh -c "echo Hello Kubernetes! && sleep 3600"
-
-// delete ns
-kubectl delete nd web
+kubectl create configmap my-config --from-literal=foo=love --from-literal=bar=puppy
+kubectl get cm
+kubectl get cm my-config -o yaml
+kubectl delete cm my-config
 ----
 
-== Configuration
+=== 创建 ConfigMap 包含 UAT 和 PROD 配置文件
 
-=== ConfigMap
+[source, bash]
+----
+// prepare config
+echo "{state: 101, config: {cur: 12, weight: 25}}" > configmap/UAT.config
+echo "{state: 102, config: {cur: 12, weight: 25}}" > configmap/PROD.config
 
-link:case.adoc#_configmap[点击链接]
+// ConfigMap
+kubectl create configmap my-config --from-file=configmap/
+kubectl get cm
+kubectl describe cm my-config
+kubectl get cm my-config -o yaml
+kubectl delete cm my-config
+----
+
+=== 创建 ConfigMap 包含两个键值对(foo=love, bar=puppy) 并以环境变量的方式传递给 busybox POD
+
+[source, bash]
+----
+kubectl create configmap my-config --from-literal=foo=love --from-literal=bar=puppy
+
+cat <<EOF > ./busybox.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+  - image: busybox
+    name: busybox
+    command: ["env"]
+    env:
+    - name: CM_VALUE_FOO
+      valueFrom:
+        configMapKeyRef:
+          name: my-config
+          key: foo
+    - name: CM_VALUE_BAR
+      valueFrom:
+        configMapKeyRef:
+          name: my-config
+          key: bar
+  restartPolicy: Never
+EOF
+
+kubectl create -f busybox.yaml
+
+kubectl logs busybox | grep CM_VALUE 
+----
+
+=== 将 ConfigMap 两个键值对(foo=love, bar=puppy) 直接作为环境 POD的环境变量 
+
+[source, bash]
+----
+kubectl create configmap my-config --from-literal=foo=love --from-literal=bar=puppy
+
+cat <<EOF > ./busybox.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+  - image: busybox
+    name: busybox
+    command: ["env"]
+    envFrom:
+    - configMapRef:
+        name: my-config
+  restartPolicy: Never
+EOF
+
+kubectl create -f busybox.yaml
+
+kubectl logs busybox | grep foo
+kubectl logs busybox | grep bar
+----
+
+=== 创建 ConfigMap 包含 UAT 和 PROD 配置文件，并挂载到 POD /etc/data 目录
+
+[source, bash]
+----
+// prepare config
+echo "{state: 101, config: {cur: 12, weight: 25}}" > configmap/UAT.config
+echo "{state: 102, config: {cur: 12, weight: 25}}" > configmap/PROD.config
+
+// ConfigMap
+kubectl create configmap my-config --from-file=configmap/
+
+// pod
+cat <<EOF > ./busybox.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+  - image: busybox
+    name: busybox
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/data
+  volumes:
+  - name: config-volume
+    configMap:
+      name: my-config
+EOF
+
+kubectl create -f busybox.yaml
+
+// view
+kubectl exec busybox -- cat /etc/data/UAT.config
+kubectl exec busybox -- cat /etc/data/PROD.config
+----
+
+=== 创建 ConfigMap 包含 UAT 和 PROD 配置文件，并分别挂载到 POD 的 /etc/data/uat 和 /etc/data/prod 目录 
+
+[source, bash]
+----
+// prepare config
+echo "{state: 101, config: {cur: 12, weight: 25}}" > configmap/UAT.config
+echo "{state: 102, config: {cur: 12, weight: 25}}" > configmap/PROD.config
+
+// ConfigMap
+kubectl create configmap my-config --from-file=configmap/
+
+// pod
+cat <<EOF > ./busybox.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+  - image: busybox
+    name: busybox
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: prod-config-volume
+      mountPath: /etc/data/prod
+    - name: uat-config-volume
+      mountPath: /etc/data/uat
+  volumes:
+  - name: prod-config-volume
+    configMap:
+      name: my-config
+      items:
+      - key: PROD.config
+        path: PROD.config
+  - name: uat-config-volume
+    configMap:
+      name: my-config
+      items:
+      - key: UAT.config
+        path: UAT.config
+EOF
+
+kubectl create -f busybox.yaml
+
+// view
+kubectl exec busybox -- cat /etc/data/uat/UAT.config
+kubectl exec busybox -- cat /etc/data/prod/PROD.config
+----
+
+=== Redis 配置文件(Volume 对接 ConfigMap)
+
+本部分演示将 Redis 的配置文件通过 ConfigMap 传递。
+
+[source, yaml]
+.*1. 创建 redis-config*
+----
+// prepare files
+cat <<EOF > ./redis-config
+maxmemory 2mb
+maxmemory-policy allkeys-lru
+EOF
+
+// create configMap
+kubectl create configmap redis-config --from-file=redis-config
+----
+
+[source, yaml]
+.*2. 创建一个 POD*
+----
+// prepare yaml files
+cat <<EOF > ./pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+  - name: redis
+    image: redis:5.0.4
+    command:
+      - redis-server
+      - "/redis-master/redis.conf"
+    env:
+    - name: MASTER
+      value: "true"
+    ports:
+    - containerPort: 6379
+    resources:
+      limits:
+        cpu: "0.1"
+    volumeMounts:
+    - mountPath: /redis-master-data
+      name: data
+    - mountPath: /redis-master
+      name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: redis-config
+        items:
+        - key: redis-config
+          path: redis.conf
+EOF
+
+// create pod
+kubectl create -f pod.yaml
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec -it redis redis-cli
+127.0.0.1:6379> CONFIG GET maxmemory
+1) "maxmemory"
+2) "2097152"
+127.0.0.1:6379> CONFIG GET maxmemory-policy
+1) "maxmemory-policy"
+2) "allkeys-lru"
+----
+
+=== Ngnix 运行参数(ENV 参数对接 ConfigMap)
+
+[source, yaml]
+.*1. 创建 nginx-config*
+----
+kubectl create configmap nginx-config --from-literal=username=kylin --from-literal=password=password
+----
+
+[source, yaml]
+.*2. 创建一个 POD*
+----
+// prepare yaml files
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+    env:
+    - name: NGINX_USERNAME
+      valueFrom:
+        configMapKeyRef:
+          name: nginx-config
+          key: username
+    - name: NGINX_PASSWORD
+      valueFrom:
+        configMapKeyRef:
+          name: nginx-config
+          key: password
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec nginx env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=nginx
+NGINX_PASSWORD=password
+NGINX_USERNAME=kylin
+----
 
 === SecurityContexts
 
@@ -229,9 +571,107 @@ spec:
         cpu: "500m"
 ----
 
-=== Secret
+=== 以文件的方式使用 Secret
 
-link:case.adoc#_secret[点击链接]
+[source, yaml]
+.*1. 创建 redis-secret*
+----
+kubectl create secret generic redis-secret --from-literal=credential=alice --from-literal=username=bob
+----
+
+[source, yaml]
+.*2. 部署*
+----
+// yaml
+cat <<EOF > ./pod-1.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-secrets-via-file
+  name: pod-secrets-via-file
+spec:
+  containers:
+  - image: redis
+    name: pod-secrets-via-file
+    volumeMounts:
+    - name: foo
+      mountPath: "/secrets"
+      readOnly: true
+  volumes:
+  - name: foo
+    secret:
+      secretName: redis-secret
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create
+kubectl create -f pod-1.yaml
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec  pod-secrets-via-file ls /secrets/
+credential
+username
+
+# kubectl exec  pod-secrets-via-file cat /secrets/credential
+alice
+----
+
+=== 以环境变量的方式使用 Secret
+
+[source, yaml]
+.*1. 创建 redis-secret*
+----
+kubectl create secret generic redis-secret --from-literal=credential=alice --from-literal=username=bob
+----
+
+[source, yaml]
+.*2. 部署*
+----
+// yaml
+cat <<EOF > ./pod-2.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-secrets-via-env
+  name: pod-secrets-via-env
+spec:
+  containers:
+  - image: redis
+    name: pod-secrets-via-env
+    env:
+    - name: USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: redis-secret
+          key: username
+    - name: TOPSECRET
+      valueFrom:
+        secretKeyRef:
+          name: redis-secret
+          key: credential
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+EOF
+
+// create
+kubectl create -f pod-2.yaml
+----
+
+[source, yaml]
+.*3. 验证*
+----
+# kubectl exec pod-secrets-via-env env
+TOPSECRET=alice
+USERNAME=bob
+----
 
 === ServiceAccounts
 
@@ -252,52 +692,1070 @@ spec:
     command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]
 ----
 
-[source, bash]
-----
+== Multi-Container Pods
 
-----
+一个 Pod 中的多个容器：
 
-[source, bash]
-----
+* 共享网络
+* 共享存储
+* 共享 Process Namespace
 
-----
+三种设计模式：
 
-[source, bash]
-----
+* *Sidecar* - Sidecar 容器对主容器的能力和通过的方法做一补充
+* *Ambassador* - 网络入口反向代理，进入主容器的网络流量上限进入 Ambassador 容器
+* *Adapter* - 定制主容器的输出
 
-----
-
-[source, bash]
-----
-
-----
+=== HAproxy Ambassador 模式
 
 [source, bash]
+.*Ambassador 示例(HAproxy on top of Service)*
+----
+// 1. prepare HAProxy config file
+cat <<EOF > ./haproxy.cfg
+global
+    daemon
+    maxconn 256
+
+defaults
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+listen http-in
+    bind *:80
+    server server1 127.0.0.1:8775 maxconn 32
+EOF
+
+// 2. create configmap to pass the haproxy cfg to Container
+kubectl create configmap haproxy-cfg --from-file=haproxy.cfg
+kubectl get configmap haproxy-cfg -o yaml
+
+// 3. create 2 containers pod
+cat <<EOF > ./service.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: fruit-service
+  name: fruit-service
+spec:
+  containers:
+  - image: linuxacademycontent/legacy-fruit-service:1
+    name: fruit-service
+    resources: {}
+  - name: haproxy
+    image: haproxy:1.7
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: cfg-volume
+      mountPath: /usr/local/etc/haproxy
+  volumes:
+  - name: cfg-volume
+    configMap:
+      name: haproxy-cfg
+EOF
+
+kubectl create -f service.yaml
+
+// 4. deploy test pod
+kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 --command -- sh -c "sleep 3600"
+
+// 5. test
+kubectl exec busybox -- curl $(kubectl get pod fruit-service -o=custom-columns=IP:.status.podIP --no-headers):80
 ----
 
+=== fluentd Adapter 模式
+
+创建 fluentd Adapter 模式容器，具体要求如下：
+
+* 将 POD 的描述保存到 adapter-pod.yml
+* POD 名称 counter
+* 容器 count 使用 busybox 镜像，提供日志，对应的参数为
+
+[source, yaml]
+----
+- /bin/sh
+- -c
+- >
+  i=0;
+  while true;
+  do
+    echo "$i: $(date)" >> /var/log/1.log;
+    echo "$(date) INFO $i" >> /var/log/2.log;
+    i=$((i+1));
+    sleep 1;
+  done
+----
+
+* adapter 容器使用镜像 k8s.gcr.io/fluentd-gcp:1.30，名称也为 adapter
+* fluentd 的配置文件内容如下，配置文件需要通过名为 fluentd-config 的 ConfigMap 加载，ConfigMap 需要挂载到 adapter 容器，挂载的路径为 /fluentd/etc/fluent.conf
+
+[source, yaml]
+----
+<source>
+  type tail
+  format none
+  path /var/log/1.log
+  pos_file /var/log/1.log.pos
+  tag count.format1
+</source>
+
+<source>
+  type tail
+  format none
+  path /var/log/2.log
+  pos_file /var/log/2.log.pos
+  tag count.format2
+</source>
+
+<match **>
+  @type file
+  path /var/logout/count
+  time_slice_format %Y%m%d%H%M%S
+  flush_interval 5s
+  log_level trace
+</match>
+----
+
+* adapter 容器添加环境变量 FLUENTD_ARGS，该变量的值为 “-c /fluentd/etc/fluent.conf”
+* 给 POD 创建一个 volume，使 POD 退出后会被删除，将 volume 挂载到两个容器，挂载的路径都是 /var/log，这样 count 容器写，adapter 容器读
+* 创建一个 hostPath 的 volume，adapter 将数据输出到 /tmp/count_output，adapter 容器的挂载路径为 /var/logout
+
+[source, yaml]
+.*1. 创建 fluentd-config*
+----
+kubectl create configmap fluentd-config --from-file=fluent.conf 
+
+kubectl get cm fluentd-config -o yaml
+----
+
+[source, yaml]
+.*2. 编辑 adapter-pod.yaml*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: counter
+  name: counter
+spec:
+  containers:
+  - image: busybox
+    name: count
+    command:
+    - /bin/sh
+    - -c
+    - >
+      i=0;
+      while true;
+      do
+        echo "$i: $(date)" >> /var/log/1.log;
+        echo "$(date) INFO $i" >> /var/log/2.log;
+        i=$((i+1));
+        sleep 1;
+      done
+    volumeMounts:
+    - name: share-volume
+      mountPath: /var/log
+  - image: k8s.gcr.io/fluentd-gcp:1.30
+    name: adapter
+    volumeMounts:
+    - name: config-volume
+      mountPath: /fluentd/etc
+    - name: share-volume
+      mountPath: /var/log
+    - name: output-volume
+      mountPath: /var/logout
+    env:
+    - name: FLUENTD_ARGS
+      value: "-c /fluentd/etc/fluent.conf"
+  volumes:
+  - name: config-volume
+    configMap:
+      name: fluentd-config
+  - name: share-volume
+    emptyDir: {}
+  - name: output-volume
+    hostPath:
+      path: /tmp/count_output
+----
+
+[source, yaml]
+.*3. 创建*
+----
+kubectl create -f adapter-pod.yml
+----
+
+[source, yaml]
+.*4. 验证*
+----
+// make sure pod is running
+kubectl get pods
+
+// check count log
+kubectl exec counter -c count -- cat /var/log/1.log
+kubectl exec counter -c count -- cat /var/log/2.log
+
+// check adapter log & files
+# kubectl exec counter -c adapter -- cat /fluentd/etc/fluent.conf
+# kubectl exec counter -c adapter -- ls /var/logout | wc -l
+65
+#kubectl exec counter -c adapter -- cat /var/logout/count.20200311092543_0.log
+2020-03-11T09:25:43+00:00	count.format1	{"message":"89: Wed Mar 11 09:25:43 UTC 2020"}
+2020-03-11T09:25:43+00:00	count.format2	{"message":"Wed Mar 11 09:25:43 UTC 2020 INFO 89"}
+
+// check from host path
+# ssh $(kubectl get pod -o wide --no-headers | awk '{print $7}')
+# ls -l /tmp/count_output | wc -l
+82
+# cat /tmp/count_output/count.20200311092918_0.log
+2020-03-11T09:29:18+00:00	count.format2	{"message":"Wed Mar 11 09:29:18 UTC 2020 INFO 132"}
+2020-03-11T09:29:18+00:00	count.format1	{"message":"132: Wed Mar 11 09:29:18 UTC 2020"}
+----
+
+[source, yaml]
+.*5. Clean Up*
+----
+kubectl delete all --all
+kubectl delete cm fluentd-config 
+----
+
+[source, yaml]
+.*6. 验证 hostpath 的文件是否删除*
+----
+# ssh machine03 'ls -l /tmp/count_output | wc -l'
+127
+----
+
+== Observability
+
+=== Liveness and Readiness Probes
+
+[source, bash]
+.*livenessProbe 示例*
+----
+// yaml
+cat <<EOF > ./liveness.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: liveness-pod
+  name: liveness-pod
+spec:
+  containers:
+  - command:
+    - sh
+    - -c
+    - sleep 3600
+    image: busybox
+    name: liveness-pod
+    livenessProbe:
+      exec:
+        command: ["echo", "test"]
+      initialDelaySeconds: 5
+      periodSeconds: 10
+EOF
+
+// create
+kubectl create -f liveness.yaml
 ----
 
 [source, bash]
+.*readinessProbe 示例*
+----
+// yaml
+cat <<EOF > ./readness.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: readiness-pod
+  name: readiness-pod
+spec:
+  containers:
+  - image: nginx
+    name: readiness-pod
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 10
+EOF
+
+// create
+kubectl create -f readness.yaml
 ----
 
-----
+=== Logging
+
+link:admin.adoc#_logging[参考链接]
+
+=== Installing Metrics Server
 
 [source, bash]
 ----
+// install
+git clone https://github.com/kubernetes-sigs/metrics-server.git
+kubectl apply -f metrics-server/deploy/kubernetes/
 
+// verify
+kubectl get --raw /apis/metrics.k8s.io/
+{"kind":"APIGroup","apiVersion":"v1","name":"metrics.k8s.io","versions":[{"groupVersion":"metrics.k8s.io/v1beta1","version":"v1beta1"}],"preferredVersion":{"groupVersion":"metrics.k8s.io/v1beta1","version":"v1beta1"}}
+
+// export
+kubectl get pod <POD_NAME> -o yaml --export > nginx-pod.yml
 ----
+
+=== Monitoring Applications 
 
 [source, bash]
 ----
-
+kubectl top pods
+kubectl top pod resource-consumer-big
+kubectl top pods -n kube-system
+kubectl top nodes
 ----
+
+=== Debugging
 
 [source, bash]
 ----
+// 1. describe
+kubectl describe <POD_NAME>
 
+// 2. logs
+kubectl logs <OBJECT_NAME>
+----
+
+== Pod Design
+
+=== Labels, Selectors, and Annotations
+
+[source, bash]
+.*Labels, Selectors 示例*
+----
+kubectl get pods -l app=my-app
+
+kubectl get pods -l environment=production
+
+kubectl get pods -l environment=development
+
+kubectl get pods -l environment!=production
+
+kubectl get pods -l 'environment in (development,production)'
+
+kubectl get pods -l app=my-app,environment=production
 ----
 
 [source, bash]
+.*Annotation 示例*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-annotation-pod
+  annotations:
+    owner: terry@linuxacademy.com
+    git-commit: bdab0c6
+spec:
+  containers:
+  - name: nginx
+    image: nginx
 ----
 
+=== Deployments
+
+[source, bash]
+----
+kubectl set image deployment/rolling-deployment nginx=nginx:1.7.9 --record
+
+kubectl rollout history deployment/rolling-deployment
+
+kubectl rollout history deployment/rolling-deployment --revision=2
+
+kubectl rollout undo deployment/rolling-deployment
+----
+
+=== Jobs and CronJobs
+
+* Job 类似 Pod，但是做完一件事情后退出
+* CronJob 类似 Job, 但周期性做同一件事件
+
+[source, bash]
+.*Job*
+----
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4
+----
+
+[source, bash]
+.*CronJobs*
+----
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: hello
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure
+----
+
+=== pizza 服务部署
+
+部署 pizza 服务，满足如下条件：
+
+* 所有对象下 pizza namespace 下
+* Deployment 对象名称为pizza-deployment
+* Deployment 对象有 3 个副本
+* 部署容器的镜像为 linuxacademycontent/pizza-service:1.14.6
+* 容器通过 nginx 命令运行
+* 容器命令的参数有 "-g", "daemon off;"
+* POD 对外暴露的端口是 80
+* POD 通过路径 /healthz 和端口 8081 检测是否需要自动重启
+* POD 通过路径 / 和端口 80 检测服务是否在线
+* 服务名称为 pizza-service
+* 服务将请求转发到 80 端口的 POD
+* 服务对外暴露的端口为 30080
+
+[source, yaml]
+.*1. 创建 namespace*
+----
+kubectl create ns pizza
+----
+
+[source, yaml]
+.*2. 创建 Deployment*
+----
+// yaml
+cat <<EOF > ./deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: pizza-deployment
+  name: pizza-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pizza-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: pizza-deployment
+    spec:
+      containers:
+      - image: linuxacademycontent/pizza-service:1.14.6
+        name: pizza-service
+        ports:
+        - containerPort: 80
+        command: ["nginx"]
+        args: ["-g", "daemon off;"]
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+EOF
+
+// create
+kubectl create -f deployment.yaml -n pizza
+----
+
+[source, yaml]
+.*3. 创建服务*
+----
+// yaml
+cat <<EOF > ./pizza-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pizza-deployment
+  name: pizza-deployment
+  namespace: pizza
+spec:
+  ports:
+  - nodePort: 30080
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: pizza-deployment
+  type: NodePort
+EOF
+
+// create svc
+kubectl create -f pizza-service.yaml -n pizza
+----
+
+[source, yaml]
+.*4. 验证*
+----
+kubectl get svc -n pizza
+kubectl get ep -n pizza
+kubectl get po -n pizza
+----
+
+[source, yaml]
+.*5. Clean up*
+----
+kubectl delete all --all -n pizza
+kubectl delete ns pizza
+----
+
+== Services and Networking
+
+=== Services
+
+link:net.adoc#_service_types[参考链接]
+
+=== NetworkPolicies
+
+link:net.adoc#_network_policies[参考链接]
+
+=== Nginx 访问策略定制
+
+定制访问策略，确保 Nginx 容器提供的服务只被特定标签的容器访问：
+
+* Nginx Pod 提供 /hello 服务，供同一 namespace 内的其他服务访问
+* Nginx 只允许 allow-access: "true" 标签的容器访问
+
+[source, yaml]
+.*1. 部署 nginx service*
+----
+// yaml
+cat <<EOF > ./hello.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: hello
+  name: hello
+spec:
+  containers:
+  - image: nginx
+    name: hello
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: svc-root
+      mountPath: "/usr/share/nginx/html"
+    livenessProbe:
+      exec:
+        command: ["test", "-e", "/usr/share/nginx/html/hello"]
+  initContainers:
+  - image: busybox:1.28
+    name: init-svc
+    command: ["sh", "-c", "echo 'hello' > /usr/share/nginx/html/hello"]
+    volumeMounts:
+    - name: svc-root
+      mountPath: "/usr/share/nginx/html"
+  volumes:
+  - name: svc-root
+    emptyDir: {}
+  restartPolicy: Always
+EOF
+
+// create service
+kubectl create -f hello.yaml 
+
+// verify 
+# kubectl exec hello -- cat /usr/share/nginx/html/hello
+hello
+----
+
+[source, yaml]
+.*2. 创建 Client 服务，访问 hello*
+----
+kubectl run client --image=radial/busyboxplus:curl --generator=run-pod/v1 --command -- sh -c "sleep 3600"
+
+// Access service
+# kubectl exec client -- curl http://$(kubectl get pod hello -o wide --no-headers | awk '{print $6}')/hello
+hello
+----
+
+[source, yaml]
+.*3. 设定访问策略*
+----
+// yaml
+cat <<EOF > ./policy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: my-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      run: hello
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          allow-access: "true"
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          allow-access: "true"
+    ports:
+    - protocol: TCP
+      port: 80	
+EOF
+
+// create
+kubectl create -f policy.yaml 
+----
+
+[source, yaml]
+.*4. 设定访问策略后重新访问 hello 服务（服务不允许被访问）*
+----
+kubectl exec client -- curl http://$(kubectl get pod hello -o wide --no-headers | awk '{print $6}')/hello
+----
+
+[source, yaml]
+.*5. 给 Client 服务设定标签后，重新访问*
+----
+kubectl run client --image=radial/busyboxplus:curl --generator=run-pod/v1 --labels='allow-access=true' --command -- sh -c "sleep 3600"
+
+// Access hello service again
+# kubectl exec client -- curl http://$(kubectl get pod hello -o wide --no-headers | awk '{print $6}')/hello
+hello
+----
+
+[source, yaml]
+.*6. Clean up*
+----
+kubectl delete pod hello client
+kubectl delete networkpolicy my-network-policy
+----
+
+=== 网关基于不同策略访问不同的服务
+
+本部分有 2 个服务和一个网关，2 个服务有对应访问策略，网关位于 2 个服务之前
+
+[cols="2,5a"]
+|===
+|对象 |yaml
+
+|customer-data
+|
+[source, yaml]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: customer-data
+  name: customer-data
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer-data
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: customer-data
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+----
+
+|inventory
+|
+[source, yaml]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: inventory
+  name: inventory
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+----
+
+|customer-data-policy
+|
+[source, yaml]
+----
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: customer-data-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: customer-data
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          allow-access-customer-data: "true"
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          allow-access-customer-data: "true"
+    ports:
+    - protocol: TCP
+      port: 80  
+----
+
+|inventory-policy
+|
+[source, yaml]
+----
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: inventory-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: inventory
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          allow-access-inventory: "true"
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          allow-access-inventory: "true"
+    ports:
+    - protocol: TCP
+      port: 80  
+----
+
+|web-gateway
+|
+[source, yaml]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: web-gateway
+  name: web-gateway
+spec:
+  containers:
+  - command:
+    - sh
+    - -c
+    - sleep 3600
+    - --dry-run
+    - -o
+    - yaml
+    image: radial/busyboxplus:curl
+    name: web-gateway
+----
+|===
+
+[source, yaml]
+.*1. 初始化*
+----
+kubectl create -f customer-data.yaml 
+kubectl create -f inventory.yaml 
+kubectl create -f customer-data-policy.yaml 
+kubectl create -f inventory-policy.yaml 
+kubectl create -f web-gateway.yaml
+kubectl expose deployments/customer-data --port=80 --name=customer-data-svc
+kubectl expose deployments/inventory --port=80 --name=inventory-svc 
+----
+
+[source, yaml]
+.*2. 访问测试（访问不通）*
+----
+kubectl exec web-gateway -- curl -m 3 customer-data-svc
+kubectl exec web-gateway -- curl -m 3 inventory-svc
+----
+
+[source, yaml]
+.*3. 设定规则*
+----
+kubectl label pod web-gateway allow-access-customer-data=true
+kubectl label pod web-gateway allow-access-inventory=true
+----
+
+[source, yaml]
+.*4. 再次访问测试，访问成功*
+----
+kubectl exec web-gateway -- curl -m 3 customer-data-svc
+kubectl exec web-gateway -- curl -m 3 inventory-svc
+----
+
+== State Persistence
+
+=== Redis 持久化
+
+[source, yaml]
+.*1. Create a PersistentVolume*
+----
+// yaml
+cat <<EOF > ./redis-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/data"
+EOF
+
+// create
+kubectl create -f redis-pv.yaml
+
+// view
+# kubectl get pv --no-headers
+redis-pv   1Gi   RWO   Retain   Available                     5m53s
+----
+
+[source, yaml]
+.*2. Create a PersistentVolumeClaim*
+----
+// yaml
+cat <<EOF > ./redis-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redisdb-pvc
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+EOF
+
+// create
+kubectl create -f redis-pvc.yaml
+
+// view
+# kubectl get pv --no-headers
+redis-pv   1Gi   RWO   Retain   Bound   default/redisdb-pvc               6m40s
+
+# kubectl get pvc --no-headers
+redisdb-pvc   Bound   redis-pv   1Gi   RWO         34s
+----
+
+[source, yaml]
+.*3. Create the redispod image, with a mounted volume to mount path /data*
+----
+// yaml
+cat <<EOF > ./redispod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redispod
+spec:
+  containers:
+  - image: redis
+    name: redisdb
+    volumeMounts:
+    - name: redis-data
+      mountPath: /data
+    ports:
+    - containerPort: 6379
+      protocol: TCP
+  volumes:
+  - name: redis-data
+    persistentVolumeClaim:
+      claimName: redisdb-pvc
+EOF
+
+// create pod
+kubectl create -f redispod.yaml
+
+// view pod
+# kubectl get pod redispod -o wide --no-headers
+redispod   1/1   Running   0     3m31s   192.168.208.248   machine03.example.com   <none>   <none>
+----
+
+[source, yaml]
+.*4. Connect to the container and write some data*
+----
+kubectl exec -it redispod redis-cli
+127.0.0.1:6379> SET server:name "redis server"
+OK
+127.0.0.1:6379> GET server:name
+"redis server"
+127.0.0.1:6379> QUIT
+----
+
+[source, yaml]
+.*5. Delete pod and check persist files*
+----
+// delete pod
+kubectl delete pod redispod
+
+// check persist files
+# ssh machine03.example.com "ls /tmp/data"
+dump.rdb
+----
+
+[source, yaml]
+.*6. Create pod again*
+----
+// create
+kubectl create -f redispod.yaml
+
+// get pod
+# kubectl get pod redispod -o wide --no-headers
+redispod   1/1   Running   0     62s   192.168.208.253   machine03.example.com   <none>   <none>
+----
+
+[source, yaml]
+7. Verify data existing
+----
+kubectl exec -it redispod redis-cli
+127.0.0.1:6379> GET server:name
+"redis server"
+127.0.0.1:6379> QUIT
+----
+
+=== Mysql 持久化
+
+[source, bash]
+.*Mysql PV*
+----
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  storageClassName: localdisk
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+----
+
+[source, bash]
+.*Mysql PVC*
+----
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: localdisk
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+----
+
+[source, bash]
+.*Mysql Pod*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: mysql-pod
+  name: mysql-pod
+spec:
+  containers:
+  - image: mysql:5.6
+    name: mysql-pod
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: password
+    volumeMounts:
+    - name: mysql-storage
+      mountPath: "/var/lib/mysql"
+    resources: {}
+  volumes:
+  - name: mysql-storage
+    persistentVolumeClaim:
+      claimName: mysql-pv-claim
 ----
