@@ -108,7 +108,7 @@ kubectl run busybox --image=busybox --generator=run-pod/v1 --command -- env
 kubectl logs busybox > env.log
 ----
 
-=== 创建 busybox POD 并确保 POD 一致运行
+=== 创建 busybox POD 并确保 POD 一直运行
 
 [source, bash]
 ----
@@ -217,7 +217,7 @@ kubectl create -f busybox.yaml
 kubectl logs busybox | grep CM_VALUE 
 ----
 
-=== 将 ConfigMap 两个键值对(foo=love, bar=puppy) 直接作为环境 POD的环境变量 
+=== 将 ConfigMap 两个键值对(foo=love, bar=puppy) 直接作为 POD 的环境变量 
 
 [source, bash]
 ----
@@ -467,31 +467,64 @@ NGINX_PASSWORD=password
 NGINX_USERNAME=kylin
 ----
 
-=== SecurityContexts
+=== SecurityContexts 定义容器访问底层文件系统的权限
 
-SecurityContexts 用来定义 Pod 或容器如何和底层的安全机制进行交互。
+SecurityContexts 用来定义 Pod 或容器如何和底层的安全机制进行交互，本部分部署的容器需要读取底层节点上的特定用户和组权限的文件。
 
 [source, bash]
+.*1. 查看 Node 上文件*
 ----
-// 1. create some users, groups, and files on both worker nodes
-for i in 2 3 ; do ssh root@machine0$i "useradd -u 2000 container-user-0; groupadd -g 3000 container-group-0 ; useradd -u 2001 container-user-1 ; groupadd -g 3001 container-group-1"; done
-for i in 2 3 ; do ssh root@machine0$i "mkdir -p /etc/message/"; done
-for i in 2 3 ; do ssh root@machine0$i "echo 'Hello, World' | tee -a /etc/message/message.txt "; done
-for i in 2 3 ; do ssh root@machine0$i "chown 2000:3000 /etc/message/message.txt ; chmod 640 /etc/message/message.txt"; done
-# for i in 2 3 ; do ssh root@machine0$i "cat /etc/message/message.txt "; done
-Hello, World
-Hello, World
+// a. init users, groups, and files on both worker nodes
+# for i in 2 3 ; do ssh root@machine0$i "useradd -u 2000 container-user-0; groupadd -g 3000 container-group-0 ; useradd -u 2001 container-user-1 ; groupadd -g 3001 container-group-1"; done
 
-// 2. deploy pod with none securityContext, The root user be used, the pod run well
+// b. check created users
+# for i in 2 3 ; do ssh root@machine0$i "grep container /etc/passwd"; done;
+container-user-0:x:2000:2000::/home/container-user-0:/bin/sh
+container-user-1:x:2001:2001::/home/container-user-1:/bin/sh
+container-user-0:x:2000:2000::/home/container-user-0:/bin/sh
+container-user-1:x:2001:2001::/home/container-user-1:/bin/sh 
+
+// c. check created groups
+# for i in 2 3 ; do ssh root@machine0$i "grep container /etc/group"; done;
+container-user-0:x:2000:
+container-group-0:x:3000:
+container-user-1:x:2001:
+container-group-1:x:3001:
+container-user-0:x:2000:
+container-group-0:x:3000:
+container-user-1:x:2001:
+container-group-1:x:3001:
+
+// d. create file and grant rights
+# for i in 2 3 ; do ssh root@machine0$i "mkdir -p /etc/message/"; done
+# for i in 2 3 ; do ssh root@machine0$i "echo 'Hello, World' | tee -a /etc/message/message.txt "; done
+# for i in 2 3 ; do ssh root@machine0$i "chown 2000:3000 /etc/message/message.txt ; chmod 640 /etc/message/message.txt"; done
+
+// e. check files grants
+# for i in 2 3 ; do ssh root@machine0$i "ls -l /etc/message/message.txt"; done;
+-rw-r----- 1 container-user-0 container-group-0 13 Mar  9 00:16 /etc/message/message.txt
+-rw-r----- 1 container-user-0 container-group-0 13 Mar  9 00:16 /etc/message/message.txt
+
+// f. check the content
+for i in 2 3 ; do ssh root@machine0$i "cat /etc/message/message.txt"; done;
+Hello, World
+Hello, World
+----
+
+[source, yaml]
+.*2. 无 securityContext，默认 root 用户访问底层文件，访问成功*
+----
+// yaml
+cat <<EOF > ./securitycontext-test-1.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-securitycontext-pod
+  name: securitycontext-test-1
 spec:
   containers:
-  - name: myapp-container
+  - name: app
     image: busybox
-    command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]
+    command: ['sh', '-c', "id && cat /message/message.txt && sleep 3600"]
     volumeMounts:
     - name: message-volume
       mountPath: /message
@@ -499,20 +532,34 @@ spec:
   - name: message-volume
     hostPath:
       path: /etc/message
+EOF
 
-// 3. define wrong user and groud, the Pod will run failed
+// create
+kubectl create -f securitycontext-test-1.yaml 
+
+// verify
+# kubectl logs securitycontext-test-1
+uid=0(root) gid=0(root) groups=10(wheel)
+Hello, World
+----
+
+[source, yaml]
+.*3. securityContext 指定用户访问底层文件，访问不成功*
+----
+// yaml
+cat <<EOF > ./securitycontext-test-2.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-securitycontext-pod
+  name: securitycontext-test-2
 spec:
   securityContext:
     runAsUser: 2001
     fsGroup: 3001
   containers:
-  - name: myapp-container
+  - name: app
     image: busybox
-    command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]
+    command: ['sh', '-c', "id && cat /message/message.txt && sleep 3600"]
     volumeMounts:
     - name: message-volume
       mountPath: /message
@@ -520,20 +567,37 @@ spec:
   - name: message-volume
     hostPath:
       path: /etc/message
+EOF
 
-// 4. define correct user and group, the Pod run success
+// create
+kubectl create -f securitycontext-test-2.yaml 
+
+// verify
+# kubectl get pods securitycontext-test-2 --no-headers
+securitycontext-test-2   0/1   CrashLoopBackOff   3     2m17s
+
+# kubectl logs securitycontext-test-2
+cat: can't open '/message/message.txt': Permission denied
+uid=2001 gid=0(root) groups=300
+----
+
+[source, yaml]
+.*4. securityContext 指定用户访问底层文件，访问成功*
+----
+// yaml
+cat <<EOF > ./securitycontext-test-3.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-securitycontext-pod
+  name: securitycontext-test-3
 spec:
   securityContext:
     runAsUser: 2000
     fsGroup: 3000
   containers:
-  - name: myapp-container
+  - name: app
     image: busybox
-    command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]
+    command: ['sh', '-c', "id && cat /message/message.txt && sleep 3600"]
     volumeMounts:
     - name: message-volume
       mountPath: /message
@@ -541,25 +605,112 @@ spec:
   - name: message-volume
     hostPath:
       path: /etc/message
+EOF
+
+// create
+kubectl create -f securitycontext-test-3.yaml
+
+// verify
+# kubectl logs securitycontext-test-3
+uid=2000 gid=0(root) groups=3000
+Hello, World
 ----
 
-=== Resource Requirements
+[source, yaml]
+.*5. Clean up*
+----
+kubectl delete pod $(kubectl get pods --no-headers | awk '{print $1}')
+----
+
+=== 创建一个 YAML 部署一个 POD，以 ID 为 101 的用户运行 nginx 
+
+[source, yaml]
+----
+// yaml
+cat <<EOF > ./securitycontext-nginx.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  securityContext:
+    runAsUser: 101
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+EOF
+
+// create
+kubectl create -f securitycontext-nginx.yaml
+
+// verify
+# kubectl logs nginx
+2020/03/12 03:20:55 [warn] 1#1: the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /etc/nginx/nginx.conf:2
+nginx: [warn] the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /etc/nginx/nginx.conf:2
+2020/03/12 03:20:55 [emerg] 1#1: mkdir() "/var/cache/nginx/client_temp" failed (13: Permission denied)
+nginx: [emerg] mkdir() "/var/cache/nginx/client_temp" failed (13: Permission denied)
+----
+
+=== 创建一个 YAML 部署一个 POD，唯一的容器具有 NET_ADMIN 和 SYS_TIME 能力
+
+[source, yaml]
+----
+// yaml
+cat <<EOF > ./securitycontext-capability.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+EOF
+
+// create
+kubectl create -f securitycontext-capability.yaml 
+----
+
+=== Resource Requests 和 Resource Limits 的区别 
 
 Kubernets allow us to specify the resource requirements of a container in the pod spec. A container's memory and CPU requirements are defined in term of `resource requests` and `resource limits`:
 
 * *Resource request* - The amount of resources necessary to run a container. A pod will only be a run on a node that has enough avalilable resources to run pod's containers
 * *Resource limit* - A maximum value of the resource usage of a container.
 
+=== 命令行部署 busybox 容器，设定运行容器所需内存 64 MB CPU 为 250 m，容器运行的最大内存为 128 MB，CPU 为 500 m
+
 [source, bash]
-.*Example*
 ----
+kubectl run busybox --image=busybox --limits='cpu=500m,memory=128Mi' --requests='cpu=250m,memory=64Mi' --generator=run-pod/v1
+----
+
+=== YAML 部署 busybox 容器，设定运行容器所需内存 64 MB CPU 为 250 m，容器运行的最大内存为 128 MB，CPU 为 500 m
+
+[source, bash]
+----
+// yaml
+cat <<EOF > ./resource-limits.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-resource-pod
+  name: busybox
 spec:
   containers:
-  - name: myapp-container
+  - name: busybox
     image: busybox
     command: ['sh', '-c', 'echo Hello Kubernetes! && sleep 3600']
     resources:
@@ -569,130 +720,183 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
+EOF
+
+// run 
+kubectl create -f resource-limits.yaml 
 ----
 
-=== 以文件的方式使用 Secret
+=== 创建 Secret 内容为 password=mypass
+
+[source, bash]
+----
+kubectl create secret generic my-secret --from-literal=password=mypass
+kubectl get secret my-secret -o yaml
+----
+
+=== 创建 Secret 内容为 password， password 保存在文件上
+
+[source, bash]
+----
+echo "myPassord" > password
+kubectl create secret generic my-secret --from-file=password 
+kubectl get secret my-secret -o yaml
+----
+
+=== 将 Secret 挂载到容器，路径为 /etc/foo
 
 [source, yaml]
-.*1. 创建 redis-secret*
+.*1. 创建 my-secret*
 ----
-kubectl create secret generic redis-secret --from-literal=credential=alice --from-literal=username=bob
+echo "This is a password" > password
+echo "This is a username" > username
+
+kubectl create secret generic my-secret --from-file=username --from-file=password 
+kubectl get secret my-secret -o yaml
 ----
 
 [source, yaml]
 .*2. 部署*
 ----
 // yaml
-cat <<EOF > ./pod-1.yaml
+cat <<EOF > ./secret-volumes.yaml
 apiVersion: v1
 kind: Pod
 metadata:
   creationTimestamp: null
   labels:
-    run: pod-secrets-via-file
-  name: pod-secrets-via-file
+    run: secret-volumes
+  name: secret-volumes
 spec:
   containers:
-  - image: redis
-    name: pod-secrets-via-file
+  - image: busybox
+    name: secret-volumes
+    command: ["sh", "-c", "ls -l /etc/foo && cat /etc/foo/username && cat /etc/foo/password"]
     volumeMounts:
-    - name: foo
-      mountPath: "/secrets"
+    - name: secret-volume
+      mountPath: /etc/foo
       readOnly: true
   volumes:
-  - name: foo
+  - name: secret-volume
     secret:
-      secretName: redis-secret
-  dnsPolicy: ClusterFirst
-  restartPolicy: Always
+      secretName: my-secret
+  restartPolicy: Never
 EOF
 
 // create
-kubectl create -f pod-1.yaml
+kubectl create -f secret-volumes.yaml
 ----
 
 [source, yaml]
 .*3. 验证*
 ----
-# kubectl exec  pod-secrets-via-file ls /secrets/
-credential
-username
-
-# kubectl exec  pod-secrets-via-file cat /secrets/credential
-alice
+# kubectl logs secret-volumes
+total 0
+lrwxrwxrwx    1 root     root            15 Mar 12 09:09 password -> ..data/password
+lrwxrwxrwx    1 root     root            15 Mar 12 09:09 username -> ..data/username
+This is a username
+This is a password
 ----
 
-=== 以环境变量的方式使用 Secret
+=== 将 Secret 以环境变量的方式传递给容器，变量名为 MY_SECRET_TEST_USERNAME 和 MY_SECRET_TEST_PASSWORD
 
 [source, yaml]
-.*1. 创建 redis-secret*
+.*1. 创建 my-secret*
 ----
-kubectl create secret generic redis-secret --from-literal=credential=alice --from-literal=username=bob
+echo "This is a password" > password
+echo "This is a username" > username
+
+kubectl create secret generic my-secret --from-file=username --from-file=password 
+kubectl get secret my-secret -o yaml
 ----
 
 [source, yaml]
 .*2. 部署*
 ----
 // yaml
-cat <<EOF > ./pod-2.yaml
+cat <<EOF > ./secret-envs.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  creationTimestamp: null
   labels:
-    run: pod-secrets-via-env
-  name: pod-secrets-via-env
+    run: secret-envs
+  name: secret-envs
 spec:
   containers:
-  - image: redis
-    name: pod-secrets-via-env
+  - image: busybox
+    name: secret-envs
+    command: ["sh", "-c", "env | grep MY_SECRET_TEST"]
     env:
-    - name: USERNAME
+    - name: MY_SECRET_TEST_USERNAME
       valueFrom:
         secretKeyRef:
-          name: redis-secret
+          name: my-secret
           key: username
-    - name: TOPSECRET
+    - name: MY_SECRET_TEST_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: redis-secret
-          key: credential
-  dnsPolicy: ClusterFirst
-  restartPolicy: Always
+          name: my-secret
+          key: password
+  restartPolicy: Never
 EOF
 
 // create
-kubectl create -f pod-2.yaml
+kubectl create -f secret-envs.yaml 
 ----
 
 [source, yaml]
 .*3. 验证*
 ----
-# kubectl exec pod-secrets-via-env env
-TOPSECRET=alice
-USERNAME=bob
+# kubectl logs secret-envs
+MY_SECRET_TEST_PASSWORD=This is a password
+MY_SECRET_TEST_USERNAME=This is a username
 ----
 
-=== ServiceAccounts
+=== 查看集群中所有的 ServiceAccounts
+
+[source, bash]
+----
+kubectl get serviceaccount --all-namespaces
+kubectl get serviceaccount default -o yaml
+----
+
+=== 创建一个 ServiceAccounts 名为 myuser
+
+[source, bash]
+----
+kubectl create sa myuser
+----
+
+=== POD 中使用 ServiceAccounts
 
 ServiceAccounts 可以使某一个容器内调运 Kubernetes API.
 
 [source, bash]
-.*示例*
 ----
+// yaml 
+cat <<EOF > ./sa.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-serviceaccount-pod
+  name: serviceaccount-pod
 spec:
-  serviceAccountName: my-serviceaccount
+  serviceAccountName: myuser
   containers:
-  - name: myapp-container
+  - name: myapp
     image: busybox
     command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]
+EOF
+
+// create
+kubectl create -f sa.yaml
+
+// verify
+kubectl get pod serviceaccount-pod  -o yaml
 ----
 
 == Multi-Container Pods
+
+=== Multi-Container 三种设计模式
 
 一个 Pod 中的多个容器：
 
@@ -706,12 +910,11 @@ spec:
 * *Ambassador* - 网络入口反向代理，进入主容器的网络流量上限进入 Ambassador 容器
 * *Adapter* - 定制主容器的输出
 
-=== HAproxy Ambassador 模式
+=== HAproxy Ambassador 模式 - HAproxy 容器位于 SVC 容器之前
 
-[source, bash]
-.*Ambassador 示例(HAproxy on top of Service)*
+[source, yaml]
+.*1. 创建 HAProxy 配置文件*
 ----
-// 1. prepare HAProxy config file
 cat <<EOF > ./haproxy.cfg
 global
     daemon
@@ -727,12 +930,17 @@ listen http-in
     bind *:80
     server server1 127.0.0.1:8775 maxconn 32
 EOF
+----
 
-// 2. create configmap to pass the haproxy cfg to Container
+[source, yaml]
+.*2. 创建 ConfigMap 保存 haproxy.cfg*
+----
 kubectl create configmap haproxy-cfg --from-file=haproxy.cfg
-kubectl get configmap haproxy-cfg -o yaml
+----
 
-// 3. create 2 containers pod
+[source, yaml]
+.*3. HAproxy Ambassador 模式 POD YAML*
+----
 cat <<EOF > ./service.yaml
 apiVersion: v1
 kind: Pod
@@ -758,17 +966,29 @@ spec:
     configMap:
       name: haproxy-cfg
 EOF
-
-kubectl create -f service.yaml
-
-// 4. deploy test pod
-kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 --command -- sh -c "sleep 3600"
-
-// 5. test
-kubectl exec busybox -- curl $(kubectl get pod fruit-service -o=custom-columns=IP:.status.podIP --no-headers):80
 ----
 
-=== fluentd Adapter 模式
+[source, yaml]
+.*4. 创建 HAproxy Ambassador 模式 POD*
+----
+kubectl create -f service.yaml 
+----
+
+[source, yaml]
+.*5. 测试*
+----
+kubectl run busybox --image=radial/busyboxplus:curl --generator=run-pod/v1 --command -- sh -c "sleep 3600"
+kubectl exec busybox -- curl http://$(kubectl get pod fruit-service -o=custom-columns=IP:.status.podIP --no-headers):80
+----
+
+[source, yaml]
+.*6. Clean up*
+----
+kubectl delete all --all
+kubectl delete cm haproxy-cfg 
+----
+
+=== fluentd Adapter 模式 - fluentd 收集 SVC 容器日志
 
 创建 fluentd Adapter 模式容器，具体要求如下：
 
@@ -934,10 +1154,9 @@ kubectl delete cm fluentd-config
 
 == Observability
 
-=== Liveness and Readiness Probes
+=== 创建 livenessProbe，执行 echo test 命令，初次延迟为 5 秒，周期为 10 秒
 
 [source, bash]
-.*livenessProbe 示例*
 ----
 // yaml
 cat <<EOF > ./liveness.yaml
@@ -950,12 +1169,9 @@ metadata:
   name: liveness-pod
 spec:
   containers:
-  - command:
-    - sh
-    - -c
-    - sleep 3600
-    image: busybox
+  - image: busybox
     name: liveness-pod
+    command: ["sh", "-c", "sleep 3600"]
     livenessProbe:
       exec:
         command: ["echo", "test"]
@@ -965,10 +1181,14 @@ EOF
 
 // create
 kubectl create -f liveness.yaml
+
+// verify
+kubectl describe pod liveness-pod | grep Liveness
 ----
 
+=== 创建 readinessProbe，执行 HTTP GET，路径 /，端口 80，初次延迟为 5 秒，周期 10 秒
+
 [source, bash]
-.*readinessProbe 示例*
 ----
 // yaml
 cat <<EOF > ./readness.yaml
@@ -993,13 +1213,20 @@ EOF
 
 // create
 kubectl create -f readness.yaml
+
+// verify
+kubectl describe pod readiness-pod | grep Readiness
 ----
 
-=== Logging
+=== 创建 busybox POD，执行 `i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done`，查看日志
 
-link:admin.adoc#_logging[参考链接]
+[source, bash]
+----
+kubectl run busybox --image=busybox --generator=run-pod/v1 --command -- sh -c "i=0; while true; do echo '$i: $(date)'; i=$((i+1)); sleep 1; done"
+kubectl logs -f busybox
+----
 
-=== Installing Metrics Server
+=== 安装 Metrics Server
 
 [source, bash]
 ----
@@ -1015,7 +1242,7 @@ kubectl get --raw /apis/metrics.k8s.io/
 kubectl get pod <POD_NAME> -o yaml --export > nginx-pod.yml
 ----
 
-=== Monitoring Applications 
+=== 常见应用监控场景
 
 [source, bash]
 ----
@@ -1025,7 +1252,7 @@ kubectl top pods -n kube-system
 kubectl top nodes
 ----
 
-=== Debugging
+=== 基本 Troubleshooting 步骤
 
 [source, bash]
 ----
@@ -1038,10 +1265,9 @@ kubectl logs <OBJECT_NAME>
 
 == Pod Design
 
-=== Labels, Selectors, and Annotations
+=== 常见 Labels, Selectors 操作
 
 [source, bash]
-.*Labels, Selectors 示例*
 ----
 kubectl get pods -l app=my-app
 
@@ -1056,8 +1282,28 @@ kubectl get pods -l 'environment in (development,production)'
 kubectl get pods -l app=my-app,environment=production
 ----
 
+=== 创建三个 POD ，Label 都包含 app=v1
+
 [source, bash]
-.*Annotation 示例*
+----
+for i in 1 2 3 ; do kubectl run nginx-$i --image=nginx --port=80 --labels=app=v1 --generator=run-pod/v1 ; done
+
+kubectl get pods -l app=v1
+
+kubectl delete all -l app=v1
+----
+
+=== 查看并修改 POD 的 Label
+
+[source, bash]
+----
+kubectl get pods --show-labels
+kubectl label pod nginx-1 app=v2 --overwrite
+----
+
+==== Annotation 记录应用的所有者和 git commits
+
+[source, yaml]
 ----
 apiVersion: v1
 kind: Pod
@@ -1072,7 +1318,22 @@ spec:
     image: nginx
 ----
 
-=== Deployments
+=== 给运行的 POD 添加"description='my description'" 的 Annotation
+
+[source, bash]
+----
+kubectl annotate pod nginx-1 description='my description'
+kubectl describe pod nginx-1
+----
+
+=== 删除运行 POD 的 Annotation
+
+[source, bash]
+----
+kubectl annotate pod nginx-1 description-
+----
+
+=== 常见 Deployments 操作
 
 [source, bash]
 ----
@@ -1085,14 +1346,19 @@ kubectl rollout history deployment/rolling-deployment --revision=2
 kubectl rollout undo deployment/rolling-deployment
 ----
 
-=== Jobs and CronJobs
+=== Jobs 和 CronJobs 比较
+
+Job 和 CronJob 都会创建 POD 去完成后一个任务
 
 * Job 类似 Pod，但是做完一件事情后退出
 * CronJob 类似 Job, 但周期性做同一件事件
 
+=== 创建 Job 计算 π 后 2000 位输出到日志
+
 [source, bash]
-.*Job*
 ----
+// yaml
+cat <<EOF > ./pi.yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -1106,11 +1372,88 @@ spec:
         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
       restartPolicy: Never
   backoffLimit: 4
+EOF
+
+// create
+kubectl create -f pi.yaml 
+
+// verify
+kubectl logs pi-r7kxf
 ----
 
+=== 创建 Job 计算 π 后 20 位输出到日志，并输出 5 次
+
 [source, bash]
-.*CronJobs*
 ----
+// yaml
+cat <<EOF > ./pi-completions.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi-completions
+spec:
+  completions: 5
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(20)"]
+      restartPolicy: Never
+  backoffLimit: 4
+EOF
+
+// create
+kubectl create -f pi-completions.yaml 
+
+// verify
+for p in $(kubectl get pods --no-headers | awk '{print $1}') ; do kubectl logs $p ; done
+----
+
+=== 创建 Job 计算 π 后 20 位输出到日志，并并行输出 5 次    
+
+[source, bash]
+----
+// yaml
+cat <<EOF > ./pi-parallelism.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi-parallelism
+spec:
+  parallelism: 5
+  template:      
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(20)"]
+      restartPolicy: Never
+  backoffLimit: 4
+EOF
+
+// create
+kubectl create -f pi-parallelism.yaml 
+
+// verify
+for p in $(kubectl get pods --no-headers | awk '{print $1}') ; do kubectl logs $p ; done
+----
+
+=== 创建 Job 运行 busybox 执行 echo, sleep 命令
+
+[source, bash]
+----
+kubectl create job busybox --image=busybox -- /bin/sh -c 'echo hello;sleep 30;echo world'
+kubectl logs -f busybox-f9bbz
+kubectl logs job/busybox
+----
+
+=== 创建 CronJob 每隔一分钟输出时间及日志信息 
+
+[source, bash]
+----
+// yaml
+cat <<EOF > ./hello-cronjob.yaml
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -1129,6 +1472,13 @@ spec:
             - -c
             - date; echo Hello from the Kubernetes cluster
           restartPolicy: OnFailure
+EOF
+
+// create
+kubectl create -f hello-cronjob.yaml 
+
+// verify
+kubectl get pods -w
 ----
 
 === pizza 服务部署
@@ -1243,13 +1593,27 @@ kubectl delete ns pizza
 
 == Services and Networking
 
-=== Services
+=== 基于 nginx 镜像创建一个 POD，并将其暴露在 80 端口
 
-link:net.adoc#_service_types[参考链接]
+[source, yaml]
+----
+kubectl run nginx --image=nginx --port=80 --generator=run-pod/v1 
+kubectl expose pod nginx --port=80 --name=nginx
 
-=== NetworkPolicies
+kubectl get svc
+kubectl get ep
 
-link:net.adoc#_network_policies[参考链接]
+kubectl run busybox --image=busybox --rm -it --generator=run-pod/v1 --command -- sh wget -0- 192.168.208.216:80
+----
+
+=== 基于 nginx 镜像创建一个 Deployment，并将其暴露在 80 端口
+
+[source, yaml]
+----
+kubectl create deployment nginx --image=nginx
+kubectl scale deployments/nginx --replicas=3
+kubectl expose deployments/nginx --port=80 --name=nginx --type=NodePort
+----
 
 === Nginx 访问策略定制
 
@@ -1688,7 +2052,7 @@ redispod   1/1   Running   0     62s   192.168.208.253   machine03.example.com  
 ----
 
 [source, yaml]
-7. Verify data existing
+.*7. Verify data existing*
 ----
 kubectl exec -it redispod redis-cli
 127.0.0.1:6379> GET server:name
