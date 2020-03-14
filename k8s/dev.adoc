@@ -141,6 +141,36 @@ kubectl create quota myrq --hard=cpu=1,memory=1G,pods=2
 kubectl delete quota myrq
 ----
 
+=== 创建 POD，使用 nginx 镜像，设定 containerPort 为 80，执行 nginx 命令，nginx 命令传递参数 `-g daemon off; -q`，POD 在 web namespace 下
+
+[source, bash]
+----
+// yaml
+cat <<EOF > ./pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - command: ["nginx"]
+    args: ["-g", "daemon off;", "-q"]
+    image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+EOF
+
+// create
+kubectl create -f pod-nginx.yaml -n web
+
+// verify
+kubectl get pods -n web
+----
+
 === 查看 Node
 
 [source, bash]
@@ -871,7 +901,7 @@ kubectl create sa myuser
 
 ServiceAccounts 可以使某一个容器内调运 Kubernetes API.
 
-[source, bash]
+[source, yaml]
 ----
 // yaml 
 cat <<EOF > ./sa.yaml
@@ -894,6 +924,124 @@ kubectl create -f sa.yaml
 kubectl get pod serviceaccount-pod  -o yaml
 ----
 
+=== 容器化部署 candy-themed 游戏
+
+容器化部署 candy-themed 游戏满足如下要求：
+
+* 容器使用镜像 `linuxacademycontent/candy-service:1`
+* candy-themed 游戏运行需要配置文件 `/etc/candy-service/candy.cfg`，内容如下，需要通过 ConfigMap 挂载道容器，ConfigMap 的名称为 `candy-service-config`
+
+[source, yaml]
+----
+candy.peppermint.power=100000000
+candy.nougat-armor.strength=10
+----
+
+* 容器需要以 group ID 2000 运行文件系统，通过 securityContext 设定
+* 运行容器需要 64MiB 内存，250m CPU
+* 运行容器最大允许的内存为 128MiB，CPU 为 500m
+* 容器需要连接后台数据库，数据库的密码为 `Kub3rn3t3sRul3s!`，密码需要以 secret 的方式保存，secret 的名称为 `db-password`，通过 DB_PASSWORD 变量传递到容器
+* 容器需要 ServiceAccount `candy-svc` 来访问 Kubernetes API
+
+[source, yaml]
+.*1. 创建 candy.cfg*
+----
+cat <<EOF > ./candy.cfg
+candy.peppermint.power=100000000
+candy.nougat-armor.strength=10
+EOF
+----
+
+[source, yaml]
+.*2. 创建 ConfigMap candy-service-config*
+----
+kubectl create configmap candy-service-config --from-file=candy.cfg
+----
+
+[source, yaml]
+.*3. 创建 Secret db-password*
+----
+kubectl create secret generic db-password --from-literal=password=Kub3rn3t3sRul3s!
+----
+
+[source, yaml]
+.*4. 创建 ServiceAccount candy-svc*
+----
+kubectl create sa candy-svc
+----
+
+[source, yaml]
+.*5. candy.yaml*
+----
+cat <<EOF > ./candy.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: candy
+  name: candy
+spec:
+  securityContext:
+    fsGroup: 2000
+  volumes:
+  - name: config-volume
+    configMap: 
+      name: candy-service-config
+  containers:
+  - image: linuxacademycontent/candy-service:1
+    name: candy
+    env:
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: db-password
+          key: password
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 250m
+        memory: 64Mi
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/candy-service
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  serviceAccountName: candy-svc
+EOF
+----
+
+[source, yaml]
+.*6. 创建 candy 服务*
+----
+kubectl create -f candy.yaml 
+----
+
+[source, yaml]
+.*7. 部署验证*
+----
+kubectl get pods
+
+kubectl exec candy -- cat /etc/candy-service/candy.cfg
+
+kubectl exec candy -- env | grep DB_PASSWORD
+
+kubectl exec candy -- id
+
+kubectl describe pod candy
+----
+
+[source, yaml]
+.*7. Clean up*
+----
+kubectl delete pod candy
+kubectl delete cm candy-service-config
+kubectl delete secret db-password
+kubectl delete sa candy-svc
+----
+
 == Multi-Container Pods
 
 === Multi-Container 三种设计模式
@@ -911,6 +1059,45 @@ kubectl get pod serviceaccount-pod  -o yaml
 * *Adapter* - 定制主容器的输出
 
 === HAproxy Ambassador 模式 - HAproxy 容器位于 SVC 容器之前
+
+遗留下来的 fruit-service 只能提供 8775 端口，但是需要通过 80 端口访问服务，本部分使用多容器 Ambassador 模式，HAproxy 容器位于 SVC 容器之前，通过 80 端口提供服务，流量经 HAproxy 容器 80 端口到 fruit-service 8775 端口，具体要求如下：
+
+* POD 名称为 fruit-service
+* POD 中名为 fruit-service 的容器使用镜像为：linuxacademycontent/legacy-fruit-service:1
+* Ambassador HAproxy 容器使用的镜像为 haproxy:1.7，代理在80 端口接收请求转发到后台 8775，具体参照如下 HAProxy 配置文件
+
+[source, yaml]
+----
+global
+    daemon
+    maxconn 256
+
+defaults
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+listen http-in
+    bind *:80
+    server server1 127.0.0.1:8775 maxconn 32
+----
+
+* HAProxy 配置文件需要通过 ConfigMap 传递，HAProxy 容器运行需要配置文件的路径为 /usr/local/etc/haproxy/haproxy.cfg
+* busybox POD用来测试，yaml 文件如下
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  containers:
+  - name: myapp-container
+    image: radial/busyboxplus:curl
+    command: ['sh', '-c', 'while true; do sleep 3600; done']
+----
 
 [source, yaml]
 .*1. 创建 HAProxy 配置文件*
@@ -1226,6 +1413,32 @@ kubectl run busybox --image=busybox --generator=run-pod/v1 --command -- sh -c "i
 kubectl logs -f busybox
 ----
 
+=== 检测应用是否重启，以及应用是否就绪
+
+* 容器中应用通常会有错导致服务异常误，但错误不会导致容器停止或 Crash（Kubernets 本身不会感知到容器发生异常），需要配置 livenessProbe 来确定是否需要重启容器
+* 容器启动过程，一些用户的请求会无法及时响应，通过 readinessProbe 来确保容器就绪
+
+[source, bash]
+.*示例*
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: candy-service
+spec:
+  containers:
+  - name: candy-service
+    image: linuxacademycontent/candy-service:2
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+----
+
 === 安装 Metrics Server
 
 [source, bash]
@@ -1344,6 +1557,161 @@ kubectl rollout history deployment/rolling-deployment
 kubectl rollout history deployment/rolling-deployment --revision=2
 
 kubectl rollout undo deployment/rolling-deployment
+----
+
+=== 滚动升级，版本回滚
+
+[source, yaml]
+.*1. 部署 nginx*
+----
+// yaml
+cat <<EOF > ./deployment-nginx.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx:1.7.8
+        name: nginx
+EOF
+
+// create
+kubectl create -f deployment-nginx.yaml 
+----
+
+[source, yaml]
+.*2. 升级*
+----
+kubectl set image deployments/nginx nginx=nginx:1.7.9  --record
+----
+
+[source, yaml]
+.*3. 查看滚动升级状态*
+----
+kubectl rollout status deployments/nginx
+----
+
+[source, yaml]
+.*4. 查看滚动升级历史*
+----
+kubectl rollout history deployments/nginx
+----
+
+[source, yaml]
+.*5. 回滚*
+----
+kubectl rollout undo deployments/nginx
+----
+
+=== 部署 StatefulSet， 使用 nginx 镜像，POD 副本数为 3
+
+[source, yaml]
+.*1. 创建 PersistentVolume*
+----
+// yaml
+cat <<EOF > ./my-storage.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: statefulsets-volume
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: my-storage-class
+  hostPath:
+    path: /tmp/statefulsets
+EOF
+
+// create
+kubectl create -f my-storage.yaml 
+----
+
+[source, yaml]
+.*2. 创建 Headless Service*
+----
+// yaml
+cat <<EOF > ./my-headless-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+EOF
+
+// create 
+kubectl create -f my-headless-svc.yaml 
+----
+
+[source, yaml]
+.*3. 创建 StatefulSet*
+----
+// yaml
+cat <<EOF > ./my-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: nginx # has to match .spec.template.metadata.labels
+  serviceName: "nginx"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: nginx
+        image: k8s.gcr.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: 1Gi
+EOF
+
+// create
+kubectl create -f my-statefulset.yaml 
 ----
 
 === Jobs 和 CronJobs 比较
