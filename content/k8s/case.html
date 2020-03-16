@@ -61,7 +61,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="admin.html" />
+    <link rel="next" href="net.html" />
     
     
     <link rel="prev" href="install.html" />
@@ -1397,7 +1397,7 @@
                 <a href="./">
             
                     
-                    Kubernetes
+                    KUBERNETES
             
                 </a>
             
@@ -1432,7 +1432,33 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.3" data-path="admin.html">
+        <li class="chapter " data-level="1.5.3" data-path="net.html">
+            
+                <a href="net.html">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="dev.html">
+            
+                <a href="dev.html">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="admin.html">
             
                 <a href="admin.html">
             
@@ -1953,996 +1979,640 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x57FA;&#x672C;&#x6982;&#x5FF5;">&#x57FA;&#x672C;&#x6982;&#x5FF5;</h1>
+                                <h1 id="&#x6982;&#x5FF5;">&#x6982;&#x5FF5;</h1>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__">&#x57FA;&#x7840;</a>
+<li><a href="#__">&#x5E38;&#x7528;&#x547D;&#x4EE4;</a></li>
+<li><a href="#___2">&#x5BB9;&#x5668;&#x7C7B;&#x578B;</a>
 <ul class="sectlevel2">
-<li><a href="#_creating_a_cluster">Creating a Cluster</a></li>
-<li><a href="#_deploy_an_app">Deploy an App</a></li>
-<li><a href="#_exploring_your_app">Exploring Your App</a></li>
-<li><a href="#_exposing_your_app">Exposing Your App</a></li>
-<li><a href="#_scaling_your_app">Scaling Your App</a></li>
-<li><a href="#_updating_your_app">Updating Your App</a></li>
+<li><a href="#_init_containers">Init Containers</a></li>
+<li><a href="#_static_pod">Static Pod</a></li>
+<li><a href="#_pod">Pod &#x4E2D;&#x591A;&#x4E2A;&#x5BB9;&#x5668;</a></li>
 </ul>
 </li>
-<li><a href="#_configmap">ConfigMap</a></li>
-<li><a href="#___2">&#x65E0;&#x72B6;&#x6001;&#x5E94;&#x7528;</a>
+<li><a href="#___3">&#x4EB2;&#x548C;&#x6027;&#x7B56;&#x7565;</a>
 <ul class="sectlevel2">
-<li><a href="#_external_load_balancer">External Load Balancer</a></li>
-<li><a href="#_guestbook">Guestbook &#x793A;&#x4F8B;</a></li>
-</ul>
-</li>
-<li><a href="#___3">&#x6709;&#x72B6;&#x6001;&#x5E94;&#x7528;</a>
-<ul class="sectlevel2">
-<li><a href="#___4">&#x57FA;&#x672C;&#x6982;&#x5FF5;</a></li>
+<li><a href="#_nodeselector">nodeSelector</a></li>
+<li><a href="#_node_affinity">Node affinity</a></li>
+<li><a href="#_pod_affinity">Pod affinity</a></li>
+<li><a href="#_nodename">nodeName</a></li>
+<li><a href="#_daemonset">DaemonSet</a></li>
+<li><a href="#_tolerations">Tolerations</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<div id="preamble">
+<div class="sect1">
+<h2 id="__">&#x5E38;&#x7528;&#x547D;&#x4EE4;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>&#x672C;&#x90E8;&#x5206;&#x6765;&#x81EA; <a href="https://kubernetes.io/docs/tutorials/" class="bare" target="_blank">https://kubernetes.io/docs/tutorials/</a> &#x90E8;&#x5206;&#x4E2D;&#x5B9E;&#x9A8C;&#x7684;&#x4E00;&#x4E9B;&#x8BB0;&#x5F55;&#x3002;</p>
+<p>&#x672C;&#x90E8;&#x5206;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x793A;&#x4F8B;&#x5C55;&#x793A; K8S &#x7684;&#x57FA;&#x672C;&#x64CD;&#x4F5C;&#xFF0C;&#x5177;&#x4F53;&#x5305;&#x62EC;&#xFF1A;&#x521B;&#x5EFA;&#x96C6;&#x7FA4;&#x3001;&#x90E8;&#x7F72;&#x5E94;&#x7528;&#x3001;&#x5916;&#x90E8;&#x8BBF;&#x95EE;&#x5E94;&#x7528;&#x3001;&#x6269;&#x5C55;&#x5E94;&#x7528;&#x3001;&#x5347;&#x7EA7;&#x5E94;&#x7528;&#x7B49;&#x3002;</p>
 </div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x7F16;&#x53F7;</th>
+<th class="tableblock halign-left valign-top">&#x547D;&#x4EE4;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x96C6;&#x7FA4;&#x7248;&#x672C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl version
+kubectl version --short</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x96C6;&#x7FA4;&#x8BE6;&#x60C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl cluster-info
+kubectl cluster-info dump</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get nodes
+kubectl get nodes -o wide
+kubectl get nodes -o wide --show-labels</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get pods
+kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces -o wide
+kubectl get pods --all-namespaces --show-labels</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x521B;&#x5EFA; Deployment</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl create deployment helloworld --image=gcr.io/google-samples/kubernetes-bootcamp:v1</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x6240;&#x6709;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get all</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x542F;&#x7528; Proxy</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl proxy
+Starting to serve on 127.0.0.1:8001
+
+curl http://127.0.0.1:8001/version
+curl http://127.0.0.1:8001/api/v1/namespaces/default/pods/<span class="hljs-variable">$POD_NAME</span></code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B; Pod &#x65E5;&#x5FD7;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl logs helloworld-7bf845589-mb92f</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x5728; Pod &#x4E2D;&#x6267;&#x884C;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl <span class="hljs-built_in">exec</span> helloworld-7bf845589-mb92f env
+kubectl <span class="hljs-built_in">exec</span> helloworld-7bf845589-mb92f ip a
+kubectl <span class="hljs-built_in">exec</span> helloworld-7bf845589-mb92f hostname
+kubectl <span class="hljs-built_in">exec</span> helloworld-7bf845589-mb92f curl http://127.0.0.1:8080
+
+kubectl <span class="hljs-built_in">exec</span> -it helloworld-7bf845589-mb92f bash</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get svc</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>NodePort &#x66B4;&#x9732;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl expose deployment helloworld --type=<span class="hljs-string">&apos;NodePort&apos;</span> --port=8080
+
+curl http://192.168.100.101:31012</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>kubectl describe</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl describe deployment helloworld
+kubectl describe pod/helloworld-7bf845589-mb92f
+kubectl describe service/helloworld
+kubectl describe replicaset helloworld-7bf845589</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>Pod &#x4E0E;&#x6807;&#x7B7E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get pod --show-labels
+kubectl get pod helloworld-7bf845589-mb92f --show-labels
+kubectl label pod helloworld-7bf845589-mb92f tester=kylin
+kubectl get pods <span class="hljs-_">-l</span> tester=kylin
+kubectl label pod helloworld-7bf845589-mb92f tester-</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B; replicaset</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get rs</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x6269;&#x5C55; Deployment</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl scale deployment/helloworld --replicas=4</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x6EDA;&#x52A8;&#x5347;&#x7EA7;: &#x9ED8;&#x8BA4;&#x90E8;&#x7F72;&#x7B56;&#x7565;&#x4E3A; RollingUpdate</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl <span class="hljs-built_in">set</span> image deployments/helloworld kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v2
+
+kubectl rollout status deployments/helloworld</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x56DE;&#x6EDA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl rollout undo deployment/helloworld
+kubectl rollout <span class="hljs-built_in">history</span> deployments/helloworld</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">18</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x5220;&#x9664;&#x6240;&#x6709;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl delete all --all</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="__">&#x57FA;&#x7840;</h2>
+<h2 id="___2">&#x5BB9;&#x5668;&#x7C7B;&#x578B;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_creating_a_cluster">Creating a Cluster</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> view the version
-<span class="hljs-comment"># kubectl version</span>
-Client Version: version.Info{Major:<span class="hljs-string">&quot;1&quot;</span>, Minor:<span class="hljs-string">&quot;17&quot;</span>, GitVersion:<span class="hljs-string">&quot;v1.17.3&quot;</span>, GitCommit:<span class="hljs-string">&quot;06ad960bfd03b39c8310aaf92d1e7c12ce618213&quot;</span>, GitTreeState:<span class="hljs-string">&quot;clean&quot;</span>, BuildDate:<span class="hljs-string">&quot;2020-02-11T18:14:22Z&quot;</span>, GoVersion:<span class="hljs-string">&quot;go1.13.6&quot;</span>, Compiler:<span class="hljs-string">&quot;gc&quot;</span>, Platform:<span class="hljs-string">&quot;linux/amd64&quot;</span>}
-Server Version: version.Info{Major:<span class="hljs-string">&quot;1&quot;</span>, Minor:<span class="hljs-string">&quot;17&quot;</span>, GitVersion:<span class="hljs-string">&quot;v1.17.3&quot;</span>, GitCommit:<span class="hljs-string">&quot;06ad960bfd03b39c8310aaf92d1e7c12ce618213&quot;</span>, GitTreeState:<span class="hljs-string">&quot;clean&quot;</span>, BuildDate:<span class="hljs-string">&quot;2020-02-11T18:07:13Z&quot;</span>, GoVersion:<span class="hljs-string">&quot;go1.13.6&quot;</span>, Compiler:<span class="hljs-string">&quot;gc&quot;</span>, Platform:<span class="hljs-string">&quot;linux/amd64&quot;</span>}
-
-// <span class="hljs-number">2.</span> view the cluster details
-<span class="hljs-comment"># kubectl cluster-info</span>
-Kubernetes master is running at https://control-plane.example.com:<span class="hljs-number">6443</span>
-KubeDNS is running at https://control-plane.example.com:<span class="hljs-number">6443</span>/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-To further debug and diagnose cluster problems, use <span class="hljs-string">&apos;kubectl cluster-info dump&apos;</span>.
-
-
-// <span class="hljs-number">3.</span> view the cluster nodes
-<span class="hljs-comment"># kubectl get nodes</span>
-NAME                    STATUS   ROLES    AGE     VERSION
-machine01.example.com   Ready    master   <span class="hljs-number">4</span>h49m   v1<span class="hljs-number">.17</span><span class="hljs-number">.3</span>
-machine02.example.com   Ready    worker   <span class="hljs-number">137</span>m    v1<span class="hljs-number">.17</span><span class="hljs-number">.3</span>
-machine03.example.com   Ready    worker   <span class="hljs-number">135</span>m    v1<span class="hljs-number">.17</span><span class="hljs-number">.3</span>
-
-// <span class="hljs-number">4.</span> view all pods
-<span class="hljs-comment"># kubectl get pods --all-namespaces</span>
-NAMESPACE     NAME                                            READY   STATUS    RESTARTS   AGE
-kube-system   calico-kube-controllers<span class="hljs-bullet">-5</span>b644bc49c-m6wdh        <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">1</span>          <span class="hljs-number">4</span>h43m
-kube-system   calico-node<span class="hljs-bullet">-5</span>nqz7                               <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">1</span>          <span class="hljs-number">4</span>h43m
-kube-system   calico-node-tmnvm                               <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">140</span>m
-kube-system   calico-node-wcjhn                               <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">141</span>m
-kube-system   coredns<span class="hljs-bullet">-6955765</span>f44-f4wxq                        <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">1</span>          <span class="hljs-number">4</span>h53m
-kube-system   coredns<span class="hljs-bullet">-6955765</span>f44-rfdzc                        <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">1</span>          <span class="hljs-number">4</span>h53m
-kube-system   etcd-machine01.example.com                      <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">149</span>m
-kube-system   kube-apiserver-machine01.example.com            <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">148</span>m
-kube-system   kube-controller-manager-machine01.example.com   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">4</span>          <span class="hljs-number">4</span>h53m
-kube-system   kube-proxy-ghm6k                                <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">1</span>          <span class="hljs-number">4</span>h53m
-kube-system   kube-proxy-k5prs                                <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">141</span>m
-kube-system   kube-proxy-ntbst                                <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">140</span>m
-kube-system   kube-scheduler-machine01.example.com            <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">4</span>          <span class="hljs-number">4</span>h53m</code></pre>
+<h3 id="_init_containers">Init Containers</h3>
+<div class="paragraph">
+<p>Init Containers &#x662F; APP Containers &#x542F;&#x52A8;&#x4E4B;&#x524D;&#x8FD0;&#x884C;&#x7684;&#x5BB9;&#x5668;&#xFF0C;&#x7279;&#x70B9;&#xFF1A;</p>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_deploy_an_app">Deploy an App</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create deployment
-<span class="hljs-comment"># kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1</span>
-
-// <span class="hljs-number">2.</span> get all items in default namespaces
-<span class="hljs-comment"># kubectl get all</span>
-NAME                                       READY   STATUS    RESTARTS   AGE
-pod/kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">37</span>s
-
-NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-service/kubernetes   ClusterIP   <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>    &lt;none&gt;        <span class="hljs-number">443</span>/TCP   <span class="hljs-number">5</span>h11m
-
-NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/kubernetes-bootcamp   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     <span class="hljs-number">1</span>            <span class="hljs-number">1</span>           <span class="hljs-number">37</span>s
-
-NAME                                             DESIRED   CURRENT   READY   AGE
-replicaset.apps/kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf   <span class="hljs-number">1</span>         <span class="hljs-number">1</span>         <span class="hljs-number">1</span>       <span class="hljs-number">37</span>s
-
-// <span class="hljs-number">3.</span> start a proxy
-kubectl proxy
-
-// <span class="hljs-number">4.</span> view API version
-<span class="hljs-comment"># curl http://127.0.0.1:8001/version</span>
-{
-<span class="hljs-attr">  &quot;major&quot;:</span> <span class="hljs-string">&quot;1&quot;</span>,
-<span class="hljs-attr">  &quot;minor&quot;:</span> <span class="hljs-string">&quot;17&quot;</span>,
-<span class="hljs-attr">  &quot;gitVersion&quot;:</span> <span class="hljs-string">&quot;v1.17.3&quot;</span>,
-<span class="hljs-attr">  &quot;gitCommit&quot;:</span> <span class="hljs-string">&quot;06ad960bfd03b39c8310aaf92d1e7c12ce618213&quot;</span>,
-<span class="hljs-attr">  &quot;gitTreeState&quot;:</span> <span class="hljs-string">&quot;clean&quot;</span>,
-<span class="hljs-attr">  &quot;buildDate&quot;:</span> <span class="hljs-string">&quot;2020-02-11T18:07:13Z&quot;</span>,
-<span class="hljs-attr">  &quot;goVersion&quot;:</span> <span class="hljs-string">&quot;go1.13.6&quot;</span>,
-<span class="hljs-attr">  &quot;compiler&quot;:</span> <span class="hljs-string">&quot;gc&quot;</span>,
-<span class="hljs-attr">  &quot;platform&quot;:</span> <span class="hljs-string">&quot;linux/amd64&quot;</span>
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_exploring_your_app">Exploring Your App</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> view pod
-<span class="hljs-comment"># kubectl get pods</span>
-NAME                                   READY   STATUS    RESTARTS   AGE
-kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">34</span>m
-
-// <span class="hljs-number">2.</span> view the details inside pod
-<span class="hljs-comment"># kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7q</span>
-
-// <span class="hljs-number">3.</span> view application via proxy
-kubectl proxy
-
-curl http://localhost:<span class="hljs-number">8001</span>/api/v1/namespaces/default/pods/$POD_NAME/proxy/
-
-// <span class="hljs-number">4.</span> view the pod logs
-<span class="hljs-comment"># kubectl logs $POD_NAME</span>
-Kubernetes Bootcamp App Started At: <span class="hljs-number">2020</span><span class="hljs-bullet">-02</span><span class="hljs-bullet">-19</span>T12:<span class="hljs-number">31</span>:<span class="hljs-number">07.245</span>Z | Running On:  kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz
-
-// <span class="hljs-number">5.</span> exec the command inside pod
-kubectl exec $POD_NAME env
-kubectl exec $POD_NAME ip a
-kubectl exec $POD_NAME hostname
-
-// <span class="hljs-number">6.</span> start a bash session
-kubectl exec -ti $POD_NAME bash
-root@kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz:/<span class="hljs-comment"># cat server.js</span>
-var http = require(<span class="hljs-string">&apos;http&apos;</span>);
-var requests=<span class="hljs-number">0</span>;
-var podname= process.env.HOSTNAME;
-var startTime;
-var host;
-var handleRequest = function(request, response) {
-  response.setHeader(<span class="hljs-string">&apos;Content-Type&apos;</span>, <span class="hljs-string">&apos;text/plain&apos;</span>);
-  response.writeHead(<span class="hljs-number">200</span>);
-  response.write(<span class="hljs-string">&quot;Hello Kubernetes bootcamp! | Running on: &quot;</span>);
-  response.write(host);
-  response.end(<span class="hljs-string">&quot; | v=1\n&quot;</span>);
-  console.log(<span class="hljs-string">&quot;Running On:&quot;</span> ,host, <span class="hljs-string">&quot;| Total Requests:&quot;</span>, ++requests,<span class="hljs-string">&quot;| App Uptime:&quot;</span>, (new Date() - startTime)/<span class="hljs-number">1000</span> , <span class="hljs-string">&quot;seconds&quot;</span>, <span class="hljs-string">&quot;| Log Time:&quot;</span>,new Date());
-}
-var www = http.createServer(handleRequest);
-www.listen(<span class="hljs-number">8080</span>,function () {
-    startTime = new Date();;
-    host = process.env.HOSTNAME;
-    console.log (<span class="hljs-string">&quot;Kubernetes Bootcamp App Started At:&quot;</span>,startTime, <span class="hljs-string">&quot;| Running On: &quot;</span> ,host, <span class="hljs-string">&quot;\n&quot;</span> );
-});
-
-<span class="hljs-comment"># curl http://127.0.0.1:8080</span>
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz | v=<span class="hljs-number">1</span></code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_exposing_your_app">Exposing Your App</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> view service(Cluster IP only can be view internally
-<span class="hljs-comment"># kubectl get services</span>
-NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   ClusterIP   <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>    &lt;none&gt;        <span class="hljs-number">443</span>/TCP   <span class="hljs-number">6</span>h20m
-
-// <span class="hljs-number">2.</span> expose service to external
-kubectl expose deployment/kubernetes-bootcamp --type=<span class="hljs-string">&quot;NodePort&quot;</span> --port <span class="hljs-number">8080</span>
-
-// <span class="hljs-number">3.</span> view services again
-<span class="hljs-comment"># kubectl get services</span>
-NAME                  TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
-kubernetes            ClusterIP   <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>     &lt;none&gt;        <span class="hljs-number">443</span>/TCP          <span class="hljs-number">6</span>h22m
-kubernetes-bootcamp   NodePort    <span class="hljs-number">10.102</span><span class="hljs-number">.1</span><span class="hljs-number">.85</span>   &lt;none&gt;        <span class="hljs-number">8080</span>:<span class="hljs-number">32437</span>/TCP   <span class="hljs-number">44</span>s
-
-// <span class="hljs-number">4.</span> view the details of service
-<span class="hljs-comment"># kubectl describe services/kubernetes-bootcamp</span>
-<span class="hljs-attr">Name:</span>                     kubernetes-bootcamp
-<span class="hljs-attr">Namespace:</span>                default
-<span class="hljs-attr">Labels:</span>                   app=kubernetes-bootcamp
-<span class="hljs-attr">Annotations:</span>              &lt;none<span class="hljs-string">&gt;
-</span><span class="hljs-attr">Selector:</span>                 app=kubernetes-bootcamp
-<span class="hljs-attr">Type:</span>                     NodePort
-<span class="hljs-attr">IP:</span>                       <span class="hljs-number">10.102</span><span class="hljs-number">.1</span><span class="hljs-number">.85</span>
-<span class="hljs-attr">Port:</span>                     &lt;unset&gt;  <span class="hljs-number">8080</span>/TCP
-<span class="hljs-attr">TargetPort:</span>               <span class="hljs-number">8080</span>/TCP
-<span class="hljs-attr">NodePort:</span>                 &lt;unset&gt;  <span class="hljs-number">32437</span>/TCP
-<span class="hljs-attr">Endpoints:</span>                <span class="hljs-number">192.168</span><span class="hljs-number">.208</span><span class="hljs-number">.193</span>:<span class="hljs-number">8080</span>
-Session Affinity:         None
-External Traffic Policy:  Cluster
-<span class="hljs-attr">Events:</span>                   &lt;none<span class="hljs-string">&gt;
-
-// 5. view the service outside cluster
-# kubectl get services/kubernetes-bootcamp -o go-template=&apos;&apos;
-32437
-
-$ curl http://192.168.100.101:32437
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-4g7qz | v=1
-
-// 6. vew deployment
-kubectl describe deployment
-
-// 7. get pod by label filters
-kubectl get pods -l app=kubernetes-bootcamp
-
-// 8. get service by label filters
-kubectl get service -l app=kubernetes-bootcamp
-
-// 9. set a lable to a pod
-kubectl label pod kubernetes-bootcamp-69fbc6f4cf-4g7qz name=ksong
-
-// 10. get pod via new lable
-kubectl get service -l name=ksong
-
-// 11. describe pods
-kubectl describe pod kubernetes-bootcamp-69fbc6f4cf-4g7qz
-
-// 12. delete service
-kubectl delete service -l app=kubernetes-bootcamp</span></code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_scaling_your_app">Scaling Your App</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> view the replicaset
-<span class="hljs-comment"># kubectl get rs</span>
-NAME                             DESIRED   CURRENT   READY   AGE
-kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf   <span class="hljs-number">1</span>         <span class="hljs-number">1</span>         <span class="hljs-number">1</span>       <span class="hljs-number">12</span>h
-
-// <span class="hljs-number">2.</span> scale the app
-kubectl scale deployments/kubernetes-bootcamp --replicas=<span class="hljs-number">4</span>
-
-// <span class="hljs-number">3.</span> view the replicaset
-<span class="hljs-comment"># kubectl get rs</span>
-NAME                             DESIRED   CURRENT   READY   AGE
-kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf   <span class="hljs-number">4</span>         <span class="hljs-number">4</span>         <span class="hljs-number">4</span>       <span class="hljs-number">12</span>h
-
-// <span class="hljs-number">4.</span> view the pods widely
-<span class="hljs-comment"># kubectl get pod -o wide</span>
-NAME                                   READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
-kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">12</span>h   <span class="hljs-number">192.168</span><span class="hljs-number">.208</span><span class="hljs-number">.193</span>   machine03.example.com   &lt;none&gt;           &lt;none<span class="hljs-string">&gt;
-kubernetes-bootcamp-69fbc6f4cf-8jj95   1/1     Running   0          90s   192.168.251.1     machine02.example.com   &lt;none&gt;           &lt;none&gt;
-kubernetes-bootcamp-69fbc6f4cf-d2f2c   1/1     Running   0          90s   192.168.251.2     machine02.example.com   &lt;none&gt;           &lt;none&gt;
-kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Running   0          90s   192.168.208.194   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-
-// 5. view the details of deployment
-kubectl describe deployments/kubernetes-bootcamp
-
-// 6. expose service via NodePort
-kubectl expose deployment/kubernetes-bootcamp --type=&quot;NodePort&quot; --port 8080
-
-// 7. view the details of service
-# kubectl describe services/kubernetes-bootcamp
-</span><span class="hljs-attr">Name:</span>                     kubernetes-bootcamp
-<span class="hljs-attr">Namespace:</span>                default
-<span class="hljs-attr">Labels:</span>                   app=kubernetes-bootcamp
-<span class="hljs-attr">Annotations:</span>              &lt;none<span class="hljs-string">&gt;
-</span><span class="hljs-attr">Selector:</span>                 app=kubernetes-bootcamp
-<span class="hljs-attr">Type:</span>                     NodePort
-<span class="hljs-attr">IP:</span>                       <span class="hljs-number">10.109</span><span class="hljs-number">.10</span><span class="hljs-number">.113</span>
-<span class="hljs-attr">Port:</span>                     &lt;unset&gt;  <span class="hljs-number">8080</span>/TCP
-<span class="hljs-attr">TargetPort:</span>               <span class="hljs-number">8080</span>/TCP
-<span class="hljs-attr">NodePort:</span>                 &lt;unset&gt;  <span class="hljs-number">30811</span>/TCP
-<span class="hljs-attr">Endpoints:</span>                <span class="hljs-number">192.168</span><span class="hljs-number">.208</span><span class="hljs-number">.193</span>:<span class="hljs-number">8080</span>,<span class="hljs-number">192.168</span><span class="hljs-number">.208</span><span class="hljs-number">.194</span>:<span class="hljs-number">8080</span>,<span class="hljs-number">192.168</span><span class="hljs-number">.251</span><span class="hljs-number">.1</span>:<span class="hljs-number">8080</span> + <span class="hljs-number">1</span> more...
-Session Affinity:         None
-External Traffic Policy:  Cluster
-<span class="hljs-attr">Events:</span>                   &lt;none<span class="hljs-string">&gt;
-
-// 8. access the service
-# curl http://control-plane.example.com:30811
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-69fbc6f4cf-kqsvn | v=1
-
-// 9. scale down the service to 2
-kubectl scale deployments/kubernetes-bootcamp --replicas=2
-
-// 10. view the pods widely
-# kubectl get pods -o wide
-NAME                                   READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
-kubernetes-bootcamp-69fbc6f4cf-4g7qz   1/1     Running   0          14h   192.168.208.193   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-kubernetes-bootcamp-69fbc6f4cf-kqsvn   1/1     Running   0          96m   192.168.208.194   machine03.example.com   &lt;none&gt;           &lt;none&gt;</span></code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_updating_your_app">Updating Your App</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> set the image to v2
-kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
-
-// <span class="hljs-number">2.</span> view the upgrade
-<span class="hljs-comment"># kubectl get pods</span>
-NAME                                   READY   STATUS              RESTARTS   AGE
-kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf<span class="hljs-bullet">-4</span>g7qz   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running             <span class="hljs-number">0</span>          <span class="hljs-number">14</span>h
-kubernetes-bootcamp<span class="hljs-bullet">-69</span>fbc6f4cf-kqsvn   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Terminating         <span class="hljs-number">0</span>          <span class="hljs-number">103</span>m
-kubernetes-bootcamp-b4d9f565<span class="hljs-bullet">-4</span>zv7w     <span class="hljs-number">0</span>/<span class="hljs-number">1</span>     ContainerCreating   <span class="hljs-number">0</span>          <span class="hljs-number">1</span>s
-kubernetes-bootcamp-b4d9f565-lrthd     <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running             <span class="hljs-number">0</span>          <span class="hljs-number">17</span>s
-
-// <span class="hljs-number">3.</span> view the details of service
-<span class="hljs-comment"># kubectl describe services/kubernetes-bootcamp</span>
-<span class="hljs-attr">Name:</span>                     kubernetes-bootcamp
-<span class="hljs-attr">Namespace:</span>                default
-<span class="hljs-attr">Labels:</span>                   app=kubernetes-bootcamp
-<span class="hljs-attr">Annotations:</span>              &lt;none<span class="hljs-string">&gt;
-</span><span class="hljs-attr">Selector:</span>                 app=kubernetes-bootcamp
-<span class="hljs-attr">Type:</span>                     NodePort
-<span class="hljs-attr">IP:</span>                       <span class="hljs-number">10.109</span><span class="hljs-number">.10</span><span class="hljs-number">.113</span>
-<span class="hljs-attr">Port:</span>                     &lt;unset&gt;  <span class="hljs-number">8080</span>/TCP
-<span class="hljs-attr">TargetPort:</span>               <span class="hljs-number">8080</span>/TCP
-<span class="hljs-attr">NodePort:</span>                 &lt;unset&gt;  <span class="hljs-number">30811</span>/TCP
-<span class="hljs-attr">Endpoints:</span>                <span class="hljs-number">192.168</span><span class="hljs-number">.208</span><span class="hljs-number">.195</span>:<span class="hljs-number">8080</span>,<span class="hljs-number">192.168</span><span class="hljs-number">.251</span><span class="hljs-number">.3</span>:<span class="hljs-number">8080</span>
-Session Affinity:         None
-External Traffic Policy:  Cluster
-<span class="hljs-attr">Events:</span>                   &lt;none<span class="hljs-string">&gt;
-
-// 4. access the app again
-# curl http://control-plane.example.com:30811
-Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-b4d9f565-lrthd | v=2
-
-// 5. view the images
-# kubectl describe pods | grep Image
-</span><span class="hljs-attr">    Image:</span>          jocatalin/kubernetes-bootcamp:v2
-<span class="hljs-attr">    Image:</span>          jocatalin/kubernetes-bootcamp:v2
-
-// <span class="hljs-number">6.</span> rolling update
-kubectl rollout status deployments/kubernetes-bootcamp
-
-// <span class="hljs-number">7.</span> set to v10
-kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
-
-// <span class="hljs-number">8.</span> roll back the updates
-kubectl rollout undo deployments/kubernetes-bootcamp
-
-// <span class="hljs-number">9.</span> check the images agai
-kubectl describe pods | grep Image
-
-// <span class="hljs-number">10.</span> delete all
-kubectl delete all --all</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_configmap">ConfigMap</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="title"><strong>1. create a redis-config file</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">cat &lt;&lt;EOF &gt; ./redis-config
-maxmemory <span class="hljs-number">2</span>mb
-maxmemory-policy allkeys-lru
-EOF</code></pre>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x4E00;&#x4E2A; POD &#x4E2D;&#x53EF;&#x4EE5;&#x6709;&#x591A;&#x4E2A; Init Containers</p>
+</li>
+<li>
+<p>Init Containers &#x603B;&#x662F;&#x8FD0;&#x884C;&#x7ED3;&#x675F;&#x540E;&#x9000;&#x51FA;</p>
+</li>
+<li>
+<p>&#x6BCF;&#x4E00;&#x4E2A; init container &#x5FC5;&#x9700;&#x8FD0;&#x884C;&#x6210;&#x529F;&#x9000;&#x51FA;&#x540E;&#xFF0C;&#x4E0B;&#x4E00;&#x4E2A; container &#x624D;&#x53EF;&#x4EE5;&#x8FD0;&#x884C;</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2. create a pod yaml file</strong></div>
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">cat &lt;&lt;EOF &gt; ./pod.yaml
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> pod yaml
+cat &lt;&lt;EOF &gt; ./pod-init.yaml
 <span class="hljs-attr">apiVersion:</span> v1
 <span class="hljs-attr">kind:</span> Pod
 <span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> redis
+<span class="hljs-attr">  name:</span> myapp-pod
+<span class="hljs-attr">  labels:</span>
+<span class="hljs-attr">    app:</span> myapp
 <span class="hljs-attr">spec:</span>
 <span class="hljs-attr">  containers:</span>
-<span class="hljs-attr">  - name:</span> redis
-<span class="hljs-attr">    image:</span> redis:<span class="hljs-number">5.0</span><span class="hljs-number">.4</span>
-<span class="hljs-attr">    command:</span>
-<span class="hljs-bullet">      -</span> redis-server
-<span class="hljs-bullet">      -</span> <span class="hljs-string">&quot;/redis-master/redis.conf&quot;</span>
-<span class="hljs-attr">    env:</span>
-<span class="hljs-attr">    - name:</span> MASTER
-<span class="hljs-attr">      value:</span> <span class="hljs-string">&quot;true&quot;</span>
-<span class="hljs-attr">    ports:</span>
-<span class="hljs-attr">    - containerPort:</span> <span class="hljs-number">6379</span>
-<span class="hljs-attr">    resources:</span>
-<span class="hljs-attr">      limits:</span>
-<span class="hljs-attr">        cpu:</span> <span class="hljs-string">&quot;0.1&quot;</span>
-<span class="hljs-attr">    volumeMounts:</span>
-<span class="hljs-attr">    - mountPath:</span> /redis-master-data
-<span class="hljs-attr">      name:</span> data
-<span class="hljs-attr">    - mountPath:</span> /redis-master
-<span class="hljs-attr">      name:</span> config
-<span class="hljs-attr">  volumes:</span>
-<span class="hljs-attr">    - name:</span> data
-<span class="hljs-attr">      emptyDir:</span> {}
-<span class="hljs-attr">    - name:</span> config
-<span class="hljs-attr">      configMap:</span>
-<span class="hljs-attr">        name:</span> example-redis-config
-<span class="hljs-attr">        items:</span>
-<span class="hljs-attr">        - key:</span> redis-config
-<span class="hljs-attr">          path:</span> redis.conf
-EOF</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3. create a kustomization.yaml file</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">cat &lt;&lt;EOF &gt; ./kustomization.yaml
-<span class="hljs-attr">configMapGenerator:</span>
-<span class="hljs-attr">- name:</span> example-redis-config
-<span class="hljs-attr">  files:</span>
-<span class="hljs-bullet">  -</span> redis-config
-<span class="hljs-attr">resources:</span>
-<span class="hljs-bullet">-</span> pod.yaml
-EOF</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4. Deploy</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl apply -k .</span>
-configmap/example-redis-config-dgh9dg555m created
-pod/redis created</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5. view the deployments</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get all</span>
-NAME        READY   STATUS    RESTARTS   AGE
-pod/redis   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">61</span>s
+<span class="hljs-attr">  - name:</span> myapp-container
+<span class="hljs-attr">    image:</span> busybox:<span class="hljs-number">1.28</span>
+<span class="hljs-attr">    command:</span> [<span class="hljs-string">&apos;sh&apos;</span>, <span class="hljs-string">&apos;-c&apos;</span>, <span class="hljs-string">&apos;echo The app is running! &amp;&amp; sleep 3600&apos;</span>]
+<span class="hljs-attr">  initContainers:</span>
+<span class="hljs-attr">  - name:</span> init-myservice
+<span class="hljs-attr">    image:</span> busybox:<span class="hljs-number">1.28</span>
+<span class="hljs-attr">    command:</span> [<span class="hljs-string">&apos;sh&apos;</span>, <span class="hljs-string">&apos;-c&apos;</span>, <span class="hljs-string">&apos;until nslookup myservice; do echo waiting for myservice; sleep 2; done;&apos;</span>]
+<span class="hljs-attr">  - name:</span> init-mydb
+<span class="hljs-attr">    image:</span> busybox:<span class="hljs-number">1.28</span>
+<span class="hljs-attr">    command:</span> [<span class="hljs-string">&apos;sh&apos;</span>, <span class="hljs-string">&apos;-c&apos;</span>, <span class="hljs-string">&apos;until nslookup mydb; do echo waiting for mydb; sleep 2; done;&apos;</span>]
+EOF
 
-NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-service/kubernetes   ClusterIP   <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>    &lt;none&gt;        <span class="hljs-number">443</span>/TCP   <span class="hljs-number">39</span>m</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>6. test the services</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl exec -it redis redis-cli</span>
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; CONFIG GET maxmemory
-<span class="hljs-number">1</span>) <span class="hljs-string">&quot;maxmemory&quot;</span>
-<span class="hljs-number">2</span>) <span class="hljs-string">&quot;2097152&quot;</span>
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; CONFIG GET maxmemory-policy
-<span class="hljs-number">1</span>) <span class="hljs-string">&quot;maxmemory-policy&quot;</span>
-<span class="hljs-number">2</span>) <span class="hljs-string">&quot;allkeys-lru&quot;</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>7. clean up</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl delete all --all</span>
-pod <span class="hljs-string">&quot;redis&quot;</span> deleted
-service <span class="hljs-string">&quot;kubernetes&quot;</span> deleted</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="___2">&#x65E0;&#x72B6;&#x6001;&#x5E94;&#x7528;</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_external_load_balancer">External Load Balancer</h3>
-<div class="listingblock">
-<div class="title"><strong>1. create a deployment.yaml</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">cat &lt;&lt;EOF &gt; ./deployment.yaml
-<span class="hljs-attr">apiVersion:</span> apps/v1
-<span class="hljs-attr">kind:</span> Deployment
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  labels:</span>
-    app.kubernetes.io/name: load-balancer-example
-<span class="hljs-attr">  name:</span> hello-world
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  replicas:</span> <span class="hljs-number">5</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    matchLabels:</span>
-      app.kubernetes.io/name: load-balancer-example
-<span class="hljs-attr">  template:</span>
-<span class="hljs-attr">    metadata:</span>
-<span class="hljs-attr">      labels:</span>
-        app.kubernetes.io/name: load-balancer-example
-<span class="hljs-attr">    spec:</span>
-<span class="hljs-attr">      containers:</span>
-<span class="hljs-attr">      - image:</span> gcr.io/google-samples/node-hello:<span class="hljs-number">1.0</span>
-<span class="hljs-attr">        name:</span> hello-world
-<span class="hljs-attr">        ports:</span>
-<span class="hljs-attr">        - containerPort:</span> <span class="hljs-number">8080</span>
-EOF</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. deploy</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl apply -f deployment.yaml</span>
-deployment.apps/hello-world created</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3. view the deployment details</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// view all
-kubectl get all
+// <span class="hljs-number">2.</span> create pod
+kubectl create -f pod-init.yaml
 
-// view the details of Deployment
-kubectl describe deployment.apps/hello-world
+// <span class="hljs-number">3.</span> get pods
+<span class="hljs-comment"># kubectl get pods --no-headers</span>
+myapp-pod   <span class="hljs-number">0</span>/<span class="hljs-number">1</span>   Init:<span class="hljs-number">0</span>/<span class="hljs-number">2</span>   <span class="hljs-number">0</span>     <span class="hljs-number">44</span>s
 
-// view the details of ReplicaSet
-kubectl describe  replicaset.apps/hello-world-f9b447754
+// <span class="hljs-number">4.</span> get pod details
+kubectl describe pod myapp-pod
 
-// view the pods distribution
-<span class="hljs-comment"># kubectl get pods -o wide</span>
-NAME                          READY   STATUS    RESTARTS   AGE     IP                NODE                    NOMINATED NODE   READINESS GATES
-hello-world-f9b447754<span class="hljs-bullet">-4</span>cqrn   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">4</span>m37s   <span class="hljs-number">192.168</span><span class="hljs-number">.251</span><span class="hljs-number">.5</span>     machine02.example.com   &lt;none&gt;           &lt;none<span class="hljs-string">&gt;
-hello-world-f9b447754-cvhgm   1/1     Running   0          4m37s   192.168.251.6     machine02.example.com   &lt;none&gt;           &lt;none&gt;
-hello-world-f9b447754-cxwm6   1/1     Running   0          4m37s   192.168.208.199   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-hello-world-f9b447754-tvq9v   1/1     Running   0          4m37s   192.168.208.198   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-hello-world-f9b447754-v85fw   1/1     Running   0          4m37s   192.168.208.197   machine03.example.com   &lt;none&gt;           &lt;none&gt;</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4. Create LB Service</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// create
-kubectl expose deployment hello-world --type=LoadBalancer --name=my-service
-
-// view service
-<span class="hljs-comment"># kubectl get services my-service</span>
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-my-service   LoadBalancer   <span class="hljs-number">10.100</span><span class="hljs-number">.32</span><span class="hljs-number">.120</span>   &lt;pending&gt;     <span class="hljs-number">8080</span>:<span class="hljs-number">31059</span>/TCP   <span class="hljs-number">7</span>m8s</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5. edit service, add a external IP(external lb), the externalIPs is added</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl edit service/my-service</span>
+// <span class="hljs-number">5.</span> create svc <span class="hljs-number">1</span>
+cat &lt;&lt;EOF &gt; ./svc<span class="hljs-bullet">-1.</span>yaml
 <span class="hljs-attr">apiVersion:</span> v1
 <span class="hljs-attr">kind:</span> Service
 <span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-string">&quot;2020-02-20T08:53:43Z&quot;</span>
-<span class="hljs-attr">  labels:</span>
-    app.kubernetes.io/name: load-balancer-example
-<span class="hljs-attr">  name:</span> my-service
-<span class="hljs-attr">  namespace:</span> default
-<span class="hljs-attr">  resourceVersion:</span> <span class="hljs-string">&quot;185225&quot;</span>
-<span class="hljs-attr">  selfLink:</span> /api/v1/namespaces/default/services/my-service
-<span class="hljs-attr">  uid:</span> <span class="hljs-number">6667</span>dd2b<span class="hljs-bullet">-9</span>ebb<span class="hljs-bullet">-499</span>f-b202-b0539d75df1a
+<span class="hljs-attr">  name:</span> myservice
 <span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  clusterIP:</span> <span class="hljs-number">10.100</span><span class="hljs-number">.32</span><span class="hljs-number">.120</span>
-<span class="hljs-attr">  externalTrafficPolicy:</span> Cluster
 <span class="hljs-attr">  ports:</span>
-<span class="hljs-attr">  - nodePort:</span> <span class="hljs-number">31059</span>
-<span class="hljs-attr">    port:</span> <span class="hljs-number">8080</span>
-<span class="hljs-attr">    protocol:</span> TCP
-<span class="hljs-attr">    targetPort:</span> <span class="hljs-number">8080</span>
-<span class="hljs-attr">  selector:</span>
-    app.kubernetes.io/name: load-balancer-example
-<span class="hljs-attr">  sessionAffinity:</span> None
-<span class="hljs-attr">  type:</span> LoadBalancer
-<span class="hljs-attr">  externalIPs:</span>
-<span class="hljs-bullet">  -</span> <span class="hljs-number">192.168</span><span class="hljs-number">.100</span><span class="hljs-number">.102</span>
-<span class="hljs-attr">status:</span>
-<span class="hljs-attr">  loadBalancer:</span> {}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5. view the services</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get svc my-service</span>
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
-my-service   LoadBalancer   <span class="hljs-number">10.100</span><span class="hljs-number">.32</span><span class="hljs-number">.120</span>   <span class="hljs-number">192.168</span><span class="hljs-number">.100</span><span class="hljs-number">.102</span>   <span class="hljs-number">8080</span>:<span class="hljs-number">31059</span>/TCP   <span class="hljs-number">14</span>m</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>6. access the application</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># curl http://192.168.100.102:8080</span>
-Hello Kubernetes!</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>7. clean up</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl delete all --all</code></pre>
+<span class="hljs-attr">  - protocol:</span> TCP
+<span class="hljs-attr">    port:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">    targetPort:</span> <span class="hljs-number">9376</span>
+EOF
+
+kubectl create -f svc<span class="hljs-bullet">-1.</span>yaml
+
+// <span class="hljs-number">6.</span> get pods
+<span class="hljs-comment"># kubectl get pods --no-headers</span>
+myapp-pod   <span class="hljs-number">0</span>/<span class="hljs-number">1</span>   Init:<span class="hljs-number">1</span>/<span class="hljs-number">2</span>   <span class="hljs-number">0</span>     <span class="hljs-number">7</span>m10s
+
+// <span class="hljs-number">7.</span> create svc2
+cat &lt;&lt;EOF &gt; ./svc<span class="hljs-bullet">-2.</span>yaml
+<span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> Service
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  name:</span> mydb
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  ports:</span>
+<span class="hljs-attr">  - protocol:</span> TCP
+<span class="hljs-attr">    port:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">    targetPort:</span> <span class="hljs-number">9377</span>
+EOF
+
+kubectl create -f svc<span class="hljs-bullet">-2.</span>yaml
+
+// <span class="hljs-number">8.</span> get pods
+<span class="hljs-comment"># kubectl get pods --no-headers</span>
+myapp-pod   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>     <span class="hljs-number">9</span>m27s</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_guestbook">Guestbook &#x793A;&#x4F8B;</h3>
+<h3 id="_static_pod">Static Pod</h3>
 <div class="listingblock">
-<div class="title"><strong>1. &#x90E8;&#x7F72; Redis Master</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the deployment yaml
-cat &lt;&lt;EOF &gt; ./redis-master-deployment.yaml
-<span class="hljs-attr">apiVersion:</span> apps/v1 <span class="hljs-comment"># for versions before 1.9.0 use apps/v1beta2</span>
-<span class="hljs-attr">kind:</span> Deployment
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> redis-master
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> redis
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    matchLabels:</span>
-<span class="hljs-attr">      app:</span> redis
-<span class="hljs-attr">      role:</span> master
-<span class="hljs-attr">      tier:</span> backend
-<span class="hljs-attr">  replicas:</span> <span class="hljs-number">1</span>
-<span class="hljs-attr">  template:</span>
-<span class="hljs-attr">    metadata:</span>
-<span class="hljs-attr">      labels:</span>
-<span class="hljs-attr">        app:</span> redis
-<span class="hljs-attr">        role:</span> master
-<span class="hljs-attr">        tier:</span> backend
-<span class="hljs-attr">    spec:</span>
-<span class="hljs-attr">      containers:</span>
-<span class="hljs-attr">      - name:</span> master
-<span class="hljs-attr">        image:</span> k8s.gcr.io/redis:e2e  <span class="hljs-comment"># or just image: redis</span>
-<span class="hljs-attr">        resources:</span>
-<span class="hljs-attr">          requests:</span>
-<span class="hljs-attr">            cpu:</span> <span class="hljs-number">100</span>m
-<span class="hljs-attr">            memory:</span> <span class="hljs-number">100</span>Mi
-<span class="hljs-attr">        ports:</span>
-<span class="hljs-attr">        - containerPort:</span> <span class="hljs-number">6379</span>
-EOF
-
-// <span class="hljs-number">2.</span> deploy
-kubectl apply -f redis-master-deployment.yaml
-
-// <span class="hljs-number">3.</span> view deployments
-kubectl get all
-
-// <span class="hljs-number">4.</span> view redis logs
-kubectl logs -f pod/redis-master<span class="hljs-bullet">-7</span>db7f6579f-j2bbv</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. &#x7ED9; Redis Master &#x521B;&#x5EFA;&#x4E00;&#x4E2A; Service</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the service yaml
-cat &lt;&lt;EOF &gt; ./redis-master-service.yaml
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> yaml
+cat &lt;&lt;EOF &gt; ./myservice.yaml
 <span class="hljs-attr">apiVersion:</span> v1
-<span class="hljs-attr">kind:</span> Service
+<span class="hljs-attr">kind:</span> Pod
 <span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> redis-master
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> redis
-<span class="hljs-attr">    role:</span> master
-<span class="hljs-attr">    tier:</span> backend
+<span class="hljs-attr">  name:</span> myservice
 <span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  ports:</span>
-<span class="hljs-attr">  - port:</span> <span class="hljs-number">6379</span>
-<span class="hljs-attr">    targetPort:</span> <span class="hljs-number">6379</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    app:</span> redis
-<span class="hljs-attr">    role:</span> master
-<span class="hljs-attr">    tier:</span> backend
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">    - name:</span> myservice
+<span class="hljs-attr">      image:</span> nginx
+<span class="hljs-attr">      ports:</span>
+<span class="hljs-attr">        - name:</span> web
+<span class="hljs-attr">          containerPort:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">          protocol:</span> TCP
 EOF
 
-// <span class="hljs-number">2.</span> create service
-kubectl apply -f redis-master-service.yaml
+// <span class="hljs-number">2.</span> place to manifests
+cd /etc/kubernetes/manifests/
+cp myservice.yaml ./
 
-// <span class="hljs-number">3.</span> view the services
-kubectl get svc
-kubectl describe svc redis-master</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3. &#x90E8;&#x7F72; 2 &#x4E2A; Redis Slave &#x8282;&#x70B9;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the deployment yaml
-cat &lt;&lt;EOF &gt; ./redis-slave-deployment.yaml
-<span class="hljs-attr">apiVersion:</span> apps/v1 <span class="hljs-comment"># for versions before 1.9.0 use apps/v1beta2</span>
-<span class="hljs-attr">kind:</span> Deployment
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> redis-slave
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> redis
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    matchLabels:</span>
-<span class="hljs-attr">      app:</span> redis
-<span class="hljs-attr">      role:</span> slave
-<span class="hljs-attr">      tier:</span> backend
-<span class="hljs-attr">  replicas:</span> <span class="hljs-number">2</span>
-<span class="hljs-attr">  template:</span>
-<span class="hljs-attr">    metadata:</span>
-<span class="hljs-attr">      labels:</span>
-<span class="hljs-attr">        app:</span> redis
-<span class="hljs-attr">        role:</span> slave
-<span class="hljs-attr">        tier:</span> backend
-<span class="hljs-attr">    spec:</span>
-<span class="hljs-attr">      containers:</span>
-<span class="hljs-attr">      - name:</span> slave
-<span class="hljs-attr">        image:</span> gcr.io/google_samples/gb-redisslave:v3
-<span class="hljs-attr">        resources:</span>
-<span class="hljs-attr">          requests:</span>
-<span class="hljs-attr">            cpu:</span> <span class="hljs-number">100</span>m
-<span class="hljs-attr">            memory:</span> <span class="hljs-number">100</span>Mi
-<span class="hljs-attr">        env:</span>
-<span class="hljs-attr">        - name:</span> GET_HOSTS_FROM
-<span class="hljs-attr">          value:</span> dns
-<span class="hljs-attr">        ports:</span>
-<span class="hljs-attr">        - containerPort:</span> <span class="hljs-number">6379</span>
-EOF
+// <span class="hljs-number">3.</span> verify the manifests path
+<span class="hljs-comment"># cat /var/lib/kubelet/config.yaml | grep staticPodPath</span>
+<span class="hljs-attr">staticPodPath:</span> /etc/kubernetes/manifests
 
-// <span class="hljs-number">2.</span> deploy
-kubectl apply -f redis-slave-deployment.yaml
-
-// <span class="hljs-number">3.</span> view the deployments
-kubectl get all -l role=slave</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4. &#x7ED9; Redis Slave &#x521B;&#x5EFA;&#x4E00;&#x4E2A; Service</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the service yaml
-cat &lt;&lt;EOF &gt; ./redis-slave-service.yaml
-<span class="hljs-attr">apiVersion:</span> v1
-<span class="hljs-attr">kind:</span> Service
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> redis-slave
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> redis
-<span class="hljs-attr">    role:</span> slave
-<span class="hljs-attr">    tier:</span> backend
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  ports:</span>
-<span class="hljs-attr">  - port:</span> <span class="hljs-number">6379</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    app:</span> redis
-<span class="hljs-attr">    role:</span> slave
-<span class="hljs-attr">    tier:</span> backend
-EOF
-
-// <span class="hljs-number">2.</span> create service
-kubectl apply -f redis-slave-service.yaml
-
-// <span class="hljs-number">3.</span> view the service
-kubectl get svc -l role=slave
-kubectl describe svc redis-slave</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5. &#x90E8;&#x7F72; Guestbook</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the deployment yaml
-cat &lt;&lt;EOF &gt; ./frontend-deployment.yaml
-<span class="hljs-attr">apiVersion:</span> apps/v1 <span class="hljs-comment"># for versions before 1.9.0 use apps/v1beta2</span>
-<span class="hljs-attr">kind:</span> Deployment
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> frontend
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> guestbook
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    matchLabels:</span>
-<span class="hljs-attr">      app:</span> guestbook
-<span class="hljs-attr">      tier:</span> frontend
-<span class="hljs-attr">  replicas:</span> <span class="hljs-number">3</span>
-<span class="hljs-attr">  template:</span>
-<span class="hljs-attr">    metadata:</span>
-<span class="hljs-attr">      labels:</span>
-<span class="hljs-attr">        app:</span> guestbook
-<span class="hljs-attr">        tier:</span> frontend
-<span class="hljs-attr">    spec:</span>
-<span class="hljs-attr">      containers:</span>
-<span class="hljs-attr">      - name:</span> php-redis
-<span class="hljs-attr">        image:</span> gcr.io/google-samples/gb-frontend:v4
-<span class="hljs-attr">        resources:</span>
-<span class="hljs-attr">          requests:</span>
-<span class="hljs-attr">            cpu:</span> <span class="hljs-number">100</span>m
-<span class="hljs-attr">            memory:</span> <span class="hljs-number">100</span>Mi
-<span class="hljs-attr">        env:</span>
-<span class="hljs-attr">        - name:</span> GET_HOSTS_FROM
-<span class="hljs-attr">          value:</span> dns
-<span class="hljs-attr">        ports:</span>
-<span class="hljs-attr">        - containerPort:</span> <span class="hljs-number">80</span>
-EOF
-
-// <span class="hljs-number">2.</span> deploy
-kubectl apply -f frontend-deployment.yaml
-
-// <span class="hljs-number">3.</span> view the deploy details
-kubectl get all -l app=guestbook</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>6. &#x7ED9; Guestbook &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x670D;&#x52A1;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the service yaml
-cat &lt;&lt;EOF &gt; ./frontend-service.yaml
-<span class="hljs-attr">apiVersion:</span> v1
-<span class="hljs-attr">kind:</span> Service
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> frontend
-<span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> guestbook
-<span class="hljs-attr">    tier:</span> frontend
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  type:</span> NodePort
-<span class="hljs-attr">  ports:</span>
-<span class="hljs-attr">  - port:</span> <span class="hljs-number">80</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    app:</span> guestbook
-<span class="hljs-attr">    tier:</span> frontend
-EOF
-
-// <span class="hljs-number">2.</span> create svc
-kubectl apply -f frontend-service.yaml
-
-// <span class="hljs-number">3.</span> view service
-kubectl get svc -l app=guestbook
-kubectl describe svc frontend</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>7. &#x67E5;&#x770B;&#x90E8;&#x7F72;&#x5B8C;&#x6210;&#x540E;&#x7684;&#x96C6;&#x7FA4;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get pods -o wide</span>
-NAME                            READY   STATUS    RESTARTS   AGE   IP                NODE                    NOMINATED NODE   READINESS GATES
-frontend<span class="hljs-bullet">-6</span>cb7f8bd65<span class="hljs-bullet">-6</span>b76c       <span class="hljs-number">1</span>/<span class="hljs-number">1</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">20</span>m   <span class="hljs-number">192.168</span><span class="hljs-number">.251</span><span class="hljs-number">.9</span>     machine02.example.com   &lt;none&gt;           &lt;none<span class="hljs-string">&gt;
-frontend-6cb7f8bd65-p66hr       1/1     Running   0          20m   192.168.208.204   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-frontend-6cb7f8bd65-pz78j       1/1     Running   0          20m   192.168.208.203   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-redis-master-7db7f6579f-j2bbv   1/1     Running   0          46m   192.168.251.7     machine02.example.com   &lt;none&gt;           &lt;none&gt;
-redis-slave-7664787fbc-5b6ds    1/1     Running   0          33m   192.168.251.8     machine02.example.com   &lt;none&gt;           &lt;none&gt;
-redis-slave-7664787fbc-lr7bp    1/1     Running   0          33m   192.168.208.202   machine03.example.com   &lt;none&gt;           &lt;none&gt;
-
-# kubectl get deployments
-NAME           READY   UP-TO-DATE   AVAILABLE   AGE
-frontend       3/3     3            3           21m
-redis-master   1/1     1            1           47m
-redis-slave    2/2     2            2           33m
-
-# kubectl get svc
-NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-frontend       NodePort    10.110.209.79   &lt;none&gt;        80:32465/TCP   17m
-kubernetes     ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP        58m
-redis-master   ClusterIP   10.97.142.208   &lt;none&gt;        6379/TCP       40m
-redis-slave    ClusterIP   10.104.96.140   &lt;none&gt;        6379/TCP       29m
-
-# kubectl get rs
-NAME                      DESIRED   CURRENT   READY   AGE
-frontend-6cb7f8bd65       3         3         3       22m
-redis-master-7db7f6579f   1         1         1       47m
-redis-slave-7664787fbc    2         2         2       34m</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>8. &#x8BBF;&#x95EE; Guestbook</strong></p>
-</div>
-<div class="paragraph">
-<p>&#x6D4F;&#x89C8;&#x5668;&#x6253;&#x5F00; <a href="http://192.168.100.101:32465/" class="bare" target="_blank">http://192.168.100.101:32465/</a></p>
-</div>
-<div class="listingblock">
-<div class="title"><strong>9. Clean up</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl delete all --all</code></pre>
+// <span class="hljs-number">4.</span> restart service
+systemctl restart kubelet</code></pre>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="___3">&#x6709;&#x72B6;&#x6001;&#x5E94;&#x7528;</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="___4">&#x57FA;&#x672C;&#x6982;&#x5FF5;</h3>
+<h3 id="_pod">Pod &#x4E2D;&#x591A;&#x4E2A;&#x5BB9;&#x5668;</h3>
 <div class="listingblock">
-<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A; StatefulSet</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> create the web yaml
-cat &lt;&lt;EOF &gt; ./web.yaml
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> yaml
+cat &lt;&lt;EOF &gt; ./containers.yaml
 <span class="hljs-attr">apiVersion:</span> v1
-<span class="hljs-attr">kind:</span> Service
+<span class="hljs-attr">kind:</span> Pod
 <span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> nginx
+<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-literal">null</span>
 <span class="hljs-attr">  labels:</span>
-<span class="hljs-attr">    app:</span> nginx
+<span class="hljs-attr">    run:</span> kucc4
+<span class="hljs-attr">  name:</span> kucc4
 <span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  ports:</span>
-<span class="hljs-attr">  - port:</span> <span class="hljs-number">80</span>
-<span class="hljs-attr">    name:</span> web
-<span class="hljs-attr">  clusterIP:</span> None
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    app:</span> nginx
-<span class="hljs-meta">---</span>
-<span class="hljs-attr">apiVersion:</span> apps/v1
-<span class="hljs-attr">kind:</span> StatefulSet
-<span class="hljs-attr">metadata:</span>
-<span class="hljs-attr">  name:</span> web
-<span class="hljs-attr">spec:</span>
-<span class="hljs-attr">  serviceName:</span> <span class="hljs-string">&quot;nginx&quot;</span>
-<span class="hljs-attr">  replicas:</span> <span class="hljs-number">2</span>
-<span class="hljs-attr">  selector:</span>
-<span class="hljs-attr">    matchLabels:</span>
-<span class="hljs-attr">      app:</span> nginx
-<span class="hljs-attr">  template:</span>
-<span class="hljs-attr">    metadata:</span>
-<span class="hljs-attr">      labels:</span>
-<span class="hljs-attr">        app:</span> nginx
-<span class="hljs-attr">    spec:</span>
-<span class="hljs-attr">      containers:</span>
-<span class="hljs-attr">      - name:</span> nginx
-<span class="hljs-attr">        image:</span> k8s.gcr.io/nginx-slim:<span class="hljs-number">0.8</span>
-<span class="hljs-attr">        ports:</span>
-<span class="hljs-attr">        - containerPort:</span> <span class="hljs-number">80</span>
-<span class="hljs-attr">          name:</span> web
-<span class="hljs-attr">        volumeMounts:</span>
-<span class="hljs-attr">        - name:</span> www
-<span class="hljs-attr">          mountPath:</span> /usr/share/nginx/html
-<span class="hljs-attr">  volumeClaimTemplates:</span>
-<span class="hljs-attr">  - metadata:</span>
-<span class="hljs-attr">      name:</span> www
-<span class="hljs-attr">    spec:</span>
-<span class="hljs-attr">      accessModes:</span> [ <span class="hljs-string">&quot;ReadWriteOnce&quot;</span> ]
-<span class="hljs-attr">      resources:</span>
-<span class="hljs-attr">        requests:</span>
-<span class="hljs-attr">          storage:</span> <span class="hljs-number">1</span>Gi
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - image:</span> nginx
+<span class="hljs-attr">    name:</span> nginx
+<span class="hljs-attr">  - image:</span> redis
+<span class="hljs-attr">    name:</span> redis
+<span class="hljs-attr">  - image:</span> memcached
+<span class="hljs-attr">    name:</span> memcached
+<span class="hljs-attr">  - image:</span> consul
+<span class="hljs-attr">    name:</span> consul
 EOF
 
 // <span class="hljs-number">2.</span> create
-kubectl apply -f web.yaml
+kubectl create -f containers.yaml
 
-// <span class="hljs-number">3.</span> view the creation</code></pre>
+// <span class="hljs-number">3.</span> get pods
+<span class="hljs-comment"># kubectl get pods -l run=kucc4 --no-headers</span>
+kucc4   <span class="hljs-number">4</span>/<span class="hljs-number">4</span>   Running   <span class="hljs-number">0</span>     <span class="hljs-number">80</span>s
+
+// <span class="hljs-number">4.</span> view specific contains log
+kubectl logs kucc4 redis</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">&#x4EB2;&#x548C;&#x6027;&#x7B56;&#x7565;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_nodeselector">nodeSelector</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x8BBE;&#x5B9A; nodes label</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl label node machine03.example.com disk=ssd
+
+kubectl get nodes -l disk=ssd</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x90E8;&#x7F72; Pod &#x5230; node</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// create pod yaml
+cat &lt;&lt;EOF &gt; ./pod-nginx.yaml
+<span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> Pod
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-literal">null</span>
+<span class="hljs-attr">  labels:</span>
+<span class="hljs-attr">    run:</span> nginx
+<span class="hljs-attr">  name:</span> nginx
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - image:</span> nginx
+<span class="hljs-attr">    name:</span> nginx
+<span class="hljs-attr">    ports:</span>
+<span class="hljs-attr">    - containerPort:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">    resources:</span> {}
+<span class="hljs-attr">  nodeSelector:</span>
+<span class="hljs-attr">    disk:</span> ssd
+<span class="hljs-attr">  dnsPolicy:</span> ClusterFirst
+<span class="hljs-attr">  restartPolicy:</span> Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>3. &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get pods -o wide --no-headers</span>
+nginx   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>     <span class="hljs-number">64</span>s   <span class="hljs-number">192.168</span><span class="hljs-number">.208</span><span class="hljs-number">.224</span>   machine03.example.com   &lt;none&gt;   &lt;none<span class="hljs-string">&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_node_affinity">Node affinity</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x8BBE;&#x5B9A; nodes label</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl label node machine03.example.com example.com/zone=zone1
+
+kubectl get nodes -l example.com/zone=zone1</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x90E8;&#x7F72; Pod &#x5230; node</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// create pod yaml
+cat &lt;&lt;EOF &gt; ./pod-nginx.yaml
+<span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> Pod
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-literal">null</span>
+<span class="hljs-attr">  labels:</span>
+<span class="hljs-attr">    run:</span> nginx
+<span class="hljs-attr">  name:</span> nginx
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - image:</span> nginx
+<span class="hljs-attr">    name:</span> nginx
+<span class="hljs-attr">    ports:</span>
+<span class="hljs-attr">    - containerPort:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">    resources:</span> {}
+<span class="hljs-attr">  affinity:</span>
+<span class="hljs-attr">    nodeAffinity:</span>
+<span class="hljs-attr">      requiredDuringSchedulingIgnoredDuringExecution:</span>
+<span class="hljs-attr">       nodeSelectorTerms:</span>
+<span class="hljs-attr">       - matchExpressions:</span>
+<span class="hljs-attr">         - key:</span> example.com/zone
+<span class="hljs-attr">           operator:</span> In
+<span class="hljs-attr">           values:</span>
+<span class="hljs-bullet">           -</span> zone1
+<span class="hljs-bullet">           -</span> zone2
+<span class="hljs-attr">      preferredDuringSchedulingIgnoredDuringExecution:</span>
+<span class="hljs-attr">      - weight:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">        preference:</span>
+<span class="hljs-attr">          matchExpressions:</span>
+<span class="hljs-attr">          - key:</span> example.com/disk
+<span class="hljs-attr">            operator:</span> In
+<span class="hljs-attr">            values:</span>
+<span class="hljs-bullet">            -</span> ssd
+<span class="hljs-attr">  dnsPolicy:</span> ClusterFirst
+<span class="hljs-attr">  restartPolicy:</span> Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>3. &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre># kubectl get pods -o wide --no-headers
+nginx   1/1   Running   0     64s   192.168.208.224   machine03.example.com   &lt;none&gt;   &lt;none&gt;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pod_affinity">Pod affinity</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_nodename">nodeName</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x90E8;&#x7F72; Pod &#x5230; node</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// create pod yaml
+cat &lt;&lt;EOF &gt; ./pod-nginx.yaml
+<span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> Pod
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-literal">null</span>
+<span class="hljs-attr">  labels:</span>
+<span class="hljs-attr">    run:</span> nginx
+<span class="hljs-attr">  name:</span> nginx
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - image:</span> nginx
+<span class="hljs-attr">    name:</span> nginx
+<span class="hljs-attr">    ports:</span>
+<span class="hljs-attr">    - containerPort:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">    resources:</span> {}
+<span class="hljs-attr">  nodeName:</span> machine02.example.com
+<span class="hljs-attr">  dnsPolicy:</span> ClusterFirst
+<span class="hljs-attr">  restartPolicy:</span> Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get pods -o wide --no-headers</span>
+nginx   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>     <span class="hljs-number">20</span>s   <span class="hljs-number">192.168</span><span class="hljs-number">.251</span><span class="hljs-number">.35</span>   machine02.example.com   &lt;none&gt;   &lt;none<span class="hljs-string">&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_daemonset">DaemonSet</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x90E8;&#x7F72; Pod &#x5230; node</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// create daemonset yaml
+cat &lt;&lt;EOF &gt; ./daemonset.yaml
+<span class="hljs-attr">apiVersion:</span> apps/v1
+<span class="hljs-attr">kind:</span> DaemonSet
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  name:</span> nginx
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  selector:</span>
+<span class="hljs-attr">    matchLabels:</span>
+<span class="hljs-attr">      name:</span> nginx
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    metadata:</span>
+<span class="hljs-attr">      labels:</span>
+<span class="hljs-attr">        name:</span> nginx
+<span class="hljs-attr">    spec:</span>
+<span class="hljs-attr">      containers:</span>
+<span class="hljs-attr">      - name:</span> nginx
+<span class="hljs-attr">        image:</span> nginx
+EOF
+
+// create
+kubectl create -f daemonset.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get pods -o wide --no-headers</span>
+nginx<span class="hljs-bullet">-8</span>x4tq   <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>     <span class="hljs-number">57</span>s   <span class="hljs-number">192.168</span><span class="hljs-number">.251</span><span class="hljs-number">.38</span>    machine02.example.com   &lt;none&gt;   &lt;none<span class="hljs-string">&gt;
+nginx-krp9l   1/1   Running   0     57s   192.168.208.225   machine03.example.com   &lt;none&gt;   &lt;none&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tolerations">Tolerations</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x90E8;&#x7F72; Pod &#x5230; node</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">// create pod yaml
+cat &lt;&lt;EOF &gt; ./pod-nginx.yaml
+<span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> Pod
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  creationTimestamp:</span> <span class="hljs-literal">null</span>
+<span class="hljs-attr">  labels:</span>
+<span class="hljs-attr">    run:</span> nginx
+<span class="hljs-attr">  name:</span> nginx
+<span class="hljs-attr">spec:</span>
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - image:</span> nginx
+<span class="hljs-attr">    name:</span> nginx
+<span class="hljs-attr">    ports:</span>
+<span class="hljs-attr">    - containerPort:</span> <span class="hljs-number">80</span>
+<span class="hljs-attr">    resources:</span> {}
+<span class="hljs-attr">  tolerations:</span>
+<span class="hljs-attr">  - key:</span> <span class="hljs-string">&quot;node-role.kubernetes.io/master&quot;</span>
+<span class="hljs-attr">    operator:</span> <span class="hljs-string">&quot;Exists&quot;</span>
+<span class="hljs-attr">    effect:</span> <span class="hljs-string">&quot;NoSchedule&quot;</span>
+<span class="hljs-attr">  dnsPolicy:</span> ClusterFirst
+<span class="hljs-attr">  restartPolicy:</span> Always
+EOF
+
+// create pod
+kubectl create -f pod-nginx.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock">
+<div class="title"><strong>2. &#x9A8C;&#x8BC1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml"></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-comment"># kubectl get pods -o wide --no-headers</span></code></pre>
 </div>
 </div>
 </div>
@@ -2979,7 +2649,7 @@ kubectl apply -f web.yaml
                 </a>
                 
                 
-                <a href="admin.html" class="navigation navigation-next " aria-label="Next page: 管理">
+                <a href="net.html" class="navigation navigation-next " aria-label="Next page: 网络">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2990,7 +2660,7 @@ kubectl apply -f web.yaml
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"概念","level":"1.5.2","depth":2,"next":{"title":"管理","level":"1.5.3","depth":2,"path":"k8s/admin.adoc","ref":"k8s/admin.adoc","articles":[]},"previous":{"title":"安装","level":"1.5.1","depth":2,"path":"k8s/install.adoc","ref":"k8s/install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s/case.adoc","mtime":"2020-02-20T10:41:55.649Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-02-20T10:58:07.661Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"概念","level":"1.5.2","depth":2,"next":{"title":"网络","level":"1.5.3","depth":2,"path":"k8s/net.adoc","ref":"k8s/net.adoc","articles":[]},"previous":{"title":"安装","level":"1.5.1","depth":2,"path":"k8s/install.adoc","ref":"k8s/install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s/case.adoc","mtime":"2020-03-11T10:16:38.662Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-16T02:23:49.014Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

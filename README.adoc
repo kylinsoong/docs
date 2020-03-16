@@ -52,6 +52,10 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |===
 |版本 |时间 |Notes
 
+|3.2
+|2020-03-16
+|add cka and ckad pages
+
 |3.1
 |2020-02-20
 |add kubernets pages

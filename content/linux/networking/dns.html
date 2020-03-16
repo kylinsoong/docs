@@ -1397,7 +1397,7 @@
                 <a href="../../k8s/">
             
                     
-                    Kubernetes
+                    KUBERNETES
             
                 </a>
             
@@ -1432,7 +1432,33 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.3" data-path="../../k8s/admin.html">
+        <li class="chapter " data-level="1.5.3" data-path="../../k8s/net.html">
+            
+                <a href="../../k8s/net.html">
+            
+                    
+                    网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../../k8s/dev.html">
+            
+                <a href="../../k8s/dev.html">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../../k8s/admin.html">
             
                 <a href="../../k8s/admin.html">
             
@@ -1959,19 +1985,21 @@
 <ul class="sectlevel1">
 <li><a href="#__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</a>
 <ul class="sectlevel2">
-<li><a href="#_why_do_we_need_dns">Why do we need DNS?</a></li>
 <li><a href="#__dns">&#x4EC0;&#x4E48;&#x662F; DNS</a></li>
 <li><a href="#_dns_zones">DNS Zones</a></li>
 <li><a href="#_dns">DNS &#x670D;&#x52A1;&#x5668;&#x79CD;&#x7C7B;</a></li>
-<li><a href="#___2">&#x57DF;&#x540D;&#x67E5;&#x8BE2;&#x89E3;&#x6790;</a></li>
+<li><a href="#_dns_2">DNS &#x5DE5;&#x4F5C;&#x8FC7;&#x7A0B;</a></li>
+<li><a href="#_ldns">LDNS &#x7F13;&#x5B58;&#x66F4;&#x65B0;&#x8FC7;&#x7A0B;</a></li>
 <li><a href="#_dns_and_udp">DNS and UDP</a></li>
 <li><a href="#_dns_rrs">DNS RRs</a></li>
 <li><a href="#__dns_2">&#x516C;&#x5171; DNS &#x670D;&#x52A1;&#x5668;</a></li>
 <li><a href="#_dns_registration_and_expiration">DNS Registration and Expiration</a></li>
 </ul>
 </li>
-<li><a href="#_dns_2">DNS &#x5DE5;&#x5177;</a>
+<li><a href="#_dns_3">DNS &#x5DE5;&#x5177;</a>
 <ul class="sectlevel2">
+<li><a href="#_host">host</a></li>
+<li><a href="#_dig">dig</a></li>
 <li><a href="#_nslookup">nslookup</a></li>
 </ul>
 </li>
@@ -1980,32 +2008,36 @@
 <li><a href="#_unbound">unbound &#x57FA;&#x672C;&#x7BA1;&#x7406;&#x64CD;&#x4F5C;</a></li>
 </ul>
 </li>
-<li><a href="#_dns_3">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
+<li><a href="#_dns_4">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</a></li>
 </ul>
 </div>
 <div class="sect1">
 <h2 id="__">&#x57FA;&#x672C;&#x6982;&#x5FF5;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_why_do_we_need_dns">Why do we need DNS?</h3>
+<h3 id="__dns">&#x4EC0;&#x4E48;&#x662F; DNS</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>DNS is a global and highly distributed network service that resolves strings of letters into IP address for you.</p>
+<p>DNS &#x662F;&#x4E00;&#x4E2A;&#x5168;&#x7403;&#x5206;&#x5E03;&#x5F0F;&#x7684;&#x7CFB;&#x7EDF;&#xFF0C;&#x7528;&#x6765;&#x5C06;&#x5B57;&#x6BCD;&#x7684;&#x5730;&#x5740;&#x8F6C;&#x5316;&#x4E3A; IP &#x5730;&#x5740;&#x3002;https://www.icann.org/[ICANN] &#x5728;&#x5168;&#x7403;&#x7684;&#x89C6;&#x89D2;&#x8D1F;&#x8D23; DNS&#x3002;</p>
 </li>
 <li>
-<p>A domain name is just the term we use for something that can be resolved by DNS.</p>
+<p>DNS &#x82F1;&#x6587;&#x5168;&#x79F0; <strong>Domain Name System</strong>&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x6811;&#x72B6;&#x5206;&#x5E03;&#x5F0F;&#x57DF;&#x540D;&#x7CFB;&#x7EDF;&#xFF0C;&#x4E3A;&#x4E92;&#x8054;&#x7F51;&#x6216;&#x79C1;&#x6709;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x8BA1;&#x7B97;&#x673A;&#x3001;&#x670D;&#x52A1;&#x6216;&#x5176;&#x4ED6;&#x4EFB;&#x4F55;&#x8D44;&#x6E90;&#x63D0;&#x4F9B;&#x89E3;&#x6790;&#x3002;&#x6700;&#x7A81;&#x51FA;&#x7684;&#x529F;&#x80FD;&#x662F;&#x5C06;&#x6613;&#x4E8E;&#x8BB0;&#x5FC6;&#x7684;&#x540D;&#x79F0;&#x7FFB;&#x8BD1;&#x6210;&#x6570;&#x5B57;&#x7684;IP&#x5730;&#x5740;&#x7528;&#x6765;&#x5B9A;&#x4F4D;&#x9700;&#x8981;&#x8BBF;&#x95EE;&#x7684;&#x8D44;&#x6E90;&#x3002;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>WWW    www.hinet.net &lt;&#x2192; 168.95.1.82</p>
 </li>
 <li>
-<p><a href="https://www.icann.org/" target="_blank">ICANN</a> is responsible for DNS at a global level.</p>
+<p>MAIL    msa.hinet.net &lt;&#x2192; 168.95.4.211</p>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="__dns">&#x4EC0;&#x4E48;&#x662F; DNS</h3>
-<div class="paragraph">
-<p>DNS &#x82F1;&#x6587;&#x5168;&#x79F0; <strong>Domain Name System</strong>&#xFF0C;&#x5373;&#x57DF;&#x540D;&#x7CFB;&#x7EDF;&#x3002;DNS &#x662F;&#x4E00;&#x4E2A;&#x5206;&#x5C42;&#x7684;&#x547D;&#x540D;&#x7CFB;&#x7EDF;&#xFF0C;&#x5145;&#x5F53;&#x7740;&#x7F51;&#x7EDC;&#x7CFB;&#x7EDF;&#x4E3B;&#x673A;&#x548C;&#x8D44;&#x6E90;&#x7684;&#x76EE;&#x5F55;&#xFF0C;&#x76EE;&#x5F55;&#x4E2D;&#x7684;&#x4FE1;&#x606F;&#x662F;&#x5C06;&#x7F51;&#x7EDC;&#x540D;&#x79F0;&#x6620;&#x5C04;&#x5230;&#x903B;&#x8F91;&#x6761;&#x76EE;/&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x6570;&#x636E;&#x3002;</p>
+</li>
+<li>
+<p>DNS &#x662F;&#x4E00;&#x4E2A;&#x5206;&#x5C42;&#x7684;&#x547D;&#x540D;&#x7CFB;&#x7EDF;&#xFF0C;&#x5145;&#x5F53;&#x7740;&#x7F51;&#x7EDC;&#x7CFB;&#x7EDF;&#x4E3B;&#x673A;&#x548C;&#x8D44;&#x6E90;&#x7684;&#x76EE;&#x5F55;&#xFF0C;&#x76EE;&#x5F55;&#x4E2D;&#x7684;&#x4FE1;&#x606F;&#x662F;&#x5C06;&#x7F51;&#x7EDC;&#x540D;&#x79F0;&#x6620;&#x5C04;&#x5230;&#x903B;&#x8F91;&#x6761;&#x76EE;/&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x6570;&#x636E;&#x3002;</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/dns-level.png" alt="DNS &#x5206;&#x5C42;&#x547D;&#x540D;&#x7CFB;&#x7EDF;"></span></p>
@@ -2081,7 +2113,7 @@ DNS can technically support up to 127 levels of domain in total for a single ful
 <div class="sect2">
 <h3 id="_dns">DNS &#x670D;&#x52A1;&#x5668;&#x79CD;&#x7C7B;</h3>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. <strong>Five primary types of DNS servers</strong></caption>
+<caption class="title">Table 1. <strong>DNS servers &#x7C7B;&#x578B;</strong></caption>
 <colgroup>
 <col style="width: 28.5714%;">
 <col style="width: 71.4286%;">
@@ -2094,8 +2126,11 @@ DNS can technically support up to 127 levels of domain in total for a single ful
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;(Caching name servers)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Local DNS(Caching/Recursive Name Servers)</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x901A;&#x5E38;&#x662F;&#x88AB; ISP &#x6216;&#x672C;&#x5730;&#x7F51;&#x7EDC;&#x63D0;&#x4F9B;&#xFF0C;&#x6267;&#x884C; DNS &#x89E3;&#x6790;&#x8BF7;&#x6C42;</p>
+</div>
+<div class="paragraph">
 <p>&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x5728;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x4E2D;&#x5B58;&#x50A8; DNS &#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#xFF0C;&#x5E76;&#x4E14;&#x5728; TTL &#x5230;&#x671F;&#x540E;&#x4ECE;&#x7F13;&#x5B58;&#x4E2D;&#x5220;&#x9664;&#x8D44;&#x6E90;&#x8BB0;&#x5F55;&#x3002;&#x901A;&#x5E38;&#x8BBE;&#x7F6E;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4EE5;&#x4E3A;&#x672C;&#x5730;&#x7F51;&#x7EDC;&#x4E0A;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x6267;&#x884C;&#x67E5;&#x8BE2;&#x3002;&#x8FD9;&#x964D;&#x4F4E;&#x4E86; Internet &#x4E0A;&#x7684; DNS &#x6D41;&#x91CF;&#xFF0C;&#x4ECE;&#x800C;&#x6781;&#x5927;&#x63D0;&#x9AD8;&#x4E86; DNS &#x540D;&#x79F0;&#x89E3;&#x6790;&#x7684;&#x6548;&#x7387;&#x3002;&#x968F;&#x7740;&#x7F13;&#x5B58;&#x7684;&#x589E;&#x52A0;&#xFF0C;&#x7F13;&#x5B58;&#x540D;&#x79F0;&#x670D;&#x52A1;&#x5668;&#x4ECE;&#x5176;&#x672C;&#x5730;&#x7F13;&#x5B58;&#x4E2D;&#x56DE;&#x7B54;&#x8D8A;&#x6765;&#x8D8A;&#x591A;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x67E5;&#x8BE2;&#xFF0C;&#x4ECE;&#x800C;&#x63D0;&#x9AD8; DNS &#x6027;&#x80FD;&#x3002;</p>
 </div>
 <div class="paragraph">
@@ -2106,25 +2141,19 @@ DNS can technically support up to 127 levels of domain in total for a single ful
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Recursive name servers</p></td>
-<td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Provided by an ISP or local network. Perform full DNS resolution requests.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Root name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Name Servers</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>13 total root name servers, what are responsible for directing queries toward the appropriate TLD name server.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TLD name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLD Name Servers</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>The TLD name servers will respond again with a redirect, this time informing the computer performing the name lookup with what authoritative name server to contact.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authoritative name servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authoritative Name Servers</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>Authoritative name servers are responsible for the last two parts of any domain name which is the resolution at which a single organization may be responsible for DNS lookups.</p>
 </div></div></td>
@@ -2132,38 +2161,78 @@ DNS can technically support up to 127 levels of domain in total for a single ful
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title"><strong>Steps of Name Resolution</strong></div>
+<div class="title"><strong>&#x57DF;&#x540D;&#x89E3;&#x6790;&#x8FC7;&#x7A0B;</strong></div>
 <p><span class="image"><img src="img/5typesdnsserverlookup.png" alt="5typesdnsserverlookup.png"></span></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="___2">&#x57DF;&#x540D;&#x67E5;&#x8BE2;&#x89E3;&#x6790;</h3>
+<h3 id="_dns_2">DNS &#x5DE5;&#x4F5C;&#x8FC7;&#x7A0B;</h3>
 <div class="paragraph">
-<p>&#x5F53;&#x7CFB;&#x7EDF;&#x9700;&#x8981;&#x4F7F;&#x7528; DNS &#x670D;&#x52A1;&#x5668;&#x6267;&#x884C;&#x540D;&#x79F0;&#x89E3;&#x6790;&#x65F6;&#xFF0C;&#x9996;&#x5148;&#x4F1A;&#x6309;&#x987A;&#x5E8F;&#x5411; /etc/resolv.conf &#x4E2D;&#x5217;&#x51FA;&#x7684;&#x670D;&#x52A1;&#x5668;&#x53D1;&#x9001;&#x67E5;&#x8BE2;&#xFF0C;&#x76F4;&#x5230;&#x83B7;&#x5F97;&#x54CD;&#x5E94;&#x6216;&#x6240;&#x6709;&#x5217;&#x51FA;&#x7684;&#x670D;&#x52A1;&#x5668;&#x8017;&#x5C3D;&#x3002;host &#x6216; dig &#x547D;&#x4EE4;&#x53EF;&#x4EE5;&#x7528;&#x6765;&#x624B;&#x52A8;&#x67E5;&#x627E; DNS &#x540D;&#x79F0;&#x3002;</p>
+<p><span class="image"><img src="img/dns_lookup_process.png" alt="dns lookup process.png"></span></p>
 </div>
-<div class="listingblock">
-<div class="title"><strong>An example of dig</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ dig https://test.apps.example.com
-
-; &lt;&lt;&gt;&gt; DiG 9.9.4-RedHat-9.9.4-51.el7_4.1 &lt;&lt;&gt;&gt; https://test.apps.example.com
-;; global options: +cmd
-;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44376
-;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
-
-;; QUESTION SECTION:
-;https://test.apps.example.com.	IN	A
-
-;; ANSWER SECTION:
-https://test.apps.example.com. 0 IN	A	192.168.122.105
-
-;; Query time: 1 msec
-;; SERVER: 192.168.122.106<span class="hljs-comment">#53(192.168.122.106)</span>
-;; WHEN: Sat Jan 06 17:43:43 CST 2018
-;; MSG SIZE  rcvd: 63</code></pre>
+<div class="paragraph">
+<p>&#x4E0A;&#x56FE;&#x6240;&#x793A;&#x4E3A; DNS &#x5DE5;&#x4F5C;&#x7684;&#x4E00;&#x822C;&#x8FC7;&#x7A0B;&#xFF0C;WEB &#x670D;&#x52A1;&#x5668;&#x7684;&#x57DF;&#x540D;&#x4E3A; www.example.com&#xFF0C;Client &#x5728;&#x6D4F;&#x89C8;&#x5668;&#x4E0A;&#x8BF7;&#x6C42;&#x8BBF;&#x95EE; www.example.com&#xFF0C;&#x5177;&#x4F53;&#x57DF;&#x540D;&#x89E3;&#x6790;&#x7684;&#x8FC7;&#x7A0B;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x4E00;&#x4E2A;&#x7528;&#x6237;&#x60F3;&#x6D4F;&#x89C8;&#x4E00;&#x4E2A;&#x57DF;&#x540D;&#x4E3A; &#x201C;www.example.com&#x201D; &#x7684;&#x7F51;&#x7AD9;</p>
+</li>
+<li>
+<p>&#x9996;&#x5148;&#x53BB; LDNS &#x89E3;&#x6790;&#x3002;&#x5982;&#x679C; LDNS &#x6CA1;&#x6709;&#x8FD9;&#x4E2A;&#x57DF;&#x540D;&#x7684;&#x7F13;&#x5B58;&#xFF0C;&#x5C06;&#x9012;&#x5F52;&#x5230;&#x56E0;&#x7279;&#x7F51;&#x67E5;&#x8BE2;&#x8C01;&#x6709;&#x8FD9;&#x4E2A;&#x57DF;&#x540D;&#x3002;</p>
+</li>
+<li>
+<p>&#x9996;&#x5148; LDNS &#x53BB;&#x6839;&#x670D;&#x52A1;&#x5668;&#x67E5;&#x8BE2; .com &#x670D;&#x52A1;&#x5668;</p>
+</li>
+<li>
+<p>.com &#x670D;&#x52A1;&#x5668;&#x786E;&#x5B9A; example.com&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x5E76;&#x4E14;&#x901A;&#x8FC7; NS(Name Server) &#x8BB0;&#x5F55;&#x8BA9; LDNS &#x53BB;&#x8BBF;&#x95EE; domain.com &#x670D;&#x52A1;&#x5668;</p>
+</li>
+<li>
+<p>LDNS &#x67E5;&#x8BE2; example.com &#x670D;&#x52A1;&#x7684; NS &#x8BB0;&#x5F55;</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>.example.com &#x67E5;&#x8BE2;&#x57DF;&#x540D;</p>
+</li>
+<li>
+<p>&#x5982;&#x679C;&#x627E;&#x5230;&#x4E86;&#x57DF;&#x540D;&#xFF0C;&#x8FD4;&#x56DE; A &#x8BB0;&#x5F55;&#xFF0C;A &#x8BB0;&#x5F55;&#x5305;&#x542B;&#x4EE5;&#x4E0B;&#x4FE1;&#x606F;&#xFF1A;</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>&#x8BF7;&#x6C42;&#x7684;&#x540D;&#x5B57;</p>
+</li>
+<li>
+<p>&#x5BF9;&#x5E94;&#x7684; IP &#x5730;&#x5740;</p>
+</li>
+<li>
+<p>&#x5BF9;&#x5E94;&#x7684; TTL &#x65F6;&#x95F4;&#x3002;TTL &#x65F6;&#x95F4;&#x544A;&#x8BC9; LDNS A &#x8BB0;&#x5F55;&#x53EF;&#x4EE5;&#x7F13;&#x5B58;&#x591A;&#x957F;&#x65F6;&#x95F4;</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>&#x5F53; LDNS &#x6536;&#x5230;&#x4E86; A &#x8BB0;&#x5F55;&#xFF0C;&#x5C06;&#x5BF9;&#x5E94;&#x4FE1;&#x606F;&#x7F13;&#x5B58;&#xFF0C;&#x5E76;&#x8BBE;&#x5B9A;&#x4E00;&#x4E2A; TTL &#x65F6;&#x95F4;&#xFF0C;&#x5982;&#x679C;&#x6709;&#x5176;&#x4ED6;&#x7528;&#x6237;&#x4E5F;&#x8BF7;&#x6C42;&#x76F8;&#x540C;&#x7684;&#x57DF;&#x540D;&#xFF0C;LDNS &#x5C06;&#x7528;&#x8FD9;&#x4E2A;&#x7F13;&#x5B58;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;&#xFF0C;&#x76F4;&#x5230;TTL &#x65F6;&#x95F4;&#x8FC7;&#x671F;&#x3002;</p>
+</li>
+<li>
+<p>LDNS &#x628A;www.example.com &#x7684; IP &#x5730;&#x5740;&#x8FD4;&#x56DE;&#x7ED9;&#x5BA2;&#x6237;&#x7AEF;&#x3002;</p>
+</li>
+<li>
+<p>&#x8FD9;&#x65F6;&#xFF0C;&#x6D4F;&#x89C8;&#x5668;&#x7F13;&#x5B58;&#x4F4F;&#x8FD9;&#x4E2A;&#x8BB0;&#x5F55;&#x3002;&#x6240;&#x4EE5;&#xFF0C;&#x8FD9;&#x65F6;&#xFF0C;&#x8FD9;&#x4E2A;&#x8BB0;&#x5F55;&#x7F13;&#x5B58;&#x5728;&#x672C;&#x5730;&#x7535;&#x8111;&#x4E0A;&#x548C; LDNS &#x4E0A;&#x3002;</p>
+</li>
+<li>
+<p>&#x6D4F;&#x89C8;&#x5668;&#x7528;&#x8FD9;&#x4E2A; IP &#x5730;&#x5740;&#x53BB;&#x8FDE;&#x63A5;&#x8FD9;&#x4E2A; WEB &#x670D;&#x52A1;&#x5668;</p>
+</li>
+<li>
+<p>WEB &#x670D;&#x52A1;&#x5668;&#x8FD4;&#x56DE;&#x8BF7;&#x6C42;&#x7ED3;&#x679C;</p>
+</li>
+</ol>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_ldns">LDNS &#x7F13;&#x5B58;&#x66F4;&#x65B0;&#x8FC7;&#x7A0B;</h3>
 <div class="paragraph">
 <p><span class="image"><img src="img/anatomy-of-dns-lookup.png" alt="DNS &#x67E5;&#x8BE2;&#x89E3;&#x6790;"></span></p>
 </div>
@@ -2173,7 +2242,7 @@ https://test.apps.example.com. 0 IN	A	192.168.122.105
 <p>&#x4ECE; <code>/etc/resolv.conf</code> &#x83B7;&#x53D6; DNS &#x670D;&#x52A1;&#x5668;&#x7684;&#x5730;&#x5740;</p>
 </li>
 <li>
-<p>&#x53D1;&#x9001; <code>https://example.com &#x7684; IP &#x5730;&#x5740;&#x662F;&#x591A;&#x5C11;</code> &#x8BF7;&#x6C42;&#x5230;&#x6B65;&#x9AA4;1&#x83B7;&#x53D6;&#x5230;&#x7684; DNS &#x670D;&#x52A1;&#x5668;</p>
+<p>&#x53D1;&#x9001; <code>example.com &#x7684; IP &#x5730;&#x5740;&#x662F;&#x591A;&#x5C11;</code> &#x8BF7;&#x6C42;&#x5230;&#x6B65;&#x9AA4;1&#x83B7;&#x53D6;&#x5230;&#x7684; DNS &#x670D;&#x52A1;&#x5668;</p>
 </li>
 <li>
 <p>&#x67E5;&#x8BE2; <code>example.com</code> &#x662F;&#x5426;&#x5728;&#x672C;&#x5730;&#x662F;&#x6709;&#x8BA4;&#x8BC1;&#x7684;</p>
@@ -2542,8 +2611,61 @@ google.com.		3600	IN	TXT	<span class="hljs-string">&quot;v=spf1 include:_spf.goo
 </div>
 </div>
 <div class="sect1">
-<h2 id="_dns_2">DNS &#x5DE5;&#x5177;</h2>
+<h2 id="_dns_3">DNS &#x5DE5;&#x5177;</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_host">host</h3>
+<div class="paragraph">
+<p>host &#x662F; Linux &#x7CFB;&#x7EDF;&#x4E0A; DNS &#x67E5;&#x8BE2;&#x7684;&#x5DE5;&#x5177;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ host -v -t A ksoong.org
+Trying <span class="hljs-string">&quot;ksoong.org&quot;</span>
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 328
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;ksoong.org.			IN	A
+
+;; ANSWER SECTION:
+ksoong.org.		676	IN	A	192.30.252.154
+ksoong.org.		676	IN	A	192.30.252.153
+
+Received 60 bytes from 192.168.204.180<span class="hljs-comment">#53 in 89 ms</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dig">dig</h3>
+<div class="paragraph">
+<p>&#x5F53;&#x7CFB;&#x7EDF;&#x9700;&#x8981;&#x4F7F;&#x7528; DNS &#x670D;&#x52A1;&#x5668;&#x6267;&#x884C;&#x540D;&#x79F0;&#x89E3;&#x6790;&#x65F6;&#xFF0C;&#x9996;&#x5148;&#x4F1A;&#x6309;&#x987A;&#x5E8F;&#x5411; /etc/resolv.conf &#x4E2D;&#x5217;&#x51FA;&#x7684;&#x670D;&#x52A1;&#x5668;&#x53D1;&#x9001;&#x67E5;&#x8BE2;&#xFF0C;&#x76F4;&#x5230;&#x83B7;&#x5F97;&#x54CD;&#x5E94;&#x6216;&#x6240;&#x6709;&#x5217;&#x51FA;&#x7684;&#x670D;&#x52A1;&#x5668;&#x8017;&#x5C3D;&#x3002;dig &#x547D;&#x4EE4;&#x53EF;&#x4EE5;&#x7528;&#x6765;&#x624B;&#x52A8;&#x67E5;&#x627E; DNS &#x540D;&#x79F0;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>An example of dig</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ dig https://test.apps.example.com
+
+; &lt;&lt;&gt;&gt; DiG 9.9.4-RedHat-9.9.4-51.el7_4.1 &lt;&lt;&gt;&gt; https://test.apps.example.com
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44376
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;https://test.apps.example.com. IN      A
+
+;; ANSWER SECTION:
+https://test.apps.example.com. 0 IN     A       192.168.122.105
+
+;; Query time: 1 msec
+;; SERVER: 192.168.122.106<span class="hljs-comment">#53(192.168.122.106)</span>
+;; WHEN: Sat Jan 06 17:43:43 CST 2018
+;; MSG SIZE  rcvd: 63</code></pre>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_nslookup">nslookup</h3>
 <div class="paragraph">
@@ -2777,7 +2899,7 @@ Address: 74.125.24.101</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_dns_3">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</h2>
+<h2 id="_dns_4">DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title"><strong>DNS &#x5E38;&#x89C1;&#x95EE;&#x9898;&#x5206;&#x6790;</strong></div>
@@ -2835,7 +2957,7 @@ $ dig A example.com</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"网络监控","level":"1.2.3.8","depth":3,"path":"linux/networking/monitor.adoc","ref":"linux/networking/monitor.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2020-01-27T15:48:42.082Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-02-20T10:58:07.661Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DNS","level":"1.2.3.7","depth":3,"next":{"title":"网络监控","level":"1.2.3.8","depth":3,"path":"linux/networking/monitor.adoc","ref":"linux/networking/monitor.adoc","articles":[]},"previous":{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/dns.adoc","mtime":"2020-02-25T13:03:02.686Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-16T02:23:49.014Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
