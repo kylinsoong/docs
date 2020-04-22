@@ -572,6 +572,21 @@ image:img/NAT.png[]
 # firewall-cmd --permanent --zone=<ZONE> --add-forward-port=port=<PORTNUMBER>:proto=<PROTOCOL>[:toport=<PORTNUMBER>][:toaddr=<IPADDR>]
 ----
 
+[source, bash]
+.*示例 - 将服务器上虚拟化平台上的服务通过端口转发让外网可以访问*
+----
+// 1. make sure the local server's service is available
+telnet 10.1.1.245 443
+
+// 2. set up port forward
+firewall-cmd --permanent --add-port=443/tcp
+firewall-cmd --permanent --add-forward-port=port=443:proto=tcp:toport=443:toaddr=10.1.1.245
+firewall-cmd --reload
+
+// 3. test(access the vm service via server's ip 192.168.1.8)
+https://192.168.1.8
+----
+
 *toport=* 和 *toaddr=* 部分均可选，但需要至少指定这两者之一。
 
 [source, text]
