@@ -52,6 +52,10 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |===
 |版本 |时间 |Notes
 
+|3.3
+|2020-05-05
+|完善 K8S 离线安装文档
+
 |3.2
 |2020-03-16
 |add cka and ckad pages

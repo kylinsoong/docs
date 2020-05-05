@@ -2007,10 +2007,14 @@
 <li><a href="#_delete_node">Delete node</a></li>
 <li><a href="#_node_notready">Node NotReady</a></li>
 <li><a href="#_static_pod">Static Pod</a></li>
-<li><a href="#_install">Install</a></li>
 <li><a href="#_kubelet_service">kubelet.service</a></li>
 <li><a href="#_persistentvolume">PersistentVolume</a></li>
-<li><a href="#_troubleshooting">Troubleshooting</a>
+<li><a href="#__">&#x5B89;&#x5168;</a>
+<ul class="sectlevel2">
+<li><a href="#_rbac">RBAC &#x8BA4;&#x8BC1;&#x6388;&#x6743;</a></li>
+</ul>
+</li>
+<li><a href="#___2">&#x521B;&#x5EFA;&#x95EE;&#x9898;&#x5206;&#x6790;&#x6B65;&#x9AA4;</a>
 <ul class="sectlevel2">
 <li><a href="#_control_plane">Control Plane</a></li>
 <li><a href="#_worker_node">Worker Node</a></li>
@@ -2719,46 +2723,6 @@ systemctl restart kubelet</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_install">Install</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="title"><strong>&#x6DFB;&#x52A0;&#x8282;&#x70B9;&#x65B9;&#x6CD5;&#x4E00;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> generate token
-<span class="hljs-comment"># kubeadm token generate</span>
-yfvb6j<span class="hljs-number">.0628</span>gwwf3ec5bzu4
-
-// <span class="hljs-number">2.</span> pring join commands
-<span class="hljs-comment"># kubeadm token create yfvb6j.0628gwwf3ec5bzu4 --ttl 2h --print-join-command</span>
-kubeadm join control-plane.example.com:<span class="hljs-number">6443</span> --token yfvb6j<span class="hljs-number">.0628</span>gwwf3ec5bzu4     --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
-
-// <span class="hljs-number">3.</span> copy kubeadm join commands to worker node implement the node join</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x6DFB;&#x52A0;&#x8282;&#x70B9;&#x65B9;&#x6CD5;&#x4E8C;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">// <span class="hljs-number">1.</span> generate token
-$ kubeadm token create
-n2kb3q.ctmc0wpfnt4cjtbl
-
-// <span class="hljs-number">2.</span> generate join node commands
-$ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der <span class="hljs-number">2</span>&gt;/dev/<span class="hljs-literal">null</span> | \
-    openssl dgst -sha256 -hex | sed <span class="hljs-string">&apos;s/^.* //&apos;</span>
-cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
-
-kubeadm join control-plane.example.com:<span class="hljs-number">6443</span> --token n2kb3q.ctmc0wpfnt4cjtbl \
-<span class="hljs-bullet">    -</span>-discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
-
-// <span class="hljs-number">3.</span> copy kubeadm join commands to worker node implement the node join</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/" class="bare" target="_blank">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_kubelet_service">kubelet.service</h2>
 <div class="sectionbody">
 <div class="listingblock">
@@ -2799,7 +2763,47 @@ systemctl list-units | grep api-server
 </div>
 </div>
 <div class="sect1">
-<h2 id="_troubleshooting">Troubleshooting</h2>
+<h2 id="__">&#x5B89;&#x5168;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_rbac">RBAC &#x8BA4;&#x8BC1;&#x6388;&#x6743;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; namespace</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl create ns web</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. role.yaml</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">apiVersion:</span> rbac.authorization.k8s.io/v1
+<span class="hljs-attr">kind:</span> Role
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">  namespace:</span> web
+<span class="hljs-attr">  name:</span> service-reader
+<span class="hljs-attr">rules:</span>
+<span class="hljs-attr">- apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]
+<span class="hljs-attr">  resources:</span> [<span class="hljs-string">&quot;services&quot;</span>]
+<span class="hljs-attr">  verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA; rolebinding&#xFF0C;&#x5C06;&#x4E0A;&#x9762;&#x521B;&#x5EFA;&#x7684; service-reader &#x7ED1;&#x5B9A;&#x5230;&#x4E00;&#x4E2A; serviceaccount</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl create rolebinding test --role=service-reader --serviceaccount=web:default -n web</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">curl localhost:<span class="hljs-number">8001</span>/api/v1/namespaces/web/services</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x521B;&#x5EFA;&#x95EE;&#x9898;&#x5206;&#x6790;&#x6B65;&#x9AA4;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_control_plane">Control Plane</h3>
@@ -2907,7 +2911,7 @@ iptables-save | grep &lt;NAME<span class="hljs-string">&gt;</span></code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"管理","level":"1.5.5","depth":2,"next":{"title":"ANSIBLE","level":"1.6","depth":1,"path":"ansible/README.adoc","ref":"ansible/README.adoc","articles":[{"title":"基本使用","level":"1.6.1","depth":2,"path":"ansible/basic-usage.adoc","ref":"ansible/basic-usage.adoc","articles":[]}]},"previous":{"title":"开发","level":"1.5.4","depth":2,"path":"k8s/dev.adoc","ref":"k8s/dev.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s/admin.adoc","mtime":"2020-03-11T10:09:47.807Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-16T02:23:49.014Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"管理","level":"1.5.5","depth":2,"next":{"title":"ANSIBLE","level":"1.6","depth":1,"path":"ansible/README.adoc","ref":"ansible/README.adoc","articles":[{"title":"基本使用","level":"1.6.1","depth":2,"path":"ansible/basic-usage.adoc","ref":"ansible/basic-usage.adoc","articles":[]}]},"previous":{"title":"开发","level":"1.5.4","depth":2,"path":"k8s/dev.adoc","ref":"k8s/dev.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s/admin.adoc","mtime":"2020-05-05T10:37:45.384Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-05-05T10:39:16.380Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

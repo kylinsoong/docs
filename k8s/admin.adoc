@@ -609,42 +609,6 @@ staticPodPath: /etc/kubernetes/manifests
 systemctl restart kubelet
 ----
 
-== Install
-
-[source, yaml]
-.*添加节点方法一*
-----
-// 1. generate token
-# kubeadm token generate
-yfvb6j.0628gwwf3ec5bzu4
-
-// 2. pring join commands
-# kubeadm token create yfvb6j.0628gwwf3ec5bzu4 --ttl 2h --print-join-command
-kubeadm join control-plane.example.com:6443 --token yfvb6j.0628gwwf3ec5bzu4     --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
-
-// 3. copy kubeadm join commands to worker node implement the node join
-----
-
-[source, yaml]
-.*添加节点方法二*
-----
-// 1. generate token
-$ kubeadm token create
-n2kb3q.ctmc0wpfnt4cjtbl
-
-// 2. generate join node commands
-$ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
-    openssl dgst -sha256 -hex | sed 's/^.* //'
-cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
-
-kubeadm join control-plane.example.com:6443 --token n2kb3q.ctmc0wpfnt4cjtbl \
-    --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
-
-// 3. copy kubeadm join commands to worker node implement the node join
-----
-
-https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
-
 == kubelet.service
 
 [source, yaml]
@@ -678,7 +642,43 @@ spec:
 
 https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volumes
 
-== Troubleshooting
+== 安全
+
+=== RBAC 认证授权
+
+[source, yaml]
+.*1. 创建 namespace*
+----
+kubectl create ns web
+----
+
+[source, yaml]
+.*2. role.yaml*
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: web
+  name: service-reader
+rules:
+- apiGroups: [""] 
+  resources: ["services"]
+  verbs: ["get", "list"]
+----
+
+[source, yaml]
+.*3. 创建 rolebinding，将上面创建的 service-reader 绑定到一个 serviceaccount*
+----
+kubectl create rolebinding test --role=service-reader --serviceaccount=web:default -n web
+----
+
+[source, yaml]
+.*4. 测试*
+----
+curl localhost:8001/api/v1/namespaces/web/services
+----
+
+== 创建问题分析步骤
 
 === Control Plane
 

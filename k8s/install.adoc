@@ -1,7 +1,11 @@
 = 安装
 :toc: manual
 
-== 环境准备
+== ubuntu 18.04 上在线安装
+
+本部分在 ubuntu 18.04 上在线安装，每个节点均可联网，且可下载 Google 的容器镜像的 RPM 包。
+
+=== 环境准备
 
 [source, bash]
 .*1. 所有节点静态域名配置*
@@ -99,7 +103,7 @@ systemctl status docker
 systemctl enable docker
 ----
 
-== kubeadm 准备
+=== kubeadm 准备
 
 [source, bash]
 ----
@@ -119,7 +123,7 @@ systemctl daemon-reload
 systemctl restart kubelet
 ----
 
-== 安装
+=== 安装
 
 [source, bash]
 .*1. config.yml*
@@ -243,13 +247,327 @@ machine02.example.com   Ready    worker   6m44s   v1.17.3
 machine03.example.com   Ready    worker   5m10s   v1.17.3
 ----
 
+== RHEL 7 上离线安装
+
+本部分说明如何在 RHEL 7 上离线安装，每个节点都没有连接互联网。
+
+=== 环境准备
+
+[source, bash]
+.*1. 静态域名配置（所有节点）*
+----
+echo "192.168.122.11 machine01.example.com machine01" >> /etc/hosts
+echo "192.168.122.12 machine02.example.com machine02" >> /etc/hosts
+----
+
+[source, bash]
+.*2. 节点互信免密登录*
+----
+ssh-keygen
+for i in machine01 machine02; do ssh-copy-id $i.example.com; done;
+----
+
+[source, bash]
+.*3. 查看主机名和操作系统版本*
+----
+$ for i in 1 2 ; do ssh machine0$i.example.com 'hostname; cat /etc/redhat-release' ; done
+machine01.example.com
+CentOS Linux release 7.8.2003 (Core)
+machine02.example.com
+CentOS Linux release 7.8.2003 (Core)
+----
+
+[source, text]
+.*4. 禁用 Swap（所有节点）*
+----
+# blkid | grep swap
+/dev/mapper/centos-swap: UUID="c53e4112-342c-429a-bb05-77e2f7e0462f" TYPE="swap" 
+
+# swapoff /dev/mapper/centos-swap
+
+// To permanently disable swap, comment out the swap line
+# vim /etc/fstab
+
+# mount -a
+
+# reboot
+----
+
+[source, bash]
+.*5. 确保每个节点二层 MAC 地址和 product_uuid 唯一*
+----
+$ for i in 1 2 ; do ssh machine0$i.example.com 'ip link | grep link/ether' ; done
+    link/ether 52:54:00:93:61:a8 brd ff:ff:ff:ff:ff:ff
+    link/ether 52:54:00:dc:6e:20 brd ff:ff:ff:ff:ff:ff
+
+$ for i in 1 2 ; do ssh machine0$i.example.com 'sudo cat /sys/class/dmi/id/product_uuid' ; done
+F6BC8F4B-EA5C-4CDD-8773-94F3600947A7
+F1E65C6B-21B0-4FF5-9DBD-5199F24DFEAA
+----
+
+[source, bash]
+.*6. 关闭 SElinux*
+----
+// change from enforcing to disabled
+vim /etc/selinux/config
+
+// alternatives
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+----
+
+[source, bash]
+.*7. 管理节点打开端口*
+----
+firewall-cmd --zone=public --add-port=6443/tcp --permanent
+firewall-cmd --zone=public --add-port=2379-2380/tcp --permanent
+firewall-cmd --zone=public --add-port=10250-10252/tcp --permanent
+firewall-cmd --reload
+----
+
+[source, bash]
+.*8. 计算节点打开端口*
+----
+firewall-cmd --zone=public --add-port=10250/tcp --permanent
+firewall-cmd --zone=public --add-port=30000-32767/tcp --permanent
+firewall-cmd --reload
+----
+
+[source, bash]
+.*9. 创建 Snapshot（本部分只有在使用 KVM 虚拟化情况下在 KVM 宿主机执行）*
+----
+// create
+qemu-img snapshot -c 20200505 /home/virt/machine01 
+qemu-img snapshot -c 20200505 /home/virt/machine02
+
+// view exist snapshot
+qemu-img snapshot -l /home/virt/machine01 
+qemu-img snapshot -l /home/virt/machine02
+
+// rollback to snapshot(only in the time need to rollback)
+qemu-img snapshot -a 20200505 /home/virt/machine01 
+qemu-img snapshot -a 20200505 /home/virt/machine02 
+----
+
+=== 安装 Docker
+
+[source, bash]
+.*安装 Docker 18.06.2*
+----
+yum install yum-utils device-mapper-persistent-data lvm2
+
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+yum install docker-ce-18.06.2.ce -y
+
+mkdir /etc/docker
+
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2",
+  "storage-opts": [
+    "overlay2.override_kernel_check=true"
+  ]
+}
+EOF
+
+mkdir -p /etc/systemd/system/docker.service.d
+
+systemctl daemon-reload
+systemctl restart docker
+systemctl enable docker
+----
+
+=== 安装 kubeadm, kubelet and kubectl
+
+[source, bash]
+.*1. 解压 RPM 包*
+----
+tar -xvf kubernets.tar.gz
+----
+
+[source, bash]
+.*2. 安装*
+----
+cd kubernets
+yum install `ls`
+----
+
+[source, bash]
+.*3. net.bridge.bridge-nf-call-iptables*
+----
+cat <<EOF >  /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+sysctl --system
+----
+
+[source, bash]
+.*4. 确保 br_netfilter 加载到内核*
+----
+lsmod | grep br_netfilter
+----
+
+[source, bash]
+.*5. kubelet 开机器启动*
+----
+systemctl enable --now kubelet
+----
+
+[source, bash]
+.*6. kubelet 启动*
+----
+systemctl daemon-reload
+systemctl restart kubelet
+----
+
+=== 管理节点安装
+
+[source, bash]
+.*1. 导入镜像*
+----
+docker load -i k8s-v1.15.5.tar.gz
+docker load -i calico-master.tar.gz
+----
+
+[source, bash]
+.*2. 安装*
+----
+kubeadm init --pod-network-cidr=192.168.0.0/16 
+----
+
+[source, bash]
+.*3. 拷贝配置文件到本地 HOME 目录*
+----
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+----
+
+[source, bash]
+.*4. 安装网络插件*
+----
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+----
+
+[source, bash]
+.*5. 管理节点也可分配计算任务*
+----
+kubectl taint nodes --all node-role.kubernetes.io/master-
+----
+
+[source, bash]
+.*6. 查看运行的容器*
+----
+$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                            READY   STATUS    RESTARTS   AGE
+kube-system   calico-kube-controllers-846568ccc-bm9xf         1/1     Running   0          2m42s
+kube-system   calico-node-2xf7s                               1/1     Running   0          2m42s
+kube-system   coredns-5c98db65d4-5xgrf                        1/1     Running   0          10m
+kube-system   coredns-5c98db65d4-md5hw                        1/1     Running   0          10m
+kube-system   etcd-machine01.example.com                      1/1     Running   0          9m11s
+kube-system   kube-apiserver-machine01.example.com            1/1     Running   0          9m8s
+kube-system   kube-controller-manager-machine01.example.com   1/1     Running   0          9m
+kube-system   kube-proxy-pkg8d                                1/1     Running   0          10m
+kube-system   kube-scheduler-machine01.example.com            1/1     Running   0          9m
+----
+
+=== 计算节点加入
+
+[source, bash]
+.*1. 导入镜像*
+----
+docker load -i k8s-v1.15.5.tar.gz
+docker load -i calico-worker.tar.gz
+----
+
+[source, bash]
+.*2. 计算节点加入*
+----
+kubeadm join 192.168.122.11:6443 --token q8fdva.fg35rk2ael190gv8 \
+     --discovery-token-ca-cert-hash sha256:244e6bf4d6b9d5b7d1ee14a70f3ff05bf003917bcb3e053ff4995ee72c85e339
+----
+
+[source, bash]
+.*3. 返回管理节点查看所有节点*
+----
+kubectl get nodes
+NAME                    STATUS   ROLES    AGE   VERSION
+machine01.example.com   Ready    master   34m   v1.15.5
+machine02.example.com   Ready    <none>   15m   v1.15.5
+----
+
+== 集群添加节点
+
+[source, yaml]
+.*添加节点方法一*
+----
+// 1. generate token
+# kubeadm token generate
+yfvb6j.0628gwwf3ec5bzu4
+
+// 2. pring join commands
+# kubeadm token create yfvb6j.0628gwwf3ec5bzu4 --ttl 2h --print-join-command
+kubeadm join control-plane.example.com:6443 --token yfvb6j.0628gwwf3ec5bzu4     --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+
+// 3. copy kubeadm join commands to worker node implement the node join
+----
+
+[source, yaml]
+.*添加节点方法二*
+----
+// 1. generate token
+$ kubeadm token create
+n2kb3q.ctmc0wpfnt4cjtbl
+
+// 2. generate join node commands
+$ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+    openssl dgst -sha256 -hex | sed 's/^.* //'
+cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+
+kubeadm join control-plane.example.com:6443 --token n2kb3q.ctmc0wpfnt4cjtbl \
+    --discovery-token-ca-cert-hash sha256:cb29759ded3490c7edc204ad8238cf973284e41d769e793ca49cebf14ee8996b
+
+// 3. copy kubeadm join commands to worker node implement the node join
+----
+
+== 已存在集群重新设定 iptables 规则 & 端口打开
+
+[source, bash]
+.*1. iptables 规则删除*
+----
+iptables-save | awk '/^[*]/ { print $1 }
+                     /^:[A-Z]+ [^-]/ { print $1 " ACCEPT" ; }
+                     /COMMIT/ { print $0; }' | iptables-restore
+----
+
+.*2. Master 节点端口打开*
+----
+firewall-cmd --zone=public --add-port=6443/tcp --permanent
+firewall-cmd --zone=public --add-port=2379-2380/tcp --permanent
+firewall-cmd --zone=public --add-port=10250-10252/tcp --permanent
+firewall-cmd --reload
+----
+
+.*3. Node 节点端口打开*
+----
+firewall-cmd --zone=public --add-port=10250/tcp --permanent
+firewall-cmd --zone=public --add-port=30000-32767/tcp --permanent
+firewall-cmd --reload
+----
+
+
 [source, bash]
 .**
 ----
 
 ----
-
-
-
 
 
