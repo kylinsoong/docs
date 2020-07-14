@@ -1985,15 +1985,16 @@
 <ul class="sectlevel1">
 <li><a href="#_pod_and_node_networking">Pod and Node Networking</a></li>
 <li><a href="#_container_network_interface_cni">Container Network Interface (CNI)</a></li>
-<li><a href="#_service_networking">Service Networking</a></li>
-<li><a href="#_network_policies">Network Policies</a></li>
-<li><a href="#_service_types">Service Types</a>
+<li><a href="#__">&#x670D;&#x52A1;&#x53D1;&#x73B0;&#x548C;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x8C03;&#x8BD5;</a>
 <ul class="sectlevel2">
-<li><a href="#_clusterip">ClusterIP</a></li>
-<li><a href="#_nodeport">NodePort</a></li>
-<li><a href="#_loadbalancer">LoadBalancer</a></li>
+<li><a href="#__service">&#x4E0D;&#x540C;&#x7C7B;&#x578B; Service &#x793A;&#x4F8B;</a></li>
+<li><a href="#_yaml">YAML &#x4E0B;&#x8F7D;</a></li>
+<li><a href="#___2">&#x670D;&#x52A1;&#x6CE8;&#x518C;</a></li>
+<li><a href="#_clusterip_iptables">ClusterIP &#x7C7B;&#x578B;&#x670D;&#x52A1; iptables &#x89C4;&#x5219;&#x8F6C;&#x53D1;&#x94FE;</a></li>
+<li><a href="#_nodeport_iptables">NodePort &#x7C7B;&#x578B;&#x670D;&#x52A1; iptables &#x89C4;&#x5219;&#x8F6C;&#x53D1;&#x94FE;</a></li>
 </ul>
 </li>
+<li><a href="#_network_policies">Network Policies</a></li>
 <li><a href="#_dns">DNS</a>
 <ul class="sectlevel2">
 <li><a href="#_service_dns">Service DNS</a></li>
@@ -2058,44 +2059,15 @@ ssh machine03
 </div>
 </div>
 <div class="sect1">
-<h2 id="_service_networking">Service Networking</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">// 1. deploy pod
-kubectl run nginx --image=nginx --port=80 --generator=run-pod/v1
-
-// 2 expose service
-kubectl expose pod nginx --port=80 --name=nginx
-
-<span class="hljs-comment"># kubectl get svc nginx --no-headers | awk &apos;{print $1, $3}&apos;</span>
-nginx 10.101.99.130
-
-// 3. view endpoints
-<span class="hljs-comment"># kubectl get endpoints nginx --no-headers | awk &apos;{print $1, $2}&apos;</span>
-nginx 192.168.208.240:80
-
-// 4. iptables rules
-<span class="hljs-comment"># iptables-save | grep KUBE | grep nginx</span>
--A KUBE-SERVICES <span class="hljs-_">-d</span> 10.101.99.130/32 -p tcp -m comment --comment <span class="hljs-string">&quot;default/nginx: cluster IP&quot;</span> -m tcp --dport 80 -j KUBE-SVC-4N57TFCL4MD7ZTDA</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_network_policies">Network Policies</h2>
+<h2 id="__">&#x670D;&#x52A1;&#x53D1;&#x73B0;&#x548C;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x8C03;&#x8BD5;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>&#x5728;&#x540C;&#x4E00;&#x4E2A; namespace &#x4E0B;&#xFF0C;kubernetes &#x9ED8;&#x8BA4;&#x662F;&#x6241;&#x5E73;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;&#x6240;&#x6709; POD &#x4E4B;&#x95F4;&#x53EF;&#x4EE5;&#x4E92;&#x901A;&#xFF0C;&#x4F46;&#x901A;&#x5E38;&#x751F;&#x4EA7;&#x4E2D;&#x9700;&#x8981;&#x66F4;&#x7EC6;&#x7C92;&#x5EA6;&#x7684;&#x5B9A;&#x4E49; POD &#x4E4B;&#x95F4;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;NetworkPolicy &#x7ED3;&#x5408; labels &#x5B9A;&#x4E49; POD &#x4E4B;&#x95F4;&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x65B9;&#x5F0F;&#x3002;</p>
+<p>K8S &#x7684; Service &#x5BF9;&#x8C61;&#x4E3B;&#x8981;&#x7684;&#x5DE5;&#x4F5C;&#x662F;&#x670D;&#x52A1;&#x53D1;&#x73B0;&#x548C;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#xFF0C;&#x5E38;&#x89C1;&#x7684; Service &#x7C7B;&#x578B;&#x5305;&#x62EC; ClusterIP &#x548C; Nodeport&#xFF0C;&#x4E0E; Service &#x5DE5;&#x4F5C;&#x76F8;&#x5173;&#x7684; K8S &#x7EC4;&#x4EF6;&#x5305;&#x62EC; <code>kubelet</code>, <code>kube-apiserver</code>, <code>kube-proxy</code>&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x8BF4;&#x660E;&#x8FD9;&#x4E9B;&#x7EC4;&#x4EF6;&#x53CA;&#x4E0D;&#x540C; Service &#x7C7B;&#x578B;&#x7684;&#x5DE5;&#x4F5C;&#x8FC7;&#x7A0B;&#x3002;</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_service_types">Service Types</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_clusterip">ClusterIP</h3>
+<h3 id="__service">&#x4E0D;&#x540C;&#x7C7B;&#x578B; Service &#x793A;&#x4F8B;</h3>
 <div class="listingblock">
+<div class="title"><strong>ClusterIP</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">// 1. create pod
 kubectl run front-end --image=nginx --port=80 --generator=run-pod/v1
@@ -2115,10 +2087,8 @@ kubectl run curl --image=radial/busyboxplus:curl --generator=run-pod/v1 --comman
 HELLO</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_nodeport">NodePort</h3>
 <div class="listingblock">
+<div class="title"><strong>NodePort</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">// 1. create pod
 kubectl run front-end --image=nginx --port=80 --generator=run-pod/v1
@@ -2141,25 +2111,323 @@ HELLO</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_loadbalancer">LoadBalancer</h3>
+<h3 id="_yaml">YAML &#x4E0B;&#x8F7D;</h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ID</th>
+<th class="tableblock halign-left valign-top">FILE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/deploy.yaml">deploy.yaml</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/clusterip.yaml">clusterip.yaml</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/nodeport.yaml">nodeport.yaml</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/nslookup.yaml">nslookup.yaml</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/curl.yaml">curl.yaml</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x670D;&#x52A1;&#x6CE8;&#x518C;</h3>
+<div class="paragraph">
+<p>&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x65F6;&#x4F1A;&#x8FDB;&#x884C;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#xFF0C;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x8FC7;&#x7A0B;&#xFF0C;&#x9996;&#x5148; kubelet &#x8C03;&#x8FD0; API &#x5C06;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x4E8E; API Server, &#x5BF9;&#x5E94; DNS &#x7EC4;&#x4EF6;&#x4F1A;&#x6DFB;&#x52A0;&#x4E00;&#x6761;&#x8BB0;&#x5F55;&#xFF0C;kube-proxy &#x4F1A;&#x5199;&#x5BF9;&#x5E94;&#x7684; iptables &#x89C4;&#x5219;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl create -f deploy.yaml
+kubectl create -f clusterip.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kubectl describe svc app-svc-clusterip -n test001</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/app-svc-clusterip.png" alt="app svc clusterip.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x6240;&#x6709;&#x8282;&#x70B9;&#x4E0A; iptables &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># for i in k8s-1 k8s-2 k8s-3 ; do ssh $i &apos;hostname ; iptables-save | grep test001 ; echo&apos; ; done
+k8s-1
+-A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-F657HDVWWTO5ELQA
+
+k8s-2
+-A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-F657HDVWWTO5ELQA
+
+k8s-3
+-A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-F657HDVWWTO5ELQA</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/app-svc-clusterip-iptables.png" alt="app svc clusterip iptables.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; DNS &#x8BB0;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># kubectl create -f nslookup.yaml
+# kubectl exec -it tools -n test001 -- nslookup app-svc-clusterip
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      app-svc-clusterip
+Address 1: 10.109.117.159 app-svc-clusterip.test001.svc.cluster.local</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/app-svc-clusterip-dns.png" alt="app svc clusterip dns.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_clusterip_iptables">ClusterIP &#x7C7B;&#x578B;&#x670D;&#x52A1; iptables &#x89C4;&#x5219;&#x8F6C;&#x53D1;&#x94FE;</h3>
+<div class="paragraph">
+<p>&#x5F53; API Server &#x63A5;&#x6536;&#x5230;&#x670D;&#x52A1;&#x6CE8;&#x518C;&#x65F6;&#xFF0C;kube-proxy &#x4F1A;&#x5199;&#x5BF9;&#x5E94;&#x7684; iptables &#x89C4;&#x5219;&#xFF0C;&#x89C4;&#x5219;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x76EE;&#x7684;&#x5730;&#x4E3A; 8080 &#x7684;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">iptables-save | grep 8080
+-A KUBE-SEP-63ULW6JC6WIZUZAX -p tcp -m tcp -j DNAT --to-destination 10.244.2.15:8080
+-A KUBE-SEP-MGLKNLMW4TUU5NXD -p tcp -m tcp -j DNAT --to-destination 10.244.1.19:8080
+-A KUBE-SEP-U4ZMXMHDO2QATTS7 -p tcp -m tcp -j DNAT --to-destination 10.244.2.16:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/svc-iptables-destination-pod.png" alt="svc iptables destination pod.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x4E0A;&#x89C4;&#x5219;&#x901A;&#x8FC7; 8080 &#x7AEF;&#x53E3;&#x8FC7;&#x6EE4;&#xFF0C;&#x516C;&#x6709;&#x4E09;&#x6761;&#xFF0C;&#x4E14;&#x76EE;&#x7684;&#x5730;&#x5740;&#x5206;&#x522B;&#x4E3A;: <code>10.244.2.15:8080</code>, <code>10.244.1.19:8080</code>, <code>10.244.2.16:8080</code>&#xFF0C;&#x8FD9;&#x4E0E; app-svc-clusterip &#x670D;&#x52A1;&#x5173;&#x8054;&#x7684; POD &#x603B;&#x6570;&#x4E00;&#x81F4;&#xFF0C;&#x4F8B;&#x5982;&#x67E5;&#x770B; POD &#x6709;&#x5982;&#x4E0B;&#x8F93;&#x51FA;&#xFF1A;</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">// 1. create pod
-kubectl run front-end --image=nginx --port=80 --generator=run-pod/v1
-
-// 2. create svc
-kubectl expose pod front-end --type=<span class="hljs-string">&apos;LoadBalancer&apos;</span> --port=80 --target-port=80 --name=front-end-service
-
-// 3. <span class="hljs-built_in">test</span>
-kubectl <span class="hljs-built_in">exec</span> -it pod/front-end sh
-<span class="hljs-comment"># cd /usr/share/nginx/html/</span>
-<span class="hljs-comment"># echo &quot;HELLO&quot; &gt; hello</span>
-<span class="hljs-comment"># exit</span>
-
-$ curl http://192.168.100.101/hello
-HELLO</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl get pods -o wide -n <span class="hljs-built_in">test</span>001 --no-headers
+app-58866f5c7-2lj7z   1/1   Running   0     106m   10.244.2.15   k8s-3   &lt;none&gt;   &lt;none&gt;
+app-58866f5c7-2nxgh   1/1   Running   0     106m   10.244.2.16   k8s-3   &lt;none&gt;   &lt;none&gt;
+app-58866f5c7-5mhrm   1/1   Running   0     106m   10.244.1.19   k8s-2   &lt;none&gt;   &lt;none&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x4E0A;&#x4E00;&#x8DF3;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">iptables-save | grep KUBE-SEP-63ULW6JC6WIZUZAX
+:KUBE-SEP-63ULW6JC6WIZUZAX - [0:0]
+-A KUBE-SEP-63ULW6JC6WIZUZAX <span class="hljs-_">-s</span> 10.244.2.15/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-63ULW6JC6WIZUZAX -p tcp -m tcp -j DNAT --to-destination 10.244.2.15:8080
+-A KUBE-SVC-F657HDVWWTO5ELQA -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-63ULW6JC6WIZUZAX
+
+iptables-save | grep KUBE-SEP-MGLKNLMW4TUU5NXD
+:KUBE-SEP-MGLKNLMW4TUU5NXD - [0:0]
+-A KUBE-SEP-MGLKNLMW4TUU5NXD <span class="hljs-_">-s</span> 10.244.1.19/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-MGLKNLMW4TUU5NXD -p tcp -m tcp -j DNAT --to-destination 10.244.1.19:8080
+-A KUBE-SVC-F657HDVWWTO5ELQA -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-MGLKNLMW4TUU5NXD
+
+iptables-save | grep KUBE-SEP-U4ZMXMHDO2QATTS7
+:KUBE-SEP-U4ZMXMHDO2QATTS7 - [0:0]
+-A KUBE-SEP-U4ZMXMHDO2QATTS7 <span class="hljs-_">-s</span> 10.244.2.16/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-U4ZMXMHDO2QATTS7 -p tcp -m tcp -j DNAT --to-destination 10.244.2.16:8080
+-A KUBE-SVC-F657HDVWWTO5ELQA -j KUBE-SEP-U4ZMXMHDO2QATTS7</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iptables-10.244.2.15.png" alt="10.244.2.15:8080"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iptables-10.244.1.19.png" alt="10.244.1.19:8080"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iptables-10.244.2.16.png" alt="10.244.2.16:8080"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x4E0A;&#x4E00;&#x8DF3;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">iptables-save | grep KUBE-SVC-F657HDVWWTO5ELQA
+:KUBE-SVC-F657HDVWWTO5ELQA - [0:0]
+-A KUBE-SERVICES <span class="hljs-_">-d</span> 10.109.117.159/32 -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-clusterip: cluster IP&quot;</span> -m tcp --dport 80 -j KUBE-SVC-F657HDVWWTO5ELQA
+-A KUBE-SVC-F657HDVWWTO5ELQA -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-MGLKNLMW4TUU5NXD
+-A KUBE-SVC-F657HDVWWTO5ELQA -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-63ULW6JC6WIZUZAX
+-A KUBE-SVC-F657HDVWWTO5ELQA -j KUBE-SEP-U4ZMXMHDO2QATTS7</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iptables-svc-clusterip.png" alt="iptables svc clusterip.png"></span></p>
+</div>
+<div class="paragraph">
+<p><code>-A KUBE-SERVICES -d 10.109.117.159/32 -p tcp -m comment --comment &quot;test001/app-svc-clusterip: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-F657HDVWWTO5ELQA</code> &#x662F;&#x4E00;&#x6761;&#x76EE;&#x7684;&#x5730;&#x5339;&#x914D;&#x7684;&#x89C4;&#x5219;&#xFF0C;&#x4E0B;&#x4E00;&#x6761;&#x7684;&#x89C4;&#x5219;&#x4E3A; KUBE-SVC-F657HDVWWTO5ELQA&#xFF0C;&#x6709;&#x4E09;&#x4E2A; KUBE-SVC-F657HDVWWTO5ELQA &#x89C4;&#x5219;&#xFF0C;&#x5E76;&#x4E14;&#x901A;&#x8FC7;&#x968F;&#x673A;&#x7684;&#x65B9;&#x5F0F;&#x8DF3;&#x8F6C;&#x3002;</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Service &#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x5B9E;&#x73B0;&#x662F;&#x901A;&#x8FC7; iptables &#x5B9E;&#x73B0;&#x7684;&#x3002;&#x4E00;&#x4E2A; ClusterIP &#x7C7B;&#x578B;&#x7684;&#x670D;&#x52A1;&#x4F1A;&#x4EA7;&#x751F; 15 &#x6761; iptables &#x89C4;&#x5219;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x4E00;&#x4E2A; ClusterIP &#x7C7B;&#x578B;&#x670D;&#x52A1;&#x5BF9;&#x5E94;&#x7684;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">:KUBE-SEP-63ULW6JC6WIZUZAX - [0:0]
+:KUBE-SEP-MGLKNLMW4TUU5NXD - [0:0]
+:KUBE-SEP-U4ZMXMHDO2QATTS7 - [0:0]
+:KUBE-SVC-F657HDVWWTO5ELQA - [0:0]
+-A KUBE-SEP-63ULW6JC6WIZUZAX <span class="hljs-_">-s</span> 10.244.2.15/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-63ULW6JC6WIZUZAX -p tcp -m tcp -j DNAT --to-destination 10.244.2.15:8080
+-A KUBE-SEP-MGLKNLMW4TUU5NXD <span class="hljs-_">-s</span> 10.244.1.19/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-MGLKNLMW4TUU5NXD -p tcp -m tcp -j DNAT --to-destination 10.244.1.19:8080
+-A KUBE-SEP-U4ZMXMHDO2QATTS7 <span class="hljs-_">-s</span> 10.244.2.16/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-U4ZMXMHDO2QATTS7 -p tcp -m tcp -j DNAT --to-destination 10.244.2.16:8080
+-A KUBE-SERVICES ! <span class="hljs-_">-s</span> 10.244.0.0/16 <span class="hljs-_">-d</span> 10.109.117.159/32 -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-clusterip: cluster IP&quot;</span> -m tcp --dport 80 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES <span class="hljs-_">-d</span> 10.109.117.159/32 -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-clusterip: cluster IP&quot;</span> -m tcp --dport 80 -j KUBE-SVC-F657HDVWWTO5ELQA
+-A KUBE-SVC-F657HDVWWTO5ELQA -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-MGLKNLMW4TUU5NXD
+-A KUBE-SVC-F657HDVWWTO5ELQA -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-63ULW6JC6WIZUZAX
+-A KUBE-SVC-F657HDVWWTO5ELQA -j KUBE-SEP-U4ZMXMHDO2QATTS7</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ClusterIP &#x7C7B;&#x578B;&#x670D;&#x52A1; iptables &#x89C4;&#x5219;&#x8F6C;&#x53D1;&#x94FE;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iptables-clusterip-chains.png" alt="iptables clusterip chains.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodeport_iptables">NodePort &#x7C7B;&#x578B;&#x670D;&#x52A1; iptables &#x89C4;&#x5219;&#x8F6C;&#x53D1;&#x94FE;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; NodePort &#x7C7B;&#x578B;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl create <span class="hljs-_">-f</span> nodeport.yaml
+kubectl create <span class="hljs-_">-f</span> nodeport.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/app-svc-nodeport.png" alt="app svc nodeport.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B; 8080 &#x7AEF;&#x53E3;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">iptables-save | grep 8080
+-A KUBE-SEP-2HTJJZZDPAT4VCE2 -p tcp -m tcp -j DNAT --to-destination 10.244.2.16:8080
+-A KUBE-SEP-GBMLEVQY6OROVLIP -p tcp -m tcp -j DNAT --to-destination 10.244.2.15:8080
+-A KUBE-SEP-YZPFJIVDJH5M2X7F -p tcp -m tcp -j DNAT --to-destination 10.244.1.19:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x4E0A;&#x4E00;&#x8DF3;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">iptables-save | grep KUBE-SEP-2HTJJZZDPAT4VCE2
+:KUBE-SEP-2HTJJZZDPAT4VCE2 - [0:0]
+-A KUBE-SEP-2HTJJZZDPAT4VCE2 -s 10.244.2.16/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-2HTJJZZDPAT4VCE2 -p tcp -m tcp -j DNAT --to-destination 10.244.2.16:8080
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -j KUBE-SEP-2HTJJZZDPAT4VCE2
+
+iptables-save | grep KUBE-SEP-GBMLEVQY6OROVLIP
+:KUBE-SEP-GBMLEVQY6OROVLIP - [0:0]
+-A KUBE-SEP-GBMLEVQY6OROVLIP -s 10.244.2.15/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-GBMLEVQY6OROVLIP -p tcp -m tcp -j DNAT --to-destination 10.244.2.15:8080
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-GBMLEVQY6OROVLIP
+
+iptables-save | grep KUBE-SEP-YZPFJIVDJH5M2X7F
+:KUBE-SEP-YZPFJIVDJH5M2X7F - [0:0]
+-A KUBE-SEP-YZPFJIVDJH5M2X7F -s 10.244.1.19/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-YZPFJIVDJH5M2X7F -p tcp -m tcp -j DNAT --to-destination 10.244.1.19:8080
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-YZPFJIVDJH5M2X7F</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x4E0A;&#x4E00;&#x6761;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">iptables-save | grep KUBE-SVC-CFVXM4HF2HSCB2P5
+:KUBE-SVC-CFVXM4HF2HSCB2P5 - [0:0]
+-A KUBE-NODEPORTS -p tcp -m comment --comment &quot;test001/app-svc-nodeport:&quot; -m tcp --dport 30080 -j KUBE-SVC-CFVXM4HF2HSCB2P5
+-A KUBE-SERVICES -d 10.111.7.86/32 -p tcp -m comment --comment &quot;test001/app-svc-nodeport: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-CFVXM4HF2HSCB2P5
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-YZPFJIVDJH5M2X7F
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-GBMLEVQY6OROVLIP
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -j KUBE-SEP-2HTJJZZDPAT4VCE2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>-A KUBE-NODEPORTS -p tcp -m comment --comment &quot;test001/app-svc-nodeport:&quot; -m tcp --dport 30080 -j KUBE-SVC-CFVXM4HF2HSCB2P5</code> &#x548C; <code>-A KUBE-SERVICES -d 10.111.7.86/32 -p tcp -m comment --comment &quot;test001/app-svc-nodeport: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-CFVXM4HF2HSCB2P5</code> &#x7684;&#x4E0B;&#x4E00;&#x8DF3;&#x90FD;&#x662F; <strong>KUBE-SVC-CFVXM4HF2HSCB2P5</strong>&#xFF0C;&#x800C; <strong>KUBE-SVC-CFVXM4HF2HSCB2P5</strong> &#x7684;&#x4E0B;&#x4E00;&#x6761;&#x6709;&#x4E09;&#x6761;&#x89C4;&#x5219;&#xFF0C;&#x5206;&#x522B;&#x6307;&#x5411;&#x4E09;&#x4E2A; POD&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x4E00;&#x4E2A; NodePort &#x7C7B;&#x578B;&#x670D;&#x52A1;&#x5BF9;&#x5E94;&#x7684;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">:KUBE-SEP-2HTJJZZDPAT4VCE2 - [0:0]
+:KUBE-SEP-GBMLEVQY6OROVLIP - [0:0]
+:KUBE-SEP-YZPFJIVDJH5M2X7F - [0:0]
+:KUBE-SVC-CFVXM4HF2HSCB2P5 - [0:0]
+-A KUBE-NODEPORTS -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-nodeport:&quot;</span> -m tcp --dport 30080 -j KUBE-MARK-MASQ
+-A KUBE-NODEPORTS -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-nodeport:&quot;</span> -m tcp --dport 30080 -j KUBE-SVC-CFVXM4HF2HSCB2P5
+-A KUBE-SEP-2HTJJZZDPAT4VCE2 <span class="hljs-_">-s</span> 10.244.2.16/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-2HTJJZZDPAT4VCE2 -p tcp -m tcp -j DNAT --to-destination 10.244.2.16:8080
+-A KUBE-SEP-GBMLEVQY6OROVLIP <span class="hljs-_">-s</span> 10.244.2.15/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-GBMLEVQY6OROVLIP -p tcp -m tcp -j DNAT --to-destination 10.244.2.15:8080
+-A KUBE-SEP-YZPFJIVDJH5M2X7F <span class="hljs-_">-s</span> 10.244.1.19/32 -j KUBE-MARK-MASQ
+-A KUBE-SEP-YZPFJIVDJH5M2X7F -p tcp -m tcp -j DNAT --to-destination 10.244.1.19:8080
+-A KUBE-SERVICES ! <span class="hljs-_">-s</span> 10.244.0.0/16 <span class="hljs-_">-d</span> 10.96.0.1/32 -p tcp -m comment --comment <span class="hljs-string">&quot;default/kubernetes:https cluster IP&quot;</span> -m tcp --dport 443 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES <span class="hljs-_">-d</span> 10.96.0.1/32 -p tcp -m comment --comment <span class="hljs-string">&quot;default/kubernetes:https cluster IP&quot;</span> -m tcp --dport 443 -j KUBE-SVC-NPX46M4PTMTKRN6Y
+-A KUBE-SERVICES ! <span class="hljs-_">-s</span> 10.244.0.0/16 <span class="hljs-_">-d</span> 10.111.7.86/32 -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-nodeport: cluster IP&quot;</span> -m tcp --dport 80 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES <span class="hljs-_">-d</span> 10.111.7.86/32 -p tcp -m comment --comment <span class="hljs-string">&quot;test001/app-svc-nodeport: cluster IP&quot;</span> -m tcp --dport 80 -j KUBE-SVC-CFVXM4HF2HSCB2P5
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-YZPFJIVDJH5M2X7F
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-GBMLEVQY6OROVLIP
+-A KUBE-SVC-CFVXM4HF2HSCB2P5 -j KUBE-SEP-2HTJJZZDPAT4VCE2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NodePort &#x7C7B;&#x578B;&#x670D;&#x52A1; iptables &#x89C4;&#x5219;&#x8F6C;&#x53D1;&#x94FE;:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iptables-nodeport-chaines.png" alt="iptables nodeport chaines.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x4ECE;&#x8F6C;&#x53D1;&#x94FE;&#x53EF;&#x4EE5;&#x5F97;&#x51FA;&#x5982;&#x4E0B;&#x7ED3;&#x8BBA;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>NodePort &#x7C7B;&#x578B;&#x670D;&#x52A1;&#x4E5F;&#x652F;&#x6301; ClusterIP &#x7C7B;&#x578B;&#xFF0C;&#x521B;&#x5EFA;&#x4E86;&#x4E00;&#x6761; ClusterIP &#x89C4;&#x5219;&#x4F9B;&#x5185;&#x90E8;&#x8C03;&#x7528;&#x4F7F;&#x7528;</p>
+</li>
+<li>
+<p>NodePort &#x5916;&#x90E8;&#x5165;&#x53E3;&#x662F; TCP &#x7AEF;&#x53E3;&#x53F7;</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_network_policies">Network Policies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x5728;&#x540C;&#x4E00;&#x4E2A; namespace &#x4E0B;&#xFF0C;kubernetes &#x9ED8;&#x8BA4;&#x662F;&#x6241;&#x5E73;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;&#x6240;&#x6709; POD &#x4E4B;&#x95F4;&#x53EF;&#x4EE5;&#x4E92;&#x901A;&#xFF0C;&#x4F46;&#x901A;&#x5E38;&#x751F;&#x4EA7;&#x4E2D;&#x9700;&#x8981;&#x66F4;&#x7EC6;&#x7C92;&#x5EA6;&#x7684;&#x5B9A;&#x4E49; POD &#x4E4B;&#x95F4;&#x7684;&#x7F51;&#x7EDC;&#xFF0C;NetworkPolicy &#x7ED3;&#x5408; labels &#x5B9A;&#x4E49; POD &#x4E4B;&#x95F4;&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x65B9;&#x5F0F;&#x3002;</p>
 </div>
 </div>
 </div>
@@ -2368,7 +2636,7 @@ Address 1: 192.168.208.238 192-168-208-238.nginx-dns.default.svc.cluster.local</
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"网络","level":"1.5.3","depth":2,"next":{"title":"开发","level":"1.5.4","depth":2,"path":"k8s/dev.adoc","ref":"k8s/dev.adoc","articles":[]},"previous":{"title":"概念","level":"1.5.2","depth":2,"path":"k8s/case.adoc","ref":"k8s/case.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s/net.adoc","mtime":"2020-03-11T04:12:41.978Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-05-05T10:39:16.380Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络","level":"1.5.3","depth":2,"next":{"title":"开发","level":"1.5.4","depth":2,"path":"k8s/dev.adoc","ref":"k8s/dev.adoc","articles":[]},"previous":{"title":"概念","level":"1.5.2","depth":2,"path":"k8s/case.adoc","ref":"k8s/case.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s/net.adoc","mtime":"2020-06-06T19:03:20.403Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-07-14T15:27:31.102Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

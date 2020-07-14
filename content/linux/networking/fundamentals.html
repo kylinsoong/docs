@@ -2845,7 +2845,32 @@ WAN technologies usually require that you contract a link across the Internet wi
 </tbody>
 </table>
 <div class="paragraph">
-<p>&#x53C2;&#x7167; <a href="https://zh.wikipedia.org/wiki/&#x5206;&#x7C7B;&#x7F51;&#x7EDC;" target="_blank">&#x1F517;</a>&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x5173;&#x4E8E;&#x7F51;&#x7EDC;&#x5206;&#x7C7B;</p>
+<p>&#x540C;&#x6837;&#x4E0D;&#x662F;&#x6240;&#x6709;&#x7684; IP &#x5730;&#x5740;&#x53EF;&#x4EE5;&#x5206;&#x914D;&#x7ED9;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF0C;&#x5982;&#x4E0B;&#x4E00;&#x4E9B;&#x5730;&#x5740;&#x5C5E;&#x9884;&#x7559;&#x5730;&#x5740;&#xFF0C;&#x4E0D;&#x80FD;&#x5206;&#x914D;&#x7ED9;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>0.0.0.0</strong> : &#x4EE3;&#x8868;&#x6240;&#x6709;&#x7F51;&#x7EDC;</p>
+</li>
+<li>
+<p><strong>127.0.0.0 - 127.255.255.255</strong> : loopback &#x672C;&#x5730;&#x6D4B;&#x8BD5;&#x5730;&#x5740;</p>
+</li>
+<li>
+<p><strong>224.0.0.0 - 239.255.255.255</strong> : &#x7C7B;&#x578B; D &#x591A;&#x64AD;&#x901A;&#x4FE1;&#x9884;&#x7559;&#x5730;&#x5740;</p>
+</li>
+<li>
+<p><strong>240.0.0.0 - 255.255.255.254</strong> : &#x7C7B;&#x578B; E &#x9884;&#x7559;&#x5730;&#x5740;&#x6BB5;&#xFF0C;&#x672A;&#x6765;&#x4F7F;&#x7528;</p>
+</li>
+<li>
+<p><strong>255.255.255.255</strong> : &#x4EE3;&#x8868;&#x6240;&#x6709;&#x4E3B;&#x673A;</p>
+</li>
+<li>
+<p>&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x4E2D;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5730;&#x5740;&#x548C;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x5730;&#x5740;&#xFF0C;&#x7B2C;&#x4E00;&#x4E2A;&#x5730;&#x5740;&#x662F;&#x7F51;&#x7EDC;&#x9884;&#x7559;&#x5730;&#x5740;&#xFF0C;&#x6700;&#x540E;&#x4E00;&#x4E2A;&#x5730;&#x5740;&#x662F;&#x591A;&#x64AD;&#x5730;&#x5740;&#xFF0C;&#x4F8B;&#x5982; 10.1.10.0/24 &#x7F51;&#x7EDC;&#xFF0C;10.1.10.0 &#x662F;&#x7F51;&#x7EDC;&#x9884;&#x7559;&#x5730;&#x5740;&#xFF0C;10.1.10.255 &#x662F;&#x591A;&#x64AD;&#x5730;&#x5740;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x53C2;&#x7167; <a href="https://zh.wikipedia.org/wiki/&#x5206;&#x7C7B;&#x7F51;&#x7EDC;" target="_blank">&#x1F517;</a>&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x5173;&#x4E8E;&#x7F51;&#x7EDC;&#x5206;&#x7C7B;&#x3002;</p>
 </div>
 </div>
 <div class="sect3">
@@ -2908,6 +2933,9 @@ WAN technologies usually require that you contract a link across the Internet wi
 <div class="paragraph">
 <p>CIDR &#x662F;&#x63CF;&#x8FF0; IP &#x5730;&#x5740;&#x7684;&#x4E00;&#x79CD;&#x66F4;&#x52A0;&#x7075;&#x6D3B;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x4EE5;&#x659C;&#x6760; + &#x6570;&#x5B57;&#x6765;&#x8868;&#x793A;&#x63A9;&#x7801;&#x957F;&#x5EA6;&#xFF0C;&#x8FD9;&#x6837;&#x5BF9;&#x5B50;&#x7F51;&#x7684;&#x5212;&#x5206;&#x66F4;&#x52A0;&#x6613;&#x8BFB;&#x3002;</p>
 </div>
+<div class="paragraph">
+<p><a href="https://ipaddressguide.com/cidr" class="bare" target="_blank">https://ipaddressguide.com/cidr</a></p>
+</div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 5. <strong>CIRD</strong></caption>
 <colgroup>
@@ -2952,6 +2980,254 @@ WAN technologies usually require that you contract a link across the Internet wi
 <td class="tableblock halign-left valign-top"><p class="tableblock">11111111.11111111.11111000.00000000</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">255.255.248.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">/21</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 6. <strong>CIRD /30 &#x793A;&#x4F8B;</strong></caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">CIDR</th>
+<th class="tableblock halign-left valign-top">Netmask</th>
+<th class="tableblock halign-left valign-top">First IP</th>
+<th class="tableblock halign-left valign-top">Last IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.0/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.4/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.7</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.8/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.12/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.15</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.16/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.19</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.20/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.23</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.24/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.24</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.27</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.28/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.28</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.31</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.32/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.35</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.36/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.36</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.39</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.40/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.40</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.43</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.44/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.44</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.47</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.48/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.48</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.51</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.52/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.52</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.55</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.56/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.56</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.59</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.60/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.63</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.64/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.67</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.68/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.68</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.71</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.72/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.75</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.76/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.76</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.79</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.80/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.83</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.84/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.84</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.87</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.128/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.128</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.131</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.240/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.240</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.243</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.244/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.244</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.247</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.248/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.248</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.251</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.252/30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.252</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.255</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 7. <strong>CIRD /27 &#x793A;&#x4F8B;</strong></caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">CIDR</th>
+<th class="tableblock halign-left valign-top">Netmask</th>
+<th class="tableblock halign-left valign-top">First IP</th>
+<th class="tableblock halign-left valign-top">Last IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.0/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.31</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.32/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.63</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.64/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.95</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.96/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.96</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.127</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.128/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.128</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.159</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.160/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.160</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.191</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.192/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.192</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.223</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.224/27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">255.255.255.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.224</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.255</p></td>
 </tr>
 </tbody>
 </table>
@@ -3270,7 +3546,7 @@ default via 10.1.1.1 dev mgmt  metric 9  mtu 1500
 </ol>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 6. <strong>IGP &#x8DEF;&#x7531;&#x534F;&#x8BAE;</strong></caption>
+<caption class="title">Table 8. <strong>IGP &#x8DEF;&#x7531;&#x534F;&#x8BAE;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3457,7 +3733,7 @@ IANA(Internet Assigned Numbers Authority) &#x662F;&#x4E00;&#x4E2A;&#x975E;&#x76C
 <p><span class="image"><img src="img/ipv6-shortern-excercise.png" alt="ipv6 shortern excercise.png"></span></p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 7. <strong>IPv6 &#x901A;&#x7528;&#x5730;&#x5740;&#x8868;</strong></caption>
+<caption class="title">Table 9. <strong>IPv6 &#x901A;&#x7528;&#x5730;&#x5740;&#x8868;</strong></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -3653,7 +3929,7 @@ IANA(Internet Assigned Numbers Authority) &#x662F;&#x4E00;&#x4E2A;&#x975E;&#x76C
 <div class="sect2">
 <h3 id="___23">&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001; &amp; &#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;</h3>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 8. <strong>&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001; &amp; &#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;</strong></caption>
+<caption class="title">Table 10. <strong>&#x591A;&#x8DEF;&#x590D;&#x7528;&#x53D1;&#x9001; &amp; &#x591A;&#x8DEF;&#x5206;&#x89E3;&#x63A5;&#x6536;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3753,7 +4029,7 @@ IANA(Internet Assigned Numbers Authority) &#x662F;&#x4E00;&#x4E2A;&#x975E;&#x76C
 <div class="sect2">
 <h3 id="_tcp">TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;</h3>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 9. <strong>6 &#x79CD; TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;</strong></caption>
+<caption class="title">Table 11. <strong>6 &#x79CD; TCP &#x63A7;&#x5236;&#x6807;&#x7B7E;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3859,7 +4135,7 @@ A responds again with just the ACK flag set* (`I acknowledge your acknowledgemen
 <p>A socket is the instantiation of an endpoint in a potential TCP connection.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 10. <strong>TCP &#x5957;&#x63A5;&#x5B57;&#x72B6;&#x6001;</strong></caption>
+<caption class="title">Table 12. <strong>TCP &#x5957;&#x63A5;&#x5B57;&#x72B6;&#x6001;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3914,7 +4190,7 @@ A responds again with just the ACK flag set* (`I acknowledge your acknowledgemen
 <p>&#x4F20;&#x8F93;&#x5C42;&#x662F;&#x6839;&#x636E;&#x7AEF;&#x53E3;&#x53F7;&#x6765;&#x786E;&#x4FDD;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x901A;&#x4FE1;&#xFF0C;&#x4F20;&#x8F93;&#x5C42;&#x7684;&#x534F;&#x8BAE;&#x4E0D;&#x7BA1;&#x662F; TCP &#x8FD8;&#x662F; UDP&#xFF0C;&#x90FD;&#x4E0E;&#x7AEF;&#x53E3;&#x53F7;&#x5173;&#x8054;&#xFF0C;&#x7AEF;&#x53E3;&#x53F7;&#x662F;&#x4E00;&#x4E2A; 16 &#x4E2A;&#x5B57;&#x8282;&#x957F;&#x5EA6;&#x7684;&#x6570;&#x5B57;&#xFF08;&#x8303;&#x56F4;&#x4E3A; 0 - 65535&#xFF09;&#x3002;&#x7AEF;&#x53E3;&#x53F7;&#x53C8;&#x5206;&#x4E3A;&#x7CFB;&#x7EDF;&#x7AEF;&#x53E3;&#x548C;&#x4E34;&#x65F6;&#x7AEF;&#x53E3;&#x3002;</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 11. <strong>IANA &#x5B9A;&#x4E49;&#x7684;&#x7AEF;&#x53E3;&#x8303;&#x56F4;</strong></caption>
+<caption class="title">Table 13. <strong>IANA &#x5B9A;&#x4E49;&#x7684;&#x7AEF;&#x53E3;&#x8303;&#x56F4;</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -4107,7 +4383,7 @@ IP masquerading is an important security concept. The most basic concept at play
 <div class="sect3">
 <h4 id="_rir_regional_internet_registries">RIR(regional internet registries)</h4>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 12. <strong>The IANA assigned address blocks to the five regional internet registries or RIRs</strong></caption>
+<caption class="title">Table 14. <strong>The IANA assigned address blocks to the five regional internet registries or RIRs</strong></caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -4396,7 +4672,7 @@ Reverse proxy can also used in encrypting and decrypting web data.
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"网络基础","level":"1.2.3.1","depth":3,"next":{"title":"TCP 调试","level":"1.2.3.1.1","depth":4,"path":"linux/networking/tcp_debug.adoc","ref":"linux/networking/tcp_debug.adoc","articles":[]},"previous":{"title":"网络","level":"1.2.3","depth":2,"path":"linux/networking/README.adoc","ref":"linux/networking/README.adoc","articles":[{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[{"title":"TCP 调试","level":"1.2.3.1.1","depth":4,"path":"linux/networking/tcp_debug.adoc","ref":"linux/networking/tcp_debug.adoc","articles":[]}]},{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},{"title":"IPv6 网络配置","level":"1.2.3.3","depth":3,"path":"linux/networking/ipv6cfg.adoc","ref":"linux/networking/ipv6cfg.adoc","articles":[]},{"title":"namespace","level":"1.2.3.4","depth":3,"path":"linux/networking/netns.adoc","ref":"linux/networking/netns.adoc","articles":[]},{"title":"teaming","level":"1.2.3.5","depth":3,"path":"linux/networking/teaming.adoc","ref":"linux/networking/teaming.adoc","articles":[]},{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},{"title":"网络监控","level":"1.2.3.8","depth":3,"path":"linux/networking/monitor.adoc","ref":"linux/networking/monitor.adoc","articles":[]},{"title":"网络编程","level":"1.2.3.9","depth":3,"path":"linux/networking/programming.adoc","ref":"linux/networking/programming.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/fundamentals.adoc","mtime":"2020-02-05T16:05:19.820Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-05-05T10:39:16.380Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络基础","level":"1.2.3.1","depth":3,"next":{"title":"TCP 调试","level":"1.2.3.1.1","depth":4,"path":"linux/networking/tcp_debug.adoc","ref":"linux/networking/tcp_debug.adoc","articles":[]},"previous":{"title":"网络","level":"1.2.3","depth":2,"path":"linux/networking/README.adoc","ref":"linux/networking/README.adoc","articles":[{"title":"网络基础","level":"1.2.3.1","depth":3,"path":"linux/networking/fundamentals.adoc","ref":"linux/networking/fundamentals.adoc","articles":[{"title":"TCP 调试","level":"1.2.3.1.1","depth":4,"path":"linux/networking/tcp_debug.adoc","ref":"linux/networking/tcp_debug.adoc","articles":[]}]},{"title":"网络配置","level":"1.2.3.2","depth":3,"path":"linux/networking/ifcfg.adoc","ref":"linux/networking/ifcfg.adoc","articles":[]},{"title":"IPv6 网络配置","level":"1.2.3.3","depth":3,"path":"linux/networking/ipv6cfg.adoc","ref":"linux/networking/ipv6cfg.adoc","articles":[]},{"title":"namespace","level":"1.2.3.4","depth":3,"path":"linux/networking/netns.adoc","ref":"linux/networking/netns.adoc","articles":[]},{"title":"teaming","level":"1.2.3.5","depth":3,"path":"linux/networking/teaming.adoc","ref":"linux/networking/teaming.adoc","articles":[]},{"title":"bridge","level":"1.2.3.6","depth":3,"path":"linux/networking/bridge.adoc","ref":"linux/networking/bridge.adoc","articles":[]},{"title":"DNS","level":"1.2.3.7","depth":3,"path":"linux/networking/dns.adoc","ref":"linux/networking/dns.adoc","articles":[]},{"title":"网络监控","level":"1.2.3.8","depth":3,"path":"linux/networking/monitor.adoc","ref":"linux/networking/monitor.adoc","articles":[]},{"title":"网络编程","level":"1.2.3.9","depth":3,"path":"linux/networking/programming.adoc","ref":"linux/networking/programming.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/networking/fundamentals.adoc","mtime":"2020-07-14T07:11:20.859Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-07-14T15:27:31.102Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
