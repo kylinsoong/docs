@@ -89,7 +89,15 @@ Hub 是一层的网络设备，交换机是二层的网络设备，二路由器�
 
 image:img/line-coding.png[]
 
-=== 双绞线(Twisted Pair) 双向交流
+=== 传输介质
+
+==== 同轴电缆
+
+image:img/transimit-1.jpeg[]
+
+传输速率低，基本被淘汰。
+
+==== 双绞线(Twisted Pair) 双向交流
 
 * 一个标准的 Cat 6 电缆由 8 根铜线，4 对双绞线组成 
 * 双向交流指电缆支持双向传输 信息。
@@ -98,7 +106,9 @@ image:img/cat5e-cat6.jpg[]
 
 https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 
-=== 网络接口和配线架
+image:img/transimit-2.jpeg[]
+
+*网络接口和配线架*
 
 * 一根网线通常通过一个 RJ-45 接头连接到一个 RJ-45 网络接口. 网络接口通常与组成计算机网络的设备直接连接，或是设备的一个部分，例如任何一台计算机都会至少有一个网络接口。
 * 配线架是一种包含许多网络端口的设备，但没有其他作用，只是将不同网络线缆连接到一起。 
@@ -117,6 +127,17 @@ https://en.wikipedia.org/wiki/Ethernet_over_twisted_pair[双绞线以太网]
 |配线架(Patch Panel)
 |image:img/patch_panel.png[]
 |===
+
+==== 光纤
+
+image:img/transimit-3.jpeg[]
+
+* 亮黄色 - 单模光纤
+* 橙黄色 - 双模光纤
+
+==== 串口电缆
+
+image:img/transimit-4.jpeg[]
 
 === 拨号接入
 
@@ -205,7 +226,18 @@ Cellular networks are built around the concept of cells. Each cell is assigned a
 
 === CSMA/CD
 
-CSMA/CD(Carrier Sense Multiple Access With Collision Detection) - CSMA/CD 用于确定通信通道何时畅通以及设备何时自由传输数据，这是为了避免冲突域。CSMA/CD 的工作原理就是检测当前网段上是否有有数据传输，如果没有，则发送数据；如果有，则等待一个随机的时间间隔，然后尝试再次发送数据，CSMA/CD 使用 MAC 地址来确认目的地节点。
+共享式网络可能会出现信号冲突现象。
+
+image:img/collision-domain.jpeg[]
+
+CSMA/CD(Carrier Sense Multiple Access With Collision Detection, 载波侦听多路访问技术) - CSMA/CD 用于确定通信通道何时畅通以及设备何时自由传输数据，这是为了避免冲突域。
+
+CSMA/CD 的工作原理就是检测当前网段上是否有数据传输，如果没有，则发送数据；如果有，则等待一个随机的时间间隔，然后尝试再次发送数据，CSMA/CD 使用 MAC 地址来确认目的地节点。
+
+1. 先听后发 
+2. 边听边发
+3. 冲突停发
+4. 随机延迟后发
 
 === MAC 地址
 

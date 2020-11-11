@@ -52,6 +52,10 @@ Once above commands executes successfully, the `cookbook` folder, `cookbook.pdf`
 |===
 |版本 |时间 |Notes
 
+|3.5
+|2020-11-11
+|update mesh start
+
 |3.4
 |2020-07-14
 |change infr network, update k8s install
