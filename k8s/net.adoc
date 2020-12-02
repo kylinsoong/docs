@@ -360,77 +360,53 @@ image:img/iptables-nodeport-chaines.png[]
 
 == DNS
 
-=== Service DNS
+=== Service/Pod DNS
 
 [source, bash]
+.*Deploy 2 services in 2 namespaces, and DNS query with busybox*
 ----
 // 1. deploy pod
 kubectl create deployment nginx --image=nginx
-kubectl scale --replicas=3 deployments/nginx
+
+kubectl create ns test01
+kubectl create deployment nginx --image=nginx -n test01
 
 // 2. expose service
-kubectl expose deployment nginx --port=80 --name=my-nginx
+kubectl expose deployment nginx --port=80 --name=nginx
+kubectl expose deployment nginx --port=80 --name=nginx -n test01
 
-// 3. deploy tools
-kubectl run tools --image=radial/busyboxplus:curl --generator=run-pod/v1 --command -- sh -c "sleep 3600"
+// 3. deploy busybox
+kubectl run busybox --image=busybox:1.28 --generator=run-pod/v1 --command -- sh -c "sleep 3600"
 
-// 4. kube dns
-$ kubectl get svc kube-dns -n=kube-system --no-headers | awk '{print $1, $3}'
-kube-dns 10.96.0.10
-
-// 5. my-nginx
-$ kubectl get svc my-nginx --no-headers | awk '{print $1, $3}'
-my-nginx 10.96.167.67
-
-// 6. test
-kubectl exec tools nslookup my-nginx
+// 4. SVC DNS loopup
+kubectl exec busybox -- nslookup nginx
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
 
-Name:      my-nginx
-Address 1: 10.96.167.67 my-nginx.default.svc.cluster.local
-----
+Name:      nginx
+Address 1: 10.100.4.22 nginx.default.svc.cluster.local
 
-=== Pod DNS
-
-[source, bash]
-----
-// 1. deploy pod
-kubectl create deployment nginx-dns --image=nginx
-
-// 2. expose service
-kubectl expose deployment nginx-dns --port=80 --name=nginx-dns
-
-// 3. deploy tools
-kubectl run tools --image=busybox:1.28 --generator=run-pod/v1 --command -- sh -c "sleep 3600"
-
-// 4. kube dns
-$ kubectl get svc kube-dns -n=kube-system --no-headers | awk '{print $1, $3}'
-kube-dns 10.96.0.10
-
-// 5. nginx-dns
-$ kubectl get svc nginx-dns --no-headers | awk '{print $1, $3}'
-nginx-dns 10.110.192.26
-
-// 6. pod ip
-$ kubectl get pods nginx-dns-69fdc94b9f-hdh7d -o wide --no-headers | awk '{print $1, $6}'
-nginx-dns-69fdc94b9f-hdh7d 192.168.208.238
-
-// 7. look up service
-# kubectl exec tools nslookup nginx-dns
+kubectl exec busybox -- nslookup nginx.test01
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
 
-Name:      nginx-dns
-Address 1: 10.110.192.26 nginx-dns.default.svc.cluster.local
+Name:      nginx.test01
+Address 1: 10.111.85.96 nginx.test01.svc.cluster.local
 
-// 8. look up pod
-$ kubectl exec tools nslookup 192-168-208-238.nginx-dns.default.svc.cluster.local
+// 5. Pod DNS loopup
+kubectl exec busybox -- nslookup 10-244-2-102.nginx
 Server:    10.96.0.10
 Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
 
-Name:      192.168.208.238
-Address 1: 192.168.208.238 192-168-208-238.nginx-dns.default.svc.cluster.local
+Name:      10-244-2-102.nginx
+Address 1: 10.244.2.102 10-244-2-102.nginx.default.svc.cluster.local
+
+kubectl exec busybox -- nslookup 10-244-1-106.nginx.test01
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      10-244-1-106.nginx.test01
+Address 1: 10.244.1.106 10-244-1-106.nginx.test01.svc.cluster.local
 ----
 
 == TD
