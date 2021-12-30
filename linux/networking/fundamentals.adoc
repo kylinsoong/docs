@@ -51,43 +51,36 @@ image:img/network-model.png[]
 * 相比较 TCP/IP 五层模型，TCP/IP 四层模型将物理层和数据链路层合为一层
 * 网络层也叫 Internet 层或网络互联层，数据链路层也称网络接口层
 
-== 网络设备
+== 物理层
 
-=== 电缆（Cables）
+=== 网络设备
+
+==== 电缆（Cables）
 
 电缆（Cables）是将不同的设备连接在一起，允许他们相互交换数据。电缆可分为两类:
 
 * 铜缆 - 就是最长见的网线，铜缆是网络电缆的最常见形式，它们由塑料绝缘体内的多对铜线组成。网络中最长见的铜线配对缠绕标准有 Cat5, Cat5e, 和 Cat6。这些类别具有不同的物理特性，例如一对铜线中的绞合数会导致不同的可用长度和传输速率。
 * 光缆 - 光纤电缆包含单个的光纤是由玻璃制成的细管，大约与人的头发宽度相同。这些玻璃管可以传输光束。与使用电压的铜缆不同，光缆使用光脉冲来表示基础数据的 1 和0。
 
-=== Hub
+==== Hub
 
 Hub 是物理层的设备，多台计算机设备可连接到它，允许同一时刻来自不同计算机的连接。
 
 image:img/network-hub.png[]
 
-All the devices connected to a hub will end up talking to all other devices at the same time. It's up to each system connected to the hub to determine if the incoming data was meant for them, or to ignore it if it isn't. This causes a lot of noise on the network and creates what's called a collision domain. A collision domain is a network segment where only one device can communicate at a time. If multiple systems try sending data at the same time, the electrical pulses sent across the cable can interfere with each other. This causes these systems to have to wait for a quiet period before they try sending their data again. It really slows down network communications, and is the primary reason hubs are fairly rare. 
+All the devices connected to a hub will end up talking to all other devices at the same time. It's up to each system connected to the hub to determine if the incoming data was meant for them, or to ignore it if it isn't. This causes a lot of noise on the network and creates what's called a collision domain. A collision domain is a network segment where only one device can communicate at a time. If multiple systems try sending data at the same time, the electrical pulses sent across the cable can interfere with each other. This causes these systems to have to wait for a quiet period before they try sending their data again. It really slows down network communications, and is the primary reason hubs are fairly rare.
 
-=== 交换机（Switch）
+==== 交换机（Switch）
 
 交换机是二层（数据链路层）设备，是目前常见的网络设备，允许多台计算机连接到它，由于是二层的设备，交换机可以识别 Ethernet 协议中的属性来识别特点的计算机，确保数据准确的传输到特定的机器。这极大的减少了网络域冲突，提高了网络传输的吞吐量.
 
-=== 路由器（Router）
+==== 路由器（Router）
 
-Hub 是一层的网络设备，交换机是二层的网络设备，二路由器是三层的网络设备，路由器知道如何在不同的网络之间发送数据。和交换机检测 Ethernet 协议中的属性决定将包发送到什么位置类似，路由器检测 IP 协议中的属性决定将包发送到什么位置。路由器内部有个路由表，包含着将数据路由到世界上不同网络的信息。
+Hub 是一层的网络设备，交换机是二层的网络设备，二路由器是三层的网络设备，路由器知道如何在不同的网络之间发送数据。和交换机检测 Ethernet 协议中的属性决定将包发送到什么位置类似，路由器检测 IP 协议中的属性决定将包发送到什么位置。路由器内部有个
+路由表，包含着将数据路由到世界上不同网络的信息。
 
-不同的路由器之间通过 BGP(Border Gateway Protocol) 协议共享数据，这使数据的发送基于最佳路径。当您打开Web浏览器并加载网页时，计算机和Web服务器之间的流量可能会经过数十个不同的路由器。 互联网异常庞大且复杂。 路由器是将流量吸引到正确位置的全球指南。
-
-== 物理层
-
-=== 链路上的字节移动
-
-* 物理层负责将字节流（0 或 1 的字节码串）从链路的一端移动到另一端
-* 物理层是由传输字节码的设备和装置组成
-* 一个比特(bit)代表计算机可以明白的最小数据，它要么是 1，要么是 0。这些在网络链路上发送的 0 或 1 的字节码串是组成数据帧、数据包的最底层元素，这些帧或包是其他网络层的概念。
-*  0 或 1 的字节码串在网络上发送是通过一个叫调节器(Modulation)的程序控制，调节器(Modulation)是一种改变电荷在电缆上移动的电压的方式。当用于计算机网络时，这种调制方式更具体地称为线路编码。它允许链路两端的设备了解某种状态下的电荷为 0，而另一种状态下的电荷为 1。 
-
-image:img/line-coding.png[]
+不同的路由器之间通过 BGP(Border Gateway Protocol) 协议共享数据，这使数据的发送基于最佳路径。当您打开Web浏览器并加载网页时，计算机和Web服务器之间的流量可能会经过数十个不同的路由器。 互联网异常庞大且复杂。 路由器是将流量吸引到正确位置的全球
+指南。
 
 === 传输介质
 
@@ -114,17 +107,14 @@ image:img/transimit-2.jpeg[]
 * 配线架是一种包含许多网络端口的设备，但没有其他作用，只是将不同网络线缆连接到一起。 
   
 .*常见网络接口*
-[cols="2,5a"]
+[cols="5a,5a,51"]
 |===
-|名称 |图示
+|RJ-45 插头 |RJ-45 网络接口 |配线架(Patch Panel)
 
-|RJ-45 插头
 |image:img/rj45.jpg[]
 
-|RJ-45 网络接口
 |image:img/rj45port.png[]
 
-|配线架(Patch Panel)
 |image:img/patch_panel.png[]
 |===
 
@@ -138,6 +128,16 @@ image:img/transimit-3.jpeg[]
 ==== 串口电缆
 
 image:img/transimit-4.jpeg[]
+
+=== 链路上的字节移动
+
+* 物理层负责将字节流（0 或 1 的字节码串）从链路的一端移动到另一端
+* 物理层是由传输字节码的设备和装置组成
+* 一个比特(bit)代表计算机可以明白的最小数据，它要么是 1，要么是 0。这些在网络链路上发送的 0 或 1 的字节码串是组成数据帧、数据包的最底层元素，这些帧或包是其他网络层的概念。
+*  0 或 1 的字节码串在网络上发送是通过一个叫调节器(Modulation)的程序控制，调节器(Modulation)是一种改变电荷在电缆上移动的电压的方式。当用于计算机网络时，这种调制方式更具体地称为线路编码。它允许链路两端的设备了解某种状态下的电荷为 0，而另一
+种状态下的电荷为 1。
+
+image:img/line-coding.png[]
 
 === 拨号接入
 
@@ -354,6 +354,28 @@ LACP(Link Aggregation Control Protocol) 链路聚合控制协议是 IEEE 标准 
 不同网路厂商 LACP 行为可陪，例如，Linux Bonding 就是一种软件 LACP 实现，可以灵活配置负载分发方式等。F5 BIG-IP 系统中 LACP 是一个可选配置，可以自定制 LACP 行为，如各个链路数据传输权重等，还可以配置一些控制策略。
 
 == 网络层
+
+=== IPv4 数据报文结构
+
+IPv4 数据报文是由一系列高度结构化的字段严格定义，IP 数据两个主要部分是 header 和 payload。
+
+image:img/ip-datagrams.png[]
+
+* *Version* - 第一个字段长度为 4 个二进制位，代表着 IP 协议的版本。常见的 IP协议版本是 4，即 IPv4。
+* *Header Length* - Header Length 字段长度为 4 个二进制位，代表着整个 header 的长度。如果是 IPv4，则 Header 的长度永远都是 20，事实上，20 个字节是 IP header 的最小长度，你不能在小于 20 自己的空间里合适的描述一个 IP Header。
+* *Service Type* - Service Type 字段长度为 8 个二进制位，用来指定 QoS 技术的详细情况。QoS 的作用是允许路由器作出决策，在一系列 IP 数据报文中，选择出最为重要的一个数据报文。
+* *Total Length* - Total Length 字段长度为 16 个二进制位，用来表示 IP 数据报文的整体长度。单个数据报文的最大长度为 16 个二进制位都为 1，即为 65,535。
+* *Identification* - Identification 字段长度为 16 个二进制位，用来将消息分组在一起，当要发送的数据大于单个数据报文允许的最大值时，则 IP 层需要将原始的大的数据包分割成几个小的数据包，在这种情况下 Identification 字段用来被接收端标识分割后的
+数据包属于同一个数据包。
+* *Flag* - Flag 字段用来标识数据报文是否允许分段，或者标识数据报文已经分段。
+* *Fragmentation* - 是将一个大的 IP 数据报文分割成多个小的数据报文的进程。
+* *TTL* - TTL 字段的长度为 8 个二进制位，指定一个数据报文在经过多少个路由跳转后丢弃。
+* *Protocol* - Protocol 字段的长度为 8 个二进制位，包含数据标识那个传输层的协议被使用，最常见的传输层协议是 TCP 或 UDP。
+* *Header Checksum* - Header checksum 字段用来对整个 IP 数据报文 header进行校验，它和 Ethernet Checksum 字段类似，通常由于 TTL 字段经过任意一个路由器时都会被修改，Header Checksum 字段相应的也会被修改。
+* *Source IP Address* - 长度为 32 个二进制位，代表着源 IP 地址。
+* *Destination IP Address* - 长度为 32 个二进制位，代表着目的地 IP 地址。
+* *Option* - 可选的字段，用来设定一些特定字符，通常用于测试目的。
+* *Padding* - 相当于一个占位符字段，由于 Option 字段时可选的一个变量，长度不定，该字段只是一些 0 串，用来确保 Header 的整体长度。
 
 === IPv4 地址
 
@@ -687,27 +709,6 @@ https://ipaddressguide.com/cidr
 ==== 子网
 
 如果一个 IPv4 地址 属于 A 类或 B类地址，则可能存在的最大主机较多，这就需要子网来进一步分组成较小的网络，这就叫做子网。
-
-=== IPv4 数据报文结构
-
-IPv4 数据报文是由一系列高度结构化的字段严格定义，IP 数据两个主要部分是 header 和 payload。
-
-image:img/ip-datagrams.png[]
-
-* *Version* - 第一个字段长度为 4 个二进制位，代表着 IP 协议的版本。常见的 IP协议版本是 4，即 IPv4。
-* *Header Length* - Header Length 字段长度为 4 个二进制位，代表着整个 header 的长度。如果是 IPv4，则 Header 的长度永远都是 20，事实上，20 个字节是 IP header 的最小长度，你不能在小于 20 自己的空间里合适的描述一个 IP Header。
-* *Service Type* - Service Type 字段长度为 8 个二进制位，用来指定 QoS 技术的详细情况。QoS 的作用是允许路由器作出决策，在一系列 IP 数据报文中，选择出最为重要的一个数据报文。
-* *Total Length* - Total Length 字段长度为 16 个二进制位，用来表示 IP 数据报文的整体长度。单个数据报文的最大长度为 16 个二进制位都为 1，即为 65,535。
-* *Identification* - Identification 字段长度为 16 个二进制位，用来将消息分组在一起，当要发送的数据大于单个数据报文允许的最大值时，则 IP 层需要将原始的大的数据包分割成几个小的数据包，在这种情况下 Identification 字段用来被接收端标识分割后的数据包属于同一个数据包。
-* *Flag* - Flag 字段用来标识数据报文是否允许分段，或者标识数据报文已经分段。
-* *Fragmentation* - 是将一个大的 IP 数据报文分割成多个小的数据报文的进程。
-* *TTL* - TTL 字段的长度为 8 个二进制位，指定一个数据报文在经过多少个路由跳转后丢弃。
-* *Protocol* - Protocol 字段的长度为 8 个二进制位，包含数据标识那个传输层的协议被使用，最常见的传输层协议是 TCP 或 UDP。
-* *Header Checksum* - Header checksum 字段用来对整个 IP 数据报文 header进行校验，它和 Ethernet Checksum 字段类似，通常由于 TTL 字段经过任意一个路由器时都会被修改，Header Checksum 字段相应的也会被修改。
-* *Source IP Address* - 长度为 32 个二进制位，代表着源 IP 地址。 
-* *Destination IP Address* - 长度为 32 个二进制位，代表着目的地 IP 地址。 
-* *Option* - 可选的字段，用来设定一些特定字符，通常用于测试目的。
-* *Padding* - 相当于一个占位符字段，由于 Option 字段时可选的一个变量，长度不定，该字段只是一些 0 串，用来确保 Header 的整体长度。
 
 === ARP
 
@@ -1069,7 +1070,7 @@ image:img/tcp-segment.png[]
 |如果此标签值为 1，则表示 *Acknowledgment number* 字段应该被检查。
 
 |PSH(push)
-|传输设备想 让接收端设备尽快将缓冲中的数据推送 到应用。
+|传输设备想 让接收端设备尽快将缓冲中的数据推送到应用。
 
 |RST(reset)
 |TCP 连接中的一方无法从一系列丢失或格式错误的段中正确恢复。

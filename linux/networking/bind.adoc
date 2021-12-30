@@ -20,7 +20,7 @@ BIND 9.11.4-P2-RedHat-9.11.4-26.P2.el7_9.2 (Extended Support Version) <id:7107de
 == Bind 的配置
 
 [source, bash]
-.*地址域名映射表*
+.*1. 地址域名映射表*
 ----
 127.0.0.1 localhost
 
@@ -43,10 +43,10 @@ BIND 9.11.4-P2-RedHat-9.11.4-26.P2.el7_9.2 (Extended Support Version) <id:7107de
 ----
 
 [source, bash]
-.*db.movie.edu*
+.*2. db.movie.edu*
 ----
 $TTL 3h
-movie.edu. IN SOA toystory.movie.edu. kylin.movie.edu. (
+@ IN SOA toystory.movie.edu. kylin.movie.edu. (
                            1       ; Serial
                            3h      ; Refresh after 3 hours
                            1h      ; Retry after 1 hour
@@ -55,41 +55,41 @@ movie.edu. IN SOA toystory.movie.edu. kylin.movie.edu. (
 ;
 ; Name servers
 ;
-movie.edu. IN NS toystory.movie.edu.
-movie.edu. IN NS wormhole.movie.edu.
+           IN NS toystory.movie.edu.
+           IN NS wormhole.movie.edu.
 
 ;
 ; Addresses for the canonical names 
 ;
-localhost.movie.edu.        IN A   127.0.0.1
-shrek.movie.edu.            IN A   192.249.249.2
-toystory.movie.edu.         IN A   192.249.249.3
-monsters-inc.movie.edu.     IN A   192.249.249.4
-misery.movie.edu.           IN A   192.253.253.2
-shining.movie.edu.          IN A   192.253.253.3
-carrie.movie.edu.           IN A   192.253.253.4
-wormhole.movie.edu.         IN A   192.249.249.1
-wormhole.movie.edu.         IN A   192.253.253.1
+localhost        IN A   127.0.0.1
+shrek            IN A   192.249.249.2
+toystory         IN A   192.249.249.3
+monsters-inc     IN A   192.249.249.4
+misery           IN A   192.253.253.2
+shining          IN A   192.253.253.3
+carrie           IN A   192.253.253.4
+wormhole         IN A   192.249.249.1
+                 IN A   192.253.253.1
 
 ;
 ; Aliases
 ;
-toys.movie.edu.        IN CNAME  toystory.movie.edu.
-mi.movie.edu.          IN CNAME  monsters-inc.movie.edu.
-wh.movie.edu.          IN CNAME  wormhole.movie.edu.
+toys            IN CNAME  toystory
+mi              IN CNAME  monsters-inc
+wh              IN CNAME  wormhole
 
 ;
 ; Interface specific names
 ;
-wh249.movie.edu.    IN A 192.249.249.1
-wh253.movie.edu.    IN A 192.253.253.1
+wh249    IN A 192.249.249.1
+wh253    IN A 192.253.253.1
 ----
 
 [source, bash]
-.*db.192.249.249*
+.*3. db.192.249.249*
 ----
 $TTL 3h
-249.249.192.in-addr.arpa. IN SOA toystory.movie.edu. kylin.movie.edu. (
+@ IN SOA toystory.movie.edu. kylin.movie.edu. (
                            1       ; Serial
                            3h      ; Refresh after 3 hours
                            1h      ; Retry after 1 hour
@@ -98,23 +98,23 @@ $TTL 3h
 ;
 ; Name servers
 ;
-249.249.192.in-addr.arpa. IN NS toystory.movie.edu.
-249.249.192.in-addr.arpa. IN NS wormhole.movie.edu.
+              IN NS toystory.movie.edu.
+              IN NS wormhole.movie.edu.
 
 ;
 ; Addresses point to canonical name 
 ;
-1.249.249.192.in-addr.arpa. IN PTR wormhole.movie.edu.
-2.249.249.192.in-addr.arpa. IN PTR shrek.movie.edu.
-3.249.249.192.in-addr.arpa. IN PTR toystory.movie.edu.
-4.249.249.192.in-addr.arpa. IN PTR monsters-inc.movie.edu.
+1             IN PTR wormhole.movie.edu.
+2             IN PTR shrek.movie.edu.
+3             IN PTR toystory.movie.edu.
+4             IN PTR monsters-inc.movie.edu.
 ----
 
 [source, bash]
-.*db.192.253.253*
+.*4. db.192.253.253*
 ----
 $TTL 3h
-253.253.192.in-addr.arpa. IN SOA toystory.movie.edu. kylin.movie.edu. (
+@ IN SOA toystory.movie.edu. kylin.movie.edu. (
                            1       ; Serial
                            3h      ; Refresh after 3 hours
                            1h      ; Retry after 1 hour
@@ -123,20 +123,40 @@ $TTL 3h
 ;
 ; Name servers
 ;
-253.253.192.in-addr.arpa. IN NS toystory.movie.edu.
-253.253.192.in-addr.arpa. IN NS wormhole.movie.edu.
+         IN NS toystory.movie.edu.
+         IN NS wormhole.movie.edu.
 
 ;
 ; Addresses point to canonical name 
 ;
-1.253.253.192.in-addr.arpa. IN PTR wormhole.movie.edu.
-2.253.253.192.in-addr.arpa. IN PTR misery.movie.edu.
-3.253.253.192.in-addr.arpa. IN PTR shining.movie.edu.
-4.253.253.192.in-addr.arpa. IN PTR carrie.movie.edu.
+1        IN PTR wormhole.movie.edu.
+2        IN PTR misery.movie.edu.
+3        IN PTR shining.movie.edu.
+4        IN PTR carrie.movie.edu.
 ----
 
 [source, bash]
-.*编辑 /etc/named.conf，添加*
+.*5. db.127.0.0*
+----
+$TTL 3h
+@ IN SOA toystory.movie.edu. kylin.movie.edu. (
+                           1       ; Serial
+                           3h      ; Refresh after 3 hours
+                           1h      ; Retry after 1 hour
+                           1w      ; Expire after 1 week
+                           1h )    ; Negative caching TTL of 1 hour
+;
+; Name servers
+;
+        IN NS toystory.movie.edu.
+        IN NS wormhole.movie.edu.
+
+1       IN PTR localhost.
+----
+
+
+[source, bash]
+.*6. 编辑 /etc/named.conf，添加*
 ----
 zone "movie.edu" in {
       type master;
@@ -160,14 +180,155 @@ zone "0.0.127.in-addr.arpa" in {
 ----
 
 [source, bash]
-.*测试*
+.*7. 配置文件格式检查*
 ----
-$ nslookup carrie.movie.edu 192.249.249.147
-Server:		192.249.249.147
-Address:	192.249.249.147#53
+named-checkconf 
+named-checkzone movie.edu db.movie.edu
+named-checkzone 249.249.192.in-addr.arpa db.192.249.249 
+named-checkzone 253.253.192.in-addr.arpa db.192.253.253
+named-checkzone 0.0.127.in-addr.arpa db.127.0.0 
+----
+
+[source, bash]
+.*8. 测试*
+----
+$ nslookup carrie.movie.edu 192.249.249.3
+Server:		192.249.249.3
+Address:	192.249.249.3#53
 
 Name:	carrie.movie.edu
 Address: 192.253.253.4
+
+$ nslookup 192.253.253.4 192.249.249.3
+Server:		192.249.249.3
+Address:	192.249.249.3#53
+
+4.253.253.192.in-addr.arpa	name = carrie.movie.edu.
+
+$ nslookup ksoong.org 192.249.249.3
+Server:		192.249.249.3
+Address:	192.249.249.3#53
+
+Non-authoritative answer:
+Name:	ksoong.org
+Address: 192.30.252.153
+Name:	ksoong.org
+Address: 192.30.252.154
+----
+
+[source, bash]
+.*9. 查看父域*
+----
+$ nslookup -type=ns com. 192.249.249.3
+Server:		192.249.249.3
+Address:	192.249.249.3#53
+
+Non-authoritative answer:
+com	nameserver = m.gtld-servers.net.
+com	nameserver = k.gtld-servers.net.
+com	nameserver = a.gtld-servers.net.
+com	nameserver = g.gtld-servers.net.
+com	nameserver = f.gtld-servers.net.
+com	nameserver = c.gtld-servers.net.
+com	nameserver = h.gtld-servers.net.
+com	nameserver = e.gtld-servers.net.
+com	nameserver = b.gtld-servers.net.
+com	nameserver = d.gtld-servers.net.
+com	nameserver = i.gtld-servers.net.
+com	nameserver = j.gtld-servers.net.
+com	nameserver = l.gtld-servers.net.
+
+Authoritative answers can be found from:
+b.gtld-servers.net	internet address = 192.33.14.30
+e.gtld-servers.net	internet address = 192.12.94.30
+l.gtld-servers.net	internet address = 192.41.162.30
+f.gtld-servers.net	internet address = 192.35.51.30
+i.gtld-servers.net	internet address = 192.43.172.30
+c.gtld-servers.net	internet address = 192.26.92.30
+j.gtld-servers.net	internet address = 192.48.79.30
+g.gtld-servers.net	internet address = 192.42.93.30
+a.gtld-servers.net	internet address = 192.5.6.30
+d.gtld-servers.net	internet address = 192.31.80.30
+k.gtld-servers.net	internet address = 192.52.178.30
+h.gtld-servers.net	internet address = 192.54.112.30
+m.gtld-servers.net	internet address = 192.55.83.30
+b.gtld-servers.net	has AAAA address 2001:503:231d::2:30
+e.gtld-servers.net	has AAAA address 2001:502:1ca1::30
+
+$ nslookup -type=ns -norecurse cebbank.com. b.gtld-servers.net
+Server:		b.gtld-servers.net
+Address:	192.33.14.30#53
+
+Non-authoritative answer:
+*** Can't find cebbank.com.: No answer
+
+Authoritative answers can be found from:
+cebbank.com	nameserver = dns1.cebbank.com.
+cebbank.com	nameserver = dns2.cebbank.com.
+cebbank.com	nameserver = dns3.cebbank.com.
+cebbank.com	nameserver = dns4.cebbank.com.
+cebbank.com	nameserver = dns5.cebbank.com.
+cebbank.com	nameserver = dns8.cebbank.com.
+dns1.cebbank.com	internet address = 202.99.20.227
+dns1.cebbank.com	has AAAA address 2408:8607:2500:0:2210::102
+dns2.cebbank.com	internet address = 111.205.94.106
+dns2.cebbank.com	has AAAA address 2408:8607:1d00:0:1210::102
+dns3.cebbank.com	internet address = 219.143.234.227
+dns3.cebbank.com	has AAAA address 240e:604:204:800:1110::102
+dns4.cebbank.com	internet address = 106.37.164.154
+dns4.cebbank.com	has AAAA address 240e:604:207:700:2110::102
+dns5.cebbank.com	internet address = 223.72.163.107
+dns5.cebbank.com	has AAAA address 2409:8700:1:d0:2310::102
+dns8.cebbank.com	internet address = 111.205.215.182
+----
+
+[source, bash]
+.*10. 配置 slave, 文件拷贝*
+----
+scp /etc/named.conf root@192.153.253.3:/etc
+scp db.127.0.0  root@192.253.253.3:/var/named/
+----
+
+[source, bash]
+.*11. 配置 slave，修改 named.conf*
+----
+zone "movie.edu" in {
+      type slave;
+      file "bak.movie.edu";
+      masters { 192.249.249.3; };
+};
+
+zone "249.249.192.in-addr.arpa" in {
+      type slave;
+      file "bak.192.249.249";
+      masters { 192.249.249.3; };
+};
+
+zone "253.253.192.in-addr.arpa" in {
+      type slave;
+      file "bak.192.253.253";
+      masters { 192.249.249.3; };
+};
+
+zone "0.0.127.in-addr.arpa" in {
+      type master;
+      file "db.127.0.0";
+};
+----
+
+[source, bash]
+.*12. 启动 slave*
+----
+chown root:named named.conf
+systemctl restart named
+----
+
+== TD
+
+[source, bash]
+.**
+----
+
 ----
 
 [source, bash]
