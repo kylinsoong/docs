@@ -219,18 +219,21 @@ Cellular networks are built around the concept of cells. Each cell is assigned a
 
 == 数据链路层
 
-=== Ethernet 和 数据链路层
+数据链路层实质上是对物理层的一个抽象，使其他层可以不用考虑物理层所使用的硬件或设备，而可以进行发送数据和接收数据的工作，这样确保了不管物理层硬件或设备如何变化，网络层、传输层、应用层都在用同样的方式工作。
+
+=== 以太网协议(Ethernet)
 
 * Ethernet 是目前链路层最被广泛使用的协议，用来在单个链路上发送数据，Ethernet 最早在 1980 年提出，1983 成为标准，后续只是基于带宽的增加相应进行过一些微调。
-* 数据链路层实质上是对物理层的一个抽象，使其他层可以不用考虑物理层所使用的硬件或设备，而可以进行发送数据和接受数据的工作，这样确保了不管物理层硬件或设备如何变化，网络层、传输层、应用层都在用同样的方式工作。
+* Ethernet 是当今现有局域网（Local Area Network LAN）采用的最通用的通信协议标准，定义了局域网中采用的电缆类型的信号处理方法。
+* Ethernet 是建立在CSMA/CD(Carrier Sense Multiple Access With Collision Detection, 载波侦听多路访问/冲突检测)机制上的广播型网络。 
 
-=== CSMA/CD
+==== 共享式以太网
 
-共享式网络可能会出现信号冲突现象。
+早期以太网是共享式网络，共享式网络可能会出现信号冲突现象，如下图所示：
 
 image:img/collision-domain.jpeg[]
 
-CSMA/CD(Carrier Sense Multiple Access With Collision Detection, 载波侦听多路访问技术) - CSMA/CD 用于确定通信通道何时畅通以及设备何时自由传输数据，这是为了避免冲突域。
+CSMA/CD(Carrier Sense Multiple Access With Collision Detection, 载波侦听多路访问/冲突检测) - CSMA/CD 用于确定通信通道何时畅通以及设备何时自由传输数据，这是为了避免冲突域。
 
 CSMA/CD 的工作原理就是检测当前网段上是否有数据传输，如果没有，则发送数据；如果有，则等待一个随机的时间间隔，然后尝试再次发送数据，CSMA/CD 使用 MAC 地址来确认目的地节点。
 
@@ -239,19 +242,36 @@ CSMA/CD 的工作原理就是检测当前网段上是否有数据传输，如果
 3. 冲突停发
 4. 随机延迟后发
 
+==== 交换式以太网
+
+当前的以太网是交换式，交换机设备很好的解决了信号冲突现象，因为交换机收到数据后会有检查机制，隔离冲突。
+
+一个交换机的接口就是一个*冲突域*；广播报文所能到达的整个访问范围称为二层广播域，简称*广播域*。
+
+NOTE: 交换机中无法隔离广播域。
+
 === MAC 地址
 
-MAC(Media Access Control) 地址 - MAC 地址是附加到一个网络接口上的全局唯一标识符。它是一个 48 位的二进制数字，由六组二位的十六进制数字构成，例如：`8:00:27:c3:0f:80`。MAC 地址分为两部分, 前三组十六进制数是组织唯一标识，是由 IEEE 组织分配给各个硬件制造商；后三位可以按制造商希望的方式任意分配，分配的条件是确保每个可能的地址只分配一次。
+* 以太网卡(Network Interface Card NIC)简称为以太网卡，每一个以太网卡会关联一个 MAC 地址。
+* MAC(Media Access Control) 地址是附加到一个以太网卡上的全局唯一标识符。
+* MAC 地址是一个 48 位的二进制数字，由六组二位的十六进制数字构成，例如：`8:00:27:c3:0f:80`。
+* MAC 地址分为两部分, 前三组十六进制数是组织唯一标识，是由 IEEE 组织分配给各个硬件制造商；后三位可以按制造商希望的方式任意分配，分配的条件是确保每个可能的地址只分配一次。
 
 image:img/mac_addr-strcture.png[]
 
-=== ARP
+==== MAC 地址分类
 
-ARP 是根据网络层 IP 地址寻找到对应网络接口的 MAC 地址，有些归纳里面讲 ARP 认为是网络层协议，详细参照 link:#_arp_2[ARP]。
+计算机网络的区域，它由每个单台计算机或与网络连接设备组成，该区域可以通过向数据链路层的广播地址发送简单帧来直接访问。整个能够直接访问的区域称为广播域，广播域是网络上的一个逻辑部分，这部分网络中的任意设计不经过路由（网关）可直接向任意其他一个设备发送数据。一个广播域中的所有设备或节点位于同一个 LAN 或 VLAN。
 
-=== 单播, 多播, 广播
+一个 LAN 或 VLAN 中不同网络节点通信通常包括：
 
-.*单播, 多播, 广播*
+* 1 对 1：一个节点发送数据包只给另一个节点
+* 1 对多：一个节点发送数据包给部分节点
+* 1对所有：一个节点发送数据包给网络中所有节点
+
+对应这三种方式， 为支持这种能力，MAC 地址分为三类，单播MAC地址、组播MAC地址和广播MAC地址。
+
+.*单播, 组播, 广播*
 |===
 |类型 |模式 |说明
 
@@ -259,7 +279,7 @@ ARP 是根据网络层 IP 地址寻找到对应网络接口的 MAC 地址，有�
 |一对一
 |Unicast 传输始终意味着只有一个接收地址。MAC 地址中第一组数字的最后一个二进位为 0，则 Ethernet 帧发送到一个地址。
 
-|Multicast（多播）
+|Multicast（组播）
 |一对多
 |Multicast 传输发送到多个物理地址。MAC 地址中第一组数字的最后一个二进位为 1，则 Ethernet 帧发送到多个地址。
 
@@ -267,10 +287,6 @@ ARP 是根据网络层 IP 地址寻找到对应网络接口的 MAC 地址，有�
 |一对所有
 |Ethernet 广播发送到 LAN 中的所有地址（广播域）, MAC 地址的所有位都为 f。
 |===
-
-广播域是网络上的一个逻辑部分，这部分网络中的任意设计不经过路由（网关）可直接向任意其他一个设备发送数据。一个更专业的定义：计算机网络的区域，它由每个单台计算机或与网络连接设备组成，该区域可以通过向数据链路层的广播地址发送简单帧来直接访问。
-
-通常一个广播域中的所有设备或节点位于同一个 LAN 或 VLAN。
 
 [source, text]
 .*示例 - Unicast MAC 地址*
@@ -306,6 +322,27 @@ a7:50:c1:30:ca:c1
 ff:ff:ff:ff:ff:ff
 ----
 
+=== 以太网帧(Ethernet Frame)
+
+以太网(Ethernet)帧(Frame)是按特定顺序显示的高度结构化的信息集合。这样，可以确保将物理层网络接口将传输的二进制串转化为有意义的数据，或将数据转化为二进制串。
+
+image:img/EthernetPacket.png[]
+
+1. The first part of an Ethernet frame is known as the preamble. A preamble is 8 bytes or 64 bits long and can itself be split into two sections. The first seven bytes are a series of alternating ones and zeros. These act partially as a buffer between frames and can also be used by the network interfaces to synchronize internal clocks they use, to regulate the speed at which they send data. This last byte in the preamble is known as the SFD or start frame delimiter. This signals to a receiving device that the preamble is over and that the actual frame contents will now follow.
+2. *Destination MAC Address* - 目的地接收地址硬件的物理地址；
+3. *Source MAC Address* - 以太网帧发送端的物理地址；
+4. *Type Field* - 16 二进制长度，以太网类型标识字段，包括帧的内容；
+5. *Payload* - Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long.
+6. CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.
+
+=== VLAN
+
+为了解决广播域带来的问题，人们引入了VLAN (Virtual Local Area Network)，即虚拟局域网技术。
+
+=== ARP
+
+ARP 是根据网络层 IP 地址寻找到对应网络接口的 MAC 地址，有些归纳里面讲 ARP 认为是网络层协议，详细参照 link:#_arp_2[ARP]。
+
 === LAN vs VLAN
 
 如下图所示，
@@ -327,19 +364,6 @@ WAN 协议：
 * https://en.wikipedia.org/wiki/Frame_Relay[Frame Relay]
 * https://en.wikipedia.org/wiki/High-Level_Data_Link_Control[High-Level Data Link Control]
 * https://en.wikipedia.org/wiki/Asynchronous_transfer_mode[Asynchronous transfer mode]
-
-=== 以太网(Ethernet)帧结构
-
-以太网(Ethernet)帧是按特定顺序显示的高度结构化的信息集合。这样，可以确保将物理层网络接口将传输的二进制串转化为有意义的数据，或将数据转化为二进制串。
-
-image:img/EthernetPacket.png[]
-
-1. The first part of an Ethernet frame is known as the preamble. A preamble is 8 bytes or 64 bits long and can itself be split into two sections. The first seven bytes are a series of alternating ones and zeros. These act partially as a buffer between frames and can also be used by the network interfaces to synchronize internal clocks they use, to regulate the speed at which they send data. This last byte in the preamble is known as the SFD or start frame delimiter. This signals to a receiving device that the preamble is over and that the actual frame contents will now follow. 
-2. *Destination MAC Address* - 目的地接收地址硬件的物理地址； 
-3. *Source MAC Address* - 以太网帧发送端的物理地址；  
-4. *Type Field* - 16 二进制长度，以太网类型标识字段，包括帧的内容； 
-5. *Payload* - Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long. 
-6. CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.
 
 === 链路聚合/LACP
 
@@ -383,8 +407,9 @@ image:img/ipv4address-netmask.png[ipv4address-netmask.png]
 
 * IPv4 地址长度为 32 为二进制数，由 4 组十进制数组成，4 组十进制数之间通过圆点连接
 * IPv4 地址有两部组成：网络部分(Network)和主机部分(Host)，同一子网的所有主机可以不经过路由而连通彼此，同一子网中主机部分唯一。
-* 子网掩码用来区分 Network 和 Host，如上图，10.66.192.36 子网掩码为 255.255.0.0，即前缀是 16，则为 10.66 网段。
+* 子网掩码用来区分网络部分和主机部分，如上图，10.66.192.36 子网掩码为 255.255.0.0，即前缀是 16，则为 10.66 网段。
 * 广播地址：当主机部分所有为位置为1是就为广播地址，如上两个地址的广播地址分别为 192.168.1.255，10.66.255.255.
+* IPv4 地址范围 0.0.0.0 - 255.255.255.255。
 
 [source, text]
 .*示例：IBM IP 地址，9 是网络地址，100.100.100 是主机地址*
@@ -398,10 +423,18 @@ image:img/bits2decimal.png[]
 
 ==== IPv4 地址分类 
 
-IPv4 地址被分为五个类型（为了更好的管理互联网网络）：A、B、C、D、E，地址分类是从两个维度进行（或依赖两个原则）：
+为了更好的管理互联网网络，IPv4 地址被分为五个类型：A、B、C、D、E，地址分类是从两个维度进行（或依赖两个原则）：
 
-1. 第一组数字的范围，0 - 127 为 A 类地址，128 - 191 为 B 类地址，192 - 223 为 C 类地址，224 - 239 为 D 类地址，240 - 255 为 E 类地址
-2. 网络部分和主机部分的划分，A 类地址只有第一组为网络地址，后面三组为主机地址；B 类地址前两组为网络地址，后两组为主机地址；C 类地址前三组为网络地址，后一组为主机地址 
+* 以第一个十进制数字的范围作为基准划分：
+** 0 - 127 为 A 类地址
+** 128 - 191 为 B 类地址
+** 192 - 223 为 C 类地址
+** 224 - 239 为 D 类地址
+** 240 - 255 为 E 类地址
+* 以网络部分和主机部分作为基准的划分：
+** A 类地址只有第一组为网络地址，后面三组为主机地址
+** B 类地址前两组为网络地址，后两组为主机地址
+** C 类地址前三组为网络地址，后一组为主机地址 
 
 对比 IPv4 地址的二进制表述和十进制表述可以帮助理解 IPv4 地址分类：
 
@@ -413,40 +446,74 @@ image:img/ipv4-classing.png[]
 
 |A
 |第一位十进制数用来做网络地址，后面三位十进制数用来做主机地址；以二进制表述，第一位以 0 开头，即二进制范围为 00000000 - 01111111
-|0 - 127
+|0.0.0.0 - 127.255.255.255
 |16 M
 
 |B
 |前两位十进制数用来做网络地址，后面二位十进制数用来做主机地址；以二进制表述，第一位以 10 开头，即二进制范围为 10000000 - 10111111
-|128 - 191
+|128.0.0.0 - 191.255.255.255
 |64000
 
 |C
 |前三位十进制数用来做网络地址，后面一位十进制数用来做主机地址；以二进制表述，第一位以 110 开头，即二进制范围 11000000 -  11011111
-|192 - 223
+|192.0.0.0 - 223.255.255.255
 |254
 
 |Class D
 |以二进制表述，第一位以 1110 开头，用于多播通信，即一个 IP数据报文可以发送到 多个地址
-|224 - 239
+|224.0.0.0 - 239.255.255.255
 |
 
 |Class E
 |以二进制表述，第一位以 1111 开头，预保留分类，供以后使用
-|240 - 255
+|240.0.0.0 - 255.255.255.255
 |
 |===
 
-同样不是所有的 IP 地址可以分配给网络设备，如下一些地址属预留地址，不能分配给网络设备：
+==== 不能分配给网络设备地址
+
+不是所有的 IP 地址可以分配给网络设备，如下一些地址属预留地址，不能分配给网络设备：
 
 * *0.0.0.0* : 代表所有网络
 * *127.0.0.0 - 127.255.255.255* : loopback 本地测试地址
 * *224.0.0.0 - 239.255.255.255* : 类型 D 多播通信预留地址
 * *240.0.0.0 - 255.255.255.254* : 类型 E 预留地址段，未来使用
 * *255.255.255.255* : 代表所有主机
-* 一个网络中的第一个地址和最后一个地址，第一个地址是网络预留地址，最后一个地址是多播地址，例如 10.1.10.0/24 网络，10.1.10.0 是网络预留地址，10.1.10.255 是多播地址。
+* 网络地址和广播地址
+** 一个网络中的第一个地址称为网络地址，用于标识一个网络，这个个地址是网络预留地址
+** 一个网络中最后一个地址称为广播地址，是一个地址是广播地址，用于向该网络中所有主机发送数据的特殊地址
+** 例如 10.1.10.0/24 网络，10.1.10.0 是网络预留地址，10.1.10.255 是多播地址。
 
 参照 link:https://zh.wikipedia.org/wiki/分类网络[🔗]了解更多关于网络分类。
+
+==== 不可路由的地址
+
+不可路由的地址空间是一些 IP 范围，可以被任何人使用，但是不能路由。不是每台每台连接到 Internet 的计算机都需要能够与其他连接到 Internet 的计算机进行通信，不可路由的地址为这一需求而定，此类节点构成的网络他们可以相互通信，但没有网关路由器会尝
+试将流量转发到此类网络。
+
+对应 IPv4地址范围，不可路由的地址空间主要有三个范围：
+
+.*不可路由的IPv4地址*
+|===
+|所属分类 |网络 |地址范围
+|A
+|10.0.0.0/8
+|10.0.0.0 - 10.255.255.255.255
+|B
+|172.16.0.0/12
+|172.16.0.0 - 172.31.255.255
+|C
+|192.168.0.0/16
+|192.168.0.0 - 192.168.255.255
+|===
+
+NOTE: 详细参照 http://www.ietf.org/。
+
+=== 子网划分
+
+“有类编址”的地址划分过于死板，划分的颗粒度太大，会有大量的主机号不能被充分利用，从而造成了大量的IP地址资源浪费。因此可以利用子网划分来减少地址浪费，将一个大的有类网络，划分成若干个小的子网，使得IP地址的使用更为科学。那么我们来看一下如何完成子网划分。
+
+如果一个 IPv4 地址 属于 A 类或 B类地址，则可能存在的最大主机较多，这就需要子网来进一步分组成较小的网络，这就叫做子网。
 
 ==== 子网掩码
 
@@ -706,9 +773,50 @@ https://ipaddressguide.com/cidr
 |10.1.10.255
 |===
 
-==== 子网
+=== ICMP
 
-如果一个 IPv4 地址 属于 A 类或 B类地址，则可能存在的最大主机较多，这就需要子网来进一步分组成较小的网络，这就叫做子网。
+ICMP(Internet Control Message Protocol)是IP协议的辅助协协议，用来在网络设备间传递各种差错和控制信息，对于收集各种网络信息、诊断和排除各种网络故障等方面起着至关重要的作用。
+
+.*ICMP packet Struct:*
+image:img/icmp-struct.png[]
+
+* *Type* - Type field is eight bits long which specifies what type of message is being delivered.
+* *Code* - Code field indicates a more specific reason for the message than just the type.
+* *Checksum* - Checksum is 16 bit length, that works like every other checksum field in other frame, like Ethernet frame, IP datagram and TCP segment.
+* *Rest of header* - A 32 bit field with an uninspired name, this field is optionally used by some of the specific types and codes to send more data.
+* *Data payload* - Data payload for an ICMP packet exists entirely so that the recipient of the message knows which of their transmissions caused the error being reported.
+
+.*Type/Code 对照表*
+|===
+|Type |Code |描述
+|0
+|0
+|Echo Reply
+
+|3
+|0
+|网络不可达
+
+|3
+|1
+|主机不可达
+
+|3
+|2
+|协议不可达
+
+|3
+|3
+|端口不可达
+
+|5
+|0
+|重定向
+
+|8
+|0
+|Echo Request
+|===
 
 === ARP
 
@@ -879,18 +987,6 @@ NOTE: IANA(Internet Assigned Numbers Authority) 是一个非盈利的组织，�
 * 不仅仅针对不同的网络可以选择出一个最佳路径，而且在初始最佳路径不可用（网络拓扑变化）后可以重新选择出一个最佳路径
 * 不同路由器之间动态共享路由信息，而不需要网络管理员人为参与
 
-==== 不可路由的地址空间
-
-不可路由的地址空间是一些 IP 范围，可以被任何人使用，但是不能路由。不是每台每台连接到 Internet 的计算机都需要能够与其他连接到 Internet 的计算机进行通信，不可路由的地址为这一需求而定，此类节点构成的网络他们可以相互通信，但没有网关路由器会尝试将流量转发到此类网络。
-
-不可路由的地址空间主要有三个范围：
-
-* 10.0.0.0/8
-* 172.16.0.0/12
-* 192.168.0.0/16
-
-http://www.ietf.org/
-
 === Fragmentation
 
 如下图，应用层发送一个消息在网络模型中每一层封装过程，底层包的 payload 是临近上一层包，
@@ -983,19 +1079,6 @@ image:img/ipv6-headers.png[]
 * https://en.wikipedia.org/wiki/6in4[6in4]
 * https://en.wikipedia.org/wiki/Tunnel_Setup_Protocol[TSP(Tunnel Setup Protocol)]
 * https://en.wikipedia.org/wiki/Anything_In_Anything[Anything In Anything]
-
-=== ICMP
-
-ICMP(internet control message protocol) is mainly used by router or remote hosts to communicate while transmission has failed back to the origin of the transmission.
-
-.*ICMP packet Struct:*
-image:img/icmp-struct.png[]
-
-* *Type* - Type field is eight bits long which specifies what type of message is being delivered.
-* *Code* - Code field indicates a more specific reason for the message than just the type.
-* *Checksum* - Checksum is 16 bit length, that works like every other checksum field in other frame, like Ethernet frame, IP datagram and TCP segment.
-* *Rest of header* - A 32 bit field with an uninspired name, this field is optionally used by some of the specific types and codes to send more data.
-* *Data payload* - Data payload for an ICMP packet exists entirely so that the recipient of the message knows which of their transmissions caused the error being reported.
 
 == 传输层
 
