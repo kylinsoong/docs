@@ -331,27 +331,91 @@ image:img/EthernetPacket.png[]
 1. The first part of an Ethernet frame is known as the preamble. A preamble is 8 bytes or 64 bits long and can itself be split into two sections. The first seven bytes are a series of alternating ones and zeros. These act partially as a buffer between frames and can also be used by the network interfaces to synchronize internal clocks they use, to regulate the speed at which they send data. This last byte in the preamble is known as the SFD or start frame delimiter. This signals to a receiving device that the preamble is over and that the actual frame contents will now follow.
 2. *Destination MAC Address* - 目的地接收地址硬件的物理地址；
 3. *Source MAC Address* - 以太网帧发送端的物理地址；
-4. *Type Field* - 16 二进制长度，以太网类型标识字段，包括帧的内容；
+4. *Type Field* - 16 二进制长度，以太网类型标识字段，包括帧的内容；例如 tag 标记的 VLAN，该字段为 802.1Q。
 5. *Payload* - Data payload of an Ethernet frame. A payload in networking terms is the actual data being transported, which is everything that isn't a header. The data payload of a traditional Ethernet frame can be anywhere from 46 to 1500 bytes long.
 6. CRC(cyclical redundancy check) checksum, which is a 4-byte or 32-bit number that represents a checksum value for the entire frame.
 
 === VLAN
 
-为了解决广播域带来的问题，人们引入了VLAN (Virtual Local Area Network)，即虚拟局域网技术。
+为了解决广播域带来的问题，人们引入了VLAN (Virtual Local Area Network)，即虚拟局域网技术。VLAN用来隔离广播域。
 
-=== ARP
-
-ARP 是根据网络层 IP 地址寻找到对应网络接口的 MAC 地址，有些归纳里面讲 ARP 认为是网络层协议，详细参照 link:#_arp_2[ARP]。
-
-=== LAN vs VLAN
-
-如下图所示，
+与VLAN相对的是LAN，如下图所示，
 
 image:img/vlan.png[]
 
 * 通常一个 2 层交换设备相当于一个 LAN， 而VLAN 是一个虚拟的广播域，通常是在一个二层交换设备中创建，当然现代多数 2 层交换设备之间可以相连和交换，不同交换机下的 VLAN 可以位于同一个 VLAN 中。
 * VLAN 可以有效的降低广播负载，提高网络性能；传统上引入 VLAN 可以进行更好的安全、分组等控制，而且大多数 2 层交换机厂商的设备默认就有 VLAN 的划分；另外，新的 SDN（软件定义的网络）只有 VLAN 的概念。
+* 不同 VLAN 内的报文在传输时相互隔离，即一个VLAN内的用户不能和其它VLAN内的用户直接通信。
 * 不同 VLAN 之间的通信是通过路由设备
+
+=== VLAN 划分
+
+可以通过5种方式进行 VLAN 划分：
+
+.*5 种 VLAN 划分方式*
+[cols="5a,2,2"]
+|===
+|VLAN 划分方式 |VLAN 10 |VLAN 20
+
+|*基于接口*
+
+* 根据交换机的接口来划分VLAN
+* Port VLAN ID，是接口上的缺省VLAN,取值:1~4094
+|GE0/0/1，GE0/0/3
+|GE0/0/2，GE0/0/4
+
+|*基于 MAC 地址*
+
+* 根据数据帧的源MAC地址来划分VLAN。
+* 映射表记录了MAC地址和VLAN ID的关联情况。
+|MAC 1，MAC 3
+|MAC 2，MAC 4
+
+|基于IP子网划分
+|10.0.1.*
+|10.0.2.*
+
+|基于协议划分
+|IPv4
+|IPv6
+
+|基于策略
+|10.0.1.* + GE0/0/1+ MAC 1
+|10.0.2.* + GE0/0/2 + MAC 2
+|===
+
+.*以太网二层接口类型*
+|===
+|接口类型 |描述
+
+|Access接口
+|接收和发送 Tagged/Untagged 帧，通常用于终端 PC 和交换机相连，只允许一个 VLAN 通过
+
+|Trunk接口
+|接收和发送 Tagged/Untagged 帧，Trunk接口有允许通过的 VLAN 列表，只有允许的 VLAN 才允许通过，通常用于交换机和交换机之间互联
+
+|Hybrid接口
+|接收和发送 Tagged/Untagged 帧，Access接口 + Trunk接口的结合
+|===
+
+VLAN 划分原则：
+
+* 按业务规划
+* 按部门规划
+* 按应用规划
+
+VLAN分配技巧：
+
+* 为了提高VLAN ID的连续性，可以采用VLAN ID 和子网关联的方式进行分配。
+
+=== STP/RSTP
+
+以太网交换网络中为了进行链路备份，提高网络可靠性，通常会使用冗余链路。但是使用冗余链路会在交换网络上产生环路，引发广播风暴以及MAC地址表不稳定等故障现象，从而导致用户通信质量差，甚至通信中断。为解决交换网络中的环路问题，生成树协议STP（Spanning Tree Protocol）应运而生。
+
+运行STP协议的设备通过彼此交互信息发现网络中的环路，并有选择地对某个接口进行阻塞，最终将环形网络结构修剪成无环路的树形网络结构，从而防止报文在环形网络中不断循环，避免设备由于重复接收相同的报文造成处理性能下降。
+
+RSTP（Rapid Spanning Tree Protocol）协议基于STP协议，对原有的STP协议进行了更加细致地修改和补充，实现了网络拓扑快速收敛。
+
 
 === WAN
 
@@ -509,7 +573,7 @@ image:img/ipv4-classing.png[]
 
 NOTE: 详细参照 http://www.ietf.org/。
 
-=== 子网划分
+=== IPv4 子网划分
 
 “有类编址”的地址划分过于死板，划分的颗粒度太大，会有大量的主机号不能被充分利用，从而造成了大量的IP地址资源浪费。因此可以利用子网划分来减少地址浪费，将一个大的有类网络，划分成若干个小的子网，使得IP地址的使用更为科学。那么我们来看一下如何完成子网划分。
 
