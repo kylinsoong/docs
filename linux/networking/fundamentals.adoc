@@ -1209,11 +1209,115 @@ NOTE: IANA(Internet Assigned Numbers Authority) 是一个非盈利的组织，�
 
 image:img/dynamic-route-classific.png[]
 
-OSPF是典型的链路状态路由协议，是目前业内使用非常广泛的IGP协议之一。
+OSPF是典型的链路状态路由协议，是目前业内使用非常广泛的IGP协议之一:
 
+* OSPF是典型的链路状态路由协议，是目前业内使用非常广泛的IGP协议之一。
+* 目前针对IPv4协议使用的是OSPF Version 2(RFC2328);针对IPv6协议使用OSPF Version 3(RFC2740)。如无特 殊说明本章后续所指的OSPF均为OSPF Version 2。
+* 运行OSPF路由器之间交互的是LS(Link State，链路状态)信息，而不是直接交互路由。LS信息是OSPF能够正常进行 拓扑及路由计算的关键信息。
+* OSPF路由器将网络中的LS信息收集起来，存储在LSDB中。路由器都清楚区域内的网络拓扑结构，这有助于路由器计 算无环路径。
+* 每台OSPF路由器都采用SPF算法计算达到目的地的最短路径。路由器依据这些路径形成路由加载到路由表中。
+* OSPF支持VLSM(Variable Length Subnet Mask，可变长子网掩码)，支持手工路由汇总。
+* 多区域的设计使得OSPF能够支持更大规模的网络。
 
-==== 工作原理
+.*OSPF 基础术语*
+[cols="2,5a"]
+|===
+|术语 |解释
 
+|区域
+|
+
+* OSPF Area用于标识一个OSPF的区域。
+* 区域是从逻辑上将设备划分为不同的组，每个组用区域号(Area ID)来标识。
+
+|Router-ID
+|
+
+* Router-ID(Router Identifier，路由器标识符)，用于在一个OSPF域中唯一地标识一台路由器。
+* Router-ID的设定可以通过手工配置的方式，或使用系统自动配置的方式。
+
+|度量值
+|
+
+* OSPF使用Cost(开销)作为路由的度量值。每一个激活了OSPF的接口都会维护一个接口Cost值，缺省时 `接口Cost值` = `100 Mbit/s`/`接口带宽` 。其中100 Mbit/s为OSPF指定的缺省参考值，该值是可配置的。
+
+|===
+
+.*OSPF 五类协议报文*
+[cols="2,5a"]
+|===
+|报文名称 |报文功能
+
+|Hello
+|周期性发送，用来发现和维护OSPF邻居关系。
+
+|Database Description
+|描述本地LSDB的摘要信息，用于两台设备进行数据库同步。
+
+|Link State Request
+|用于向对方请求所需要的LSA。设备只有在OSPF邻居双方成功交换DD报文 后才会向对方发出LSR报文。
+
+|Link State Update
+|用于向对方发送其所需要的LSA。
+
+|Link State ACK
+|用来对收到的LSA进行确认。
+
+|===
+
+.*OSPF 三大表项* 
+[cols="2,5a"]
+|===
+|表项 |说明
+
+|邻居表
+|
+
+* OSPF在传递链路状态信息之前，需先建立OSPF邻居关系。
+* OSPF的邻居关系通过交互Hello报文建立。
+* OSPF邻居表显示了OSPF路由器之间的邻居状态
+
+|LSDB 表
+|
+
+* LSDB会保存自己产生的及从邻居收到的LSA信息
+
+|OSPF 路由表
+|
+
+* OSPF路由表和路由器路由表是两张不同的表项
+* OSPF路由表包含Destination、Cost和NextHop等指导转发的信息
+|===
+
+.*OSPF 四种网络类型*
+[cols="2,5a"]
+|===
+|类型 |说明
+
+|P2P(Point-to-Point，点对点)
+|
+
+* P2P 指的是在一段链路上只能连接两台网络设备的环境。
+* 典型的例子是PPP链路。当接口采用PPP封装时，OSPF 在该接口上采用的缺省网络类型为P2P 。
+
+|BMA(Broadcast Multiple Access，广播式多路访问)
+|
+
+* BMA也被称为Broadcast，指的是一个允许多台设备接入 的、支持广播的环境。
+* 典型的例子是Ethernet(以太网)。当接口采用Ethernet 封装时，OSPF在该接口上采用的缺省网络类型为BMA。
+
+|NBMA(Non-Broadcast Multiple Access，非广播式多路访问)
+|
+
+* NBMA指的是一个允许多台网络设备接入且不支持广播 的环境。
+* 典型的例子是帧中继(Frame-Relay)网络。
+
+|P2MP(Point to Multi-Point，点到多点)
+|
+
+* P2MP相当于将多条P2P链路的一端进行捆绑得到 的网络。
+* 没有一种链路层协议会被缺省的认为是P2MP网络 类型。该类型必须由其他网络类型手动更改。
+|===
 
 === Fragmentation
 
