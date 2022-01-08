@@ -1,4 +1,4 @@
-= 计算机网络
+//= 计算机网络
 :toc: manual
 
 == 网络模型
@@ -191,17 +191,6 @@ Instead of a modem, the demarcation point for fiber technologies is known as Opt
 * The most common specifications for how wireless networking devices should communicate, are defined by the IEEE 802.11 standards. This set of specifications, also called the 802.11 family, make up the set of technologies we call WiFi.
 * A frequency band is a certain section of the radio spectrum that's been agreed upon to be used for certain communications.
 * WiFi networks operate on a few different frequency bands. Most commonly, the 2.4 gigahertz and 5 gigahertz bands. There are lots of 802.11 specifications including some that exist just experimentally or for testing. The most common specifications you might run into are 802.11b, 802.11a, 802.11g, 802.11n, and 802.11ac.
-
-*802.11 frame*
-
-image:img/802.11-frame.png[]
-
-* *Frame Control* - Frame control field is 16 bits long, and contains a number of sub-fields that are used to describe how the frame itself should be processed.
-* *Duration ID* - It specifies how long the total frame is. So, the receiver knows how long it should expect to have to listen to the transmission.
-* *Address* - There are four address fields, because there needs to be room to indicate which wireless access point should be processing the frame. So, we'd have our normal source address field, which would represent the MAC address of the sending device.
-* *Sequence Control* - Sequence control field is 16 bits long and mainly contains a sequence number used to keep track of ordering the frames.
-* *Data payload* - Data payload section which has all of the data of the protocols further up the stack.
-* *FCS* - Frame check sequence field which contains a checksum used for a cyclical redundancy check.
 
 ==== Wireless Channels
 
@@ -560,9 +549,24 @@ LACP(Link Aggregation Control Protocol) 链路聚合控制协议是 IEEE 标准 
 
 |===
 
+=== WLAN
+
+以有线电缆或光纤作为传输介质的有线局域网应用广泛，但有线传输介质的铺设成本高，位置固定，移动性差。随着人们对网络的便携性和移动性的要求日益增强，传统的有线网络已经无法满足需求，WLAN (Wireless Local Area Network，无线局域网)技术应运而生。目前，WLAN已经成为一种经济、高效的网络接入方式。
+
+=== 802.11 帧结构
+
+image:img/802.11-frame.png[]
+
+* *Frame Control* - Frame control field is 16 bits long, and contains a number of sub-fields that are used to describe how the frame itself should be processed.
+* *Duration ID* - It specifies how long the total frame is. So, the receiver knows how long it should expect to have to listen to the transmission.
+* *Address* - There are four address fields, because there needs to be room to indicate which wireless access point should be processing the frame. So, we'd have our normal source address field, which would represent the MAC address of the sending device.
+* *Sequence Control* - Sequence control field is 16 bits long and mainly contains a sequence number used to keep track of ordering the frames.
+* *Data payload* - Data payload section which has all of the data of the protocols further up the stack.
+* *FCS* - Frame check sequence field which contains a checksum used for a cyclical redundancy check.
+
 === WAN
 
-与 LAN 相对应，WAN stands for wide area network. A wide area network acts like a single network but spans across multiple physical locations.
+广域网是连接不同地区局域网的网络，通常所覆盖的范围从几十公里到几千公里。它能连接多个地区、城市和 国家，或横跨几个洲提供远距离通信，形成国际性的远程网络。
 
 NOTE: WAN technologies usually require that you contract a link across the Internet with your ISP. This ISP handles sending your data from one side to the other. So, it could be like all of your computers are in the same physical location.
 
@@ -571,6 +575,62 @@ WAN 协议：
 * https://en.wikipedia.org/wiki/Frame_Relay[Frame Relay]
 * https://en.wikipedia.org/wiki/High-Level_Data_Link_Control[High-Level Data Link Control]
 * https://en.wikipedia.org/wiki/Asynchronous_transfer_mode[Asynchronous transfer mode]
+
+.*广域网技术发展阶段*
+[cols="2,5a"]
+|===
+|阶段 |说明
+
+|传统 IP 路由转发
+|传统的 IP 转发采用的是逐跳转发。数据报文经过每一台路由器，都要被解封装查看报文网络层信息，然后根据路由最长匹配 原则查找路由表指导报文转发。各路由器重复进行解封装查找路由表和再封装的过程，所以转发性能低。
+
+传统 IP 路由转发的特点:
+
+* 所有路由器需要知道全网的路由。
+* 传统 IP 转发是面向无连接的，无法提供较好的端到 端QoS保证。
+
+|MPLS 标签转发
+|
+
+* MPLS 是一种 IP 骨干网技术。
+* MPLS 是一种隧道技术，在 IP 路由和控制协议的基础上，向网络层提供面向连接的交换。能够提供较好的 QoS 保证。
+* MPLS 标签指导报文转发的过程中，使用本地标签查找替代传统 IP 转发的路由查找，大大提高转发效率。
+* MPLS 转发过程中使用的标签，既可以通过手工静态配置，又可以通过动态标签分发协议分配。
+
+MPLS 的标签分发有静态和动态两种方式，均面临着不同的问题:
+
+* 静态标签分发为手工配置。
+* 动态标签分发的问题。
+
+|Segment Routing 转发
+|为解决传统IP转发和MPLS转发的问题，业界提出了SR (Segment Routing，分段路由)。SR的转发机制有很 大改进，主要体现在以下几个方面:
+
+* *基于现有协议进行扩展:* 扩展后的IGP/BGP具有标签分发能力，因此网络中无需其他任何标签分发协议，实现协议简化。
+* *引入源路由机制:* 基于源路由机制，支持通过控制器进行集中算路。
+* *由业务来定义网络:* 业务驱动网络，由应用提出需求(时延、带宽、丢包率等)，控制器收集网络拓扑、带宽利用率、时延等信息，根据业务需求计算显式路径。
+
+|===
+
+
+
+=== PPP/PPPoE
+
+==== PPP
+
+* PPP是一种常见的广域网数据链路层协议，主要用于在全双工的链路上进行点到点的数据传输封装。
+* PPP(Point-to-Point Protocol，点到点协议)是一种常见的广域网数据链路层协议，主要用于在全双工的链路上进行点到点 的数据传输封装。
+* PPP提供了安全认证协议族PAP(Password Authentication Protocol，密码验证协议)和CHAP(Challenge Handshake Authentication Protocol，挑战握手认证协议)。
+* PPP协议具有良好的扩展性，例如，当需要在以太网链路上承载PPP协议时，PPP可以扩展为PPPoE。
+* PPP协议提供LCP(Link Control Protocol，链路控制协议)，用于各种链路层参数的协商，例如最大接收单元，认证模式等。
+* PPP协议提供各种NCP(Network Control Protocol，网络控制协议)，如IPCP(IP Control Protocol ，IP控制协议)，用于 各网络层参数的协商，更好地支持了网络层协议。
+
+==== PPPoE
+
+* PPPoE是一种把PPP帧封装到以太网帧中的链路层协议。PPPoE可以使以太网网络中的多台主机连接到远端的宽带接入服务器。
+* PPPoE(PPP over Ethernet，以太网承载PPP协议)是一种把PPP帧封装到以太网帧中的链路层协议。PPPoE可 以使以太网网络中的多台主机连接到远端的宽带接入服务器。
+* PPPoE集中了PPP和Ethernet两个技术的优点。既有以太网的组网灵活优势，又可以利用PPP协议实现认证、计费等功能。
+* PPPoE实现了在以太网上提供点到点的连接。PPPoE客户端与PPPoE服务器端之间建立PPP会话，封装PPP数据 报文，为以太网上的主机提供接入服务，实现用户控制和计费，在企业网络与运营商网络中应用广泛。
+* PPPoE的常见应用场景有家庭用户拨号上网、企业用户拨号上网等。
 
 == 网络层
 
