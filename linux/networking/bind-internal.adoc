@@ -1,0 +1,122 @@
+= Bind(Internal DNS)
+:toc: manual
+
+
+== Authoritative DNS Server
+
+[source, bash]
+.*1. Packages install*
+----
+sudo apt install bind9 bind9utils bind9-doc
+----
+
+[source, bash]
+.*2. Check installed version*
+----
+named -v
+----
+
+[source, bash]
+.*3. Edit /etc/bind/named.conf.options, setting up an authoritative DNS server*
+----
+        // hide version number from clients for security reasons.
+        version "not currently available";
+
+        // disable recursion on authoritative DNS server.
+        recursion no;
+
+        // enable the query log
+        querylog yes;
+
+        // disallow zone transfer
+        allow-transfer { none; };
+----
+
+[source, bash]
+.*4. check the configuration and restart service*
+----
+sudo named-checkconf
+sudo systemctl restart bind9
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+== Local DNS Resolver
+
+[source, bash]
+.*1. Packages install*
+----
+sudo apt install bind9 bind9utils bind9-doc bind9-host dnsutils -y
+----
+
+[source, bash]
+.*2. Check installed version*
+----
+$ named -v
+BIND 9.16.1-Ubuntu (Stable Release) <id:d497c32>
+----
+
+[source, bash]
+.*3. Edit /etc/bind/named.conf.options, enable recursion service*
+----
+        // hide version number from clients for security reasons.
+        version "not currently available";
+
+        // optional - BIND default behavior is recursion
+        recursion yes;
+
+        // provide recursion service to trusted clients only
+        allow-recursion { 127.0.0.1; 192.168.0.0/24; 10.1.10.0/24; };
+
+        // enable the query log
+        querylog yes;
+----
+
+[source, bash]
+.*4. check the configuration and restart service*
+----
+sudo named-checkconf
+sudo systemctl restart bind9
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+

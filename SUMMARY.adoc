@@ -24,6 +24,7 @@
 ... link:linux/networking/bridge.adoc[bridge]
 ... link:linux/networking/dns.adoc[DNS]
 .... link:linux/networking/bind.adoc[bind]
+.... link:linux/networking/bind-internal.adoc[Internal DNS]
 ... link:linux/networking/monitor.adoc[网络监控]
 ... link:linux/networking/programming.adoc[网络编程]
 .. link:linux/fs.adoc[文件系统]
