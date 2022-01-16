@@ -1,0 +1,44 @@
+$TTL  3h
+movie.xyz. IN SOA ns1.movie.xyz. kylin.movie.xyz. (
+                           1       ; Serial
+                           3h      ; Refresh after 3 hours
+                           1h      ; Retry after 1 hour
+                           1w      ; Expire after 1 week
+                           1h )    ; Negative caching TTL of 1 hour
+
+movie.xyz. IN NS  ns1.movie.xyz.
+movie.xyz. IN NS  ns2.movie.xyz.
+
+
+;
+;Host addresses
+;
+
+ns1.movie.xyz.              IN A   10.1.10.176
+ns2.movie.xyz.              IN A   10.1.30.128 
+
+localhost.movie.xyz.        IN A   127.0.0.1
+
+shrek.movie.xyz.            IN A   10.1.10.2
+toystory.movie.xyz.         IN A   10.1.10.3
+monsters-inc.movie.xyz.     IN A   10.1.10.4
+
+misery.movie.xyz.           IN A   10.1.30.2
+shining.movie.xyz.          IN A   10.1.30.3
+carrie.movie.xyz.           IN A   10.1.30.4
+
+;
+;Multi-homed hosts
+;
+wormhole.movie.xyz.         IN A   10.1.10.1
+wormhole.movie.xyz.         IN A   10.1.30.1
+
+;
+; Aliases
+;
+toys.movie.xyz.             IN CNAME   toystory.movie.xyz.
+mi.movie.xyz.               IN CNAME   misery.movie.xyz.
+wh.movie.xyz.               IN CNAME   wormhole.movie.xyz. 
+
+wh10.movie.xyz.             IN A       10.1.10.1
+wh30.movie.xyz.             IN A       10.1.30.1
