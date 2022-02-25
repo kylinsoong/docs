@@ -1,0 +1,19 @@
+$TTL  3h
+0.0.127.in-addr.arpa. IN SOA ns1.movie.xyz. kylin.movie.xyz. (
+                           1       ; Serial
+                           3h      ; Refresh after 3 hours
+                           1h      ; Retry after 1 hour
+                           1w      ; Expire after 1 week
+                           1h )    ; Negative caching TTL of 1 hour
+
+;
+; Name servvers
+;
+0.0.127.in-addr.arpa. IN NS  ns1.movie.xyz.
+0.0.127.in-addr.arpa. IN NS  ns2.movie.xyz.
+
+
+;
+; Addresses point to canonical name
+;
+1.0.0.127.in-addr.arpa.    IN PTR   localhost.

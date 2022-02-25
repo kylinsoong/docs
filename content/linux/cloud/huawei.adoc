@@ -1,0 +1,83 @@
+= Huawei Cloud
+:toc: manual
+
+== ECS 
+
+[source, bash]
+.*CPU*
+----
+$ lscpu
+Architecture:          aarch64
+Byte Order:            Little Endian
+CPU(s):                2
+On-line CPU(s) list:   0,1
+Thread(s) per core:    1
+Core(s) per socket:    2
+Socket(s):             1
+NUMA node(s):          1
+Model:                 0
+CPU max MHz:           2400.0000
+CPU min MHz:           2400.0000
+BogoMIPS:              200.00
+L1d cache:             64K
+L1i cache:             64K
+L2 cache:              512K
+L3 cache:              32768K
+NUMA node0 CPU(s):     0,1
+Flags:                 fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+----
+
+[source, bash]
+.*OS*
+----
+# cat /etc/redhat-release 
+CentOS Linux release 7.6.1810 (AltArch) 
+----
+
+[source, bash]
+.*docker*
+----
+ docker version
+Client: Docker Engine - Community
+ Version:           18.09.8
+ API version:       1.39
+ Go version:        go1.10.8
+ Git commit:        0dd43dd
+ Built:             Wed Jul 17 17:39:22 2019
+ OS/Arch:           linux/arm64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          18.09.8
+  API version:      1.39 (minimum version 1.12)
+  Go version:       go1.10.8
+  Git commit:       0dd43dd
+  Built:            Wed Jul 17 17:53:39 2019
+  OS/Arch:          linux/arm64
+  Experimental:     false
+----
+
+
+[source, bash]
+.**
+----
+
+----
+
+
+[source, bash]
+.**
+----
+
+----
+
+
+[source, bash]
+.*error message*
+----
+standard_init_linux.go:211: exec user process caused "exec format error"
+----
+
+
+

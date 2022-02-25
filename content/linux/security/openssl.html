@@ -410,6 +410,38 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.7.1" data-path="../networking/bind.html">
+            
+                <a href="../networking/bind.html">
+            
+                    
+                    bind
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.7.2" data-path="../networking/bind-internal.html">
+            
+                <a href="../networking/bind-internal.html">
+            
+                    
+                    Internal DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.2.3.8" data-path="../networking/monitor.html">
@@ -2008,21 +2040,452 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#__">&#x5E38;&#x89C1;&#x547D;&#x4EE4;</a></li>
+<li><a href="#_key_and_certificate_management">Key and Certificate Management</a>
+<ul class="sectlevel2">
+<li><a href="#_key_generation">Key Generation</a></li>
+<li><a href="#__csr">&#x521B;&#x5EFA; CSR</a></li>
+<li><a href="#___2">&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</a></li>
+</ul>
+</li>
 <li><a href="#_rsa">RSA &#x516C;&#x94A5;&#x79C1;&#x94A5;</a>
 <ul class="sectlevel2">
-<li><a href="#__">&#x521B;&#x5EFA;&#x516C;&#x94A5;&#x79C1;&#x94A5;</a></li>
-<li><a href="#___2">&#x52A0;&#x5BC6;/&#x89E3;&#x5BC6;</a></li>
+<li><a href="#___3">&#x521B;&#x5EFA;&#x516C;&#x94A5;&#x79C1;&#x94A5;</a></li>
+<li><a href="#___4">&#x52A0;&#x5BC6;/&#x89E3;&#x5BC6;</a></li>
 <li><a href="#__hash_digest">&#x521B;&#x5EFA;&#x4E00;&#x4E2A; hash digest</a></li>
 </ul>
 </li>
-<li><a href="#___3">&#x521B;&#x5EFA;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</a></li>
+<li><a href="#___5">&#x521B;&#x5EFA;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</a></li>
 </ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x5E38;&#x89C1;&#x547D;&#x4EE4;</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x529F;&#x80FD;</th>
+<th class="tableblock halign-left valign-top">&#x547D;&#x4EE4;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x67E5;&#x770B;OpenSSL&#x7248;&#x672C;</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>openssl version
+openssl version -a</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x67E5;&#x770B;&#x5E2E;&#x52A9;&#x6587;&#x6863;</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>openssl help</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x67E5;&#x770B;&#x6240;&#x6709; Cipher Suite</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre>openssl ciphers -v &apos;ALL:COMPLEMENTOFALL&apos;</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_and_certificate_management">Key and Certificate Management</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x8BA9;Web&#x670D;&#x52A1;&#x5668;&#x652F;&#x6301;SSL&#x9700;&#x8981;&#x4E09;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>generate a private key</p>
+</li>
+<li>
+<p>create a Certificate Signing Request (CSR) and send it to a CA</p>
+</li>
+<li>
+<p>install the CA-provided certificate in your web server</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_key_generation">Key Generation</h3>
+<div class="paragraph">
+<p>&#x751F;&#x4EA7;&#x79C1;&#x6709; Key &#x4E4B;&#x524D;&#x9700;&#x8981;&#x786E;&#x5B9A;&#x4E09;&#x4EF6;&#x4E8B;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>&#x7B97;&#x6CD5;</strong> - OpenSSL &#x652F;&#x6301;&#x7684;&#x7B97;&#x6CD5;&#x5305;&#x62EC;&#xFF1A;RSA&#x3001;DSA&#x3001;ECDSA&#x3001;EdDSA&#xFF0C;&#x5176;&#x4E2D;&#x505A;&#x5E38;&#x7528;&#x7684;&#x662F; RSA &#x548C; ECDSA</p>
+</li>
+<li>
+<p><strong>&#x957F;&#x5EA6;</strong> - &#x76EE;&#x524D;&#x79C1;&#x6709; Key &#x7684;&#x957F;&#x5EA6;&#x4E3A; 2048 &#x8BA4;&#x4E3A;&#x662F;&#x5B89;&#x5168;&#x7684;</p>
+</li>
+<li>
+<p><strong>Passphrase</strong> - &#x53EF;&#x9009;&#x62E9;&#xFF0C;&#x5982;&#x679C;&#x5B89;&#x5168;&#x6027;&#x9AD8;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; Passphrase &#x6765;&#x4FDD;&#x62A4;&#x79C1;&#x6709; Key</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x751F;&#x6210; RSA KEY</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openssl genpkey -out example.com.key -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -aes-256-cbc -pass pass:hello</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x751F;&#x6210;&#x7684; KEY</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cat example.com.key
+-----BEGIN ENCRYPTED PRIVATE KEY-----
+MIIFLTBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIUA1klXE97UwCAggA
+MAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAEqBBDSmOX/EXqkqndsuc2tkJ/5BIIE
+0D3ssbgGL2qq5tWCElArT70DJ+7Qj5j2at9LitF7NPE7c1EJkKaUUW8kWXbPb6PU
+0MdKIC+gHDp+BD9dfXhRxkU1y/5X5/HCJFTeweZtjdsA8lBkd1cM5jcEM7vZ1THm
+rUNGQVkCOfHms23laq2B7RyOGHmdelI7aC7t6aAbKXgtCMKNZjeXzF441hM/ogJa
+p9tlsEVzTAly3iQPq8Cdv6tBIfO3OK4MBcwNn//YfXm+QatmgSQZsLDCQzCKdPHg
+4m6f7ilUBZA2YhKOfqhtOawtBpXACKNPhJDVt1xx0EOvTKv8lsPgWJoQkDHk9tKk
+LA3s6Zl8hC6iSJzJ5xl1g64SuNtJ2Q29PIceWnoTLfbwJY1g5TcHk5wP2K0NRpAM
+BPs6JOxz0USuRC5Oy8PbbBr/CKf/KAgmLEgqx3wfayJ/VQ+aUR3De9vwv/ZlQlHK
+p6fxF+/RTCliwaaBTM5G09M3mtsuBrgD5rvW16lNqhE294qIT9pXdjULqaozESvl
+9qCSxiElEomMR9SLJadQTpsXtVsS1VUUOH8Cy4/peLaPtgbbC7Te5oMb/VD9+L8Q
+DN9Gj0Zn6nUXKGMnkSc4RNCMruFvNxMx2HNaNboQygwSeoX8FBcfLQNJWfQ4Umbe
+8pb0SLkQePGtBjbeHXuLCQ4LHPYiccokyuRDg7U6yG4jNn98sldGCDjKP9lWJ1U6
+hCmMUEFXRGyKE3ms0zHR107/t5vms1fvyv2+joEVruJtiBPVBN+6W0pwvtXfw80K
+6dyc6/zP9bO8CVtdP7ZMhaAvoMyauTD4aZxyOBPXjrUydaenOy07hW8ojoeXx/Uz
+e33Ecq5aoAdUBQdmZ+WI7XWalltn0BliDnoqSfjDOhqtByHvOgwTS+kNan8qaRj+
+60051KD87B++f0X3g4aVjUJN/uahDNQS2blARO9cozMXeqp1rmRTgAm+HEYngXnc
+gU8rDKUSTW42cpYCmdm0cWqIVstyZIbfhgnGa1rir0IXRlxD8ruX5Y/6r6ClMgtA
+aSZb7Ip0Z4zgEr/72MetcNEbsGubvkyJ02WnT78kdkmKkk83QuNJ2SUXwl1HxsWp
+oVcuTFNxgofgzgGbzyWYeMxpqDj1dGx5I6aikRfwJIKAr9H6hxQm5PhYLqYLwif5
+YNnW7hGZY+6wg55U1edhDTZii8bfuFXno4YKW2rxQzfX7BxlN3y5jgZdKe9gO/SK
+KF38ckZVB2A2FnG5fIwvFRlhRc5oMhxOcZaO7ZZ/4xBgBV5lfvD3ZalddL22JGs9
+ddvYVwSxFhH05klgYbCN1p+pTrZRz0CrsC1qVM82s0gAc+ReAeQLiGJPcrNRrU5s
+Qku7IVsPD7uRbr0vIWoje1WhG0wP2jC1et3O7iY6ueuAjdAvQEtXCnhspJuT0Feg
+Xqcqn+3litIx4GCAZNrVWSycuRUVyfWu0mRRaCrc7S7vZC8utCS2yTAnrFaDD4vo
+YZXJ9Jsjfo6H3/Wr+AnYZsqdPaf+U4KCxOIUUiPfhUFGD4l7OcikBFOAioACDdTZ
+nYMmVLd1GltWrxm+dV5p7vrNlpmgQIpb2vdn3TketGe022eDtoWBjXGB8jr4x1Dc
+EK6UnpuhE7uB0eqgKZNLei7Wq70LfySIpaxcTKjWfctW
+-----END ENCRYPTED PRIVATE KEY-----</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x79C1;&#x6709; KEY &#x7684;&#x7ED3;&#x6784;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl pkey -in example.com.key -text -noout
+Enter pass phrase <span class="hljs-keyword">for</span> example.com.key:
+RSA Private-Key: (2048 bit, 2 primes)
+modulus:
+    00:cf:de:6b:38:97:09:b8:ba:fe:68:72:eb:44:0c:
+    41:34:ba:2a:a6:da:96:13:35:31:3a:77:f2:e9:7c:
+    56:13:2c:77:e1:3f:f1:4e:45:ec:0f:97:d8:8f:e6:
+    58:7b:56:eb:ae:27:c3:82:83:6d:8a:93:04:00:92:
+    a6:28:75:50:1d:85:bb:5e:f2:1a:a0:63:a1:46:34:
+    70:89:21:75:db:af:86:b5:08:f6:09:36:12:0f:14:
+    c8:5e:5e:b9:e0:2b:b7:de:c6:67:7f:80:bd:e2:f5:
+    bf:42:30:1a:3f:83:1b:b5:34:82:45:b4:31:77:bf:
+    92:18:0a:2e:71:f7:3e:d1:02:d5:30:02:1c:2b:48:
+    d5:48:b3:c1:54:91:48:79:02:1f:d3:c4:2a:c3:a1:
+    b0:f0:65:a0:21:8d:d2:6e:3c:e3:19:bb:8e:86:5b:
+    4b:73:14:eb:6f:29:91:f1:de:d6:fe:2b:d1:e3:47:
+    b1:9a:a4:2e:e8:45:f6:07:25:c0:b9:0d:84:99:ba:
+    4a:80:22:16:7b:77:6c:d8:0e:75:90:c9:fd:b8:38:
+    d5:c8:f0:92:f6:1a:0f:27:e2:5f:8f:49:cf:fe:86:
+    ce:9a:15:86:d6:ad:26:a4:d1:91:90:f0:24:3f:58:
+    6a:1f:3b:54:9c:85:bb:c0:e2:40:a6:c0:d3:81:7a:
+    f7:f9
+publicExponent: 65537 (0x10001)
+privateExponent:
+    30:bb:ff:bd:5b:c3:de:b8:90:8e:e2:6a:80:20:b3:
+    64:ee:44:b3:ab:c9:c5:a5:11:ee:98:52:ae:25:05:
+    75:27:56:cf:cb:93:02:7b:e8:35:5b:af:5d:45:6e:
+    f7:33:d0:bb:9a:<span class="hljs-built_in">fc</span>:fe:6b:5b:d2:42:57:8c:de:d4:
+    ef:e5:59:2c:22:bf:64:2a:34:<span class="hljs-built_in">cd</span>:e7:ad:d6:ec:d2:
+    79:84:0b:c2:be:ab:41:64:61:72:95:67:b4:7b:75:
+    e2:92:28:d8:02:c7:f0:05:ea:1b:fd:8e:07:59:00:
+    47:3f:49:d8:1c:1f:f1:e2:e6:ab:fa:ec:22:1c:1a:
+    df:61:fb:b3:a2:78:ea:bd:67:fe:64:4b:dc:1a:f6:
+    ab:f2:85:c9:2e:e0:c9:06:c1:38:eb:2f:c3:69:04:
+    e1:c1:d5:3d:df:1a:09:76:8d:fd:84:e5:09:a0:b5:
+    bb:fd:72:8c:4c:43:b9:f1:c2:5b:a8:32:83:21:e4:
+    56:47:ef:ae:ee:76:4c:b0:e0:ce:53:f9:cb:36:fd:
+    9e:43:6f:57:e9:73:0a:e6:0b:0e:fb:b2:13:69:bb:
+    84:42:7d:90:27:8c:20:83:65:1a:7b:28:c8:d6:83:
+    e9:6f:21:50:3d:61:b6:a3:94:ae:fb:b1:18:0b:02:
+    6b:4e:c3:f2:b8:96:92:09:55:e7:81:38:26:a4:67:
+    c5
+prime1:
+    00:f1:ce:0c:4d:6f:0a:2f:82:04:06:3c:a9:2b:9c:
+    f5:1a:e2:04:03:e2:69:13:b9:3e:98:c8:f3:df:0b:
+    58:84:43:e4:01:57:48:f9:c0:28:dc:ec:17:cc:0c:
+    e3:7f:4c:26:<span class="hljs-built_in">cd</span>:7b:9a:15:93:b9:51:0b:3f:e1:2b:
+    90:f2:37:65:79:f0:5a:6a:cf:b3:d5:62:c5:41:8e:
+    8c:f5:94:d0:f3:f2:7d:b8:58:81:5d:c3:53:9b:18:
+    67:e5:06:3d:02:6f:96:74:d7:d4:75:0e:eb:61:3c:
+    ea:7e:d0:18:60:09:70:89:dd:43:9d:9a:a3:6a:32:
+    c1:b5:1d:0c:bf:77:be:c2:ff
+prime2:
+    00:dc:12:5d:56:19:ea:cb:94:fb:93:c7:1a:f2:5b:
+    bb:ce:ea:d8:95:22:49:74:2a:76:1a:5c:8b:5b:64:
+    9d:6f:9c:a9:9b:6f:eb:db:e4:6b:6c:44:e0:49:ea:
+    27:c5:e7:0f:4b:5c:17:84:66:03:e8:ba:8c:99:ba:
+    85:bc:93:56:6e:cf:26:2d:be:2c:e1:d2:5b:0c:57:
+    66:60:4b:4d:13:95:84:37:a5:c0:11:59:69:29:91:
+    29:2d:9c:ca:09:74:a0:32:92:89:22:2f:7a:6d:af:
+    1f:e1:f9:f7:ce:03:05:46:80:a0:a3:92:7e:a5:6a:
+    df:9e:00:50:11:0a:93:5d:07
+exponent1:
+    00:94:98:3c:f3:30:f3:9f:72:54:aa:c8:88:65:66:
+    d5:31:2a:07:b1:a3:67:53:59:99:60:26:<span class="hljs-built_in">cd</span>:c7:19:
+    9f:d1:d8:2e:bb:ac:3a:0a:50:ce:4b:c5:42:72:80:
+    d1:25:1f:55:11:1d:8d:f9:08:88:ef:86:ec:40:a1:
+    97:37:62:57:97:f1:de:7e:99:19:38:5e:b4:3d:af:
+    2e:6c:94:81:3c:08:9e:bd:b4:95:fb:5a:d7:7c:0e:
+    29:7a:92:b4:d7:54:5f:af:7a:1a:f3:bc:b1:65:56:
+    1b:<span class="hljs-built_in">fc</span>:c6:40:d4:73:b8:96:e0:44:77:0b:da:b4:9e:
+    70:6f:ae:64:71:1d:53:3b:5d
+exponent2:
+    00:ad:e9:b9:67:04:9e:3f:7a:22:02:1b:b3:98:d9:
+    93:a6:a6:82:b8:00:5b:89:f8:d0:52:6e:d6:16:48:
+    81:fe:25:11:07:ec:3f:b9:0b:5f:35:35:8d:05:<span class="hljs-built_in">fc</span>:
+    8c:a7:e1:bc:7d:72:6e:87:4b:d3:45:04:bf:7d:f1:
+    20:24:f1:4e:b9:cc:ec:3f:f3:ed:26:1c:85:a5:50:
+    20:70:72:b1:9b:8b:69:ec:4c:09:67:ec:7f:a5:c0:
+    b8:88:fa:41:d3:8d:1d:d8:39:63:33:e7:cf:59:84:
+    ae:ae:77:4b:34:bb:c0:5c:81:e3:f0:c0:21:63:79:
+    <span class="hljs-built_in">fc</span>:f3:b1:0d:95:1a:05:70:db
+coefficient:
+    00:c0:6f:99:71:7a:f5:18:b9:c2:4e:7f:34:b9:0c:
+    06:3f:99:f6:8d:c8:72:03:2e:8c:d6:c6:ba:0c:36:
+    c9:1e:9e:e9:ec:e7:c1:ac:d3:86:cb:db:1e:dd:67:
+    0c:7a:d0:61:a2:ee:50:15:19:93:0d:ef:5c:4c:d6:
+    0a:3e:f0:e7:23:f9:32:d0:70:59:<span class="hljs-built_in">fc</span>:be:bc:ca:62:
+    2e:90:d9:eb:be:a3:5c:a4:01:b3:60:28:6a:81:d4:
+    10:d6:7f:a8:3a:e4:09:b0:49:20:06:<span class="hljs-built_in">fc</span>:47:22:3b:
+    8f:93:98:2b:0f:46:16:13:e6:5c:66:f2:f6:d6:8e:
+    29:39:fa:d0:01:91:90:30:35</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x79C1;&#x6709; KEY &#x4E2D;&#x7684; PUBLIC KEY</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl pkey -in example.com.key -pubout
+Enter pass phrase <span class="hljs-keyword">for</span> example.com.key:
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz95rOJcJuLr+aHLrRAxB
+NLoqptqWEzUxOnfy6XxWEyx34T/xTkXsD5fYj+ZYe1brrifDgoNtipMEAJKmKHVQ
+HYW7XvIaoGOhRjRwiSF126+GtQj2CTYSDxTIXl654Cu33sZnf4C94vW/QjAaP4Mb
+tTSCRbQxd7+SGAoucfc+0QLVMAIcK0jVSLPBVJFIeQIf08Qqw6Gw8GWgIY3Sbjzj
+GbuOhltLcxTrbymR8d7W/ivR40exmqQu6EX2ByXAuQ2EmbpKgCIWe3ds2A51kMn9
+uDjVyPCS9hoPJ+Jfj0nP/obOmhWG1q0mpNGRkPAkP1hqHztUnIW7wOJApsDTgXr3
++QIDAQAB
+-----END PUBLIC KEY-----</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x751F;&#x4EA7; ECDSA KEY</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openssl genpkey -out example.com.key -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -aes-128-cbc -pass pass:hello
+openssl pkey -in example.com.key -text -noout</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__csr">&#x521B;&#x5EFA; CSR</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; cnf &#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[req]
+prompt = no
+distinguished_name = dn
+req_extensions = ext
+input_password = hello
+
+[dn]
+CN = www.example.com
+emailAddress = ksong@example.com
+O = Kylin Soong Ltd
+L = Beijing
+C = CN
+
+[ext]
+subjectAltName = DNS:www.example.com,DNS:example.com</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA; CSR</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openssl req -new -config example.com.cnf -key example.com.key -out example.com.csr</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B; CSR</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cat example.com.csr
+-----BEGIN CERTIFICATE REQUEST-----
+MIIC9DCCAdwCAQAwdTEYMBYGA1UEAwwPd3d3LmV4YW1wbGUuY29tMSAwHgYJKoZI
+hvcNAQkBFhFrc29uZ0BleGFtcGxlLmNvbTEYMBYGA1UECgwPS3lsaW4gU29vbmcg
+THRkMRAwDgYDVQQHDAdCZWlqaW5nMQswCQYDVQQGEwJDTjCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAMQJ6Eobxk9Q0FTxqIoEaEsRW0N0FvvOrRPEllPI
+KIWeLT4AvzISK4CORMcQOix+K2Y2wmIpt6DjNIqhgEwQwz9uHO83YtV+73UQJzui
+BqJ1uiASDEQ9Q2oj64fq/I5U+YE+hZa0NN0qS6JhSwbXJq0aGXlJRcjQynXoBgUu
+A3V4buJ9FoCo53udVcTGwPB4XLnXN/8e1X6fp1odkBZmkCqmMF72n+oHojkUa7S2
+Vd/Ubkh69oXoGiJCXkm0Ryfy+yKnwfWeUa2DMNxzO5F83wsi47LK4aO+Bx0w47T5
+ZJbCW7LjCwrliN0fIMmO6v9B6kFgf1LmWDSzGUdPbFyokLsCAwEAAaA6MDgGCSqG
+SIb3DQEJDjErMCkwJwYDVR0RBCAwHoIPd3d3LmV4YW1wbGUuY29tggtleGFtcGxl
+LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAvwF+j70H0qJqE7rAPpyAIeCiwsPhAaKd
+CaKrGh2AB6NBUlz9RNPWWIMHajtvD5T3B2KEWrUsUoVaNFNgPDzUbFa5owVvYr0k
+qXpoLRUczi1gL/QKWnguDwS9IsovCSJg+QeqozC0SyKnNcN1ldOUzqhZRu2WZrgA
+PAa+Y+KK+Uv3ZVzYanB8Y2KleA+k1Tj1M4bSOvbTA19EUtov6YunsUUys0Kc3Xh/
++Gs3arBTB87zJbZm33zsalNk3eQB4ZpGe/wVbRSdCtUA6Wl9nr99mubiAVthFbIe
++03ojaH41ddzn+q+g+1dnWoafyxOiShRi1sZPO/0PH80WsmjLNkcWQ==
+-----END CERTIFICATE REQUEST-----</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; CSR &#x7ED3;&#x6784;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl req -in example.com.csr -text -noout
+Certificate Request:
+    Data:
+        Version: 1 (0x0)
+        Subject: CN = www.example.com, emailAddress = ksong@example.com, O = Kylin Soong Ltd, L = Beijing, C = CN
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:c4:09:e8:4a:1b:c6:4f:50:d0:54:f1:a8:8a:04:
+                    68:4b:11:5b:43:74:16:fb:ce:ad:13:c4:96:53:c8:
+                    28:85:9e:2d:3e:00:bf:32:12:2b:80:8e:44:c7:10:
+                    3a:2c:7e:2b:66:36:c2:62:29:b7:a0:e3:34:8a:a1:
+                    80:4c:10:c3:3f:6e:1c:ef:37:62:d5:7e:ef:75:10:
+                    27:3b:a2:06:a2:75:ba:20:12:0c:44:3d:43:6a:23:
+                    eb:87:ea:<span class="hljs-built_in">fc</span>:8e:54:f9:81:3e:85:96:b4:34:dd:2a:
+                    4b:a2:61:4b:06:d7:26:ad:1a:19:79:49:45:c8:d0:
+                    ca:75:e8:06:05:2e:03:75:78:6e:e2:7d:16:80:a8:
+                    e7:7b:9d:55:c4:c6:c0:f0:78:5c:b9:d7:37:ff:1e:
+                    d5:7e:9f:a7:5a:1d:90:16:66:90:2a:a6:30:5e:f6:
+                    9f:ea:07:a2:39:14:6b:b4:b6:55:df:d4:6e:48:7a:
+                    f6:85:e8:1a:22:42:5e:49:b4:47:27:f2:fb:22:a7:
+                    c1:f5:9e:51:ad:83:30:dc:73:3b:91:7c:df:0b:22:
+                    e3:b2:ca:e1:a3:be:07:1d:30:e3:b4:f9:64:96:c2:
+                    5b:b2:e3:0b:0a:e5:88:dd:1f:20:c9:8e:ea:ff:41:
+                    ea:41:60:7f:52:e6:58:34:b3:19:47:4f:6c:5c:a8:
+                    90:bb
+                Exponent: 65537 (0x10001)
+        Attributes:
+        Requested Extensions:
+            X509v3 Subject Alternative Name:
+                DNS:www.example.com, DNS:example.com
+    Signature Algorithm: sha256WithRSAEncryption
+         bf:01:7e:8f:bd:07:d2:a2:6a:13:ba:c0:3e:9c:80:21:e0:a2:
+         c2:c3:e1:01:a2:9d:09:a2:ab:1a:1d:80:07:a3:41:52:5c:fd:
+         44:d3:d6:58:83:07:6a:3b:6f:0f:94:f7:07:62:84:5a:b5:2c:
+         52:85:5a:34:53:60:3c:3c:d4:6c:56:b9:a3:05:6f:62:bd:24:
+         a9:7a:68:2d:15:1c:ce:2d:60:2f:f4:0a:5a:78:2e:0f:04:bd:
+         22:ca:2f:09:22:60:f9:07:aa:a3:30:b4:4b:22:a7:35:c3:75:
+         95:d3:94:ce:a8:59:46:ed:96:66:b8:00:3c:06:be:63:e2:8a:
+         f9:4b:f7:65:5c:d8:6a:70:7c:63:62:a5:78:0f:a4:d5:38:f5:
+         33:86:d2:3a:f6:d3:03:5f:44:52:da:2f:e9:8b:a7:b1:45:32:
+         b3:42:9c:dd:78:7f:f8:6b:37:6a:b0:53:07:ce:f3:25:b6:66:
+         df:7c:ec:6a:53:64:dd:e4:01:e1:9a:46:7b:<span class="hljs-built_in">fc</span>:15:6d:14:9d:
+         0a:d5:00:e9:69:7d:9e:bf:7d:9a:e6:e2:01:5b:61:15:b2:1e:
+         fb:4d:e8:8d:a1:f8:d5:d7:73:9f:ea:be:83:ed:5d:9d:6a:1a:
+         7f:2c:4e:89:28:51:8b:5b:19:3c:ef:f4:3c:7f:34:5a:c9:a3:
+         2c:d9:1c:59</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x751F;&#x4EA7;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">openssl x509 -req -days 3650 -in example.com.csr -signkey example.com.key -out example.com.crt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x8BC1;&#x4E66;&#x7ED3;&#x6784;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl x509 -in example.com.crt -text -noout
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            70:69:24:47:70:16:a8:11:0e:f0:87:86:b5:73:63:64:2b:51:4a:10
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN = www.example.com, emailAddress = ksong@example.com, O = Kylin Soong Ltd, L = Beijing, C = CN
+        Validity
+            Not Before: Jul 11 14:37:53 2021 GMT
+            Not After : Jul  9 14:37:53 2031 GMT
+        Subject: CN = www.example.com, emailAddress = ksong@example.com, O = Kylin Soong Ltd, L = Beijing, C = CN
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:c4:09:e8:4a:1b:c6:4f:50:d0:54:f1:a8:8a:04:
+                    68:4b:11:5b:43:74:16:fb:ce:ad:13:c4:96:53:c8:
+                    28:85:9e:2d:3e:00:bf:32:12:2b:80:8e:44:c7:10:
+                    3a:2c:7e:2b:66:36:c2:62:29:b7:a0:e3:34:8a:a1:
+                    80:4c:10:c3:3f:6e:1c:ef:37:62:d5:7e:ef:75:10:
+                    27:3b:a2:06:a2:75:ba:20:12:0c:44:3d:43:6a:23:
+                    eb:87:ea:<span class="hljs-built_in">fc</span>:8e:54:f9:81:3e:85:96:b4:34:dd:2a:
+                    4b:a2:61:4b:06:d7:26:ad:1a:19:79:49:45:c8:d0:
+                    ca:75:e8:06:05:2e:03:75:78:6e:e2:7d:16:80:a8:
+                    e7:7b:9d:55:c4:c6:c0:f0:78:5c:b9:d7:37:ff:1e:
+                    d5:7e:9f:a7:5a:1d:90:16:66:90:2a:a6:30:5e:f6:
+                    9f:ea:07:a2:39:14:6b:b4:b6:55:df:d4:6e:48:7a:
+                    f6:85:e8:1a:22:42:5e:49:b4:47:27:f2:fb:22:a7:
+                    c1:f5:9e:51:ad:83:30:dc:73:3b:91:7c:df:0b:22:
+                    e3:b2:ca:e1:a3:be:07:1d:30:e3:b4:f9:64:96:c2:
+                    5b:b2:e3:0b:0a:e5:88:dd:1f:20:c9:8e:ea:ff:41:
+                    ea:41:60:7f:52:e6:58:34:b3:19:47:4f:6c:5c:a8:
+                    90:bb
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha256WithRSAEncryption
+         0c:50:b3:d7:0b:fb:64:76:7f:c0:0e:6b:39:c9:26:49:e5:c3:
+         13:e6:81:02:4b:1e:b6:c1:9e:64:08:50:c2:4b:32:df:ea:af:
+         cc:ab:9d:eb:d1:02:ee:ff:b6:18:d8:cc:50:f2:e0:0c:34:3e:
+         39:47:ab:e3:13:e9:19:63:b0:12:72:3e:0f:3a:00:31:0b:83:
+         b9:b9:90:c0:6d:39:53:a1:0d:3b:d0:f9:42:0d:34:a4:9e:fd:
+         f0:03:d6:9a:5e:8d:37:66:b8:ef:81:46:dc:01:af:17:34:73:
+         2d:d3:48:85:3b:22:fa:01:aa:f1:d7:1d:7c:71:35:4c:2d:5c:
+         13:f2:9f:c8:fe:a7:2a:07:69:ad:b1:bd:6c:e2:17:77:7c:da:
+         29:6e:a9:c8:37:74:ef:00:9d:dc:d6:c1:52:07:1a:0f:6d:b3:
+         72:41:d7:b6:56:2f:38:aa:dd:be:d9:05:1c:6a:b4:8e:07:af:
+         ab:56:08:7f:09:a6:e3:8d:ff:08:25:06:7e:e1:d7:03:76:e0:
+         45:a3:93:4b:b6:c5:fd:a7:97:dc:e2:da:c7:11:2e:b9:9f:7f:
+         43:7d:08:e8:9a:90:b9:c4:05:24:e7:45:90:ed:d1:ca:d6:7c:
+         2a:48:2d:1f:c5:d6:0c:c2:27:9b:12:74:f6:32:8c:6a:b9:39:
+         b9:24:d7:3c</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="sect1">
 <h2 id="_rsa">RSA &#x516C;&#x94A5;&#x79C1;&#x94A5;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="__">&#x521B;&#x5EFA;&#x516C;&#x94A5;&#x79C1;&#x94A5;</h3>
+<h3 id="___3">&#x521B;&#x5EFA;&#x516C;&#x94A5;&#x79C1;&#x94A5;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x67E5;&#x770B; openssl &#x7248;&#x672C;</strong></div>
 <div class="content">
@@ -2097,7 +2560,7 @@ MQIDAQAB
 </div>
 </div>
 <div class="sect2">
-<h3 id="___2">&#x52A0;&#x5BC6;/&#x89E3;&#x5BC6;</h3>
+<h3 id="___4">&#x52A0;&#x5BC6;/&#x89E3;&#x5BC6;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4EFB;&#x610F;&#x6587;&#x672C;</strong></div>
 <div class="content">
@@ -2137,7 +2600,7 @@ Verified OK</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___3">&#x521B;&#x5EFA;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</h2>
+<h2 id="___5">&#x521B;&#x5EFA;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title"><strong>1. &#x521B;&#x5EFA; private key</strong></div>
@@ -2211,7 +2674,7 @@ total 12
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"OpenSSL","level":"1.2.6.4","depth":3,"next":{"title":"LDAP","level":"1.2.6.5","depth":3,"path":"linux/security/ldap.adoc","ref":"linux/security/ldap.adoc","articles":[]},"previous":{"title":"防火墙","level":"1.2.6.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/openssl.adoc","mtime":"2020-01-27T15:48:42.161Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-11-11T01:30:10.492Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"OpenSSL","level":"1.2.6.4","depth":3,"next":{"title":"LDAP","level":"1.2.6.5","depth":3,"path":"linux/security/ldap.adoc","ref":"linux/security/ldap.adoc","articles":[]},"previous":{"title":"防火墙","level":"1.2.6.3","depth":3,"path":"linux/security/firewall.adoc","ref":"linux/security/firewall.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"GUID":"na39","OCP_USER_ID":"ksoong-redhat.com","copyrightYear":"2018","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2018","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"linux/security/openssl.adoc","mtime":"2021-07-11T15:01:20.926Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2022-02-25T03:07:49.301Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

@@ -1,0 +1,24 @@
+$TTL  3h
+10.1.10.in-addr.arpa. IN SOA ns1.movie.xyz. kylin.movie.xyz. (
+                           1       ; Serial
+                           3h      ; Refresh after 3 hours
+                           1h      ; Retry after 1 hour
+                           1w      ; Expire after 1 week
+                           1h )    ; Negative caching TTL of 1 hour
+
+;
+; Name servvers
+;
+10.1.10.in-addr.arpa. IN NS  ns1.movie.xyz.
+30.1.10.in-addr.arpa. IN NS  ns2.movie.xyz.
+
+
+;
+; Addresses point to canonical name
+;
+1.10.1.10.in-addr.arpa.    IN PTR   wormhole.movie.xyz.
+2.10.1.10.in-addr.arpa.    IN PTR   shrek.movie.xyz.
+3.10.1.10.in-addr.arpa.    IN PTR   toystory.movie.xyz.
+4.10.1.10.in-addr.arpa.    IN PTR   monsters-inc.movie.xyz.
+176.10.1.10.in-addr.arpa.  IN PTR   ns1.movie.xyz.
+
