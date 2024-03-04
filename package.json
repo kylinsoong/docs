@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@gitbook-ng/gitbook": "^3.3.6",
+    "gitbook-plugin-back-to-top-button": "^0.1.4",
+    "gitbook-plugin-collapsible-menu": "^1.0.3",
+    "gitbook-plugin-donate": "^1.0.2",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-sharing-plus": "0.0.2",
+    "gitbook-plugin-splitter": "0.0.8"
+  }
+}
